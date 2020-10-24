@@ -34,8 +34,7 @@ border-style:none;
 
 .header .company	{float: right;
 	margin: 20px;
-	font-size: 24px;
-	font-weight: bold;
+	font-size: 22px;
 	color: #000;
 	line-height: 1;}
 
@@ -88,7 +87,7 @@ border-style:none;
 .entry img	{max-width: 100%;
 	height: auto;}
 .entry h1	{margin: 0 0 20px 0;
-	font-size: 28px;
+	font-size: 26px;
 	line-height: 1.2;}
 
 .entry h2	{margin: 0 0 10px 0;

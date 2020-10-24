@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>開発環境構築(Mac)</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="keywords" content="Mac,JavaEE,Java EE,JavaEE7,Java EE 7,NetBeans">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!--if lt IE 9
+    script(src="http://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv-printshiv.min.js")
+    script(src="http://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js")
+    -->
+    <!--if lt IE 8-->
+    <script src="js/tagManager.js" type="text/javascript"></script>
+  </head>
+  <body id="_top">
+    <div class="container">
+      <div class="header">
+        <div class="logoImg">
+          <h1><a href="index.html"><img class="logo" src="images/logo.gif" alt="Yuimarl" border="0"></a></h1>
+        </div>
+        <div class="company">新田システム事務所</div>
+      </div>
+      <div class="menu">
+        <ul>
+          <li><a href="index.html">ホーム</a></li>
+        </ul>
+      </div>
+      <div class="cols">
+        <div class="col">
+          <div class="entry">
+            <div class="warning">このページに書かれている内容は古い情報です。<br>現在、Yuimarlの新バージョンを開発中です。</div>
+            <h1><a name="#screen"></a>開発環境構築（Mac）</h1>
+            <p>ここでは、Yuimarl の開発を Mac で行う場合の開発環境構築の手順について記述します。</p>
+            <hr>
+            <ul>
+              <li><a href="##jdk">JDK8</a></li>
+              <li><a href="##javaee">Java EE 7 Software Development Kit</a></li>
+              <li><a href="##import">Yuimarlプロジェクトのインポート</a></li>
+              <li><a href="##jdbc">JDBCの設定</a></li>
+              <li><a href="##deploy">アプリケーションのデプロイ</a></li>
+              <li><a href="##exec">Yuimarlの実行</a></li>
+            </ul>
+            <hr>
+            <h3><a name="#jdk">JDK8</a></h3>
+            <p>
+              Javaの開発環境であるJava Platform, Standard Edition Development Kit
+              (JDK)をインストールします。
+            </p>
+            <ol>
+              <li>Java SE のダウンロードサイトにアクセスします。<br>
+                <div class="box1"><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a></div><br><br><img height="420" src="images/image79.png" width="600"><br><br>		「JDK 8u11 & NetBeans 8.0」をクリックします。（この執筆時点では、「8u11」が最新版でしたが、最新版が変わっていれば、その最新版をダウンロードしてください。）<br>
+              </li>
+              <li>
+                「Accept License
+                Agreement」をチェックし、「jdk-8u11-nb-8-macosx-x64.dmg」のリンクをクリックしてダウンロードします。<br><img height="445" src="images/image80.png" width="600">
+              </li>
+              <li>ダウンロードした「jdk-8u11-nb-8-macosx-x64.dmg」を実行します。<br><img height="334" src="images/image81.png" width="600"><br>			「NetBeans 8.0 with JDK 8 Update 11.mpkg」をクリックして実行します。</li>
+              <li>「Oracle JDKとNetBeans IDE のインストール」が起動するので、「続ける」ボタンを押します。<br><img height="426" src="images/image82.png" width="600"></li>
+              <li>「インストールの種類」では、そのままで「インストール」ボタンを押します。<br><img height="426" src="images/image83.png" width="600"></li>
+              <li>インストールが完了したら、「閉じる」ボタンを押して閉じます。</li>
+              <li>「アプリケーション」から「ユーティリティ」を選択し、「ターミナル.app」を起動します。</li>
+              <li>「ターミナル」の「シェル」メニューから「新規ウインドウ」を選択して、ターミナルウィンドウを表示します。</li>
+              <li>次のコマンドを実行します。
+                <div class="box1">export JAVA_HOME=`/usr/libexec/java_home`<br>				export PATH=$PATH:$JAVA_HOME/bin</div>
+              </li>
+              <li>テキストエディタ vi で ~/.bashrc を編集します。
+                <div class="box1">vi ~/.bashrc</div>			以下の行を追加します。ファイルがすでに存在すれば、最終行に追加します。
+                <div class="box1">export JAVA_HOME=`/usr/libexec/java_home`<br>				export PATH=$PATH:$JAVA_HOME/bin</div>			変更内容を保存して vi を終了します。
+              </li>
+              <li>テキストエディタ vi で ~/.bash_profile を編集します。
+                <div class="box1">vi ~/.bash_profile</div>			以下の行を追加します。ファイルがすでに存在する場合は、最終行に追加します。<br>			この部分がすでに存在する場合は、追加する必要はありません。
+                <div class="box1">if [ -f ~/.bashrc ]; then<br>				. ~/.bashrc<br>				fi</div>			変更内容を保存して vi を終了します。<br>
+              </li>
+            </ol>
+            <hr>
+            <h3><a name="#javaee">Java EE 7 Software Development Kit</a></h3>
+            <p>
+              Java EE 7 Software Development Kit（Java EE SDK）は、Java
+              EE 7の開発環境です。以下の手順でインストールします。
+            </p>
+            <ol>
+              <li>Jave EE SDKのダウンロードサイトにアクセスします。<br>
+                <div class="box1"><a href="http://www.oracle.com/technetwork/java/javaee/downloads/index.html">http://www.oracle.com/technetwork/java/javaee/downloads/index.html</a></div><br>		「Java EE 7 SDK」をクリックします。<br><img height="420" src="images/image84.png" width="600"><br>
+              </li>
+              <li>
+                「Accept License
+                Agreement」をチェックし、「java_ee_sdk-7-unix.sh」をダウンロードします。<br><img height="376" src="images/image85.png" width="592">
+              </li>
+              <li>「アプリケーション」から「ユーティリティ」を選択し、「ターミナル.app」を起動します。</li>
+              <li>「ターミナル」の「シェル」メニューから「新規ウインドウ」を選択して、ターミナルウィンドウを表示します。</li>
+              <li>次のコマンドを実行します。
+                <div class="box1">cd ~/Downloads/<span class="style3">← ダウンロードフォルダに移動します。</span><br>				ls<span class="style3">
+                    ←
+                    「java_ee_sdk-7-unix.sh」がダウンロードされていることを確認します。</span><br>				chmod u+x java_ee_sdk-7-unix.sh<span class="style3">
+                    ←
+                    実行権限を付与します。</span><br>				DISPLAY=:0 ./java_ee_sdk-7-unix.sh<span class="style3">
+                    ←
+                    インストーラを起動します。</span></div>
+              </li>
+              <li>インストーラが起動したら、「次」ボタンを押します。<br><img height="476" src="images/image86.png" width="600"></li>
+              <li>「インストールのタイプ」では、「標準インストール」のままで、「次」ボタンを押します。</li>
+              <li>「インストールディレクトリ」は、そのままで、「次」ボタンを押します。</li>
+              <li>「更新ツール」は、そのままで、「次」ボタンを押します。</li>
+              <li>「インストール可能」と表示されたら、「インストール」ボタンを押します。</li>
+              <li>インストールが完了したら、「終了」ボタンを押して閉じます。</li>
+              <li>次のコマンドを実行します。
+                <div class="box1">cd $JAVA_HOME/jre/lib/security<br>				sudo vi java.policy<span class="style3">
+                    ← テキストエディタ vi で
+                    java.policy ファイルを編集します。</span></div>			次の行を探します。
+                <div class="box1">permission java.net.SocketPermission "localhost:0", "listen”;</div>			この行の次に、次の行を追加します。
+                <div class="box1">permission java.net.SocketPermission "localhost:1527", "listen";</div>			変更内容を保存して vi を終了します。
+              </li>
+              <li>次のコマンドを実行します。
+                <div class="box1">~/glassfish4/glassfish/bin/asadmin start-database<span class="style3">← Java DB を起動</span><br>				~/glassfish4/glassfish/bin/asadmin start-domain domain1<span class="style3">← GlassFish を起動</span></div>
+              </li>
+              <li>ブラウザで<br><a href="http://localhost:4848/">http://localhost:4848/</a><br>にアクセスし、次の管理画面が表示されたら、正常にインストールされました。<br><img height="479" src="images/image99.png" width="600"></li>
+            </ol>
+            <hr>
+            <h3><a name="#import">Yuimarlプロジェクトのインポート</a></h3>
+            <ol>
+              <li><a href="download.html">ダウンロードページ</a>から、YuimarlプロジェクトのZIP形式圧縮ファイルをダウンロードします。</li>
+              <li>
+                「アプリケーション」から「NetBeans」を選択し、「NetBeans 8.0.app」をクリックすると、NetBeans
+                IDE が起動します。
+              </li>
+              <li>旧バージョンのYuimarlプロジェクトがすでにインポートされている場合は、次の手順で削除します。
+                <ol>
+                  <li>NetBeansで「ファイル」メニューから、Yuimarlのプロジェクトを１つずつ選択し、右クリックで表示されたポップアップメニューから、「閉じる」を選択し、すべてのプロジェクトを閉じます。</li>
+                  <li>Finder で、「NetBeansProjects」の下にある、「yuimarl」フォルダを削除します。</li>
+                </ol>
+              </li>
+              <li>NetBeansの「ファイル」メニューから、「プロジェクトをインポート」-「ZIPから」を選択します。</li>
+              <li>「プロジェクトをZIPからインポート」画面で、ダウンロードしたZIPファイルを選択し、「インポート」ボタンを押します。<br><img height="175" src="images/image87.png" width="380"></li>
+              <li>「ファイル」-「プロジェクトを開く」メニューから、「yuimarl」プロジェクトを選択して、その下にあるすべてのプロジェクトもすべて選択して、「プロジェクトを開く」ボタンを押します。<br><img height="334" src="images/image88.png" width="600"></li>
+              <li>Java DBが起動していなければ、起動を行います。（上記参照）</li>
+              <li>「yuimarl-db-javadb-setup」プロジェクトを右クリックし、ポップアップメニューから「ビルド」を選択します。<br>			出力欄に、「BUILD SUCCESS」と表示されれば、ビルドが成功です。<br>
+                <ul>
+                  <li>このビルドを実行すると、「yuimarl-db-javadb-setup」プロジェクトの「build.xml」ファイルにある、「createJavaDB」（テーブル作成）と「importInitData」（データ投入）のAntタスクが実行されます。<br>				（「ファイル」タブでファイルを見ることができます。）</li>
+                  <li>「createJavaDB」で作成されるテーブルの定義は、「yuimarl-db-javadb-setup」-「sql」-「YUIMARL_JavaDB_DDL.sql」ファイルにあります。</li>
+                  <li>「importInitData」で作成されるデータは、「yuimarl-db-javadb-setup」-「xml」-「YUIMARL_DB_INIT_DATA.xml」ファイルが読み込まれます。このデータ投入には、<a href="http://www.dbunit.org/">DbUnit</a>が使用されています。</li>
+                  <li>[データの確認方法]<br>投入されたデータの中身を確認するためには、ターミナルで、以下のように入力します。（赤文字が入力するコマンドです。）
+                    <div class="box1">$<span class="style4">
+                        java -jar ~/glassfish4/javadb/lib/derbyrun.jar
+                        ij</span><span class="style3">
+                        ←
+                        起動コマンド</span><br>					ij バージョン 10.9<br>					ij><span class="style4">CONNECT 'jdbc:derby://localhost:1527/yuimarl';</span><span class="style3">
+                        ←
+                        yuimarl データベースに接続</span><br>					ij><span class="style4">select * from PARTY;</span><span class="style3">
+                        ←
+                        PARTYテーブルの中身を確認する場合</span><br>					ij><span class="style4">exit;</span><span class="style3">← 終了</span></div>
+                  </li>
+                </ul><br><img height="358" src="images/image89.png" width="600">
+              </li>
+              <li>「yuimarl-lib」プロジェクトを右クリックし、ポップアップメニューから「ビルド」を選択します。<br>			出力欄に、「BUILD SUCCESS」と表示されれば、ビルドが成功です。</li>
+              <li>「yuimarl-ejb」プロジェクトを右クリックし、ポップアップメニューから「ビルド」を選択します。<br>出力欄に、「BUILD SUCCESS」と表示されれば、ビルドが成功です。</li>
+              <li>「yuimarl-web」プロジェクトを右クリックし、ポップアップメニューから「ビルド」を選択します。<br>			出力欄に、「BUILD SUCCESS」と表示されれば、ビルドが成功です。</li>
+              <li>「yuimarl-ear」プロジェクトを右クリックし、ポップアップメニューから「ビルド」を選択します。<br>			出力欄に、「BUILD SUCCESS」と表示されれば、ビルドが成功です。<br><img height="215" src="images/img100.png" width="419"></li>
+              <li>CSSファイルの解析でエラーとなっている箇所があれば、そのファイルを開き、赤いマークをクリックします。ポップアップから、「予期しないトークン・・・が見つかりました。CSS解析エラーのフィルタ処理」をクリックすると、エラーが消えます。<br><img height="277" src="images/image90.png" width="600"></li>
+            </ol>
+            <hr>
+            <h3><a name="#jdbc">JDBCの設定</a></h3>
+            <p>GlassFishの管理画面で、Java DBデータベースへの接続のためのJDBC接続の設定を行います。</p>
+            <ol>
+              <li>GlassFishサーバーが起動していなければ、上記の方法で起動します。</li>
+              <li>ブラウザで<br style="color: rgb(0, 0, 0); font-family: 'MS PGothic'; font-size: 13px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);"><a href="http://localhost:4848/" style="color: blue; font-family: 'MS PGothic'; font-size: 13px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">http://localhost:4848/</a><br style="color: rgb(0, 0, 0); font-family: 'MS PGothic'; font-size: 13px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);">			にアクセスし、管理画面を起動します。</li>
+              <li>管理画面の左側のツリーから、「Resources」-「JDBC」-「JDBC Connection Pools」を選択します。</li>			「JDBC Connection Pools」画面で「New」ボタンを押します。<br><img height="427" src="images/image91.png" width="600">
+              <li>
+                「New
+                JDBC Connection Pool (Step 1 of 2)」画面で、次のように入力・選択します。<br>
+                <table class="tb1" cellpadding="3">
+                  <tr>
+                    <th>名前</th>
+                    <th>値</th>
+                  </tr>
+                  <tr>
+                    <td>Pool Name</td>
+                    <td>YuimarlPool</td>
+                  </tr>
+                  <tr>
+                    <td>Resource Type</td>
+                    <td>javax.sql.DataSource</td>
+                  </tr>
+                  <tr>
+                    <td>Database Driver Vendor</td>
+                    <td>JavaDB</td>
+                  </tr>
+                </table><br><img height="275" src="images/image92.png" width="600"><br><br>			「Next」ボタンを押します。
+              </li>
+              <li>
+                「New JDBC Connection Pool (Step 2 of 2)」画面の「Additional
+                Properties」で、以下の値を設定します。（下記以外は変更しない）<br>
+                <table class="tb1" cellpadding="3">
+                  <tr>
+                    <th>名前</th>
+                    <th>値</th>
+                  </tr>
+                  <tr>
+                    <td>User</td>
+                    <td>APP</td>
+                  </tr>
+                  <tr>
+                    <td>DatabaseName</td>
+                    <td>yuimarl</td>
+                  </tr>
+                  <tr>
+                    <td>ServerName</td>
+                    <td>localhost</td>
+                  </tr>
+                  <tr>
+                    <td>PortNumber</td>
+                    <td>1527</td>
+                  </tr>
+                  <tr>
+                    <td>Password</td>
+                    <td>APP</td>
+                  </tr>
+                </table><img height="452" src="images/image93.png" width="600"><br>			「Finish」ボタンを押します。
+              </li>
+              <li>管理画面の左側のツリーから、「Resources」-「JDBC」-「JDBC Resources」を選択します。<br>			「JDBC Resources」画面で「New」ボタンを押します。<br><img height="363" src="images/image94.png" width="600"></li>
+              <li>「New JDBC Resource」画面で、次のように入力・選択します。<br>
+                <table class="tb1" cellpadding="3">
+                  <tr>
+                    <th>名前</th>
+                    <th>値</th>
+                  </tr>
+                  <tr>
+                    <td>JNDI Name</td>
+                    <td>jdbc/yuimarl</td>
+                  </tr>
+                  <tr>
+                    <td>Pool Name</td>
+                    <td>YuimarlPool</td>
+                  </tr>
+                </table><img height="337" src="images/image95.png" width="600"><br>			「OK」ボタンを押します。
+              </li>
+            </ol>
+            <hr>
+            <h3><a name="#deploy">アプリケーションのデプロイ</a></h3>
+            <p>GlassFishの管理画面で、Yuimarl アプリケーションのデプロイ（配置）を行います。<br>		上記で「yuimarl-ear」プロジェクトのビルドを行ったことにより、<br>		NetBeansProjects/yuimar/yuimarl-ear/target/<br>		フォルダに、「yuimarl-ear-(バージョン).ear」という EARファイル（エンタープライズアプリケーションリソースファイル）が作成されています。このファイルを、GlassFish
+              		サーバーにデプロイ（配置）します。
+            </p>
+            <ol>
+              <li>GlassFish の管理画面を起動します。</li>
+              <li>管理画面の左側のツリーから、「Applications」を選択します。</li>			「Applications」画面で「Deploy」ボタンを押します。<br><img height="377" src="images/image96.png" width="600">
+              <li>
+                「Deploy
+                Applications or Modules」画面で、以下の設定を行います。
+                <ol>
+                  <li>「Local Packaged File of Directory That is Accessible from GlassFish Server」にチェックします。</li>
+                  <li>「Browse Files」ボタンを押します。</li>
+                  <li>「Browse Server」画面で、<br>				NetBeansProjects/yuimar/yuimarl-ear/target/<br>				フォルダにある、「yuimarl-ear-(バージョン).ear」という EARファイル（エンタープライズアプリケーションリソースファイル）を選択して、「Choose
+                    				File」ボタンを押します。<br><img height="426" src="images/image98.png" width="496">
+                  </li>
+                  <li>以下の設定を行います。（それ以外はデフォルトのまま）<br>
+                    <table class="tb1" cellpadding="3">
+                      <tr>
+                        <th>名前</th>
+                        <th>値</th>
+                      </tr>
+                      <tr>
+                        <td>Type</td>
+                        <td>Enterprise Application</td>
+                      </tr>
+                      <tr>
+                        <td>Application Name</td>
+                        <td>yuimarl-ear</td>
+                      </tr>
+                      <tr>
+                        <td>Virtual Servers</td>
+                        <td>server</td>
+                      </tr>
+                    </table><br><img height="399" src="images/image97.png" width="540"><br><br>「OK」ボタンを押します。
+                  </li>
+                  <li>「Applications」画面の一覧に「yuimarl-ear」が追加されれば、デプロイが完了しました。</li>
+                </ol>
+              </li>
+            </ol>
+            <hr>
+            <h3><a name="#exec">Yuimarlの実行</a></h3>
+            <ol>
+              <li>
+                Java DB と
+                GlassFish が起動していなければ、起動を行います。
+              </li>
+              <li>Webブラウザを起動し、次のアドレスを入力します。<br><a href="http://localhost:8080/yuimarl-web/">http://localhost:8080/yuimarl-web/</a><br><br>ログイン画面が表示されますので、ユーザーIDに「U00001」、パスワードに「test」と入力し、「ログイン」ボタンをクリックすると、メインメニュー画面が表示します。<br><img height="472" src="images/image38.png" width="600"><br></li>
+            </ol>
+            <hr>
+            <p>以上が、初期セットアップの手順です。通常の開発時には、以下の順に行います。<br>		Java DB起動 → GlassFish起動 → NetBeans起動 → Yuimarl実行 → NetBeans終了 → GlassFish停止 →
+              		Java DB停止
+            </p>
+            <ul>
+              <li>Java DB と GlassFish の起動は、ターミナルで次のコマンドを実行します。
+                <div class="box1">~/glassfish4/glassfish/bin/asadmin start-database<span class="style3">← Java DB を起動</span><br>~/glassfish4/glassfish/bin/asadmin start-domain domain1<span class="style3">← GlassFish を起動</span></div>
+              </li>
+              <li>Java DB と GlassFish の停止は、ターミナルで次のコマンドを実行します。
+                <div class="box1">~/glassfish4/glassfish/bin/asadmin stop-domain domain1<span class="style3">← GlassFish を停止<br></span>~/glassfish4/glassfish/bin/asadmin stop-database<span class="style3">← Java DB を停止</span></div>
+              </li>
+            </ul>
+            <p><a href="#_top">先頭へ戻る</a><br></p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="submenu">
+            <h3>CONTENTS</h3>
+            <ul>
+              <li><a href="index.html">ホーム</a></li>
+              <li><a href="https://mnitta220.github.io/">新田システム事務所</a></li>
+              <li><a href="https://github.com/mnitta220/nngb/">脳内碁盤</a></li>
+              <li><a href="https://mnitta220.github.io/bnan/">文章暗記</a></li>
+              <li><a class="current" href="index.html">Yuimarl</a>
+                <ul>
+                  <li><a href="devsetup.html">開発環境構築(Windows)</a></li>
+                  <li><a href="devsetupMysql.html">開発環境構築(MySQL)</a></li>
+                  <li><a class="current" href="devsetupMac.html">開発環境構築(Mac)</a></li>
+                  <li><a href="download.html">ダウンロード</a></li>
+                  <li><a href="howtouse.html">使い方</a></li>
+                  <li><a href="develop.html">開発情報</a></li>
+                  <li><a href="deploy.html">運用環境構築</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <p><a href="https://mnitta220.github.io/privacy.html">プライバシー・ポリシー</a><br>Copyright © 2020 Masahiro Nitta. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

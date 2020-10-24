@@ -1,0 +1,261 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="UTF-8")
+    title 開発情報
+    meta(name="viewport" content="width=device-width")
+    link(rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css")
+    link(rel="stylesheet" href="css/style.css")
+    //if lt IE 9
+      script(src="http://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv-printshiv.min.js")
+      script(src="http://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js")
+    script(src="js/tagManager.js" type="text/javascript")
+  body#_top
+    .container
+      .header
+        .logoImg
+          h1
+            a(href="index.html")
+              img.logo(src="images/logo.gif" alt="Yuimarl" border="0")
+        .company 新田システム事務所
+      .menu
+        ul
+          li
+            a(href="index.html") ホーム
+      .cols
+        .col
+          .entry
+            .warning
+              | このページに書かれている内容は古い情報です。
+              br
+              | 現在、Yuimarlの新バージョンを開発中です。
+            h1
+              a(name="#screen")
+              | 開発情報
+            p Yuimarl の開発に関わる技術情報と、内部構造について記述します。
+            hr
+            ul
+              li
+                a(href="##knowledge") 前提知識
+              li
+                a(href="##javaee") Java EE 7
+              li
+                a(href="##projects") Yuimarl のプロジェクト一覧
+              li
+                a(href="##modeling") 概念モデリング
+              li
+                a(href="##login") ログイン
+            hr
+            h3
+              a(name="#knowledge") 前提知識
+            p
+              | Yuimarl は、Java EE 7 (Java Platform, Enterprise Edition
+              | 7) を使用しています。Java EE 7 を使いこなすためには、前提として、以下の技術を使用できる必要があります。
+            ul
+              li Java SE (Java Platform, Standard Edition)
+              li HTML5
+              li CSS
+              li JavaScript
+              li XML
+              li JSON
+              li SQL
+            p
+              | また、Yuimarl では、
+              a(href="http://jquery.com/") jQuery
+              |  という JavaScript
+              | 		ライブラリを使用していますので、これらについての知識も必要となります。
+            p これらの技術については、関連書籍等で学ぶことができます。
+            hr
+            h3
+              a(name="#javaee") Java EE 7
+            p
+              | Java EE 7 について、技術を習得するために最善の方法は、次の「The Java EE 7 Tutorial」を実施することです。
+              br
+              a(href="http://docs.oracle.com/javaee/7/tutorial/doc/")
+                | http://docs.oracle.com/javaee/7/tutorial/doc/
+              br
+              | 		英語ですし、量も多いのですが、これがもっとも有効な方法だと思います。
+            p Java EE 7 の仕様を詳しく知りたい場合は、以下を参照してください。（英語）
+            ul
+              li
+                a(href="http://www.oracle.com/technetwork/java/javaee/documentation/index.html")
+                  | Java EE Documentation
+              li
+                a(href="http://www.oracle.com/technetwork/java/javaee/tech/index.html")
+                  | Java EE 7 Technologies
+            p
+              | 日本語で Java EE について学ぶことができる書籍としては、『
+              a(href="http://www.amazon.co.jp/マスタリングJavaEE5-第2版-DVD付-Programmer’s-SELECTION/dp/4798120545/ref=sr_1_27?ie=UTF8&qid=1408572149&sr=8-27&keywords=java+ee")
+                | マスタリング
+                | JavaEE5
+              | 』があります。
+              br
+              | 		この本は、Java EE 5 の解説書なので、やや情報が古いのですが、Java EE の基本について全般的に学ぶには、とてもよい本です。
+              br
+              | 		本書を読んでから、「The Java EE 7 Tutorial」を実施すると、理解が深まります。
+            hr
+            h3
+              a(name="#projects") Yuimarl のプロジェクト一覧
+            p
+              table.tb1(cellpadding="3")
+                tr
+                  th プロジェクト
+                  th 説明
+                tr
+                  td(style="white-space:nowrap") yuimarl-lib
+                  td 共通ライブラリ。EJBとWebで共通に使用する。エンティティクラス、EJBインターフェース、ユーティリティクラスなどを保持する。
+                tr
+                  td(style="white-space:nowrap") yuimarl-ejb
+                  td
+                    | EJBクラスを保持する。
+                    br
+                    | 				ビルドすると、拡張子が "jar" の EJB-JARファイルが作成される。
+                tr
+                  td(style="white-space:nowrap") yuimarl-web
+                  td
+                    | Web画面用の xhtml、JavaScript、CSS、マネージドBeanクラスなどを保持する。
+                    br
+                    | 				ビルドすると、拡張子が "war"
+                    | 		の Webアプリケーションリソースファイルが作成される。
+                tr
+                  td(style="white-space:nowrap") yuimarl-ear
+                  td
+                    | EJBとWebを合わせたエンタープライズアプリケーションを保持する。
+                    br
+                    | 				ビルドすると、拡張子が "ear"
+                    | 		のエンタープライズアプリケーションリソースファイルが作成される。
+                tr
+                  td(style="white-space:nowrap") yuimarl-db-javadb-setup
+                  td Java DB のテーブル作成と初期データ投入を行う。
+                tr
+                  td(style="white-space:nowrap") yuimarl-db-javadb-init
+                  td Java DB の既存データ削除と初期データ投入を行う。
+                tr
+                  td(style="white-space:nowrap") yuimarl-db-javadb-export
+                  td Java DB のデータを XMLファイルに出力する。
+                tr
+                  td(style="white-space:nowrap") yuimarl-db-javadb-dtd
+                  td XMLファイルの定義情報であるDTDファイルの出力を行う。（テーブルの定義が変わった際に実行する。）
+                tr
+                  td(style="white-space:nowrap") yuimarl-db-mysql-setup
+                  td MySQL のテーブル作成と初期データ投入を行う。
+                tr
+                  td(style="white-space:nowrap") yuimarl-db-mysql-init
+                  td MySQL の既存データ削除と初期データ投入を行う。
+                tr
+                  td(style="white-space:nowrap") yuimarl-db-mysql-export
+                  td MySQL のデータを XMLファイルに出力する。
+                tr
+                  td(style="white-space:nowrap") yuimarl-test-javadb
+                  td EJBの JUnit 単体テストを行う。Java DB用。
+                tr
+                  td(style="white-space:nowrap") yuimarl-test-mysql
+                  td EJBの JUnit 単体テストを行う。MySQL用。
+            hr
+            h3
+              a(name="#modeling") 概念モデリング
+            p
+              | 企業活動を支援する情報システムは、企業活動の対象となる様々な事物（ヒト、モノ、カネ、コトなど）を、データとして保持します。
+              br
+              | 		どのようなデータをどのように保持するかということが、情報システムにとって、最も重要な要素となります。
+              br
+              | 		現実の事物をデータ化するには、現実をどのように捉えるかということが問題になります。そのためのプロセスとして、抽象化（モデリング）を行います。
+            p 現実世界 → 抽象化 → データ設計
+            p
+              | 抽象化（モデリング）とは、現実世界を分析して概念の構造を抽出するプロセスであるということができます。そのための手法として確立されているのが、「オブジェクト指向」という技術です。オブジェクト指向は、概念とその関連を分析し、コンピュータ内部に、仮想現実世界を表現する技術といえます。
+            h4 人・組織・物
+            p
+              | 「人」とその集合体である「組織」は、活動や契約の主体となりえるという意味で、共通の属性を持っています。マーチン・ファウラーの『
+              a(href="http://www.amazon.co.jp/アナリシスパターン―再利用可能なオブジェクトモデル-Object-Technology-マーチン-ファウラー/dp/4894716933/ref=sr_1_1?ie=UTF8&s=books&qid=1246422336&sr=1-1") アナリシスパターン
+              | 』では、人と組織の上位概念として、「パーティ」(Party)
+              | 		という概念を用いています。「Party」 には、仲間、関係者、当事者などの意味があります。
+              br
+              img(src="images/image75.gif")
+              br
+              | 		この図は「クラス図」といって、クラス（抽象データ型）の関係性を表現したものです。白三角が付いている先が親クラス、白三角が付いていない先が子クラスです。この図では、「パーティ」という親クラスに対し、「人」と「組織」という２つの子クラスが存在するということを表しています。
+              br
+              | 		クラスの親子関係を「継承」といいます。親クラスの属性は子クラスに継承されます。たとえば、「住所」という属性は人にも組織にもありますので、パーティクラスに住所属性を保持させれば、人と組織には住所属性を持たせなくても、パーティクラスから継承されます。
+              br
+              | 		パーティという概念を用いることによって、システム内部がすっきりとします。たとえば、企業にとっての「顧客」は、個人あることもあれば、法人であることもあります。顧客をパーティとすることによって、プログラムは顧客をパーティとして扱うことができます。
+            p
+              | 会社などの「法人」は「組織」の一種ですので、「法人」クラスを「組織」クラスの子クラスとして定義することができます。
+              br
+              | 		さらに、建物、機械、不動産などの「物品」も、何らかの主体となりえますので、パーティの一種と捉えることができます。
+              br
+              img(src="images/image76.gif")
+              br
+              | 		Yuimarl では、人・組織・法人・物をすべてパーティとして登録し、識別番号によって管理しています。
+            h4 パーティ関連
+            p
+              | たとえば、AさんとBさんは親子である、CさんはD社の社員である、EビルディングはF社が所有している、などというように、人と人、人と組織、組織と組織、組織と物など、主体と主体は関係性を持っていることがあります。このパーティ間の関係性を保持するために、Yuimarl
+              | では、「パーティ関連」クラスを定義しています。
+              br
+              | 		次の図は、CさんとD社の間に雇用関係というパーティ関連があるということを表現したオブジェクト図です。
+              br
+              img(src="images/image77.gif")
+              br
+              | 		人も法人もパーティなので、クラス図にすると次のようになります。
+              br
+              img(src="images/image78.gif")
+              br
+              | 		Yuimarl
+              | 		では、「パーティ関連」クラスに、「パーティ1」と「パーティ2」という２つの属性を持たせることによって、２者間の関連情報を保持しています。すべてのパーティ関連は、識別番号によって管理されます。
+            h4 イベント
+            p
+              | スケジュール管理機能では、過去から未来までの出来事を管理します。その出来事を「イベント」クラスとして管理します。イベントには、１回のみのイベントと、複数回繰り返されるイベントがあります。繰り返されるイベントには、「日イベント」、「週イベント」、「月イベント」、「年イベント」、「休日・記念日」があります。
+              br
+              | 		プロジェクト管理機能で管理されるイベントは、「タスク」クラスとします。
+              br
+              | 		イベントのクラスは、次のような継承関係となります。
+              br
+              img(src="images/img102.png")
+            h4 全体クラス図
+            p
+              | 現在の Yuimarl のクラス図は、次のようになっています。
+              br
+              br
+              a(href="images/ClassDiagram.png") クラス図
+              br
+              | 		（クリックしてご覧ください。）
+              br
+              br
+              | 		概念クラスは、プログラミング工程において、エンティティクラスとして実装されます。Yuimarl のエンティティクラスは、yuimarl-lib
+              | 		プロジェクトの src/main/java/jp/yuimarl/entity/ に存在します。
+            hr
+            p
+              a(href="#_top") 先頭へ戻る
+              br
+        .col
+          .submenu
+            h3 CONTENTS
+            ul
+              li
+                a(href="index.html") ホーム
+              li
+                a(href="https://mnitta220.github.io/") 新田システム事務所
+              li
+                a(href="https://github.com/mnitta220/nngb/") 脳内碁盤
+              li
+                a(href="https://mnitta220.github.io/bnan/") 文章暗記
+              li
+                a.current(href="index.html") Yuimarl
+                ul
+                  li
+                    a(href="devsetup.html") 開発環境構築(Windows)
+                  li
+                    a(href="devsetupMysql.html") 開発環境構築(MySQL)
+                  li
+                    a(href="devsetupMac.html") 開発環境構築(Mac)
+                  li
+                    a(href="download.html") ダウンロード
+                  li
+                    a(href="howtouse.html") 使い方
+                  li
+                    a.current(href="develop.html") 開発情報
+                  li
+                    a(href="deploy.html") 運用環境構築
+      .footer
+        p
+          a(href="https://mnitta220.github.io/privacy.html") プライバシー・ポリシー
+          br
+          | Copyright © 2020 Masahiro Nitta. All rights reserved.

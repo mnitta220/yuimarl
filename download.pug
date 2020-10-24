@@ -1,0 +1,260 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="UTF-8")
+    title ダウンロード
+    meta(name="viewport" content="width=device-width")
+    link(rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css")
+    link(rel="stylesheet" href="css/style.css")
+    //if lt IE 9
+      script(src="http://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv-printshiv.min.js")
+      script(src="http://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js")
+    //if lt IE 8
+    script(src="js/tagManager.js" type="text/javascript")
+  body#_top
+    .container
+      .header
+        .logoImg
+          h1
+            a(href="index.html")
+              img.logo(src="images/logo.gif" alt="Yuimarl" border="0")
+        .company 新田システム事務所
+      .menu
+        ul
+          li
+            a(href="index.html") ホーム
+      .cols
+        .col
+          .entry
+            .warning
+              | このページに書かれている内容は古い情報です。
+              br
+              | 現在、Yuimarlの新バージョンを開発中です。
+            h1
+              a(name="#screen")
+              | ダウンロード
+            p Yuimarl の MavenプロジェクトのGitリポジトリは、次のGitHubで公開されています。
+            p
+              a(href="https://github.com/MasahiroNitta/yuimarl" target="_blank") https://github.com/MasahiroNitta/yuimarl
+            p
+              a(href="https://git-scm.com/" target="_blank") Git
+              | をインストールして、次のコマンドを実行することによって、YuimarlのGitリポジトリのクローンを取得することができます。
+            p
+              .box1 git clone https://github.com/MasahiroNitta/yuimarl.git
+            p
+            p
+              | ※ Gitがインストールされていない環境では、上記Webページの「Clone or download」ボタンから、「Download ZIP」を選択すると、ZIPファイルをダウンロードすることができます。
+            hr
+            h3 更新履歴
+            ul
+              li
+                strong Version 170216
+                ul
+                  li
+                    | データベースのテーブル名を以下のように変更しました。
+                    ul
+                      li EVENT → YM_EVENT
+                      li EVENTSET → YM_EVENTSET
+                      li EVENTVIEW → YM_EVENTVIEW
+                      li EVENTVIEWSET → YM_EVENTVIEWSET
+                      li EVENTVIEW_SPREAD → YM_EVENTVIEW_SPREAD
+                      li GENERATED_ID → YM_GENERATED_ID
+                      li GOODS_CATEGORY → YM_GOODS_CATEGORY
+                      li ORG_CATEGORY → YM_ORG_CATEGORY
+                      li PARTY → YM_PARTY
+                      li PARTY_RELATION → YM_PARTY_RELATION
+                      li PREFECTURE → YM_PREFECTURE
+                      li YUIMARL_USER → YM_USER
+                  li
+                    | yuimarl-ejb/src/test/java/jp/yuimarl/ejb/YuimarlUserServiceBeanTest.java テストクラスを追加しました。テスト用の
+                    a(href="http://www.h2database.com/html/main.html" target="_blank") H2
+                    | インメモリデータベースを作成して、YuimarlUserServiceBeanのEJBをテストします。
+                  li
+                    | ビルド時に、
+                    a(href="http://checkstyle.sourceforge.net/" target="_blank") Checkstyle
+                    | と
+                    a(href="http://findbugs.sourceforge.net/" target="_blank") Findbugs
+                    | のチェックを行うようにしました。これでエラーが出た箇所を修正しました。
+              li
+                strong Version 161230
+                ul
+                  li 物品カテゴリー画面で、物品カテゴリーのツリーが表示されなくなっていた不具合を修正しました。
+              li
+                strong Version 161225
+                ul
+                  li jp.yuimarl.util.PageNavigationクラスを削除し、ページ遷移を変更しました。
+                  li  ユーザー認証を、管理画面で設定するレルム(Realm)で設定した内容で認証するように変更しました。レルムの設定方法は、環境構築のページを参照してください。
+              li
+                strong Version 150213
+                ul
+                  li
+                    | スマートフォン、タブレットなどの小さな画面で表示すると、自動的にレイアウトが変わるようにしました。（レスポンシブデザイン）
+                    br
+                    | これに伴い、jQuery Mobileの使用をやめました。
+                  li
+                    | 前バージョンまでは、人、組織、法人、物品のテーブルを分けていましたが、Partyテーブルのみに変更しました。
+                    br
+                    | Partyクラスの変更：
+                    br
+                    | (旧) @Inheritance(strategy = InheritanceType.JOINED)
+                    br
+                    | (新) @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+              li
+                strong Version 140927
+                ul
+                  li
+                    | 人/組織/物品、およびユーザーの削除を、物理削除から論理削除に変更しました。
+                    ul
+                      li 物理削除 ・・・ データベースのレコード自体を削除する。
+                      li
+                        | 論理削除 ・・・
+                        | レコードに削除フラグを定義し、削除フラグが'0'なら未削除、'1'なら削除済とする。（レコードの削除を行わない）
+                  li
+                    | スケジュール管理機能で使用するイベント用のクラスを追加しました。
+                    ul
+                      li Event : イベントクラス
+                      li Daily : 日イベントクラス
+                      li Weekly : 週イベントクラス
+                      li Monthly : 月イベントクラス
+                      li Yearly : 年イベントクラス
+                      li Holiday : 休日・記念日クラス
+                      li Task : タスククラス
+                    | 				現在は、スケジュール管理画面はありません。以下のEJBおよびテストクラスのみ作成済みです。
+                    ul
+                      li EventviewServiceBean : イベントビュー操作EJB
+                      li MonthlyCalendarBean : 月カレンダー操作EJB
+                      li EventviewServiceBeanTest : イベントビュー操作テストクラス
+                      li MonthlyCalendarBeanTest  : 月カレンダー操作テストクラス
+              li
+                strong Version 140829
+                ul
+                  li 人/組織/物品の情報画面で、開始年月日（生年月日等）、終了年月日の欄に、「平成○年」等の和暦年を表示するようにしました。
+                  li データの不整合が発生する可能性がある不具合を修正しました。（トランザクション処理の修正）
+                  li
+                    | yuimarl-lib
+                    | プロジェクトのビルド時に、「注釈処理で捕捉されない例外がスローされました。」というエラーが発生する不具合を修正しました。
+              li
+                strong Version 140822
+                ul
+                  li
+                    | プロジェクトの構成を変更しました。
+                    br
+                    | 				〔旧バージョン〕
+                    ul
+                      li yuimarl-common : EJBとライブラリ用のプロジェクト。
+                      li yuimarl-web : Web画面用のプロジェクト。
+                  | 				〔新バージョン〕
+                  ul
+                    li yuimarl-lib : 共通ライブラリ用のプロジェクト。
+                    li yuimarl-ejb : EJB用のプロジェクト。
+                    li yuimarl-web : Web画面用のプロジェクト。
+                    li yuimarl-ear : エンタープライズアプリケーション用のプロジェクト。
+                  | EJB(エンタープライズ JavaBeans) と Web の結合を弱めました（疎結合）。旧バージョンでは、WebプロジェクトのマネージドBean（画面の制御を行うクラス）から、直接 EJB を実行していました。これに対し、新バージョンでは、マネージドBean は、EJB
+                  | 				のインターフェースを使用するようにしました。
+                  br
+                  | 				たとえば、Party の検索・更新などを行う機能は、次のように分けました。
+                  ul
+                    li
+                      | PartyService :
+                      | 検索・更新などの関数を定義したインターフェース
+                    li PartyServiceBean : 上記の関数を実装したクラス
+                  | マネージドBeanでは PartyService
+                  | 				インターフェースを使用します。（実行時には、PartyServiceBean
+                  | 				のインスタンスが自動的にインジェクション(注入)されます。）
+                  br
+                  | 				これにより、EJB と Web の開発担当者を分けたり、EJB と Web を別サーバーに配置することなどが可能となります。
+                  br
+                  | 				また、エンタープライズアプリケーションに変更したことにより、開発環境で実行するのは yuimarl-ear
+                  | 				プロジェクトになり、サーバーにデプロイ（配置）するのは、yuimarl-ear 配下の EARファイルとなりました。
+                  br
+                  img(height="215" src="images/img100.png" width="419")
+                  li
+                    | EJBの単体テスト用プロジェクトを追加しました。
+                    ul
+                      li yuimarl-test-javadb : Java DB 用の単体テストプロジェクト。
+                      li yuimarl-test-mysql : MySQL 用の単体テストプロジェクト。
+                    | 				これは、開発時に EJB の JUnit
+                    | 				単体テストを実行するためのプロジェクトです。Web画面を使わなくても単体テストができますので、開発効率が上がりますし、EJB と
+                    | 				Web の分担にもつながります。
+                  li 数箇所の不具合を修正しました。
+              li
+                strong Version 140819
+                ul
+                  li Internet Explorer で正常に動作しなかった不具合を修正しました。
+              li
+                strong Version 140818
+                ul
+                  li
+                    | 開発環境で使用するデータベースとして、前バージョンまでは、MySQL を標準としていましたが、Java DB
+                    | を標準とするように変更しました。
+                    br
+                    | 				プロジェクト名を、以下のように変更しました。
+                    ul
+                      li yuimarl-db-setup  →  yuimarl-db-mysql-setup
+                      li yuimarl-db-init  →  yuimarl-db-mysql-init
+                      li yuimarl-db-export  →  yuimarl-db-mysql-export
+                    | 				以下のプロジェクトを追加しました。
+                  ul
+                    li yuimarl-db-javadb-setup
+                    li yuimarl-db-javadb-init
+                    li yuimarl-db-javadb-export
+                  li 関連一覧画面とユーザー一覧画面で、名前のリンクをクリックすると、詳細情報画面をポップアップで表示するようにしました。
+                  li
+                    | yuimarl-commonプロジェクト、jp.yuimarl.util.YuimarlUtil クラスの writeLog()
+                    | メソッドで、クライアントのIPアドレスを出力するようにしました。
+                  li 若干の不具合修正を行いました。
+              li
+                strong Version 140812
+                ul
+                  li
+                    | スマートフォン向けのページを追加しました。ログイン画面の「デバイス」で「Mobile」を選択してログインすると、スマートフォン向けの画面が表示されます。現在は、人/組織/物の検索・表示機能のみです。
+                  li
+                    | yuimarl-commonプロジェクトの jp.yuimarl.util.YuimarlUtil クラスに、writeLog()
+                    | メソッドを追加しました。このメソッドは、ログファイルにメッセージを出力するために使用します。出力されるログファイルは、glassfish/domains/domain1/logs/server.log
+                    | です。
+                  li
+                    | yuimarl-webプロジェクトの構成を変更しました。mainフォルダを追加し、index.xhtmlファイル等をこのフォルダに入れました。これによって、前バージョンで使用していたredirect.xhtmlファイルが不要となりました。
+                    br
+                    | 				また、前バージョンで使用していたcontractsフォルダを使用しないように変更しました。
+                  li 若干の不具合修正を行いました。
+              li
+                strong Version 140801
+                ul
+                  li
+                    | 新Yuimarl を公開しました。旧バージョンでは、Seasarプロジェクトの製品を主に使用していましたが、新バージョンでは、Seasarプロジェクトの使用をやめ、Java
+                    | EE 7を使用して、全面的に作り直しました。
+                  li 機能としては、人・組織・法人・物品の登録ができます。
+        .col
+          .submenu
+            h3 CONTENTS
+            ul
+              li
+                a(href="index.html") ホーム
+              li
+                a(href="https://mnitta220.github.io/") 新田システム事務所
+              li
+                a(href="https://github.com/mnitta220/nngb/") 脳内碁盤
+              li
+                a(href="https://mnitta220.github.io/bnan/") 文章暗記
+              li
+                a.current(href="index.html") Yuimarl
+                ul
+                  li
+                    a(href="devsetup.html") 開発環境構築(Windows)
+                  li
+                    a(href="devsetupMysql.html") 開発環境構築(MySQL)
+                  li
+                    a(href="devsetupMac.html") 開発環境構築(Mac)
+                  li
+                    a.current(href="download.html") ダウンロード
+                  li
+                    a(href="howtouse.html") 使い方
+                  li
+                    a(href="develop.html") 開発情報
+                  li
+                    a(href="deploy.html") 運用環境構築
+      .footer
+        p
+          a(href="https://mnitta220.github.io/privacy.html") プライバシー・ポリシー
+          br
+          | Copyright © 2020 Masahiro Nitta. All rights reserved.

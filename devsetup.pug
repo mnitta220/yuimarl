@@ -1,0 +1,559 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="UTF-8")
+    title 開発環境構築
+    meta(name="viewport" content="width=device-width")
+    meta(name="keywords" content="JavaEE,Java EE,JavaEE7,Java EE 7,NetBeans,Maven")
+    link(rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css")
+    link(rel="stylesheet" href="css/style.css")
+    //if lt IE 9
+      script(src="http://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv-printshiv.min.js")
+      script(src="http://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js")
+    //if lt IE 8
+    script(src="js/tagManager.js" type="text/javascript")
+  body#_top
+    .container
+      .header
+        .logoImg
+          h1
+            a(href="index.html")
+              img.logo(src="images/logo.gif" alt="Yuimarl" border="0")
+        .company 新田システム事務所
+      .menu
+        ul
+          li
+            a(href="index.html") ホーム
+      .cols
+        .col
+          .entry
+            .warning
+              | このページに書かれている内容は古い情報です。
+              br
+              | 現在、Yuimarlの新バージョンを開発中です。
+            h1
+              a(name="#screen")
+              | 開発環境構築(Windows)
+            p
+              | Yuimarlの標準的な開発環境構築について述べます。
+              br
+              | 		ここに書かれているのは、作者がWindows10（x64）のパソコン上で、この手順で開発環境を構築したということの紹介です。この通りでなくても開発することは可能です。
+            p
+              | ここでは、開発環境用のデータベースとして、
+              a(href="http://www.oracle.com/technetwork/jp/java/javadb/overview/index.html")
+                | Java
+                | DB
+              |  (
+              a(href="http://db.apache.org/derby/") Apache Derby
+              | )
+              | 		を使用した場合について記述しています。Java DB は、Java EE の開発環境に標準で付属しているので、基本的に、Java DB
+              | 		の使用を推奨いたします。
+              br
+              | 		何らかの理由で、Java DB ではなく、
+              a(href="http://www.mysql.com/") MySQL
+              | を使用したい場合は、このページに書かれた内容を、データベース関連以外について一通り実施してから、「
+              a(href="devsetupMysql.html") 開発環境構築（MySQL）
+              | 」を実施してください。
+            p
+              | Mac で開発を行う場合は、「
+              a(href="devsetupMac.html") 開発環境構築（Mac）
+              | 」をご覧ください。
+            hr
+            ul
+              li
+                a(href="##jdk") JDK8
+              li
+                a(href="##payara") Payaraのインストール
+              li
+                a(href="##netbeans") NetBeans IDE
+              li
+                a(href="##javadb") PayaraとJava DBの起動
+              li
+                a(href="##import") Yuimarlプロジェクトのインポート
+              li
+                a(href="##jdbc") JDBCの設定
+              li
+                a(href="##realm") Realmの設定
+              li
+                a(href="##exec") Yuimarlの実行
+            hr
+            h3
+              a(name="#jdk") JDK8
+            p
+              | Javaの開発環境であるJava Platform, Standard Edition Development Kit
+              | (JDK)をインストールします。
+            ol
+              li
+                | JDK8のダウンロードサイトにアクセスします。
+                br
+                .box1
+                  a(href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html")
+                    | http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+                br
+                img(src="images/image01.png")
+                br
+              li
+                | 「Accept License
+                | Agreement」をチェックし、「jdk-8u102-windows-x64.exe」（32bit版OSの場合は「jdk-8u102-windows-i586.exe」）のリンクをクリックしてダウンロードします。
+                br
+                | 			（この執筆時点では、「8u102」が最新版でしたが、最新版が変わっていれば、その最新版をダウンロードしてください。）
+              li
+                | ダウンロードした「jdk-8u102-windows-x64.exe」を実行します。
+                br
+                | 			インストール先は「C:\jdk1.8.0_102\」に変更します。
+                br
+                img(src="images/image02.png")
+              li
+                | 「Javaセットアップ - コピー先フォルダ」は、そのままで「次」ボタンを押します。
+                br
+                | 			「完了」画面が表示されたら、「閉じる」ボタンで終了します。
+              li
+                | 「コントロールパネル」を開き（Windows10の場合はスタートボタンを右クリックして「コントロールパネル」）、「システムとセキュリティ」-「システム」-「システムの詳細設定」とたどり、「システムのプロパティ」ダイアログの「詳細設定」タブで、「環境変数」ボタンを押します。
+                br
+                img(src="images/image03.png")
+              li
+                | 「環境変数」ダイアログで、「システム環境変数」の下にある「新規」ボタンを押し、「新しいシステム変数」ダイアログで、「変数名」に「JAVA_HOME」、「変数値」に「C:\jdk1.8.0_102」と入力し、「OK」ボタンを押します。
+                br
+                img(src="images/image04.png")
+              li
+                | 「システム環境変数」の一覧から、変数が「Path」となっている行を選択し、「編集」ボタンを押します。「環境変数名の編集」画面で「新規」ボタンを押し、「%JAVA_HOME%\bin」を追加し、「OK」ボタンをクリックします。
+                br
+                | 			「環境変数」ダイアログを「OK」ボタンを押して閉じます。
+                br
+                img(src="images/image05.png")
+              li
+                | コマンドプロンプトで
+                br
+                | 						java -version
+                br
+                | 			を実行し、Javaのバージョンが「1.8.0_102」と表示されることを確認します。
+                br
+                img(src="images/image06.png")
+            hr
+            h3
+              a(name="#payara") Payaraのインストール
+            ol
+              li
+                | Payara Serverのダウンロードサイトにアクセスします。
+                br
+                a(href="http://www.payara.fish/downloads")
+                  | http://www.payara.fish/downloads
+                br
+                | 			「Payara Server Full 162 Download」ボタンをクリックして、ダウンロードを実行します。
+                br
+                img(src="images/img116.png")
+              li ダウンロードした payara-4.1.1.162.zip を解凍します。
+              li 解凍して作成された payara41 フォルダを、C:\payara41 に移動します。
+            hr
+            h3
+              a(name="#netbeans") NetBeans IDE
+            p
+              a(href="https://netbeans.org/") NetBeans IDE
+              | は、Javaの開発環境です。Java
+              | 		EEの開発に便利な機能を提供してくれます。以下の手順でインストールします。
+            ol
+              li
+                | NetBeansのページにアクセスし、「Download」ボタンをクリックします。
+                br
+                a(href="http://netbeans.org/") http://netbeans.org/
+                br
+                br
+                img(src="images/image18.png")
+              li 「Java EE」の「ダウンロード」ボタンを押してダウンロードを行います。
+              li ダウンロードされた「netbeans-8.1-javaee-windows.exe」を実行します。
+              li
+                | インストーラが起動したら、「GlassFish Server Open Source Edition
+                | 4.1.1」のチェックを外し、「次」ボタンを押します。
+                br
+                img(src="images/image19.png")
+              li 「ライセンス契約」画面で、「ライセンス契約条件に同意する」をチェックし、「次」ボタンを押します。
+              li 「NetBeans IDE 8.1のインストール」画面はデフォルトのままで、「次」ボタンを押します。
+              li 「サマリー」画面で「インストール」ボタンを押します。
+              li
+                | 「スタート」-「すべてのプログラム」-「NetBeans」-「NetBeans IDE
+                | 8.1」とたどって、NetBeansを起動します。
+              li 「ツール」-「サーバー」を選択します。
+              li
+                | 「サーバー」画面で「サーバーの追加」ボタンを押します。
+                br
+                img(src="images/image20.png")
+              li 「サーバー・インスタンスの追加」画面で、「GlassFish Server」を選択し、「次」ボタンを押します。
+              li
+                | 「サーバーの場所」で「C:\payara41」を選択し、「次」ボタンを押します。
+                br
+                img(src="images/img126.png")
+              li 「ドメインの場所」はデフォルトのままで「終了」ボタンを押します。
+              li 「サーバー」画面を「閉じる」ボタンを押して閉じます。
+            hr
+            h3
+              a(name="#javadb") PayaraとJava DBの起動
+            ol
+              li
+                | 初回のみ、以下のように Java DB の初期設定を行います。
+                ol
+                  li
+                    | テキストエディタで、次のファイルを開きます。
+                    br
+                    | 				C:\jdk1.8.0_102\jre\lib\security\java.policy
+                  li
+                    | 次の行が存在することを確認します。
+                    br
+                    | 				permission java.net.SocketPermission "localhost:0", "listen";
+                  li
+                    | この行の下に、次の行を追加します。
+                    br
+                    | 				permission java.net.SocketPermission "localhost:1527", "listen";
+                  li java.policy ファイルを保存して、テキストエディタを終了します。
+              li
+                | Payara と Java DB
+                | を起動するバッチファイルを作成し、そのファイルをダブルクリックして起動するようにすると便利です。
+                br
+                | 			起動バッチファイルの例：
+                br
+                | 			ファイル名 startserver.bat
+                .box1
+                  | cd C:\payara41\bin
+                  br
+                  | 				echo start-database
+                  br
+                  | 				call asadmin.bat start-database
+                  span.style3
+                    | ← Java DB
+                    | を起動
+                  br
+                  | 				echo start-server
+                  br
+                  | 				call asadmin.bat start-domain domain1
+                  span.style3
+                    | ←
+                    | Payara を起動
+                  br
+                  | 				echo done.
+              li
+                | 同様に、Payara と Java DB
+                | を停止するバッチファイルを作成し、そのファイルをダブルクリックして停止するようにすると便利です。
+                br
+                | 			起動バッチファイルの例：
+                br
+                | 			ファイル名 stopserver.bat
+                .box1
+                  | cd C:\payara41\bin
+                  br
+                  | 				echo stop-domain
+                  br
+                  | 				call asadmin.bat stop-domain domain1
+                  span.style3
+                    | ←
+                    | Payara を停止
+                  br
+                  | 				echo stop-database
+                  br
+                  | 				call asadmin.bat stop-database
+                  span.style3
+                    | ← Java DB
+                    | を停止
+                  br
+                  | 				echo done.
+            hr
+            h3
+              a(name="#import") Yuimarlプロジェクトのインポート
+            ol
+              li
+                a(href="download.html") ダウンロードページ
+                | から、YuimarlプロジェクトのZIP形式圧縮ファイルをダウンロードします。
+              li
+                | 旧バージョンのYuimarlプロジェクトがすでにインポートされている場合は、次の手順で削除します。
+                ul
+                  li
+                    | NetBeansでYuimarlのプロジェクトを１つずつ選択し、右クリックで表示されたポップアップメニューから、「閉じる」を選択し、すべてのプロジェクトを閉じます。
+                  li
+                    | エクスプローラで、「ドキュメント」-「NetBeansProjects」の下にある、「yuimarl」フォルダを削除します。
+              li NetBeansの「ファイル」メニューから、「プロジェクトをインポート」-「ZIPから」を選択します。
+              li
+                | 「プロジェクトをZIPからインポート」画面で、ダウンロードしたZIPファイルを選択し、「インポート」ボタンを押します。
+                br
+                img(src="images/image23.png")
+              li
+                | Java DBが起動していなければ、起動を行います。（上記参照）
+              li
+                | 「yuimarl-db-javadb-setup」プロジェクトを右クリックし、ポップアップメニューから「ビルド」を選択します。
+                br
+                | 			出力欄に、「BUILD SUCCESS」と表示されれば、ビルドが成功です。
+                br
+                ul
+                  li
+                    | このビルドを実行すると、「yuimarl-db-javadb-setup」プロジェクトの「build.xml」ファイルにある、「createJavaDB」（テーブル作成）と「importInitData」（データ投入）のAntタスクが実行されます。
+                    br
+                    | 				（「ファイル」タブでファイルを見ることができます。）
+                  li
+                    | 「createJavaDB」で作成されるテーブルの定義は、「yuimarl-db-javadb-setup」-「sql」-「YUIMARL_JavaDB_DDL.sql」ファイルにあります。
+                  li
+                    | 「importInitData」で作成されるデータは、「yuimarl-db-javadb-setup」-「xml」-「YUIMARL_DB_INIT_DATA.xml」ファイルが読み込まれます。このデータ投入には、
+                    a(href="http://www.dbunit.org/") DbUnit
+                    | が使用されています。
+                  li
+                    | [データの確認方法]
+                    br
+                    | 投入されたデータの中身を確認するためには、コマンドプロンプトで、以下のように入力します。（赤文字が入力するコマンドです。）
+                    .box1
+                      | C:\Users\masan>
+                      span.style4
+                        | java -jar
+                        | C:\payara41\javadb\lib\derbyrun.jar ij
+                      span.style3
+                        | ←
+                        | 起動コマンド
+                      br
+                      | 					ij バージョン 10.10
+                      br
+                      | 					ij>
+                      span.style4 CONNECT 'jdbc:derby://localhost:1527/yuimarl';
+                      span.style3
+                        | ←
+                        | yuimarl データベースに接続
+                      br
+                      | 					ij>
+                      span.style4 select * from PARTY;
+                      span.style3
+                        | ←
+                        | PARTYテーブルの中身を確認する場合
+                      br
+                      | 					ij>
+                      span.style4 exit;
+                      span.style3 ← 終了
+                br
+                img(src="images/image76.png")
+              li
+                | 「yuimarl-lib」プロジェクトを右クリックし、ポップアップメニューから「ビルド」を選択します。
+                br
+                | 			出力欄に、「BUILD SUCCESS」と表示されれば、ビルドが成功です。
+              li
+                | 「yuimarl-ejb」プロジェクトを右クリックし、ポップアップメニューから「ビルド」を選択します。
+                br
+                | 出力欄に、「BUILD SUCCESS」と表示されれば、ビルドが成功です。
+              li
+                | 「yuimarl-web」プロジェクトを右クリックし、ポップアップメニューから「ビルド」を選択します。
+                br
+                | 			出力欄に、「BUILD SUCCESS」と表示されれば、ビルドが成功です。
+              li
+                | 「yuimarl-ear」プロジェクトを右クリックし、ポップアップメニューから「ビルド」を選択します。
+                br
+                | 			出力欄に、「BUILD SUCCESS」と表示されれば、ビルドが成功です。
+                br
+                img(src="images/img100.png")
+              li
+                | CSSファイルの解析でエラーとなっている箇所があれば、そのファイルを開き、赤いマークをクリックします。ポップアップから、「予期しないトークン・・・が見つかりました。CSS解析エラーのフィルタ処理」をクリックすると、エラーが消えます。
+                br
+                img(src="images/image75.png")
+            hr
+            h3
+              a(name="#jdbc") JDBCの設定
+            p Payaraの管理画面で、Java DBデータベースへの接続のためのJDBC接続の設定を行います。
+            ol
+              li
+                | Payaraサーバーが起動していなければ、上記の方法で起動します。
+              li
+                | ブラウザで
+                br(style="color: rgb(0, 0, 0); font-family: 'MS PGothic'; font-size: 13px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);")
+                a(href="http://localhost:4848/" style="color: blue; font-family: 'MS PGothic'; font-size: 13px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);")
+                  | http://localhost:4848/
+                br(style="color: rgb(0, 0, 0); font-family: 'MS PGothic'; font-size: 13px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255);")
+                | 			にアクセスし、管理画面を起動します。
+              li
+                | 管理画面の左側のツリーから、「Resources」-「JDBC」-「JDBC Connection Pools」を選択します。
+                br
+                | 			「JDBC Connection Pools」画面で「New」ボタンを押します。
+                br
+                img(src="images/img127.png")
+              li
+                | 「New JDBC Connection Pool (Step 1 of 2)」画面で、次のように入力・選択します。
+                br
+                table.tb1(cellpadding="3")
+                  tr
+                    th 名前
+                    th 値
+                  tr
+                    td Pool Name
+                    td YuimarlPool
+                  tr
+                    td Resource Type
+                    td javax.sql.DataSource
+                  tr
+                    td Database Driver Vendor
+                    td JavaDB
+                img(src="images/img128.png")
+                br
+                br
+                | 			「Next」ボタンを押します。
+              li
+                | 「New JDBC Connection Pool (Step 2 of 2)」画面の「Additional Properties」で、以下の値を設定します。（下記以外は変更しない）
+                br
+                table.tb1(cellpadding="3")
+                  tr
+                    th 名前
+                    th 値
+                  tr
+                    td User
+                    td APP
+                  tr
+                    td DatabaseName
+                    td yuimarl
+                  tr
+                    td ServerName
+                    td localhost
+                  tr
+                    td PortNumber
+                    td 1527
+                  tr
+                    td Password
+                    td APP
+                img(src="images/image78.png")
+                br
+                | 			「Finish」ボタンを押します。
+              li
+                | 管理画面の左側のツリーから、「Resources」-「JDBC」-「JDBC Resources」を選択します。
+                br
+                | 			「JDBC Resources」画面で「New」ボタンを押します。
+                br
+                img(src="images/img129.png")
+              li
+                | 「New JDBC Resource」画面で、次のように入力・選択します。
+                br
+                table.tb1(cellpadding="3")
+                  tr
+                    th 名前
+                    th 値
+                  tr
+                    td JNDI Name
+                    td jdbc/yuimarl
+                  tr
+                    td Pool Name
+                    td YuimarlPool
+                img(src="images/img130.png")
+                br
+                | 			「OK」ボタンを押します。
+            hr
+            h3
+              a(name="#realm") Realmの設定
+            p Payaraの管理画面で、ユーザー認証のための Realm（レルム）の設定を行います。
+            ol
+              li
+                | 管理画面の左側のツリーから、「Configurations」-「server-config」-「Security」-「Realms」を選択します。
+                br
+                | 			「Realms」画面で「New」ボタンを押します。
+                br
+                img(src="images/img131.png")
+              li
+                | 「New Realm」画面で、次のように入力・選択します。
+                br
+                table.tb1(cellpadding="3")
+                  tr
+                    th 名前
+                    th 値
+                  tr
+                    td Name
+                    td yuimarl-realm
+                  tr
+                    td Class Name
+                    td com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm
+                  tr
+                    td JAAS Context
+                    td jdbcRealm
+                  tr
+                    td JNDI
+                    td jdbc/yuimarl
+                  tr
+                    td User Table
+                    td YUIMARL_USER
+                  tr
+                    td User Name Column
+                    td USER_ID
+                  tr
+                    td Password Column
+                    td PASSWORD
+                  tr
+                    td Group Table
+                    td YUIMARL_USER
+                  tr
+                    td Group Table User Name Column
+                    td USER_ID
+                  tr
+                    td Group Name Column
+                    td ACCOUNT_GROUP
+                  tr
+                    td Password Encryption Algorithm
+                    td digest-algorithm
+                  tr
+                    td Digest Algorithm
+                    td SHA-256
+                  tr
+                    td Encoding
+                    td Hex
+                img(src="images/img132.png")
+                br
+                br
+                | 			「OK」ボタンを押します。
+            hr
+            h3
+              a(name="#exec") Yuimarlの実行
+            ol
+              li
+                | Java DB と
+                | Payara が起動していなければ、起動を行います。
+              li
+                | NetBeans IDEで、「
+                strong yuimarl-ear
+                | 」プロジェクトを選択して右クリックします。ポップアップメニューから「実行」を選択します。
+                br
+                | または、Webブラウザを起動し、次のアドレスを入力します。
+                br
+                a(href="http://localhost:8080/yuimarl-web/") http://localhost:8080/yuimarl-web/
+                br
+                br
+                | ログイン画面が表示されますので、ユーザーIDに「U00001」、パスワードに「test」と入力し、「ログイン」ボタンをクリックすると、メインメニュー画面が表示します。
+                br
+                img(src="images/image38.png")
+                br
+            hr
+            p
+              | 以上が、初期セットアップの手順です。通常の開発時には、以下の順に行います。
+              br
+              | 		Java DB起動 → Payara起動 → NetBeans起動 → Yuimarl実行 → NetBeans終了 → Payara停止 →
+              | 		Java DB停止
+            p
+              a(href="#_top") 先頭へ戻る
+              br
+        .col
+          .submenu
+            h3 CONTENTS
+            ul
+              li
+                a(href="index.html") ホーム
+              li
+                a(href="https://mnitta220.github.io/") 新田システム事務所
+              li
+                a(href="https://github.com/mnitta220/nngb/") 脳内碁盤
+              li
+                a(href="https://mnitta220.github.io/bnan/") 文章暗記
+              li
+                a.current(href="index.html") Yuimarl
+                ul
+                  li
+                    a.current(href="devsetup.html") 開発環境構築(Windows)
+                  li
+                    a(href="devsetupMysql.html") 開発環境構築(MySQL)
+                  li
+                    a(href="devsetupMac.html") 開発環境構築(Mac)
+                  li
+                    a(href="download.html") ダウンロード
+                  li
+                    a(href="howtouse.html") 使い方
+                  li
+                    a(href="develop.html") 開発情報
+                  li
+                    a(href="deploy.html") 運用環境構築
+      .footer
+        p
+          a(href="https://mnitta220.github.io/privacy.html") プライバシー・ポリシー
+          br
+          | Copyright © 2020 Masahiro Nitta. All rights reserved.

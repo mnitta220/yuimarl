@@ -1,0 +1,603 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="UTF-8")
+    title 使い方
+    meta(name="viewport" content="width=device-width")
+    link(rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css")
+    link(rel="stylesheet" href="css/style.css")
+    //if lt IE 9
+      script(src="http://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv-printshiv.min.js")
+      script(src="http://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js")
+    //if lt IE 8
+    script(src="js/tagManager.js" type="text/javascript")
+  body#_top
+    .container
+      .header
+        .logoImg
+          h1
+            a(href="index.html")
+              img.logo(src="images/logo.gif" alt="Yuimarl" border="0")
+        .company 新田システム事務所
+      .menu
+        ul
+          li
+            a(href="index.html") ホーム
+      .cols
+        .col
+          .entry
+            .warning
+              | このページに書かれている内容は古い情報です。
+              br
+              | 現在、Yuimarlの新バージョンを開発中です。
+            h1
+              a(name="#screen")
+              | 使い方
+            p Yuimarl を使用する方法について記述します。
+            hr
+            ul
+              li
+                a(href="##browser") Webブラウザ
+              li
+                a(href="##login") ログイン
+              li
+                a(href="##logout") ログアウト
+              li
+                a(href="##list") 人/組織/物の一覧
+              li
+                a(href="##person") 人の登録
+              li
+                a(href="##org") 組織の登録
+              li
+                a(href="##company") 法人の登録
+              li
+                a(href="##goods") 物品の登録
+              li
+                a(href="##rellist") 関連の一覧
+              li
+                a(href="##relreg") 関連の登録
+            hr
+            h3
+              a(name="#browser") Webブラウザ
+            p
+              | Yuimarl を使用するためには、パソコン用のWebブラウザが必要です。 HTML5、XHTML、JavaScript、CSS
+              | に対応した最新のWebブラウザをご使用ください。古いバージョンのWebブラウザでは動作しないことがあります。また、JavaScriptの作動を許可するように設定してください。
+            h4 動作確認済みのWebブラウザ
+            ul
+              li Mozilla Firefox 31.0
+              li Google Chrome 36.0
+              li Safari 7.0.6
+              li Internet Explorer 11.0
+            hr
+            h3
+              a(name="#login") ログイン
+            p Yuimarl にログインするための手順は、以下の通りです。
+            ol
+              li Webブラウザを起動します。
+              li Yuimarl のアドレスを入力してアクセスします。
+              li
+                | ログイン画面が表示されるので、ユーザーIDとパスワードを入力して「ログイン」ボタンをクリックします。
+                br
+                | 			「デバイス」で「Mobile」を選択すると、スマートフォン向けの画面となります。（現在は、人/組織/物の検索・表示機能のみです。）
+                br
+                img(height="426" src="images/image38.png" width="600")
+                br
+                | 			サンプル用のユーザーID、パスワードは以下の通りです。
+                br
+                table.tb1
+                  tr
+                    th ユーザーID
+                    th パスワード
+                    th 説明
+                  tr
+                    td U00001
+                    td test
+                    td すべての権限を持つシステム管理者。ユーザーを登録する権限を持つ。
+                  tr
+                    td U00002
+                    td test
+                    td 人/組織/物の参照権限を持つ一般ユーザー。
+                  tr
+                    td U00003
+                    td test
+                    td 何も権限を持たないユーザー。
+              li
+                | ログイン認証がOKならば、メインメニュー画面が表示されます。
+                br
+                img(height="460" src="images/image39.png" width="600")
+            h4 セッションタイムアウト
+            p
+              | 一定時間（初期設定では30分間）操作が行われないと、セッションタイムアウトとなります。セッションタイムアウトになった後で、何らかの操作を行うと、エラー画面が表示されます。
+              br
+              | 		データ登録画面で入力に時間が掛かると、タイムアウトになって、せっかく入力したのが無駄になるということがありますので、ご注意ください。
+            hr
+            h3
+              a(name="#logout") ログアウト
+            p Yuimarl からログアウトするための手順は、以下の通りです。
+            ol
+              li 画面右上にある「ログアウト」というリンクをクリックします。
+              li
+                | ブラウザを終了させます。
+                br
+                | 			（なお、1.を省いてブラウザを終了させても、特に問題はありません。）
+                br
+            hr
+            h3
+              a(name="#list") 人/組織/物の一覧
+            p
+              | メインメニュー画面で「人/組織/物」の枠内にある「一覧」をクリックするか、画面左にある青いメニューで、「人/組織/物」の下にある「一覧」をクリックすると、人、組織、物の一覧を表示する画面が表示されます。
+              br
+              | 		この画面では、条件を指定して検索を行うことができます。
+            h4 条件検索
+            p
+              | 人/組織/物を条件検索するには、検索条件欄に検索条件を入力して「検索」ボタンをクリックします。
+              br
+              img(height="202" src="images/image40.png" width="390")
+            table.tb1(cellpadding="3")
+              tr
+                td.style2(style="width: 80px" valign="top") Party No.
+                td.style2
+                  | Yuimarl に登録されたすべての 人/組織/物 には、「Party
+                  | No.」という識別番号が付与されます。検索したい「Party No.」がわかっている場合は、ここに入力します。
+              tr
+                td.style2(valign="top") 名前
+                td.style2
+                  | 人/組織/物を名前で検索したい場合は、ここに入力します。検索は部分一致で行われます。たとえば、「会社」と入力すれば、名前に「会社」という文字が含まれるすべての人/組織/物が選択されます。
+              tr
+                td.style2(valign="top") 種別
+                td.style2
+                  | 人を検索対象とする場合は「人」にチェックを付けます。組織を検索対象とする場合は「組織」にチェックを付けます。法人を検索対象とする場合は「法人」にチェックを付けます。物品を検索対象とする場合は「物品」にチェックを付けます。
+                  br
+                  | 				どこにもチェックを付けないと、すべての種別が検索対象となります。
+            h4 一覧
+            p
+              | 検索結果一覧に表示される項目の説明は以下の通りです。
+              br
+              img(height="118" src="images/image41.png" width="420")
+            table.tb1(cellpadding="3")
+              tr
+                td.style2(style="width: 80px" valign="top") No.
+                td.style2 対象データの「Party No.」が表示されます。
+              tr
+                td.style2(valign="top") 名前
+                td.style2 対象データの名前が表示されます。
+              tr
+                td.style2(valign="top") 都道府県
+                td.style2 対象データの都道府県が表示されます。
+              tr
+                td.style2(valign="top") 市区町村
+                td.style2 対象データの市区町村が表示されます。
+              tr
+                td.style2(valign="top") 種別
+                td.style2 対象データの種別が表示されます。
+              tr
+                td.style2(valign="top") 照会
+                td.style2 クリックすると、対象データの詳細情報画面に遷移します。
+              tr
+                td.style2(valign="top") 編集
+                td.style2 クリックすると、対象データの編集画面に遷移します。
+              tr
+                td.style2(valign="top") 削除
+                td.style2 クリックすると、対象データの削除確認メッセージが表示されます。
+              tr
+                td.style2(valign="top") 関連
+                td.style2 クリックすると、対象データに関連付けられている人/組織/物の一覧画面に遷移します。
+            h4 ページ遷移
+            p
+              | 検索結果のレコード数が20件を超えると、一覧の下にページ遷移用のリンクが表示されます。
+              br
+              img(height="31" src="images/image42.png" width="176")
+            table.tb1(cellpadding="3")
+              tr
+                td.style6(style="width: 80px" valign="top") <<
+                td.style2 クリックすると、先頭のページに遷移します。
+              tr
+                td.style6(style="width: 80px" valign="top") <
+                td.style2 クリックすると、前のページに遷移します。
+              tr
+                td.style6(style="width: 80px" valign="top") 番号
+                td.style2 クリックすると、その番号のページに遷移します。
+              tr
+                td.style6(style="width: 80px" valign="top") >
+                td.style2 クリックすると、次のページに遷移します。
+              tr
+                td.style6(style="width: 80px" valign="top") >>
+                td.style2 クリックすると、最後のページに遷移します。
+            p  
+            hr
+            h3
+              a(name="#person") 人の登録
+            p
+              | メインメニュー画面で「人を登録する」をクリックするか、画面左にある青いメニューで、「人を登録」をクリックすると、人を登録する画面が表示されます。
+              br
+              img(height="732" src="images/image43.png" width="600")
+            table.tb1(cellpadding="3")
+              tr
+                td.style2(style="width: 80px" valign="top") 姓
+                td.style2 姓を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 名
+                td.style2 名を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 姓よみ
+                td.style2 姓の読みを入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 名よみ
+                td.style2 名の読みを入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 性別
+                td.style2 性別を選択します。
+              tr
+                td.style2(style="width: 80px" valign="top") 郵便番号
+                td.style2 郵便番号を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 都道府県
+                td.style2 都道府県を選択します。
+              tr
+                td.style2(style="width: 80px" valign="top") 市区町村
+                td.style2 市区町村を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 住所1
+                td.style2 住所を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 住所2
+                td.style2 住所1の追加情報を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 電話番号
+                td.style2 電話番号を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 携帯電話番号
+                td.style2 携帯電話番号を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") FAX番号
+                td.style2 FAX番号を入力します。
+              tr
+                td.style2(style="width: 100px" valign="top") メールアドレス1
+                td.style2 メールアドレスを入力します。
+              tr
+                td.style2(style="width: 100px" valign="top") メールアドレス2
+                td.style2 メールアドレス1以外にメールがある場合に入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 生年月日
+                td.style2 生年月日を YYYY/MM/DD 形式で入力します。日付入力画面が表示されるので、そこから選択することもできます。
+              tr
+                td.style2(style="width: 80px" valign="top") 死亡年月日
+                td.style2 この人がすでに死亡しており、その日付が分かる場合に入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") メモ
+                td.style2 この人に関する特記事項がある場合、「編集」ボタンをクリックするとメモ編集画面が表示されるので、そこで入力します。
+            p
+              | 入力したら「登録」ボタンをクリックします。
+            h4
+              | 日付入力画面
+            p
+              | 日付入力欄では、次のようにポップアップ表示されるので、ポップアップから年月日を指定することができます。
+              br
+              img(src="images/image44.png")
+            h4
+              | メモ入力画面
+            p
+              | メモ入力欄で「編集」ボタンをクリックするとメモ編集画面が表示されるので、そこで入力します。
+              br
+              | 		文字の大きさ、色などを指定することができます。
+              br
+              | 		入力が終わったら「OK」ボタンをクリックします。
+              br
+              img(src="images/image45.png")
+            hr
+            h3
+              a(name="#org") 組織の登録
+            p
+              | メインメニュー画面で「組織を登録する」をクリックするか、画面左にある青いメニューで、「組織を登録」をクリックすると、組織を登録する画面が表示されます。
+              br
+              img(src="images/image46.png")
+            table.tb1(cellpadding="3")
+              tr
+                td.style2(style="width: 80px" valign="top") 名前
+                td.style2 名前を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 名前よみ
+                td.style2 名前の読みを入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 郵便番号
+                td.style2 郵便番号を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 都道府県
+                td.style2 都道府県を選択します。
+              tr
+                td.style2(style="width: 80px" valign="top") 市区町村
+                td.style2 市区町村を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 住所1
+                td.style2 住所を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 住所2
+                td.style2 住所1の追加情報を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 電話番号
+                td.style2 電話番号を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") FAX番号
+                td.style2 FAX番号を入力します。
+              tr
+                td.style2(style="width: 100px" valign="top") メールアドレス1
+                td.style2 メールアドレスを入力します。
+              tr
+                td.style2(style="width: 100px" valign="top") メールアドレス2
+                td.style2 メールアドレス1以外にメールがある場合に入力します。
+              tr
+                td.style2(style="width: 100px" valign="top") 組織区分
+                td.style2 組織の区分を選択します。
+              tr
+                td.style2(style="width: 100px" valign="top") 所属者数
+                td.style2 所属者数を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 設立年月日
+                td.style2 組織が設立された年月日を YYYY/MM/DD 形式で入力します。日付入力画面が表示されるので、そこから選択することもできます。
+              tr
+                td.style2(style="width: 80px" valign="top") 廃止年月日
+                td.style2 この組織がすでに廃止されており、その日付が分かる場合に入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") メモ
+                td.style2 この組織に関する特記事項がある場合、「編集」ボタンをクリックするとメモ編集画面が表示されるので、そこで入力します。
+            p
+              | 入力したら「登録」ボタンをクリックします。
+            hr
+            h3
+              a(name="#company") 法人の登録
+            p
+              | メインメニュー画面で「法人を登録する」をクリックするか、画面左にある青いメニューで、「法人を登録」をクリックすると、法人を登録する画面が表示されます。
+              br
+              img(src="images/image47.png")
+            table.tb1(cellpadding="3")
+              tr
+                td.style2(style="width: 80px" valign="top") 名前
+                td.style2 名前を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 名前よみ
+                td.style2 名前の読みを入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 郵便番号
+                td.style2 郵便番号を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 都道府県
+                td.style2 都道府県を選択します。
+              tr
+                td.style2(style="width: 80px" valign="top") 市区町村
+                td.style2 市区町村を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 住所1
+                td.style2 住所を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 住所2
+                td.style2 住所1の追加情報を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 電話番号
+                td.style2 電話番号を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") FAX番号
+                td.style2 FAX番号を入力します。
+              tr
+                td.style2(style="width: 100px" valign="top") メールアドレス1
+                td.style2 メールアドレスを入力します。
+              tr
+                td.style2(style="width: 100px" valign="top") メールアドレス2
+                td.style2 メールアドレス1以外にメールがある場合に入力します。
+              tr
+                td.style2(style="width: 100px" valign="top") URL
+                td.style2 ホームページがある場合は、そのURL（アドレス）を入力します。
+              tr
+                td.style2(style="width: 100px" valign="top") 組織区分
+                td.style2 法人の区分を選択します。
+              tr
+                td.style2(style="width: 100px" valign="top") 所属者数
+                td.style2 所属者数を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 設立年月日
+                td.style2 法人が設立された年月日を YYYY/MM/DD 形式で入力します。日付入力画面が表示されるので、そこから選択することもできます。
+              tr
+                td.style2(style="width: 80px" valign="top") 廃止年月日
+                td.style2 この法人がすでに廃止されており、その日付が分かる場合に入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 資本金
+                td.style2 資本金を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 決算月
+                td.style2 決算月を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") メモ
+                td.style2 この法人に関する特記事項がある場合、「編集」ボタンをクリックするとメモ編集画面が表示されるので、そこで入力します。
+            p
+              | 入力したら「登録」ボタンをクリックします。
+            hr
+            h3
+              a(name="#goods") 物品の登録
+            p
+              | メインメニュー画面で「物品を登録する」をクリックするか、画面左にある青いメニューで、「物品を登録」をクリックすると、物品を登録する画面が表示されます。
+              br
+              img(src="images/image48.png")
+            table.tb1(cellpadding="3")
+              tr
+                td.style2(style="width: 80px" valign="top") 名前
+                td.style2 名前を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 名前よみ
+                td.style2 名前の読みを入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 郵便番号
+                td.style2 郵便番号を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 都道府県
+                td.style2 都道府県を選択します。
+              tr
+                td.style2(style="width: 80px" valign="top") 市区町村
+                td.style2 市区町村を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 住所1
+                td.style2 所在地を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 住所2
+                td.style2 住所1の追加情報を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 電話番号
+                td.style2 電話番号を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") FAX番号
+                td.style2 FAX番号を入力します。
+              tr
+                td.style2(style="width: 100px" valign="top") メールアドレス1
+                td.style2 メールアドレスを入力します。
+              tr
+                td.style2(style="width: 100px" valign="top") メールアドレス2
+                td.style2 メールアドレス1以外にメールがある場合に入力します。
+              tr
+                td.style2(style="width: 100px" valign="top") カテゴリー
+                td.style2
+                  | 「選択」ボタンをクリックすると、物品のカテゴリーが階層構造で表示されるので、その中から選択します。
+              tr
+                td.style2(style="width: 80px" valign="top") 開始年月日
+                td.style2 物品の使用開始日などを YYYY/MM/DD 形式で入力します。日付入力画面が表示されるので、そこから選択することもできます。
+              tr
+                td.style2(style="width: 80px" valign="top") 終了年月日
+                td.style2 物品の使用終了日などを入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") メモ
+                td.style2 この物品に関する特記事項がある場合、「編集」ボタンをクリックするとメモ編集画面が表示されるので、そこで入力します。
+            p
+              | 入力したら「登録」ボタンをクリックします。
+            hr
+            h3
+              a(name="#rellist") 関連の一覧
+            p
+              | 人/組織/物の一覧画面で、「関連」をクリックすると、その関連情報を一覧する画面が表示されます。
+              br
+              | 		関連とは、２者間の関係性のことをいいます。たとえば、AさんとBさんは親子である、CさんはD社の社員である、EビルディングはF社が所有している、などの関係を関連として登録します。
+              br
+              | 		関連の一方を「Party1」、もう一方を「Party2」として扱います。
+              br
+              img(src="images/image49.png")
+            p
+              | 一覧に表示される項目の説明は以下の通りです。
+            table.tb1(cellpadding="3")
+              tr
+                td.style2(style="width: 80px" valign="top") 関連No.
+                td.style2 それぞれの関連は「関連No.」で識別されており、その番号が表示されます。
+              tr
+                td.style2(valign="top" style="width: 110px")
+                  | 種別
+                  | （[1]←→[2]）
+                td.style2
+                  | [1]はParty1、[2]はParty2を表します。その種別を表示します。
+                  br
+                  | 				たとえば、「勤務先←→勤務者」と表示されていれば、Party1が勤務先で、Party2が勤務者です。
+              tr
+                td.style2(valign="top") [1] No.
+                td.style2 Party1のParty No.（識別番号）が表示されます。
+              tr
+                td.style2(valign="top") [1] 名前
+                td.style2
+                  | Party1の名前が表示されます。
+                  br
+                  | 				リンクをクリックすると、ポップアップで詳細情報画面が表示されます。
+              tr
+                td.style2(valign="top") [1] 役割
+                td.style2 この関連におけるParty1の役割が表示されます。
+              tr
+                td.style2(valign="top") [2] No.
+                td.style2 Party2のParty No.（識別番号）が表示されます。
+              tr
+                td.style2(valign="top") [2] 名前
+                td.style2
+                  | Party2の名前が表示されます。
+                  br
+                  | 				リンクをクリックすると、ポップアップで詳細情報画面が表示されます。
+              tr
+                td.style2(valign="top") [2] 役割
+                td.style2 この関連におけるParty2の役割が表示されます。
+              tr
+                td.style2(valign="top") 開始日
+                td.style2 関連の開始日が表示されます。
+              tr
+                td.style2(valign="top") 終了日
+                td.style2 関連の終了日が表示されます。
+              tr
+                td.style2(valign="top") 編集
+                td.style2 クリックすると、関連の編集画面に遷移します。
+              tr
+                td.style2(valign="top") 削除
+                td.style2 クリックすると、関連の削除を行います。
+            p  
+            hr
+            h3
+              a(name="#relreg") 関連の登録
+            p
+              | 関連一覧画面で「登録」ボタンをクリックすると、関連を登録する画面が表示されます。
+              br
+              img(src="images/image50.png")
+            table.tb1(cellpadding="3")
+              tr
+                td.style2(style="width: 80px" valign="top") 関連種別
+                td.style2 関連種別を選択します。
+              tr
+                td.style2(style="width: 80px" valign="top") Party1: No.
+                td.style2
+                  | Party1のParty No.（識別番号）を入力します。
+                  br
+                  | 				「検索」ボタンをクリックすると、該当する「名前」がセットされます。
+              tr
+                td.style2(style="width: 80px" valign="top") Party1: 役割
+                td.style2 関連におけるParty1の役割を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") Party2: No.
+                td.style2
+                  | Party2のParty No.（識別番号）を入力します。
+                  br
+                  | 				「検索」ボタンをクリックすると、該当する「名前」がセットされます。
+              tr
+                td.style2(style="width: 80px" valign="top") Party2: 役割
+                td.style2 関連におけるParty2の役割を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 開始日
+                td.style2 関連の開始日を入力します。
+              tr
+                td.style2(style="width: 80px" valign="top") 終了日
+                td.style2 関連の終了日を入力します。
+            p
+              | 入力したら「登録」ボタンをクリックします。
+            p
+              a(href="##_top") 先頭へ戻る
+              br
+        .col
+          .submenu
+            h3 CONTENTS
+            ul
+              li
+                a(href="index.html") ホーム
+              li
+                a(href="https://mnitta220.github.io/") 新田システム事務所
+              li
+                a(href="https://github.com/mnitta220/nngb/") 脳内碁盤
+              li
+                a(href="https://mnitta220.github.io/bnan/") 文章暗記
+              li
+                a.current(href="index.html") Yuimarl
+                ul
+                  li
+                    a(href="devsetup.html") 開発環境構築(Windows)
+                  li
+                    a(href="devsetupMysql.html") 開発環境構築(MySQL)
+                  li
+                    a(href="devsetupMac.html") 開発環境構築(Mac)
+                  li
+                    a(href="download.html") ダウンロード
+                  li
+                    a.current(href="howtouse.html") 使い方
+                  li
+                    a(href="develop.html") 開発情報
+                  li
+                    a(href="deploy.html") 運用環境構築
+      .footer
+        p
+          a(href="https://mnitta220.github.io/privacy.html") プライバシー・ポリシー
+          br
+          | Copyright © 2020 Masahiro Nitta. All rights reserved.

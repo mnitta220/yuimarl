@@ -1,0 +1,1316 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="UTF-8")
+    title 運用環境構築
+    meta(name="viewport" content="width=device-width")
+    meta(name="keywords" content="Google Compute Engine,GCE,debian,JavaEE7,Payara")
+    link(rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css")
+    link(rel="stylesheet" href="css/style.css")
+    //if lt IE 9
+      script(src="http://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv-printshiv.min.js")
+      script(src="http://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js")
+    script(src="js/tagManager.js" type="text/javascript")
+  body#_top
+    .container
+      .header
+        .logoImg
+          h1
+            a(href="index.html")
+              img.logo(src="images/logo.gif" alt="Yuimarl" border="0")
+        .company 新田システム事務所
+      .menu
+        ul
+          li
+            a(href="index.html") ホーム
+      .cols
+        .col
+          .entry
+            .warning
+              | このページに書かれている内容は古い情報です。
+              br
+              | 現在、Yuimarlの新バージョンを開発中です。
+            h1
+              a(name="#screen")
+              | 運用環境構築
+            p
+              | Yuimarl の運用環境を、Amazonが提供する
+              a(href="https://aws.amazon.com/jp/") Amazon Web Services
+              | のクラウド環境である「EC2」の仮想サーバー上に構築する方法について記述します。ここでは、EC2上でのOSとして、Linuxディストリビューションの１つである
+              a(href="http://www.ubuntu.com/") Ubuntu
+              |  を使用します。
+              br
+              | 		ここで記述する例は、以下の環境とします。他の環境に構築する場合は、適宜、読み換えてください。
+            table(border="1")
+              tr
+                td.style7 クラウド環境
+                td
+                  a(href="https://aws.amazon.com/jp/") Amazon EC2
+              tr
+                td.style7 OS
+                td
+                  a(href="http://www.ubuntu.com/") Ubuntu
+              tr
+                td.style7 Java開発環境
+                td JDK 1.8
+              tr
+                td.style7 Java EE 7 アプリケーションサーバー
+                td
+                  a(href="http://www.payara.fish/") Payara
+              tr
+                td.style7 データベース
+                td
+                  a(href="http://www.mysql.com/") MySQL
+              tr
+                td.style7 ビルドツール
+                td
+                  a(href="http://maven.apache.org/") Apache Maven
+              tr
+                td.style7 SSH接続クライアント
+                td
+                  a(href="http://ttssh2.sourceforge.jp/") Tera Term
+            br
+            p
+              | ※ 以下の説明では、
+              span.style4 赤字
+              | の部分が入力する文字です。
+              span.style3 緑色
+              | の文字は説明で、入力しません。
+            hr
+            ul
+              li
+                a(href="##teraterm") Tera Termのインストール
+              li
+                a(href="##ec2") Amazon EC2 仮想サーバーの構築
+              li
+                a(href="##ssh") Tera TermからのSSH接続
+              li
+                a(href="##ssl") SSL証明書の作成と登録
+              li
+                a(href="##mysql") MySQLのインストール
+              li
+                a(href="##jdk") Java開発・実行環境のインストール
+              li
+                a(href="##payara") Payaraのインストール
+              li
+                a(href="##setup") Yuimarlプロジェクトのセットアップ
+              li
+                a(href="##jdbc") JDBCの設定
+              li
+                a(href="##realm") Realmの設定
+              li
+                a(href="##deploy") アプリケーションのデプロイ
+              li
+                a(href="##auto") Payara自動起動の設定
+            hr
+            h3
+              a(name="#teraterm") Tera Termのインストール
+            p
+              | Tera Termは、Windows用のターミナルエミュレータです。Amazon EC2のサーバーにSSH（Secure
+              | Shell）で接続するために使用します。Tera
+              | Term以外のターミナルエミュレータでも可能ですが、その場合は、RSA暗号によるSSH接続に対応したものをお使いください。
+            ol
+              li
+                | 次のTera Termのダウンロードサイトにアクセスします。
+                br
+                a(href="http://sourceforge.jp/projects/ttssh2/releases/")
+                  | http://sourceforge.jp/projects/ttssh2/releases/
+              li
+                | ダウンロードの一覧から、最新版のexeファイルを選択してダウンロードします。（執筆時点では、「teraterm-4.91.exe」）
+              li
+                | ダウンロードしたファイルを実行して、Tera Termのインストールを行います。
+                br
+                | 			「コンポーネントの選択」では、初期表示のままで「次へ」を押してください。
+                br
+                img(src="images/image55.png")
+            hr
+            h3
+              a(name="#ec2") Amazon EC2 仮想サーバーの構築
+            p Amazon Web ServicesのEC2で、仮想サーバーを作る方法を記述します。
+            ol
+              li
+                | Amazonのアカウントを持っていなければ、以下の手順で作成します。
+                ul
+                  li
+                    | Webブラウザで、Amazon Web Services のアドレスにアクセスします。
+                    br
+                    a(href="https://aws.amazon.com/jp/")
+                      | https://aws.amazon.com/jp/
+                  li
+                    | 「サインアップ」ボタンを押します。
+                    br
+                    img(src="images/image51.png")
+                  li
+                    | 「Eメールまたは携帯番号:」を入力し、「私は新規ユーザーです。」をチェックし、「サインイン」ボタンを押します。
+                    br
+                    img(src="images/img103.png")
+                  li 「ログイン認証情報」画面で名前、メールアドレス、パスワードを入力します。
+                  li 「連絡先情報」画面で連絡先情報を入力します。
+                  li 「支払情報」画面で支払情報を入力します。
+              li
+                | Amazon Web Services のページで、「コンソールへサインイン」ボタンを押します。
+                br
+                a(href="https://aws.amazon.com/jp/") https://aws.amazon.com/jp/
+                br
+                img(src="images/image51.png")
+              li サインイン画面でメールアドレスとパスワードを入力してサインインします。
+              li
+                | AWSマネジメントコンソール画面で、「EC2」をクリックします。
+                br
+                img(src="images/img104.png")
+              li
+                | 「EC2ダッシュボード」画面で「インスタンスの作成」ボタンを押します。
+                br
+                img(src="images/img105.png")
+              li
+                | 「ステップ 1: Amazon マシンイメージ（AMI）」画面で「Ubuntu Server 14.04 LTS (HVM), SSD Volume Type」の「選択」ボタンを押します。
+                br
+                img(src="images/img106.png")
+              li
+                | 「ステップ 2: インスタンスタイプの選択」画面で、初期状態のまま、「確認と作成」ボタンを押します。
+                br
+                img(src="images/img107.png")
+              li
+                | 「ステップ 7: インスタンス作成の確認」画面で、「セキュリティグループの編集」をクリックします。
+                br
+                img(src="images/img108.png")
+              li
+                | 「ステップ 6: セキュリティグループの設定」画面で、「HTTP」、「HTTPS」、「カスタムTCPルール」（ポート範囲：8080）、「SSH」を追加します。（「送信元」は「任意の場所」を選択）
+                br
+                img(src="images/img109.png")
+                br
+                | 「確認と作成」ボタンを押します。
+              li 「ステップ 7: インスタンス作成の確認」画面で、「作成」ボタンを押します。
+              li
+                | 「既存のキーペアを選択するか、新しいキーペアを作成します。」画面で、「新しいキーペアの作成」を選択し、「キーペア名」を入力します。キーペアのファイルをダウンロードしてから、「インスタンスの作成」ボタンを押します。
+                br
+                img(src="images/img110.png")
+              li 「作成ステータス」画面で、「インスタンスの表示」ボタンを押します。
+              li
+                | 「EC2ダッシュボード」画面で、表示された「パブリック IP」を確認してメモしておきます。
+                br
+                img(src="images/img111.png")
+            hr
+            h3
+              a(name="#ssh") Tera TermからのSSH接続
+            ol
+              li Tera Termを起動します。
+              li
+                | 「新しい接続」画面で、「ホスト」欄に、Amazon EC2のインスタンスのパブリックIPを入力します。
+                br
+                | 			「OK」ボタンを押します。
+                br
+                img(src="images/image60.png")
+              li 「セキュリティ警告」画面が表示されたら、「続行」ボタンを押します。
+              li
+                | 「SSH認証」画面で、「RSA/DSA/ECDSA/ED25519鍵を使う」をチェックし、「秘密鍵」ボタンを押して、上記でダウンロードしたキーペアのファイルを選択します。
+                br
+                | 			「ユーザ名」に「ubuntu」と入力し、「パスフレーズ」は空のままで、「OK」ボタンを押します。
+                br
+                img(src="images/image61.png")
+              li
+                | ログインが成功し、Amazon EC2のターミナル画面が表示されます。
+                br
+                img(src="images/image62.png")
+              li
+                | 次のコマンドを入力して、Ubuntuの更新を適用します。
+                .box1
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4 sudo apt-get update
+                  br
+                  | 				（省略）
+                  br
+                  | 				Reading package lists... Done
+                  br
+                  | 				ubuntu@ip-172-31-23-251:~$
+                  span.style4 sudo apt-get -y upgrade
+                  br
+                  | 				（省略）
+                  br
+                  | 				ubuntu@ip-172-31-23-251:~$
+              li
+                | タイムゾーンの設定
+                ul
+                  li
+                    | 次のコマンドを実行します。
+                    .box1
+                      | ubuntu@ip-172-31-23-251:~$
+                      span.style4 sudo dpkg-reconfigure tzdata
+                  li
+                    | 次の画面が表示されたら、リストから「Asia」を選択し、「Ok」ボタンを押します。
+                    br
+                    img(src="images/img112.png")
+                  li
+                    | 次の画面が表示されたら、リストから「Tokyo」を選択し、「Ok」ボタンを押します。
+                    br
+                    img(src="images/img113.png")
+                  li
+                    | dateコマンドを実行して、日本標準時(JST)で表示されることを確認します。
+                    .box1
+                      | ubuntu@ip-172-31-23-251:~$
+                      span.style4 date
+              li
+                | 日本語環境の設定
+                ul
+                  li
+                    | 次のコマンドを実行します。
+                    .box1
+                      | ubuntu@ip-172-31-23-251:~$
+                      span.style4 export LANGUAGE=ja_JP.UTF-8
+                  li
+                    | 次のコマンドを実行して、「ja_JP.UTF-8」と表示されることを確認します。
+                    .box1
+                      | ubuntu@ip-172-31-23-251:~$
+                      span.style4 echo $LANGUAGE
+                      br
+                      | 				ja_JP.UTF-8
+                  li
+                    | 次のコマンドを実行します。
+                    .box1
+                      | ubuntu@ip-172-31-23-251:~$
+                      span.style4 export LANG=ja_JP.UTF-8
+                  li
+                    | 次のコマンドを実行して、「ja_JP.UTF-8」と表示されることを確認します。
+                    .box1
+                      | ubuntu@ip-172-31-23-251:~$
+                      span.style4 echo $LANG
+                      br
+                      | 				ja_JP.UTF-8
+                  li
+                    | 次のコマンドを実行します。
+                    .box1
+                      | ubuntu@ip-172-31-23-251:~$
+                      span.style4 export LC_ALL=ja_JP.UTF-8
+                  li
+                    | 次のコマンドを実行して、「ja_JP.UTF-8」と表示されることを確認します。
+                    .box1
+                      | ubuntu@ip-172-31-23-251:~$
+                      span.style4 echo $LC_ALL
+                      br
+                      | 				ja_JP.UTF-8
+                  li
+                    | 次のコマンドを入力して、「.bashrc」ファイルをテキストエディタviで編集します。
+                    .box1
+                      | ubuntu@ip-172-31-23-251:~$
+                      span.style4 vi .bashrc
+                    | 				ファイルの末尾に次の３行を追加します。
+                    .box1
+                      | export LANGUAGE=ja_JP.UTF-8
+                      br
+                      | 				export LANG=ja_JP.UTF-8
+                      br
+                      | 				export LC_ALL=ja_JP.UTF-8
+                    | 				変更内容を保存して、viを終了します。
+                  li
+                    | 次のコマンドを実行します。
+                    .box1
+                      | ubuntu@ip-172-31-23-251:~$
+                      span.style4 sudo locale-gen ja_JP.UTF-8
+                  li
+                    | 1度ログアウトして、再度ログインします
+                    .box1
+                      | ubuntu@ip-172-31-23-251:~$
+                      span.style4 logout
+              li
+                | 次のコマンドを入力します。
+                .box1
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4
+                    | sudo apt-get -y install
+                    | unzip make gcc apache2
+            hr
+            h3
+              a(name="#ssl") SSL証明書の作成と登録
+            p OpenSSLを使用して、SSL証明書を作成し、SSLによって接続するように設定します。
+            ol
+              li
+                | Webブラウザで、次のアドレスにアクセスします。
+                br
+                a(href="http://www.openssl.org/source/")
+                  | http://www.openssl.org/source/
+                br
+                | 			OpenSSLの「Tarballs」画面が表示されますので、その中から、「[LATEST]」と表示されているファイル名を確認します。（執筆時点では、「openssl-1.0.2h.tar.gz」）
+              li
+                | Tera Termのターミナル画面で、次のコマンドを入力します。
+                .box1
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4
+                    | sudo wget -P /usr/local/src
+                    | http://www.openssl.org/source/openssl-1.0.2h.tar.gz
+                    span.style3
+                      | ←OpenSSLの[LATEST]のファイル名
+                    br
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4 cd /usr/local/src
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/usr/local/src$
+                  span.style4 ls -l
+                  br
+                  | 				total 5152
+                  br
+                  | 				-rw-r--r-- 1 root root 5274412 May  3 22:57 openssl-1.0.2h.tar.gz
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/usr/local/src$
+                  span.style4
+                    | sudo
+                    | tar xzf openssl-1.0.2h.tar.gz
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/usr/local/src$
+                  span.style4 ls -l
+                  br
+                  | 				total 5156
+                  br
+                  | 				drwxr-xr-x 20 root root    4096 Aug  2 02:06 openssl-1.0.2h
+                  br
+                  | 				-rw-r--r--  1 root root 5274412 May  3 22:57 openssl-1.0.2h.tar.gz
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/usr/local/src$
+                  span.style4
+                    | cd
+                    | openssl-1.0.2h
+                    br
+                  | ubuntu@ip-172-31-23-251:/usr/local/src/openssl-1.0.2h$
+                  span.style4
+                    | sudo ./config --prefix=/usr/local
+                    br
+                  | ubuntu@ip-172-31-23-251:/usr/local/src/openssl-1.0.2h$
+                  span.style4
+                    | sudo make
+                    br
+                  | ubuntu@ip-172-31-23-251:/usr/local/src/openssl-1.0.2h$
+                  span.style4
+                    | echo $?
+                    br
+                  | 0
+                  span.style3
+                    span.style4
+                    | 				←0なら成功です。0以外は失敗なのでやり直してください。
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/usr/local/src/openssl-1.0.2h$
+                  span.style4 sudo make install
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/usr/local/src/openssl-1.0.2h$
+                  span.style4 echo $?
+                  br
+                  | 				0
+                  span.style3
+                    span.style4
+                    | 				←0なら成功です。0以外は失敗なのでやり直してください。
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/usr/local/src/openssl-1.0.2h$
+                  span.style4 sudo a2enmod ssl
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/usr/local/src/openssl-1.0.2h$
+                  span.style4 sudo service apache2 restart
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/usr/local/src/openssl-1.0.2h$
+                  span.style4 sudo mkdir /etc/apache2/ssl
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/usr/local/src/openssl-1.0.2h$
+                  span.style4 cd /etc/apache2/ssl
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/etc/apache2/ssl$
+                  span.style4
+                    | sudo
+                    | openssl req -x509 -nodes -days 366 -newkey rsa:2048 -keyout
+                    | /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+                  br
+                  | 				Country Name (2 letter code) [AU]:
+                  span.style4 JP
+                  br
+                  | 				State or Province Name (full name) [Some-State]:
+                  span.style3
+                    | ←都道府県名を入力（例：Tokyo）
+                  br
+                  | 				Locality Name (eg, city) []:
+                  span.style3
+                    | ←市区町村名を入力（例：Chofu-shi）
+                  br
+                  | 				Organization Name (eg, company) [Internet Widgits Pty Ltd]:
+                  span.style3
+                    | ←組織名を入力（例：BitFarm）
+                  br
+                  | 				Organizational Unit Name (eg, section) []:
+                  span.style3
+                    | ←組織単位を入力（例：Manager）
+                  br
+                  | 				Common Name (e.g. server FQDN or YOUR name) []:
+                  span.style3
+                    | ←FQDNを入力（例：yuimarl.jp）
+                  br
+                  | 				Email Address []:
+                  span.style3  ←メールアドレス（未入力でよい）
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/etc/apache2/ssl$
+                  span.style4 ls -l
+                  br
+                  | 				total 8
+                  br
+                  | 				-rw-r--r-- 1 root root 1326 Aug  2 02:16 apache.crt
+                  br
+                  | 				-rw-r--r-- 1 root root 1708 Aug  2 02:16 apache.key
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/etc/apache2/ssl$
+                  span.style4
+                    | cd
+                    | /etc/apache2/sites-available
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/etc/apache2/sites-available$
+                  span.style4 ls -l
+                  br
+                  | 				total 12
+                  br
+                  | 				-rw-r--r-- 1 root root 1332 Jan  7  2014 000-default.conf
+                  br
+                  | 				-rw-r--r-- 1 root root 6437 Jan  7  2014 default-ssl.conf
+              li
+                | テキストエディタviで「default-ssl.conf」を編集します。
+                .box1
+                  | ubuntu@ip-172-31-23-251:/etc/apache2/sites-available$
+                  span.style4 sudo vi default-ssl.conf
+                | 			画面をスクロールして、次の行を探します。
+                .box1
+                  | SSLCertificateFile
+                  span.style5 /etc/ssl/certs/ssl-cert-snakeoil.pem
+                  br
+                  | 				SSLCertificateKeyFile
+                  span.style5 /etc/ssl/private/ssl-cert-snakeoil.key
+                | 			これらの行を次のように変更します。
+                .box1
+                  | SSLCertificateFile
+                  span.style4 /etc/apache2/ssl/apache.crt
+                  br
+                  | 				SSLCertificateKeyFile
+                  span.style4 /etc/apache2/ssl/apache.key
+                | 			変更内容を保存して、viを終了します。
+              li
+                | 次のコマンドを入力します。
+                .box1
+                  | ubuntu@ip-172-31-23-251:/etc/apache2/sites-available$
+                  span.style4 sudo a2ensite default-ssl
+                  br
+                  | 				Enabling site default-ssl.
+                  br
+                  | 				To activate the new configuration, you need to run:
+                  br
+                  | 				service apache2 reload
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/etc/apache2/sites-available$
+                  span.style4 sudo service apache2 reload
+                  br
+                  | 				Reloading web server config: apache2.
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/etc/apache2/sites-available$
+            hr
+            h3
+              a(name="#mysql") MySQLのインストール
+            ol
+              li
+                | 次のコマンドを実行します。
+                br
+                .box1
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4
+                    | sudo apt-get install
+                    | -y mysql-server
+                  br
+                  span.style3  rootユーザーのパスワードを聞かれますので、パスワードを設定して、「<了解>」を押します。
+                  br
+                  | 				ubuntu@ip-172-31-23-251:~$
+                  span.style4 echo $?
+                  br
+                  | 				0
+                  span.style3
+                    span.style4
+                    | 				←0なら成功です。0以外は失敗なのでやり直してください。
+                  br
+                  | 				ubuntu@ip-172-31-23-251:~$
+                  span.style4 mysql -u root -p
+                  br
+                  | 				Enter password:
+                  span.style3
+                    span.style4
+                    | 				←上記で設定したrootユーザーのパスワードを入力します。
+                    br
+                  | Welcome to the MySQL monitor.  Commands end with ; or \g.
+                  br
+                  | 				Your MySQL connection id is 42
+                  br
+                  | 				Server version: 5.5.50-0ubuntu0.14.04.1 (Ubuntu)
+                  br
+                  br
+                  | 				Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.
+                  br
+                  br
+                  | 				Oracle is a registered trademark of Oracle Corporation and/or its
+                  br
+                  | 				affiliates. Other names may be trademarks of their respective
+                  br
+                  | 				owners.
+                  br
+                  br
+                  | 				Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+                  br
+                  br
+                  | 				mysql>
+                  span.style4
+                    | create database yuimarl default
+                    | character set 'utf8';
+                    span.style3  ←yuimarデータベースの作成。
+                  br
+                  | 				Query OK, 1 row affected (0.00 sec)
+                  br
+                  br
+                  | 				mysql>
+                  span.style4
+                    | create user yuimarluser identified
+                    | by 'yuimarlpass';
+                    span.style3
+                      | ←yuimarlユーザーのID（yuimarluser）とパスワード（yuimarlpass）。
+                      | ※変更してもよいですが、その場合は、以下すべてそのように変更してください。
+                  br
+                  | 				Query OK, 0 rows affected (0.00 sec)
+                  br
+                  br
+                  | 				mysql>
+                  span.style4
+                    | grant all privileges on yuimarl.* to
+                    | 'yuimarluser'@'%' with grant option;
+                  br
+                  | 				Query OK, 0 rows affected (0.00 sec)
+                  br
+                  br
+                  | 				mysql>
+                  span.style4
+                    | grant all privileges on yuimarl.* to
+                    | 'yuimarluser'@'localhost' identified by 'yuimarlpass' with grant
+                    | option;
+                  br
+                  | 				Query OK, 0 rows affected (0.00 sec)
+                  br
+                  br
+                  | 				mysql>
+                  span.style4 show databases;
+                  br
+                  | 				+--------------------+
+                  br
+                  | 				| Database |
+                  br
+                  | 				+--------------------+
+                  br
+                  | 				| information_schema |
+                  br
+                  | 				| mysql |
+                  br
+                  | 				| performance_schema |
+                  br
+                  | 				| yuimarl |
+                  br
+                  | 				+--------------------+
+                  br
+                  | 				4 rows in set (0.00 sec)
+                  br
+                  br
+                  | 				mysql>
+                  span.style4 quit
+                  br
+                  | 				Bye
+                  br
+                  | 				ubuntu@ip-172-31-23-251:~$
+              li
+                | テキストエディタviで「default-ssl.conf」を編集します。
+                .box1
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4 sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+                | 			画面をスクロールして、次の行を探します。
+                .box1
+                  | [mysqld]
+                  br
+                  | 				character-set-server=utf8
+                  span.style3  ←mysqldセクションの末尾に追加
+                | 			変更内容を保存して、viを終了します。
+              li
+                | 次のコマンドを入力します。
+                .box1
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4 sudo service mysql restart
+            hr
+            h3
+              a(name="#jdk") Java開発・実行環境のインストール
+            p サーバーにJavaの開発・実行環境をインストールします。
+            ol
+              li
+                | クライアントPCで、JDK8のダウンロードサイトにアクセスします。
+                br
+                .box1
+                  a(href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html")
+                    | http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+                br
+                img(src="images/image01.png")
+              li
+                | 「Accept License
+                | Agreement」をチェックし、「Linux
+                | x64」で、拡張子が「.tar.gz」となっているファイル（この執筆時点では、「jdk-8u102-linux-x64.tar.gz」）のリンクをクリックしてダウンロードします。
+              li
+                | 以下の手順で、ダウンロードしたファイルを、Amazon EC2のサーバーに転送します。
+                ul
+                  li Tera Termで「ファイル」-「SSH SCP」を選択します。
+                  li
+                    | 「TTSSH」画面で、「From:」に上記でダウンロードしたファイルを選択します。
+                    br
+                    | 				「Send」ボタンを押します。
+                    br
+                    img(src="images/image63.png")
+                  li
+                    | ファイルが転送されたことを確認します。
+                    .box1
+                      | ubuntu@ip-172-31-23-251:~$
+                      span.style4 ls -l
+                      br
+                      | 					total 177184
+                      br
+                      | 					-rw-r--r-- 1 ubuntu ubuntu 181435897 Aug  2 03:05 jdk-8u102-linux-x64.tar.gz
+                      br
+                      | 					ubuntu@ip-172-31-23-251:~$
+              li
+                | 以下のコマンドを実行します。
+                .box1
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4 sudo tar -zxf ./jdk-8u102-linux-x64.tar.gz -C /opt
+                  br
+                  | 				ubuntu@ip-172-31-23-251:~$
+                  span.style4 cd /opt
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/opt$
+                  span.style4 ls -l
+                  br
+                  | 				total 4
+                  br
+                  | 				drwxr-xr-x 8 uucp 143 4096 Jun 23 10:56 jdk1.8.0_102
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/opt$
+                  span.style4
+                    | export JAVA_HOME=/opt/jdk1.8.0_102
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/opt$
+                  span.style4
+                    | sudo
+                    | update-alternatives --install /usr/bin/java java
+                    | $JAVA_HOME/bin/java 20000
+                  br
+                  | 				update-alternatives: /usr/bin/java (java) を提供するために 自動モード で
+                  | 				/opt/jdk1.8.0_102/bin/java を使います
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/opt$
+                  span.style4
+                    | sudo
+                    | update-alternatives --install /usr/bin/javac javac
+                    | $JAVA_HOME/bin/javac 20000
+                  br
+                  | 				update-alternatives: /usr/bin/javac (javac) を提供するために 自動モード で
+                  | 				/opt/jdk1.8.0_102/bin/javac を使います
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/opt/java-oracle$
+                  span.style4
+                    | sudo
+                    | update-alternatives --config java
+                  br
+                  | 				リンクグループ java に 1 つの alternative のみがあります (/usr/bin/java が提供):
+                  | 				/opt/jdk1.8.0_102/bin/java
+                  br
+                  | 				設定は行いません。
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/opt$
+                  span.style4
+                    | java
+                    | -version
+                  br
+                  | 				java version "1.8.0_102"
+                  span.style3  ←Javaのバージョンが表示されます。
+                  br
+                  | 				Java(TM) SE Runtime Environment (build 1.8.0_102-b14)
+                  br
+                  | 				Java HotSpot(TM) 64-Bit Server VM (build 25.102-b14, mixed mode)
+                  br
+                  | 				ubuntu@ip-172-31-23-251:/opt$
+              li
+                | 次のコマンドを実行します。（Apache Mavenのインストール）
+                .box1
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4
+                    | sudo apt-get -y install
+                    | maven2
+                    br
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4 mvn -v
+                  br
+                  | 				Apache Maven 2.2.1 (rdebian-14)
+                  span.style3
+                    | ←Apache
+                    | Mavenのバージョンが表示されます。
+                  br
+                  | 				Java version: 1.8.0_102
+                  br
+                  | 				Java home: /opt/jdk1.8.0_102/jre
+                  br
+                  | 				Default locale: en_US, platform encoding: UTF-8
+                  br
+                  | 				OS name: "linux" version: "3.13.0-92-generic" arch: "amd64" Family: "unix"
+                  br
+                  | 				ubuntu@ip-172-31-23-251:~$
+            hr
+            h3
+              a(name="#payara") Payaraのインストール
+            ol
+              li
+                | クライアントPCで、Payara Serverのダウンロードサイトにアクセスします。
+                br
+                a(href="http://www.payara.fish/downloads")
+                  | http://www.payara.fish/downloads
+                br
+                | 			「Payara Server Full 162 Download」ボタンをクリックして、ダウンロードを実行します。
+                br
+                img(src="images/img116.png")
+              li
+                | 以下の手順で、ダウンロードしたファイルを、Amazon EC2のサーバーに転送します。
+                ul
+                  li Tera Termで「ファイル」-「SSH SCP」を選択します。
+                  li
+                    | 「TTSSH」画面で、「From:」に上記でダウンロードしたファイルを選択します。
+                    br
+                    | 				「Send」ボタンを押します。
+                    br
+                    img(src="images/img117.png")
+                  li
+                    | ファイルが転送されたことを確認します。
+                    .box1
+                      | ubuntu@ip-172-31-23-251:~$
+                      span.style4 ls -l
+                      br
+                      | 					total 118600
+                      br
+                      | 					-rw-r--r-- 1 ubuntu ubuntu 121443419  8月  3 04:35 payara-4.1.1.162.zip
+              li
+                | 以下のコマンドを実行します。
+                .box1
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4 unzip payara-4.1.1.162.zip
+                  br
+                  | 				ubuntu@ip-172-31-23-251:~$
+                  span.style4 sudo mv payara41 /opt
+                  br
+                  | 				ubuntu@ip-172-31-23-251:~$
+                  span.style4
+                    | /opt/payara41/bin/asadmin start-domain
+                  span.style3 ←Payaraサーバーを起動します。
+                  br
+                  | 				Waiting for domain1 to start ........
+                  br
+                  | 				Successfully started the domain : domain1
+                  br
+                  | 				domain  Location: /opt/payara41/glassfish/domains/domain1
+                  br
+                  | 				Log File: /opt/payara41/glassfish/domains/domain1/logs/server.log
+                  br
+                  | 				Admin Port: 4848
+                  br
+                  | 				Command start-domain executed successfully.
+                  br
+                  | 				ubuntu@ip-172-31-23-251:~$
+              li
+                | 以下の手順で、TCPポート4848の通信が通るように設定します。
+                ul
+                  li
+                    | Amazon EC2のコンソール画面で、「セキュリティグループ」の「インバウンド」タブを選択し、「編集」ボタンを押します。
+                    br
+                    img(src="images/img114.png")
+                  li
+                    | 「インバウンドルールの編集」画面で、「ルールの追加」ボタンを押して、次の２行を追加します。
+                    br
+                    | 				タイプ：「カスタム TCP ルール」、ポート範囲：「4848」、送信元：「任意の場所」
+                    br
+                    | 				タイプ：「カスタム TCP ルール」、ポート範囲：「8181」、送信元：「任意の場所」
+                    br
+                    | 				「保存」ボタンを押します。
+                    br
+                    img(src="images/img115.png")
+              li
+                | 以下のコマンドを実行します。
+                pre.boxPre.
+                  \nubuntu@ip-172-31-23-251:~$
+                  ubuntu@ip-172-31-23-251:/opt/payara41/bin$
+                  Enter admin user name [default: admin]>
+                  Enter the admin password>
+                  Enter the new admin password>
+                  Enter the new admin password again>
+                  Command change-admin-password executed successfully.
+                  ubuntu@ip-172-31-23-251:/opt/payara41/bin$
+                  Enter admin user name [Enter to accept default]>
+                  Enter admin password>
+                  Login information relevant to admin user name [admin] for host [localhost] and admin port [4848] stored at [/home/T110Win7/.gfclient/pass] successfully.
+                  Make sure that this file remains protected. Information stored in this file will be used by administration commands to manage associated domain.
+                  Command login executed successfully.
+                  ubuntu@ip-172-31-23-251:/opt/payara41/bin$
+                  You must restart all running servers for the change in secure admin to take effect.
+                  Command enable-secure-admin executed successfully.
+                  ubuntu@ip-172-31-23-251:/opt/payara41/bin$
+                  Waiting for the domain to stop .
+                  Command stop-domain executed successfully.
+                  ubuntu@ip-172-31-23-251:/opt/payara41/bin$
+                  Waiting for domain1 to start ........
+                  Successfully started the domain : domain1
+                  domain  Location: /opt/payara41/glassfish/domains/domain1
+                  Log File: /opt/payara41/glassfish/domains/domain1/logs/server.log
+                  Admin Port: 4848
+                  Command start-domain executed successfully.
+                  ubuntu@ip-172-31-23-251:/opt/payara41/bin$
+              li
+                | WebブラウザでPayaraの管理コンソールにアクセスします。
+                br
+                span.style9 https://(インスタンスのパブリックIP):4848/
+                br
+                | 			プライバシーエラー画面が表示されますが、「(インスタンスのパブリックIP)にアクセスする （安全ではありません）」をクリックします。
+                br
+                img(src="images/image66.png")
+              li
+                | Payaraの管理画面が表示しますので、上記で設定した「User Name」と「Password」を入力して、「Login」ボタンを押します。
+                br
+                img(src="images/img118.png")
+              li
+                | Payaraコンソール画面が表示されます。
+                br
+                img(src="images/img119.png")
+                br
+            hr
+            h3
+              a(name="#setup") Yuimarlプロジェクトのセットアップ
+            p Yuimarlプロジェクトのファイルをサーバーに転送し、ビルドとテーブルの作成を行います。
+            ol
+              li
+                a(href="download.html") ダウンロード
+                | ページの内容に従って、Yuimarlプロジェクトファイルをダウンロードします。
+              li
+                | 以下の手順で、ダウンロードしたファイルを、GCEのサーバーに転送します。
+                ol
+                  li Tera Termで「ファイル」-「SSH SCP」を選択します。
+                  li
+                    | 「TTSSH」画面で、「From:」に上記でダウンロードしたファイルを選択します。
+                    br
+                    | 				「Send」ボタンを押します。
+                    br
+                    img(src="images/image69.png")
+                  li
+                    | ファイルが転送されたことを確認します。
+                    .box1
+                      | ubuntu@ip-172-31-23-251:~$
+                      span.style4 ls -l
+                      br
+                      | 					total 2584
+                      br
+                      | 					-rw-r--r-- 1 ubuntu ubuntu 2642864 Aug  2 07:15 yuimarl150213.zip
+              li
+                | 以下のコマンドを実行します。
+                pre.boxPre.
+                  \nubuntu@ip-172-31-23-251:~$
+                  ubuntu@ip-172-31-23-251:~$
+                  ubuntu@ip-172-31-23-251:~$
+                  CLI306: Warning - The server located at /opt/payara41/glassfish/domains/domain1 is not running.
+                  Command stop-domain executed successfully.
+                  ubuntu@ip-172-31-23-251:~$
+                  Waiting for domain1 to start .........
+                  Successfully started the domain : domain1
+                  domain  Location: /opt/payara41/glassfish/domains/domain1
+                  Log File: /opt/payara41/glassfish/domains/domain1/logs/server.log
+                  Admin Port: 4848
+                  Command start-domain executed successfully.
+                  ubuntu@ip-172-31-23-251:~$
+                  ubuntu@ip-172-31-23-251:~/yuimarl/yuimarl-db-mysql-setup$
+                  build.xml  lib  pom.xml  property  sql  xml
+                  ubuntu@ip-172-31-23-251:~/yuimarl/yuimarl-db-mysql-setup$                   [INFO] ------------------------------------------------------------------------
+                  [INFO] BUILD SUCCESSFUL
+                  [INFO] ------------------------------------------------------------------------
+                  [INFO] Total time: 16 seconds
+                  [INFO] Finished at: Tue Aug 02 07:26:00 JST 2016
+                  [INFO] Final Memory: 13M/33M
+                  [INFO] ------------------------------------------------------------------------
+                  ubuntu@ip-172-31-23-251:~/yuimarl/yuimarl-db-mysql-setup$
+                  Enter password:
+                  Welcome to the MySQL monitor.  Commands end with ; or \g.
+                  Your MySQL connection id is 45
+                  Server version: 5.5.50-0ubuntu0.14.04.1 (Ubuntu)
+
+                  Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.
+
+                  Oracle is a registered trademark of Oracle Corporation and/or its
+                  affiliates. Other names may be trademarks of their respective
+                  owners.
+
+                  Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+                  mysql>
+                  Reading table information for completion of table and column names
+                  You can turn off this feature to get a quicker startup with -A
+
+                  Database changed
+                  mysql>
+                  +-------------------+
+                  | Tables_in_yuimarl |
+                  +-------------------+
+                  | EVENT             |
+                  | EVENTSET          |
+                  | EVENTVIEW         |
+                  | EVENTVIEWSET      |
+                  | EVENTVIEW_SPREAD  |
+                  | GENERATED_ID      |
+                  | GOODS_CATEGORY    |
+                  | ORG_CATEGORY      |
+                  | PARTY             |
+                  | PARTY_RELATION    |
+                  | PREFECTURE        |
+                  | YUIMARL_USER      |
+                  +-------------------+
+                  12 rows in set (0.00 sec)
+
+                  mysql>
+
+                  mysql>
+                  Bye
+                  ubuntu@ip-172-31-23-251:~/yuimarl/yuimarl-db-mysql-setup$
+            hr
+            h3
+              a(name="#jdbc") JDBCの設定
+            p Payaraの管理画面で、MySQLデータベースに接続するためのJDBCの設定を行います。
+            ol
+              li
+                | 上記の手順で、Payaraコンソール画面を表示します。
+              li
+                | 管理画面の左側のツリーから、「Resources」-「JDBC」-「JDBC Connection Pools」を選択します。
+                br
+                | 			「JDBC Connection Pools」画面で「New」ボタンを押します。
+                br
+                img(src="images/img120.png")
+              li
+                | 「New JDBC Connection Pool (Step 1 of 2)」画面で、次のように入力・選択します。
+                br
+                table.tb1(cellpadding="3")
+                  tr
+                    th 名前
+                    th 値
+                  tr
+                    td Pool Name
+                    td YuimarlPool
+                  tr
+                    td Resource Type
+                    td javax.sql.DataSource
+                  tr
+                    td Database Driver Vendor
+                    td MySQL
+                img(src="images/img121.png")
+                br
+                br
+                | 			「Next」ボタンを押します。
+              li
+                | 「New JDBC Connection Pool (Step 2 of 2)」画面の「Additional Properties」で、以下の値を設定します。（下記以外は変更しない）
+                br
+                table.tb1(cellpadding="3")
+                  tr
+                    th 名前
+                    th 値
+                  tr
+                    td DatabaseName
+                    td yuimarl
+                  tr
+                    td Password
+                    td yuimarlpass
+                  tr
+                    td URL
+                    td jdbc:mysql://localhost:3306/yuimarl?characterEncoding=utf8
+                  tr
+                    td Url
+                    td jdbc:mysql://localhost:3306/yuimarl?characterEncoding=utf8
+                  tr
+                    td ServerName
+                    td localhost
+                  tr
+                    td User
+                    td yuimarluser
+                br
+                img(src="images/image30.png")
+                br
+                | 			「Finish」ボタンを押します。
+              li
+                | 管理画面の左側のツリーから、「Resources」-「JDBC」-「JDBC Resources」を選択します。
+                br
+                | 			「JDBC Resources」画面で「New」ボタンを押します。
+                br
+                img(src="images/img122.png")
+              li
+                | 「新規JDBCリソース」画面で、次のように入力・選択します。
+                br
+                table.tb1(cellpadding="3")
+                  tr
+                    th 名前
+                    th 値
+                  tr
+                    td JNDI名
+                    td jdbc/yuimarl
+                  tr
+                    td プール名
+                    td YuimarlPool
+                img(src="images/img123.png")
+                br
+                | 			「OK」ボタンを押します。
+            hr
+            h3
+              a(name="#realm") Realmの設定
+            p Payaraの管理画面で、ユーザー認証のための Realm（レルム）の設定を行います。
+            ol
+              li
+                | 管理画面の左側のツリーから、「Configurations」-「server-config」-「Security」-「Realms」を選択します。
+                br
+                | 			「Realms」画面で「New」ボタンを押します。
+                br
+                img(src="images/img131.png")
+              li
+                | 「New Realm」画面で、次のように入力・選択します。
+                br
+                table.tb1(cellpadding="3")
+                  tr
+                    th 名前
+                    th 値
+                  tr
+                    td Name
+                    td yuimarl-realm
+                  tr
+                    td Class Name
+                    td com.sun.enterprise.security.auth.realm.jdbc.JDBCRealm
+                  tr
+                    td JAAS Context
+                    td jdbcRealm
+                  tr
+                    td JNDI
+                    td jdbc/yuimarl
+                  tr
+                    td User Table
+                    td YUIMARL_USER
+                  tr
+                    td User Name Column
+                    td USER_ID
+                  tr
+                    td Password Column
+                    td PASSWORD
+                  tr
+                    td Group Table
+                    td YUIMARL_USER
+                  tr
+                    td Group Table User Name Column
+                    td USER_ID
+                  tr
+                    td Group Name Column
+                    td ACCOUNT_GROUP
+                  tr
+                    td Password Encryption Algorithm
+                    td digest-algorithm
+                  tr
+                    td Digest Algorithm
+                    td SHA-256
+                  tr
+                    td Encoding
+                    td Hex
+                img(src="images/img132.png")
+                br
+                br
+                | 			「OK」ボタンを押します。
+            hr
+            h3
+              a(name="#deploy") アプリケーションのデプロイ
+            p Yuimarlのプロジェクトをビルドしてから、Payaraの管理画面で、Yuimarl アプリケーションのデプロイ（配置）します。
+            ol
+              li
+                | 以下のコマンドを実行します。
+                pre.boxPre.
+                  \nubuntu@ip-172-31-25-199:~$
+                  ubuntu@ip-172-31-25-199:~/yuimarl/yuimarl-lib$
+                  [INFO] ------------------------------------------------------------------------
+                  [INFO] BUILD SUCCESSFUL
+                  [INFO] ------------------------------------------------------------------------
+                  [INFO] Total time: 23 seconds
+                  [INFO] Finished at: Wed Aug 03 18:42:43 JST 2016
+                  [INFO] Final Memory: 46M/110M
+                  [INFO] ------------------------------------------------------------------------
+                  ubuntu@ip-172-31-25-199:~/yuimarl/yuimarl-lib$
+                  ubuntu@ip-172-31-25-199:~/yuimarl/yuimarl-ejb$
+                  [INFO] ------------------------------------------------------------------------
+                  [INFO] BUILD SUCCESSFUL
+                  [INFO] ------------------------------------------------------------------------
+                  [INFO] Total time: 18 seconds
+                  [INFO] Finished at: Wed Aug 03 18:44:46 JST 2016
+                  [INFO] Final Memory: 30M/72M
+                  [INFO] ------------------------------------------------------------------------
+                  ubuntu@ip-172-31-25-199:~/yuimarl/yuimarl-ejb$
+                  ubuntu@ip-172-31-25-199:~/yuimarl/yuimarl-web$
+                  [INFO] ------------------------------------------------------------------------
+                  [INFO] BUILD SUCCESSFUL
+                  [INFO] ------------------------------------------------------------------------
+                  [INFO] Total time: 11 seconds
+                  [INFO] Finished at: Wed Aug 03 18:46:45 JST 2016
+                  [INFO] Final Memory: 31M/74M
+                  [INFO] ------------------------------------------------------------------------
+                  ubuntu@ip-172-31-25-199:~/yuimarl/yuimarl-web$
+                  ubuntu@ip-172-31-25-199:~/yuimarl/yuimarl-ear$
+                  [INFO] ------------------------------------------------------------------------
+                  [INFO] BUILD SUCCESSFUL
+                  [INFO] ------------------------------------------------------------------------
+                  [INFO] Total time: 4 seconds
+                  [INFO] Finished at: Wed Aug 03 18:48:08 JST 2016
+                  [INFO] Final Memory: 9M/23M
+                  [INFO] ------------------------------------------------------------------------
+                  ubuntu@ip-172-31-25-199:~/yuimarl/yuimarl-ear$
+                  total 21656
+                  -rw-rw-r-- 1 ubuntu ubuntu      571  8月  3 18:48 application.xml
+                  drwxrwxr-x 2 ubuntu ubuntu     4096  8月  3 18:48 maven-archiver
+                  drwxrwxr-x 4 ubuntu ubuntu     4096  8月  3 18:48 yuimarl-ear-140829
+                  -rw-rw-r-- 1 ubuntu ubuntu 22161180  8月  3 18:48 yuimarl-ear-140829.ear
+                  ubuntu@ip-172-31-25-199:~/yuimarl/yuimarl-ear$
+              li
+                | 管理画面の左側のツリーから、「Applications」を選択します。
+                br
+                | 			「Applications」画面で「Deploy」ボタンを押します。
+                br
+                img(src="images/img124.png")
+              li
+                | 「Deploy Applications or Modules」画面で、以下の設定を行います。
+                ul
+                  li
+                    | 「Local Packaged File or Directory That Is Accessible from Payara Server 」をチェックします。
+                  li
+                    | 「Browse Files」ボタンを押します。ファイル選択画面が表示されるので、「/home/ubuntu/yuimarl/yuimarl-ear/target/yuimarl-ear-(バージョン).ear」という
+                    | EARファイル（エンタープライズアプリケーションリソースファイル）を選択して「Choose File」ボタンを押します。
+                  li
+                    | 以下の設定を行います。（それ以外はデフォルトのまま）
+                    br
+                    table.tb1(cellpadding="3")
+                      tr
+                        th 名前
+                        th 値
+                      tr
+                        td Type
+                        td Enterprise Application
+                      tr
+                        td Application Name
+                        td yuimarl-ear
+                      tr
+                        td Virtual Servers
+                        td server
+                    br
+                    img(src="images/img125.png")
+                    br
+                    br
+                    | 				「OK」ボタンを押します。
+                  li 「Applications」画面の一覧に「yuimarl-ear」が追加されれば、デプロイが完了しました。
+              li
+                | Webブラウザで、次のURLにアクセスします。
+                br
+                span.style9 https://(インスタンスのパブリックIP):8181/yuimarl-web/
+                br
+                | 		（SSLの警告メッセージが出ますが、そのまま続行してください。）
+                br
+                img(src="images/image72.png")
+                br
+                | 			「ユーザーID」に「U00001」、「パスワード」に「test」と入力して、「ログイン」ボタンを押すと、「メインメニュー」画面が表示されます。
+            hr
+            h3
+              a(name="#auto") Payara自動起動の設定
+            p OSが再起動された時に、Payaraが自動的に起動するように設定を行います。
+            ol
+              li
+                | テキストエディタviで、「payara」という自動起動スクリプトを作成します。
+                .box1
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4 sudo vi /etc/init.d/payara
+                | 			次のように編集して保存します。
+                pre.boxPre.
+                  \n#!/bin/sh
+                  ### BEGIN INIT INFO
+                  # Provides:          payara
+                  # Required-Start:    $local_fs $remote_fs $network $syslog
+                  # Required-Stop:     $local_fs $remote_fs $network $syslog
+                  # Default-Start:     2 3 4 5
+                  # Default-Stop:      S 0 1 6
+                  # Short-Description: StartUP and Shutdown for Payara.
+                  # Description: Written by Masahiro Nitta
+                  ### END INIT INFO
+                  . /lib/lsb/init-functions
+                  export LANG=ja_JP.UTF-8
+                  export LC_ALL=ja_JP.UTF-8
+                  export JAVA_HOME=/opt/jdk1.8.0_102
+                  export PATH=$PATH:$JAVA_HOME/bin
+                  export CLASSPATH=.:$JAVA_HOME/jre/lib:$JAVA_HOME/lib:$JAVA_HOME/lib/tools.jar
+
+                  case "$1" in
+                  start)
+                  /opt/payara41/bin/asadmin start-domain
+                  ;;
+                  restart|reload|force-reload)
+                  /opt/payara41/bin/asadmin restart-domain
+                  ;;
+                  stop)
+                  /opt/payara41/bin/asadmin stop-domain
+                  ;;
+                  *)
+                  ;;
+                  esac
+              li
+                | 次のコマンドを実行します。
+                .box1
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4
+                    | sudo chmod +x /etc/init.d/payara
+                    br
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4
+                    | sudo update-rc.d
+                    | payara defaults 92 08
+              li
+                | 自動起動の確認を行うために、次のように再起動を行います。
+                .box1
+                  | ubuntu@ip-172-31-23-251:~$
+                  span.style4 sudo shutdown -r now
+                | 			しばらくしてからYuimarlにアクセスできれば設定が正常に行われました。
+            p
+              a(href="#_top") 先頭へ戻る
+              br
+        .col
+          .submenu
+            h3 CONTENTS
+            ul
+              li
+                a(href="index.html") ホーム
+              li
+                a(href="https://mnitta220.github.io/") 新田システム事務所
+              li
+                a(href="https://github.com/mnitta220/nngb/") 脳内碁盤
+              li
+                a(href="https://mnitta220.github.io/bnan/") 文章暗記
+              li
+                a.current(href="index.html") Yuimarl
+                ul
+                  li
+                    a(href="devsetup.html") 開発環境構築(Windows)
+                  li
+                    a(href="devsetupMysql.html") 開発環境構築(MySQL)
+                  li
+                    a(href="devsetupMac.html") 開発環境構築(Mac)
+                  li
+                    a(href="download.html") ダウンロード
+                  li
+                    a(href="howtouse.html") 使い方
+                  li
+                    a(href="develop.html") 開発情報
+                  li
+                    a.current(href="deploy.html") 運用環境構築
+      .footer
+        p
+          a(href="https://mnitta220.github.io/privacy.html") プライバシー・ポリシー
+          br
+          | Copyright © 2020 Masahiro Nitta. All rights reserved.

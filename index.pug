@@ -1,0 +1,228 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="UTF-8")
+    title Yuimarl
+    meta(name="viewport" content="width=device-width")
+    meta(name="keywords" content="JavaEE,Java EE,JavaEE7,Java EE 7,Java Enterprise Edition")
+    link(rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css")
+    link(rel="stylesheet" href="css/style.css")
+    //if lt IE 9
+      script(src="http://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv-printshiv.min.js")
+      script(src="http://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js")
+    //if lt IE 8
+    script(src="js/tagManager.js" type="text/javascript")
+  body#_top
+    .container
+      .header
+        .logoImg
+          h1
+            a(href="index.html")
+              img.logo(src="images/logo.gif" alt="Yuimarl" border="0")
+        .company 新田システム事務所
+      .menu
+        ul
+          li
+            a(href="index.html") ホーム
+      .cols
+        .col
+          .entry
+            .warning
+              | このページに書かれている内容は古い情報です。
+              br
+              | 現在、Yuimarlの新バージョンを開発中です。
+            h1 Yuimarl
+            p 「Yuimarl」（ゆいまーる）は、企業向けの情報システムです。以下の３つの目的を持っています。
+            ul
+              li
+                | 企業の業務を総合的に支援するシステムとなること。
+                br
+                | 							（現在は、人、組織、法人、物品の情報を管理する機能しかありません。）
+              li
+                | 様々なシステムの“ひな型”となること。
+                br
+                | 							（Yuimarl をベースとすることで、迅速かつ低コストでの開発が可能となります。）
+              li 情報システムの開発者に、Java EEの開発技術を普及すること。
+            p Yuimarl の特長として、以下のような点を挙げることができます。
+            ul
+              li ソースコードが公開されており、誰でも無料で使用でき、変更も自由に行うことができます。
+              li
+                | エンタープライズJavaの世界標準である、Java Platform, Enterprise Edition (Java
+                | EE)の最新バージョンが使用されています。
+              li プログラム内部が、しっかりとした概念モデリングに基づく構造をしているため、再利用が容易です。
+              li 実装済みの様々な機能部品を利用することができます。
+              li スマートフォン、タブレットでアクセスすると、その画面に合わせたレイアウトになります。（レスポンシブデザイン）
+            h3 名前の由来
+            p
+              | 「ゆいまーる」は、沖縄の言葉で、「相互扶助」（そうごふじょ）、「助け合い」を意味します。「ゆい」は「結ぶ」、「まーる」は「交流の場」です。このシステムが、多くの企業の助けになればよいと願っています。また、多くの方からのご意見、ご協力をいただき、このシステムが成長していけばよいと思っています。そうした願いと期待を込めて、この名前を付けました。
+            h3 機能
+            p
+              | 現在は、人、組織、法人、物品の情報を管理する機能のみです。
+              br
+              | 		今後は、スケジュール管理などの機能を追加していく予定です。（この予定は変更される可能性があります。）
+            h3 実際の画面
+            p
+              | 次のアドレスにアクセスすると、Yuimarl を実際に使用することができます。（スマートフォン、タブレットでアクセスすると、その画面に合わせたレイアウトになります。）
+              br
+              a(href="https://www.bitfarm.co.jp/yuimarl-web/" target="_blank") https://www.bitfarm.co.jp/yuimarl-web/
+              br
+              br
+              | 		以下のいずれかのユーザーID、パスワードを入力してログインしてください。
+              br
+              table.tb1
+                tr
+                  th ユーザーID
+                  th パスワード
+                  th 説明
+                tr
+                  td U00001
+                  td test
+                  td すべての権限を持つシステム管理者。ユーザーを登録する権限を持つ。
+                tr
+                  td U00002
+                  td test
+                  td 人/組織/物、イベントの参照権限を持つ一般ユーザー。
+                tr
+                  td U00003
+                  td test
+                  td 何も権限を持たないユーザー。
+              br
+              | 		データを自由に登録していただいて構いません。（登録されたデータは、定期的に元に戻されます。）
+            h3 動作環境
+            p
+              | Yuimarl
+              | の開発言語にはJava言語が使用されています。Javaを実行できる環境であれば、様々なOSで動作させることができます。データベースも様々なリレーショナルデータベース製品に対応させることが可能です。
+            h3 アーキテクチャー
+            p Yuimarl のシステムを構成するソフトウェア階層と、そこで使用されているプロダクトは、次のようになっています。
+            table.tb1
+              tr
+                th 階層
+                th プロダクト
+                th 説明
+              tr
+                td(rowspan="4") プレゼンテーション層
+                td 各種Webブラウザ
+                td Firefox、Google Chrome、Safari、Internet Explorer で動作確認済みです。
+              tr
+                td
+                  a(href="http://jquery.com/") jQuery
+                td JavaScriptライブラリ。
+              tr
+                td
+                  a(href="http://jqueryui.com/") jQuery UI
+                td jQueryを使用したユーザーインターフェースライブラリ。
+              tr
+                td
+                  a(href="http://ckeditor.com/") CKEditor
+                td HTML形式で文章を入力するJavaScriptライブラリ。メモ入力画面で使用。
+              tr
+                td(rowspan="2") アプリケーション層
+                td Java Runtime Environment
+                td Java実行環境。
+              tr
+                td Java EEアプリケーションサーバー
+                td
+                  | Java Platform, Enterprise Edition（Java EE）の動作をサポートする実行環境。
+                  a(href="https://glassfish.java.net/") GlassFish
+                  | 、
+                  a(href="http://www.payara.fish/") Payara
+                  | など。
+              tr
+                td データアクセス層
+                td 各種データベース製品
+                td
+                  | 現在は、
+                  a(href="http://www.oracle.com/technetwork/jp/java/javadb/overview/index.html")
+                    | Java
+                    | DB
+                  |  および
+                  a(href="http://www-jp.mysql.com/") MySQL
+                  | を使用。
+            h3 ライセンス
+            p
+              | Yuimarl は、
+              a(href="http://opensource.org/licenses/mit-license.php") MITライセンス
+              | （
+              a(href="http://sourceforge.jp/projects/opensource/wiki/licenses/MIT_license") 参考日本語訳
+              | ）の下で公開されています。ご使用に当たっては、このライセンス条項に従ってください。
+            ul
+              li
+                | このソフトウェアを誰でも無償で無制限に扱って良いです。ただし、著作権表示および本許諾表示をソフトウェアのすべての複製または重要な部分に記載しなければなりません。
+              li 作者または著作権者は、ソフトウェアに関してなんら責任を負いません。
+              li 商用・非商用に関わらす、無料で使用することができます。
+              li 配布の際には、ライセンス条項も配布する必要があります。
+              li ソフトウェア・成果物の著作権は作者が保持しています。
+            h3 カスタマイズ
+            p
+              | Yuimarl のソースコードは、自由に改変することができます。Yuimarl
+              | をベースとして、別のシステムを開発することもできます。
+              br
+              | 		カスタマイズを有限会社ビットファームに依頼される場合は、ご連絡ください。Yuimarl
+              | 		に取り込むかを検討させていただきます。内容によっては、有償での対応とさせていただくこともあります。
+            h3 問い合わせ
+            p
+              | Yuimarl に関するお問い合わせ、ご意見、ご要望等は、support@bitfarm.co.jp
+              | まで、電子メールにてお願いいたします。
+            h3 共同開発者募集
+            p
+              | Yuimarl を共同で開発してくださる企業様、個人様を募集しています。
+              br
+              | 		開発を行うためには、ある程度の技術力が必要です。必要なスキルは、上記「アーキテクチャー」で使用されている技術を使用することができるというものです。初心者レベルでも結構です。
+              br
+              | 		報酬は出せませんので、ボランティアとなります。開発環境はご自身で用意していただき、お好きな時間にご自宅等で開発を行っていただきます。
+              | 		社会の役に立つシステムを作ってみたい、開発スキルを向上させたいという方は、ぜひ、ご参加いただれればと思います。
+              br
+              | 		企業様として参加していただければ、それを、貴社としての強みにすることができます。生産性が向上し、競争力が高まります。
+              br
+              | 		参加をご希望される方は、support@bitfarm.co.jp まで、電子メールでご連絡ください。
+              br
+              br
+            .added
+              p
+                a.lb(href="devsetup.html") 開発環境構築
+                br
+                a.lb(href="download.html") ダウンロード
+                br
+                a.lb(href="howtouse.html") 使い方
+                br
+                a.lb(href="develop.html") 開発情報
+                br
+                a.lb(href="deploy.html") 運用環境構築
+            p
+              a(href="#_top") 先頭へ戻る
+              br
+              br
+        .col
+          .submenu
+            h3 CONTENTS
+            ul
+              li
+                a(href="index.html") ホーム
+              li
+                a(href="https://mnitta220.github.io/") 新田システム事務所
+              li
+                a(href="https://github.com/mnitta220/nngb/") 脳内碁盤
+              li
+                a(href="https://mnitta220.github.io/bnan/") 文章暗記
+              li
+                a.current(href="index.html") Yuimarl
+                ul
+                  li
+                    a(href="devsetup.html") 開発環境構築(Windows)
+                  li
+                    a(href="devsetupMysql.html") 開発環境構築(MySQL)
+                  li
+                    a(href="devsetupMac.html") 開発環境構築(Mac)
+                  li
+                    a(href="download.html") ダウンロード
+                  li
+                    a(href="howtouse.html") 使い方
+                  li
+                    a(href="develop.html") 開発情報
+                  li
+                    a(href="deploy.html") 運用環境構築
+      .footer
+        p
+          a(href="https://mnitta220.github.io/privacy.html") プライバシー・ポリシー
+          br
+          | Copyright © 2020 Masahiro Nitta. All rights reserved.

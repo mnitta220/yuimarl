@@ -1,0 +1,26 @@
+﻿@charset "utf-8";
+.box1 {
+	border: thin solid #808080;
+	padding: 4px;
+	background-color: #EBEBEB;
+	margin: 3px;
+}
+.boxPre {
+	border: thin solid #808080;
+	padding: 4px;
+	background-color: #EBEBEB;
+	margin: 3px;
+	font-size: 100%;
+}
+.tb1 {
+	border-collapse: collapse;
+	border: 1px solid #BBBBBB;
+}
+.tb1 th {
+	text-align: center;
+	font-weight: normal;
+	border: 1px solid #BBBBBB;
+}
+.tb1 td {
+	border: 1px solid #BBBBBB;
+}

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: db-config
+stringData:
+  db-url: jdbc:postgresql://eks-work-db.cbgyh8khuxwu.ap-northeast-1.rds.amazonaws.com/myworkdb
+  db-username: mywork
+  db-password: ':tkz(cMcRD4xkxmr'

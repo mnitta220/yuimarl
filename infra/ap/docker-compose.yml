@@ -1,0 +1,32 @@
+version: "3"
+services:
+  db:
+    image: postgres:13.0
+    container_name: postgresql
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: myworkdb
+      POSTGRES_USER: mywork
+      POSTGRES_PASSWORD: test01
+    hostname: postgres
+    restart: always
+  app:
+    image: mnitta220/yuimarl_ap:latest
+    container_name: "yuimarl_ap"
+    ports:
+      - "8080:8080"
+    mem_limit: 1024m
+    cpu_shares: 2048
+    environment:
+      DB_URL: "jdbc:postgresql://db:5432/myworkdb"
+      DB_USERNAME: "mywork"
+      DB_PASSWORD: "test01"
+    restart: always
+    depends_on:
+      - db
+volumes:
+  db-data:
+    driver: local

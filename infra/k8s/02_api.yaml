@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yuimarlapi
+  namespace: yuimarl
+  labels:
+    app: yuimarlapi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: yuimarlapi
+  template:
+    metadata:
+      labels:
+        app: yuimarlapi
+    spec:
+      containers:
+      - name: api
+        image: mnitta220/yuimarl_ap:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DB_URL
+          value: "jdbc:postgresql://postgresql:5432/myworkdb"
+        - name: DB_USERNAME
+          value: "mywork"
+        - name: DB_PASSWORD
+          value: "test01"

@@ -1,5 +1,6 @@
 ### VS Code ###
 .vscode/
 
+/02ap/*.jar
 /infra/**/*.jar
 /infra/nuxt/dist/

@@ -1,0 +1,15 @@
+version: "3"
+services:
+  db:
+    image: postgres:13.0
+    container_name: postgresql
+    ports:
+      - 5432:5432
+    volumes:
+      - /run/desktop/mnt/host/c/Projects/data/yuimarl:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: yuimarl
+      POSTGRES_USER: yuimarluser
+      POSTGRES_PASSWORD: yuimarlpass
+    hostname: postgres
+    restart: always

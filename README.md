@@ -1,6 +1,53 @@
 # Yuimarl Project
 Yuimarl Project
 
+## 1. ローカルDB
+
+```bash
+cd /c/Projects/yuimarl/01db
+docker-compose up -d
+docker container exec -it postgresql bash
+psql -U yuimarluser -d yuimarl
+\i init\01_ddl.sql
+\i init\20_nsert_sample_data.sql
+\dt
+\q
+```
+
+## 2. ローカル Spring Boot
+
+```bash
+cd /c/Projects/yuimarl_ap
+export DB_URL="jdbc:postgresql://localhost:5432/yuimarl"
+export DB_USERNAME=yuimarluser
+export DB_PASSWORD=yuimarlpass
+./mvnw spring-boot:run
+./mvnw clean package
+java -jar target/yuimarl_ap-1.0.0.jar
+
+cd /c/Projects/yuimarl/02ap
+cp ../../yuimarl_ap/target/yuimarl_ap-1.0.0.jar .
+docker build -t mnitta220/yuimarl_ap:latest --build-arg JAR_FILE=yuimarl_ap-1.0.0.jar .
+docker login -u mnitta220 -p ***
+docker image push mnitta220/yuimarl_ap:latest
+
+```
+
+## 3. ローカル docker + Nuxt.js
+
+```bash
+cd /c/Projects/yuimarl/01db
+docker-compose down
+cd /c/Projects/yuimarl/03docker
+docker-compose up -d
+cd /c/Projects/yuimarl_nuxt
+yarn dev
+```
+
+## 4. ローカル Kubernetes + Nuxt.js
+
+## 5. AWS
+
 #### Build
 
 ```bash

@@ -53,7 +53,17 @@ html(lang="ja")
                       li メールアドレスまたは Google アカウントでログインする。
                       li プロジェクトを登録する。
                       li プロジェクトにメンバーを追加する。
-                      li チケットを登録する。（このシステムでは、プロジェクトで行うタスクを「チケット」として登録します）
+                      li
+                        span.badge.bg-info.text-dark 開発中
+                        |  チケットを登録する。（このシステムでは、プロジェクトで行うタスクを「チケット」として登録します）
+
+                .row.pb-3
+                  .col
+                    h3 開発中の画面
+                    p
+                      | 次のURLで、開発中の Yuimarl をご覧いただくことができます。データを登録していただいても結構ですが、データを消去する場合があります。<br>
+                      a(href="https://yuimarl-web-3titd7zm3a-an.a.run.app" target="_blank") https://yuimarl-web-3titd7zm3a-an.a.run.app
+
                 .row.pb-3
                   .col
                     h3 開発情報、動作環境
@@ -68,6 +78,7 @@ html(lang="ja")
                       | サーバーが&nbsp;
                       a(href="https://cloud.google.com/?hl=ja" target="_blank") Google Cloud
                       | &nbsp;のインフラで動作します。アプリケーションの実行環境は Cloud Run、データベースは Firestore、ユーザー認証には Firebase Authentication が使われています。
+
                 .row.pb-3
                   .col
                     h3 アーキテクチャー

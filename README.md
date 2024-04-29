@@ -3,6 +3,13 @@
 ホームページ:  
 https://mnitta220.github.io/yuimarl/
 
+# Command
+
+```sh
+docker image build -t masahironitta/yuimarl:0.0.1 .
+docker image push masahironitta/yuimarl:0.0.1
+```
+
 # Links
 
 - [Rust](https://www.rust-lang.org/ja/)

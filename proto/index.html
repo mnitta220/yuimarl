@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Yuimarl</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="icon" type="image/x-icon" href="../static/favicon.ico">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+      <div class="container"><a class="navbar-brand" href="/"><img class="mw-100" src="../static/images/logo.png" alt="Yuimarl"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbar-content">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item active"><a class="nav-link" href="/">ホーム<span class="visually-hidden">(current)</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#about">プロジェクト</a></li>
+            <li class="nav-item"><a class="nav-link" href="#items">チケット</a></li>
+            <li class="nav-item"><a class="nav-link" href="#items">利用ガイド</a></li>
+            <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">インフォメーション</a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown"><a class="dropdown-item" href="#shop">お店</a><a class="dropdown-item" href="#access">アクセス</a></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="py-3">
+        <section id="news">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-3">
+                <h3>お知らせ</h3>
+              </div>
+              <div class="col-md-9 py-0">
+                <dl class="row">
+                  <dt class="col-md-4">2021年○月○日</dt>
+                  <dd class="col-md-8">ドリンクサービスクーポン配布中ですドリンクサービスクーポン配布中ですドリンクサービスクーポン配布中です</dd>
+                  <dt class="col-md-4">2021年○月○日</dt>
+                  <dd class="col-md-8">この季節だけの花木を追加しました</dd>
+                  <dt class="col-md-4">2021年○月○日</dt>
+                  <dd class="col-md-8">新しいプランター入荷しました</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <form action="/ticket/add" method="POST">
+        <div class="py-3 bg-light">
+          <section id="news">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-3">
+                  <h3>プロジェクト</h3>
+                </div>
+                <div class="col-md-9">
+                  <dl class="row">
+                    <div class="col-md-8 mb-2">
+                      <select class="form-select" id="project" name="project">
+                        <option value="018f1071-d05f-7e42-bbc9-bc448a63087b">test5</option>
+                        <option value="018f0b0c-e9e7-738e-bdd3-76102d6160e7">microservices_demo_rust</option>
+                        <option value="018f05bd-f670-7280-a046-8bd3518e0aa5">yuimarl</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4 mb-1"><a class="btn btn-primary" href="/project/add">プロジェクトを作成</a></div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="py-3">
+          <section class="mb-3" id="tickets">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-3">
+                  <h3>チケット</h3>
+                </div>
+                <div class="col-md-9">
+                  <dl class="row">
+                    <dt class="col-md-3"><a href="#">YM1000</a></dt>
+                    <dd class="col-md-9">ドリンクサービスクーポン配布中です</dd>
+                    <dt class="col-md-3"><a href="#">YM1001</a></dt>
+                    <dd class="col-md-9">この季節だけの花木を追加しました</dd>
+                    <dt class="col-md-3"><a href="#">YM1002</a></dt>
+                    <dd class="col-md-9">新しいプランター入荷しました</dd>
+                  </dl>
+                  <button class="btn btn-primary" type="submit">チケットを追加</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </form>
+    </main>
+    <footer class="py-1 mt-3 bg-dark text-light">
+      <div class="container text-center pt-1">
+        <ul class="nav justify-content-center">
+          <li class="nav-item"><a class="nav-link" href="/">ホーム</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/yuimarl/" target="_blank">製品ホームページ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">利用規約</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contact">お問い合わせ</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/" target="_blank">新田システム事務所</a></li>
+        </ul>
+        <p style="color: #a0a0a0"><small>Yuimarl version 0.0.10&nbsp;&nbsp;&nbsp;Copyright &copy; 2024 Masahiro Nitta</small></p>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+  </body>
+</html>

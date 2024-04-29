@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>チケットを作成 - Yuimarl</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="icon" type="image/x-icon" href="../static/favicon.ico">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+      <div class="container"><a class="navbar-brand" href="/"><img class="mw-100" src="../static/images/logo.png" alt="Yuimarl"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbar-content">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item active"><a class="nav-link" href="/">ホーム<span class="visually-hidden">(current)</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#about">プロジェクト</a></li>
+            <li class="nav-item"><a class="nav-link" href="#items">チケット</a></li>
+            <li class="nav-item"><a class="nav-link" href="#items">利用ガイド</a></li>
+            <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">インフォメーション</a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown"><a class="dropdown-item" href="#shop">お店</a><a class="dropdown-item" href="#access">アクセス</a></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="py-3">
+        <div class="container">
+          <h3 class="mb-3">チケット</h3>
+          <form>
+            <div class="row py-2">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="ticket-id">プロジェクト/チケットID</label>
+              <div class="col-md-9 mb-1">
+                <p>Yuimarl / YM1000</p>
+              </div>
+            </div>
+            <div class="row py-2">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="name">チケット名</label>
+              <div class="col-md-9 mb-1">
+                <input class="form-control" id="name" type="text" maxlength="40" required>
+              </div>
+            </div>
+            <div class="row py-2">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="message">内容</label>
+              <div class="col-md-9 mb-1">
+                <div class="form-floating">
+                  <textarea class="form-control" id="message" rows="8" name="message" placeholder="チケット内容"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row py-2">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="member">担当者</label>
+              <div class="col-md-9 mb-1">
+                <div class="form-floating">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">名前</th>
+                        <th scope="col">メールアドレス</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>新田雅浩</td>
+                        <td>masa.nitta@nifty.ne.jp</td>
+                        <td><a class="badge bg-info text-dark link-underline link-underline-opacity-0" href="#">削除</a>&nbsp;<a class="badge bg-info text-dark link-underline link-underline-opacity-0" href="#">
+                            <svg class="bi bi-arrow-up" xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"></path>
+                            </svg></a>&nbsp;<a class="badge bg-info text-dark link-underline link-underline-opacity-0" href="#">
+                            <svg class="bi bi-arrow-down" xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"></path>
+                            </svg></a></td>
+                      </tr>
+                      <tr>
+                        <td>新田雅浩</td>
+                        <td>masa.nitta@nifty.ne.jp</td>
+                        <td><a class="badge bg-info text-dark link-underline link-underline-opacity-0" href="#">削除</a>&nbsp;<a class="badge bg-info text-dark link-underline link-underline-opacity-0" href="#">
+                            <svg class="bi bi-arrow-up" xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"></path>
+                            </svg></a>&nbsp;<a class="badge bg-info text-dark link-underline link-underline-opacity-0" href="#">
+                            <svg class="bi bi-arrow-down" xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"></path>
+                            </svg></a></td>
+                      </tr>
+                      <tr>
+                        <td>新田雅浩</td>
+                        <td>masa.nitta@nifty.ne.jp</td>
+                        <td><a class="badge bg-info text-dark link-underline link-underline-opacity-0" href="#">削除</a>&nbsp;<a class="badge bg-info text-dark link-underline link-underline-opacity-0" href="#">
+                            <svg class="bi bi-arrow-up" xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"></path>
+                            </svg></a>&nbsp;<a class="badge bg-info text-dark link-underline link-underline-opacity-0" href="#">
+                            <svg class="bi bi-arrow-down" xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"></path>
+                            </svg></a></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <button class="btn btn-primary btn-sm" type="submit" data-bs-toggle="tooltip" data-bs-placement="top" title="担当者を追加する">＋</button>
+                  <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" title="担当者を追加する" data-bs-target="#exampleModal">＋</button>
+                </div>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">担当者を検索</h1>
+                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">...</div>
+                      <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="button">Save changes</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <fieldset class="py-2">
+              <div class="row">
+                <legend class="col-form-label col-md-3 bg-light mb-1">開始日/終了日</legend>
+                <div class="col-md-9 mb-1">
+                  <dl class="row">
+                    <div class="col-sm-6 mb-2">
+                      <label class="form-label" for="startdate">開始日</label>
+                      <input class="form-control" id="startdate" type="date">
+                    </div>
+                    <div class="col-sm-6 mb-1">
+                      <label class="form-label" for="enddate">終了日</label>
+                      <input class="form-control" id="enddate" type="date">
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset class="py-2">
+              <div class="row">
+                <legend class="col-form-label col-md-3 bg-light mb-1">進捗率</legend>
+                <div class="col-md-9 mb-1">
+                  <dl class="row">
+                    <div class="col-sm-6 mb-2">
+                      <select class="form-select" id="progress" name="progress">
+                        <option value="0">0%</option>
+                        <option value="10">10%</option>
+                        <option value="20">20%</option>
+                        <option value="30">30%</option>
+                        <option value="40">40%</option>
+                        <option value="50">50%</option>
+                        <option value="60">60%</option>
+                        <option value="70">70%</option>
+                        <option value="80">80%</option>
+                        <option value="90">90%</option>
+                        <option value="100">100%</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-6 mb-1">
+                      <div class="form-check">
+                        <input class="form-check-input" id="finished" type="checkbox" value="">
+                        <label class="form-check-label" for="finished">完了済</label>
+                      </div>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset class="py-2">
+              <div class="row">
+                <legend class="col-form-label col-md-3 bg-light mb-1">優先度</legend>
+                <div class="col-md-9 mb-1">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" id="priority1" name="priority" type="radio" value="priority1">
+                    <label class="form-check-label" for="priority1">最優先</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" id="priority2" name="priority" type="radio" value="priority2">
+                    <label class="form-check-label" for="priority2">高</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" id="priority3" name="priority" type="radio" value="priority3">
+                    <label class="form-check-label" for="priority3">中</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" id="priority4" name="priority" type="radio" value="priority4">
+                    <label class="form-check-label" for="priority4">低</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" id="priority0" name="priority" type="radio" value="priority0" checked="checked">
+                    <label class="form-check-label" for="priority0">未設定</label>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset class="py-2">
+              <div class="row">
+                <legend class="col-form-label col-md-3 bg-light mb-1">親チケット</legend>
+                <div class="col-md-9 mb-1">
+                  <dl class="row">
+                    <dt class="col-md-3"><a href="#">YM1000</a></dt>
+                    <dd class="col-md-9">ドリンクサービスクーポン配布中です</dd>
+                  </dl>
+                </div>
+              </div>
+            </fieldset>
+            <div class="row py-2">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="category">子チケット</label>
+              <div class="col-md-9 mb-1">
+                <dl class="row">
+                  <dt class="col-md-3"><a href="#">YM1000</a></dt>
+                  <dd class="col-md-9">ドリンクサービスクーポン配布中です</dd>
+                  <dt class="col-md-3"><a href="#">YM1001</a></dt>
+                  <dd class="col-md-9">この季節だけの花木を追加しました</dd>
+                  <dt class="col-md-3"><a href="#">YM1002</a></dt>
+                  <dd class="col-md-9">新しいプランター入荷しました</dd>
+                </dl>
+              </div>
+            </div>
+            <div class="row py-3 mt-2 bg-light">
+              <div class="col-md-9">
+                <button class="btn btn-primary" type="submit">作成する</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+    <footer class="py-1 mt-3 bg-dark text-light">
+      <div class="container text-center pt-1">
+        <ul class="nav justify-content-center">
+          <li class="nav-item"><a class="nav-link" href="/">ホーム</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/yuimarl/" target="_blank">製品ホームページ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">利用規約</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contact">お問い合わせ</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/" target="_blank">新田システム事務所</a></li>
+        </ul>
+        <p style="color: #a0a0a0"><small>Yuimarl version 0.0.10&nbsp;&nbsp;&nbsp;Copyright &copy; 2024 Masahiro Nitta</small></p>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+  </body>
+</html>

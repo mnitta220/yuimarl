@@ -1,0 +1,33 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title 利用規約 - Yuimarl
+    link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous")
+    link(rel="icon" type="image/x-icon" href="../static/favicon.ico")
+  body
+    nav.navbar.navbar-expand-md.navbar-dark.bg-dark.sticky-top
+      .container
+        img.mw-100(src="../static/images/logo.png" alt="Yuimarl")
+
+    main
+      .container.pt-3.pb-1
+        h2 利用規約
+        p 「Yuimarl（ゆいまーる）」（以下、「当システム」と記述します）をお使いいただくためには、以下の利用規約に同意していただく必要があります。
+      .container
+        ol
+          li 現在、当システムは無料で使用できますが、将来、有料化する可能性があります。
+          li 運用者（新田システム事務所）は、必要に応じて、当システムに保存されているデータを閲覧する場合があります。
+          li データ消失、情報漏洩、一時的または永久的なシステム停止などにより、利用者が不利益をこうむったとしても、運用者は一切の補償を行いません。
+          li 当システムにおいて、誹謗中傷や、公序良俗に反する不適切な使用などが発覚した場合は、利用者のアカウントを停止させていただく場合があります。
+          li 長期間利用されていないアカウントやデータは、予告なく削除させていただく場合があります。
+        .pt-3.pb-4
+          a.btn.btn-primary(href="/agree/ok" role="button") 同意する
+          | &nbsp;&nbsp;
+          a.btn.btn-secondary(href="/agree/no" role="button") 同意しない
+        .alert.alert-danger.mb-3(role="alert") 利用規約に同意していただけない場合は、このシステムを使用することができません。
+        .alert.alert-info.mb-4(role="alert")
+          | 利用者がご自身でこのシステムのサーバーを運用する方法を公開しています。可能であれば、それによって利用することもご検討ください。
+
+    include includes/footer.pug

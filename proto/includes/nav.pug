@@ -1,0 +1,25 @@
+nav.navbar.navbar-expand-md.navbar-dark.bg-dark.sticky-top
+  .container
+    a.navbar-brand(href="/")
+      img.mw-100(src="../static/images/logo.png" alt="Yuimarl")
+    button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content" aria-controls="navbar-content"
+      aria-expanded="false" aria-label="Toggle navigation")
+      span.navbar-toggler-icon
+    .collapse.navbar-collapse#navbar-content
+      ul.navbar-nav.me-auto
+        li.nav-item.active
+          a.nav-link(href="/")
+            | ホーム
+            span.visually-hidden (current)
+        li.nav-item
+          a.nav-link(href="#about") プロジェクト
+        li.nav-item
+          a.nav-link(href="#items") チケット
+        li.nav-item
+          a.nav-link(href="#items") 利用ガイド
+        li.nav-item.dropdown
+          a.nav-link.dropdown-toggle(href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false") インフォメーション
+          .dropdown-menu(aria-labelledby="navbarDropdown")
+            a.dropdown-item(href="#shop") お店
+            a.dropdown-item(href="#access") アクセス

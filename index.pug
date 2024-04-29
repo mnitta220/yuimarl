@@ -1,0 +1,38 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title Yuimarl
+    link(rel="stylesheet" href="css/bootstrap.min.css")
+    link(rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css")
+    link(rel="stylesheet" href="css/style3.css")
+  body
+    main
+      .container
+        .row
+          .col-md-1
+          .col.col-md-10
+            include includes/logo.pug
+            include includes/nav.pug
+
+            .row
+              .col-md-9
+                .row.py-3
+                  .col
+                    .alert.alert-danger(role="alert")
+                      | このシステムは、現在、開発中です。
+
+              .col-md-3
+                .submenu.mt-3
+                  h3 CONTENTS
+                  ul
+                    li
+                      a(href="../index.html") 新田システム事務所
+                    li
+                      a.current(href="index.html") ホーム
+
+            include includes/footer.pug
+          .col-md-1
+
+    script(src="js/bootstrap.bundle.min.js")

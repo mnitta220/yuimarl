@@ -1,0 +1,163 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title Yuimarl
+    link(rel="stylesheet" href="css/bootstrap.min.css")
+    link(rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css")
+    link(rel="stylesheet" href="css/style3.css")
+  body
+    main
+      .container
+        .row
+          .col-md-1
+          .col.col-md-10
+            include includes/logo.pug
+            include includes/nav.pug
+
+            .row
+              .col-md-9
+                .row.py-3
+                  .col
+                    .alert.alert-danger(role="alert")
+                      | このシステムは、現在、開発中です。
+                      br
+                      | まだ、お使いいただくことができません。
+                .row.pb-3
+                  .col
+                    p
+                      | 「Yuimarl」（ゆいまーる）は、少人数のグループ、または、個人のプロジェクトを管理するためのシステムです。
+                      br
+                      | 以下の特徴があります。
+                    ul
+                      li グループまたは個人のプロジェクトを自由に登録することができます。
+                      li 無料で使うことができます。（将来、有料化する可能性があります）
+                      li インターネットにつながった、パソコン、スマートフォン、タブレットで使うことができます。
+                      li サーバーをご自身で運用するための情報が公開されています。
+                      li ソースコードが公開されているので、ご自身で機能を改変することができます。
+                .row.pb-3
+                  .col
+                    h3 名前の由来
+                    p
+                      | 「ゆいまーる」は、沖縄の言葉で、「相互扶助」（そうごふじょ）、「助け合い」を意味します。
+                      | 「ゆい」は「結ぶ」、「まーる」は「交流の場」です。<br>
+                      | このシステムが、共同作業や個人作業の基盤となって、価値的な作業が推進されればよいと願っています。<br>
+                      | また、多くの方からのご意見、ご協力をいただき、このシステムが成長していけばよいと思っています。<br>
+                      | そうした願いと期待を込めて、この名前を付けました。
+                .row.pb-3
+                  .col
+                    h3 機能
+                    p 現時点での機能は、以下の通りです。順次、機能を追加していきます。
+                    ul
+                      li メールアドレスまたは Google アカウントでログインする。
+                      li プロジェクトを登録する。
+                      li プロジェクトにメンバーを追加する。
+                      li チケットを登録する。（このシステムでは、プロジェクトで行うタスクを「チケット」として登録します）
+                .row.pb-3
+                  .col
+                    h3 開発情報、動作環境
+                    p
+                      | Yuimarl のプログラミング言語には、
+                      a(href="https://www.rust-lang.org/ja/" target="_blank") Rust
+                      | &nbsp;が使用されています。
+                      br
+                      | サーバーが&nbsp;
+                      a(href="https://cloud.google.com/?hl=ja" target="_blank") Google Cloud
+                      | &nbsp;のインフラで動作します。アプリケーションの実行環境は Cloud Run、データベースは Firestore、ユーザー認証には Firebase Authentication が使われています。
+                .row.pb-3
+                  .col
+                    h3 アーキテクチャー
+                    p Yuimarl のシステムを構成するソフトウェア階層と、そこで使用されているプロダクトは、次のようになっています。
+                    table.table.table-bordered
+                      tr
+                        th 階層
+                        th プロダクト
+                        th 説明
+                      tr
+                        td(rowspan="4") プレゼンテーション層
+                        td 各種Webブラウザ
+                        td Google Chrome、Microsoft Edge、Safari、Firefox で動作確認済みです。
+                      tr
+                        td
+                          a(href="https://github.com/firebase/firebaseui-web" target="_blank") FirebaseUI Auth
+                        td Firebase Authentication を使ったユーザー認証のUIライブラリ
+                      tr
+                        td
+                          a(href="https://getbootstrap.jp/" target="_blank") Bootstrap
+                        td フロントエンドツールキット
+                      tr
+                        td
+                          a(href="http://jquery.com/" target="_blank") jQuery
+                        td JavaScript ライブラリ
+                      tr
+                        td(rowspan="3") アプリケーション層
+                        td
+                          a(href="https://cloud.google.com/run?hl=ja" target="_blank") Cloud Run
+                        td アプリケーションを Docker コンテナで実行する Google Cloud 環境
+                      tr
+                        td
+                          a(href="https://github.com/firebase/firebaseui-web" target="_blank") Firebase Authentication
+                        td Google Cloud のユーザー認証基盤
+                      tr
+                        td
+                          a(href="https://github.com/tokio-rs/axum" target="_blank") axum
+                        td Rust の Webアプリケーションフレームワーク
+                      tr
+                        td データアクセス層
+                        td
+                          a(href="https://cloud.google.com/firestore?hl=ja" target="_blank") Firestore
+                        td Google Cloud のドキュメントデータベース
+                .row.pb-3
+                  .col
+                    h3 ライセンス
+                    p
+                      | Yuimarl は、
+                      a(href="http://opensource.org/licenses/mit-license.php" target="_blank") MITライセンス
+                      | （
+                      a(href="http://sourceforge.jp/projects/opensource/wiki/licenses/MIT_license" target="_blank") 参考日本語訳
+                      | ）の下で公開されています。ソースコードのご使用に当たっては、このライセンス条項に従ってください。
+                    ul
+                      li
+                        | このソフトウェアのソースコードを誰でも無償で使っていただいて結構です。ただし、著作権表示および本許諾表示をソフトウェアのすべての複製または重要な部分に記載しなければなりません。
+                      li 作者または著作権者は、ソフトウェアに関してなんら責任を負いません。
+                      li 商用・非商用に関わらす、無料で使用することができます。
+                      li 配布の際には、ライセンス条項も配布する必要があります。
+                      li ソフトウェア・成果物の著作権は作者が保持しています。
+                .row.pb-3
+                  .col
+                    h3 カスタマイズ
+                    p
+                      | Yuimarl のソースコードは、自由に改変することができます。Yuimarl
+                      | をベースとして、別のシステムを開発することもできます。
+                      br
+                      | カスタマイズを新田システム事務所に依頼される場合は、ご連絡ください。
+                .row.pb-3
+                  .col
+                    h3 問い合わせ
+                    p
+                      | Yuimarl に関するお問い合わせ、ご意見、ご要望等は、masa.nitta@nifty.ne.jp
+                      | まで、電子メールでお願いいたします。
+                .row.pb-3
+                  .col
+                    h3 共同開発者募集
+                    p
+                      | Yuimarl を共同で開発してくださる企業または個人の方を募集しています。
+                      br
+                      | 報酬は出せませんので、ボランティアとなります。開発環境はご自身で用意していただき、お好きな時間にご自宅等で開発を行っていただきます。
+                      br
+                      | 参加をご希望される方は、masa.nitta@nifty.ne.jp まで、電子メールでご連絡ください。
+
+              .col-md-3
+                .submenu.mt-3
+                  h3 CONTENTS
+                  ul
+                    li
+                      a(href="../index.html") 新田システム事務所
+                    li
+                      a.current(href="index.html") ホーム
+
+            include includes/footer.pug
+          .col-md-1
+
+    script(src="js/bootstrap.bundle.min.js")

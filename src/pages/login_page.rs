@@ -76,7 +76,6 @@ impl LoginPage {
               signInSuccessUrl: 'static/success.html',
               signInOptions: [
                 firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-                firebase.auth.FacebookAuthProvider.PROVIDER_ID,
                 firebase.auth.EmailAuthProvider.PROVIDER_ID,
               ],
               tosUrl: 'static/404.html',

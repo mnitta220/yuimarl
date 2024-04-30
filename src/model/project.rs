@@ -344,6 +344,80 @@ impl ProjectMember {
             role = v[i];
             i += 1;
             tracing::info!("uid={} role={}", uid, role);
+            let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
+                .fluent()
+                .select()
+                .fields(paths!(ProjectMember::{id, project_id, member, role, last_used})) // Optionally select the fields needed
+                .from(COLLECTION_MEMBER)
+                .filter(|q| {
+                    q.for_all([
+                        q.field(path!(ProjectMember::project_id)).eq(&project_id),
+                        q.field(path!(ProjectMember::member)).eq(&uid),
+                    ])
+                })
+                .order_by([(
+                    path!(ProjectMember::last_used),
+                    FirestoreQueryDirection::Descending,
+                )])
+                .obj() // Reading documents as structures using Serde gRPC deserializer
+                .stream_query_with_errors()
+                .await
+            {
+                Ok(s) => s,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+
+            let project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
+                Ok(s) => s,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+            if project_members.len() > 0 {
+                return Ok(format!("{}はすでに存在します。", uid));
+            }
+            let mut member = ProjectMember {
+                id: "".to_string(),
+                project_id: project_id.to_string(),
+                member: uid.to_string(),
+                role: role.parse::<i32>().unwrap(),
+                last_used: Utc::now(),
+            };
+            let mut count = 0u32;
+
+            loop {
+                count += 1;
+                if count > 9 {
+                    return Err(anyhow::anyhow!("Failed to create project".to_string()));
+                }
+                let id = Uuid::now_v7().to_string();
+                member.id = id.clone();
+
+                match db
+                    .fluent()
+                    .insert()
+                    .into(&COLLECTION_MEMBER)
+                    .document_id(id)
+                    .object(&member)
+                    .execute::<ProjectMember>()
+                    .await
+                {
+                    Ok(_) => {
+                        break;
+                    }
+                    Err(e) => match &e {
+                        firestore::errors::FirestoreError::DataConflictError(e) => {
+                            tracing::error!("DataConflictError: {:?}", e);
+                            continue;
+                        }
+                        _ => {
+                            return Err(anyhow::anyhow!(e.to_string()));
+                        }
+                    },
+                };
+            }
         }
 
         Ok("".to_string())

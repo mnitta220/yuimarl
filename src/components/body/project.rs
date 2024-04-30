@@ -505,10 +505,21 @@ impl Component for ProjectBody {
                         }
                     }
                     console.log('***buf=' + buf);
-                    if (buf.length > 0) {
-                        $('#add_members').val(buf);
-                        $('#membarAddForm').submit();
-                    }
+                    //if (buf.length > 0) {
+                    //    $('#add_members').val(buf);
+                    //    $('#membarAddForm').submit();
+                    //}
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/memberAdd",
+                        data: {
+                          members: buf
+                        },
+                        success: function(result) {
+                            console.log('***result=' + result);
+                            //var ret = JSON.parse(result);
+                        }
+                    });
                 });
             </script>"##;
         }

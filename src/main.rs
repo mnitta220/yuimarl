@@ -60,11 +60,12 @@ async fn main() {
             "/project/add",
             get(handlers::project::get_add_project).post(handlers::project::post_project),
         )
-        .route("/member/add", post(handlers::project::post_member_add))
+        //.route("/member/add", post(handlers::project::post_member_add))
         .route("/ticket/add", post(handlers::ticket::post_add_ticket))
         .route("/ticket/create", post(handlers::ticket::post_create_ticket))
         .route("/contact", get(handlers::contact::get_contact))
         .route("/api/userByEmail", post(handlers::api::user_by_email))
+        .route("/api/memberAdd", post(handlers::api::member_add))
         //.route("/_healthz", get(handlers_bk::health))
         .nest_service("/static", ServeDir::new("static"))
         .layer(

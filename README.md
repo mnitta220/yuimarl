@@ -3,6 +3,22 @@
 ホームページ:  
 https://mnitta220.github.io/yuimarl/index2.html
 
+# 環境構築
+
+## Rust をインストール
+
+## VSCode をインストール
+
+## gcloud CLI をインストール
+
+https://cloud.google.com/sdk/docs/install?hl=ja
+
+ローカルで動作確認する場合、次のコマンドを実行しておく。
+
+```sh
+gcloud auth application-default login
+```
+
 # Command
 
 ## VSCode のワークスペースを起動

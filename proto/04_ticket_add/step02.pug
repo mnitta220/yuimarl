@@ -14,7 +14,16 @@ html(lang="ja")
       .py-3
         .container
           h3.mb-3 チケット
-          form
+          ul.nav.nav-tabs
+            li.nav-item
+              a.nav-link.active(href="#") 基本情報
+            li.nav-item
+              a.nav-link(href="#") ノート
+            li.nav-item
+              a.nav-link(href="#") コメント
+            li.nav-item
+              a.nav-link(href="#") 更新履歴
+          form.pt-2
             //- プロジェクト/チケットID
             .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="ticket-id") プロジェクト/チケットID

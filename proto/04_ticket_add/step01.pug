@@ -31,7 +31,7 @@ html(lang="ja")
                       a.btn.btn-primary(href="/project/add") プロジェクト一覧
                       | &nbsp;&nbsp;
                       a.btn.btn-primary(href="step02.html") プロジェクトを作成
-                  dl.row
+                  //- dl.row
                     .col
                       a.btn.btn-outline-primary(href="/project/add") 
                         img.icon1(src="../../static/images/list-outline.svg")
@@ -40,6 +40,15 @@ html(lang="ja")
                       a.btn.btn-outline-primary(href="step02.html")
                         img.icon1(src="../../static/images/add-circle-outline.svg")
                         | &nbsp;プロジェクトを作成
+                  dl.row
+                    .col
+                      a(href="/project/add" title="プロジェクト一覧") 
+                        img.icon3(src="../../static/images/list-outline.svg")
+                      //- | &nbsp;[プロジェクト一覧]
+                      | &nbsp;&nbsp;&nbsp;
+                      a(href="step02.html" title="プロジェクトを作成")
+                        img.icon3(src="../../static/images/add-circle-outline.svg")
+                      //- | &nbsp;[プロジェクトを作成]
 
         //- チケット
         .py-3
@@ -50,9 +59,12 @@ html(lang="ja")
                   h3 チケット
                 .col-md-9
                   //- button.btn.btn-primary(type="submit") チケットを追加
-                  a.btn.btn-outline-primary(href="step02.html")
+                  //- a.btn.btn-outline-primary(href="step02.html")
                     img.icon1(src="../../static/images/add-circle-outline.svg")
                     | &nbsp;チケットを追加
+                  a(href="step02.html" title="チケットを追加")
+                    img.icon3(src="../../static/images/add-circle-outline.svg")
+                  small.text-secondary &nbsp;: チケットを追加
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light

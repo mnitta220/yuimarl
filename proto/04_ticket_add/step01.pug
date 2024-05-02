@@ -5,6 +5,7 @@ html(lang="ja")
     meta(name="viewport" content="width=device-width, initial-scale=1")
     title Yuimarl
     link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous")
+    link(rel="stylesheet" href="../../static/css/style.css")
     link(rel="icon" type="image/x-icon" href="../../static/favicon.ico")
   body
     include ../includes/nav.pug
@@ -25,11 +26,20 @@ html(lang="ja")
                       | &nbsp;&nbsp;
                       small
                         span.badge.bg-secondary.text-light オーナー
-                  dl.row
+                  //- dl.row
                     .col
                       a.btn.btn-primary(href="/project/add") プロジェクト一覧
                       | &nbsp;&nbsp;
                       a.btn.btn-primary(href="step02.html") プロジェクトを作成
+                  dl.row
+                    .col
+                      a.btn.btn-outline-primary(href="/project/add") 
+                        img.icon1(src="../../static/images/list-outline.svg")
+                        | &nbsp;プロジェクト一覧
+                      | &nbsp;&nbsp;
+                      a.btn.btn-outline-primary(href="step02.html")
+                        img.icon1(src="../../static/images/add-circle-outline.svg")
+                        | &nbsp;プロジェクトを作成
 
         //- チケット
         .py-3
@@ -39,7 +49,10 @@ html(lang="ja")
                 .col-md-3
                   h3 チケット
                 .col-md-9
-                  button.btn.btn-primary(type="submit") チケットを追加
+                  //- button.btn.btn-primary(type="submit") チケットを追加
+                  a.btn.btn-outline-primary(href="step02.html")
+                    img.icon1(src="../../static/images/add-circle-outline.svg")
+                    | &nbsp;チケットを追加
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light

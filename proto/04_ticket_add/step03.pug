@@ -32,7 +32,8 @@ html(lang="ja")
             .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="name") チケット名
               .col-md-9.mb-1
-                input.form-control#name(type="text" maxlength="40" value="" required)
+                input.form-control.is-invalid#name(type="text" maxlength="40" value="" required)
+                .invalid-feedback 入力してください。
             // 内容
             .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="message") 内容
@@ -146,14 +147,14 @@ html(lang="ja")
       hr
       .row.align-items-end
         .col-md-2.text-end.py-1
-          a.nav-link.px-2.px-md-0(href="step01.html") ← prev
+          a.nav-link.px-2.px-md-0(href="step02.html") ← prev
         .col-md-8
           .alert.alert-danger.text-start(role="alert")
-            | step02.
+            | step03.
             br
-            | チケット追加の初期画面
+            | 何も入力せずに追加ボタンを押すとエラーメッセージを表示する。
         .col-md-2.text-start.py-1
-          a.nav-link.px-2.px-md-0(href="step03.html") next →
+          a.nav-link.px-2.px-md-0(href="step04.html") next →
 
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"

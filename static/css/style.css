@@ -1,7 +1,6 @@
 .icon {
   width: 22px;
   height: 100%;
-  color: red;
 }
 
 .icon1 {
@@ -17,4 +16,9 @@
 .icon3 {
   width: 30px;
   height: 100%;
+}
+
+.btn-help {
+  font-size: 9pt;
+  color: #888;
 }

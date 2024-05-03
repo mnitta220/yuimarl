@@ -14,18 +14,18 @@ html(lang="ja")
         .container
           h3.mb-3 プロジェクトを作成
           form
-            //- プロジェクト名
+            // プロジェクト名
             .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="name") プロジェクト名
               .col-md-9.mb-1
                 input.form-control#name(type="text" maxlength="40" value="文化祭実行プロジェクト" required)
-            //- オーナー
+            // オーナー
             .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="owner") オーナー
               .col-md-9.mb-1
                 .form-floating
                   span 山田太郎 [taro.yamada@gmail.com]
-            //- メンバー
+            // メンバー
             .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="member") メンバー
               .col-md-9.mb-1
@@ -109,4 +109,6 @@ html(lang="ja")
         crossorigin="anonymous")
     script(src="https://code.jquery.com/jquery-3.7.1.min.js")
     script.
-      $("#btnMemberAdd").click();
+      $(document).ready(function() {
+        $("#btnMemberAdd").click();
+      });

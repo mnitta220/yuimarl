@@ -1,0 +1,236 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title チケットを作成 - Yuimarl
+    link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous")
+    link(rel="stylesheet" href="../../static/css/style.css")
+    link(rel="icon" type="image/x-icon" href="../../static/favicon.ico")
+  body
+    include ../includes/nav.pug
+
+    main
+      .py-3
+        .container
+          h3.mb-3 チケット
+          ul.nav.nav-tabs
+            li.nav-item
+              a.nav-link.active(href="#") 基本情報
+            li.nav-item
+              a.nav-link(href="#") ノート
+            li.nav-item
+              a.nav-link(href="#") コメント
+            li.nav-item
+              a.nav-link(href="#") 更新履歴
+          form.pt-2
+            // プロジェクト/チケットID
+            .row.py-2
+              label.col-md-3.col-form-label.bg-light.mb-1(for="ticket-id") プロジェクト/チケットID
+              .col-md-9.mb-1 文化祭実行プロジェクト / BN8
+            // チケット名
+            .row.py-2
+              label.col-md-3.col-form-label.bg-light.mb-1(for="name") チケット名
+              .col-md-9.mb-1
+                input.form-control#name(type="text" maxlength="40" value="たこやき模擬店" required)
+            // 内容
+            .row.py-2
+              label.col-md-3.col-form-label.bg-light.mb-1(for="message") 内容
+              .col-md-9.mb-1
+                textarea.form-control#message(rows="3" name="message")
+                  | たこやき模擬店を出店するために、やるべきことを検討する。
+            // 担当者
+            .row.py-2
+              label.col-md-3.col-form-label.bg-light.mb-1(for="member") 担当者
+              .col-md-9.mb-1
+                .form-floating
+                  table.table.table-hover
+                    thead
+                      tr
+                        th(scope="col") 名前
+                        th(scope="col") メールアドレス
+                        th(scope="col")
+                    tbody
+                      tr
+                        td 山田太郎
+                        td taro.yamada@mail.com
+                        td
+                          img.icon(src="../../static/ionicons/trash-outline.svg" title="削除")
+                          | &nbsp;
+                          img.icon(src="../../static/ionicons/arrow-down-outline.svg" title="下に移動")
+                        //-
+                          a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#") 削除
+                          | &nbsp;
+                          a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#")
+                            svg.bi.bi-arrow-down(xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 16 16")
+                              path(fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z")
+                      tr
+                        td 岩鬼正美
+                        td masami.iwaki@mail.com
+                        td
+                          img.icon(src="../../static/ionicons/trash-outline.svg" title="削除")
+                          | &nbsp;
+                          img.icon(src="../../static/ionicons/arrow-up-outline.svg" title="上に移動")
+                          | &nbsp;
+                          img.icon(src="../../static/ionicons/arrow-down-outline.svg" title="下に移動")
+                        //-
+                          a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#") 削除
+                          | &nbsp;
+                          a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#")
+                            svg.bi.bi-arrow-up(xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 16 16")
+                              path(fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z")
+                          | &nbsp;
+                          a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#")
+                            svg.bi.bi-arrow-down(xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 16 16")
+                              path(fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z")
+                      tr
+                        td 殿馬一人
+                        td kazuto.tonoma@mail.com
+                        td
+                          img.icon(src="../../static/ionicons/trash-outline.svg" title="削除")
+                          | &nbsp;
+                          img.icon(src="../../static/ionicons/arrow-up-outline.svg" title="上に移動")
+                          | &nbsp;
+                          img.icon(src="../../static/ionicons/arrow-down-outline.svg" title="下に移動")
+
+                      tr
+                        td 里中智
+                        td satoru.satonaka@mail.com
+                        td
+                          img.icon(src="../../static/ionicons/trash-outline.svg" title="削除")
+                          | &nbsp;
+                          img.icon(src="../../static/ionicons/arrow-up-outline.svg" title="上に移動")
+                        //-
+                          a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#") 削除
+                          | &nbsp;
+                          a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#")
+                            svg.bi.bi-arrow-up(xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" viewBox="0 0 16 16")
+                              path(fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z")
+                  //- button.btn.btn-primary.btn-sm(type="button" data-bs-toggle="modal" title="担当者を追加する" data-bs-target="#exampleModal") ＋
+                  img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="担当者を追加する")
+
+                .modal.fade#exampleModal(tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true")
+                  .modal-dialog
+                    .modal-content
+                      .modal-header
+                        h1.modal-title.fs-5#exampleModalLabel 担当者を検索
+                        button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
+                      .modal-body ...
+                      .modal-footer
+                        button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Close
+                        button.btn.btn-primary(type="button") Save changes
+            // 開始日/終了日
+            fieldset.py-2
+              .row
+                legend.col-form-label.col-md-3.bg-light.mb-1 開始日/終了日
+                .col-md-9.mb-1
+                  .row
+                    .col-sm-6.mb-2
+                      label.form-label(for="startdate") 開始日
+                      input.form-control#startdate(type="date" value="2024-09-10")
+                    .col-sm-6.mb-1
+                      label.form-label(for="enddate") 終了日
+                      input.form-control#enddate(type="date")
+            // 進捗率
+            fieldset.py-2
+              .row
+                legend.col-form-label.col-md-3.bg-light.mb-1 進捗率
+                .col-md-9.mb-1
+                  .row
+                    .col-sm-6.mb-2
+                      table
+                        tr
+                          td
+                            input.form-control#progress(type="number" min="0" max="100" value="25")
+                          td
+                            | &nbsp;%
+                    .col-sm-6.mb-1
+                      .form-check
+                        input.form-check-input#finished(type="checkbox" value="")
+                        label.form-check-label(for="finished") 完了済
+            // 優先度
+            fieldset.py-2
+              .row
+                legend.col-form-label.col-md-3.bg-light.mb-1 優先度
+                .col-md-9.mb-1
+                  .form-check.form-check-inline
+                    input.form-check-input#priority1(name="priority" type="radio" value="priority1")
+                    label.form-check-label(for="priority1") 最優先
+                  .form-check.form-check-inline
+                    input.form-check-input#priority2(name="priority" type="radio" value="priority2" checked="checked")
+                    label.form-check-label(for="priority2") 高
+                  .form-check.form-check-inline
+                    input.form-check-input#priority3(name="priority" type="radio" value="priority3")
+                    label.form-check-label(for="priority3") 中
+                  .form-check.form-check-inline
+                    input.form-check-input#priority4(name="priority" type="radio" value="priority4")
+                    label.form-check-label(for="priority4") 低
+                  .form-check.form-check-inline
+                    input.form-check-input#priority0(name="priority" type="radio" value="priority0")
+                    label.form-check-label(for="priority0") 未設定
+            // 親チケット
+            div.row.py-2
+              label.col-md-3.col-form-label.bg-light.mb-1(for="category") 親チケット
+              .col-md-9
+                a(href="#") BN5
+                | &nbsp;
+                | 文化祭出し物
+
+            // 子チケット
+            div.row.py-2.mb-1
+              label.col-md-3.col-form-label.bg-light.mb-1(for="category") 子チケット
+              .col-md-9
+                p.mb-0
+                  a(href="#") BN13
+                  | &nbsp;
+                  | 備品準備
+                p.mb-0
+                  a(href="#") BN14
+                  | &nbsp;
+                  | 食材購入
+                p.my-1
+                  a(href="step01.html")
+                    img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="子チケットを追加")
+
+            // 成果物
+            div.row.py-2
+              label.col-md-3.col-form-label.bg-light.mb-1(for="category") 成果物
+              .col-md-9.mb-1
+                //- button.btn.btn-primary.btn-sm(type="button" data-bs-toggle="modal" title="成果物を追加する" data-bs-target="#exampleModal") ＋
+                a(href="step01.html")
+                  img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="成果物を追加")
+                span.btn-help &nbsp;: 成果物を追加
+
+            .row.py-3.mt-2.bg-light
+              .col-9
+                button.btn.btn-primary(type="submit")
+                  img.icon(src="../../static/ionicons/save-outline.svg")
+                  | &nbsp;更新
+                | &nbsp;&nbsp;
+                button.btn.btn-primary(type="submit")
+                  img.icon(src="../../static/ionicons/refresh-outline.svg")
+                  | &nbsp;再読み込み
+              .col-3.text-end
+                button.btn.btn-secondary(type="submit")
+                  img.icon(src="../../static/ionicons/trash-outline2.svg")
+                  | &nbsp;削除
+
+    //- include ../includes/footer.pug
+    footer.py-1.mt-3.bg-dark.text-light
+      include ../includes/footer2.pug
+
+      hr
+      .row.align-items-end
+        .col-md-2.text-end.py-1
+          a.nav-link.px-2.px-md-0(href="step01.html") ← prev
+        .col-md-8
+          .alert.alert-danger.text-start(role="alert")
+            | step02.
+            br
+            | 「チケットを追加」をクリックする。（ユーザーのロールが閲覧者以外ならチケットを追加できる）
+        .col-md-2.text-start.py-1
+          a.nav-link.px-2.px-md-0(href="step03.html") next →
+
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous")

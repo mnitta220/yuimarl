@@ -1,0 +1,49 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title Yuimarl
+    link(rel="stylesheet" href="css/bootstrap.min.css")
+    link(rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css")
+    link(rel="stylesheet" href="css/style3.css")
+  body
+    main
+      .container
+        .row
+          .col-md-1
+          .col.col-md-10
+            include includes/logo.pug
+            include includes/nav.pug
+
+            .row
+              .col-md-9
+                .row
+                  .col
+                    h2.pt-3.pb-1 運用環境構築
+                    p 工事中
+
+              .col-md-3
+                .submenu.mt-3
+                  h3 CONTENTS
+                  ul
+                    li
+                      a(href="https://mnitta220.github.io/") 新田システム事務所
+                    li
+                      a(href="index2.html") ホーム
+                      ul
+                        li
+                          a(href="devsetup.html") 開発環境構築
+                        li
+                          a.current(href="deploy.html") 運用環境構築
+                        li
+                          a(href="develop.html") 開発情報
+                        li
+                          a(href="howtouse.html") 使い方
+                        li
+                          a(href="agreement.html") 利用規約
+
+            include includes/footer.pug
+          .col-md-1
+
+    script(src="js/bootstrap.bundle.min.js")

@@ -82,7 +82,7 @@ html(lang="ja")
                   .modal-dialog.modal-lg
                     .modal-content
                       .modal-header
-                        h1.modal-title.fs-5#membarAddModalLabel 担当者を追加
+                        h1.modal-title.fs-5#addMemberModalLabel 担当者を追加
                         button.btn-close(type="button" data-bs-dismiss="modal" aria-label="キャンセル")
                       .modal-body
                         .row.py-3
@@ -179,13 +179,13 @@ html(lang="ja")
                 p.my-1
                   a(href="javascript:clickAddParent();")
                     img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="親チケットを追加")
-                  span.btn-help &nbsp;: 親チケットを追加
+                  //- span.btn-help &nbsp;: 親チケットを追加
 
                 .modal.fade#addParentModal(tabindex="-1" aria-labelledby="addParentModalLabel" aria-hidden="true")
                   .modal-dialog.modal-md
                     .modal-content
                       .modal-header
-                        h1.modal-title.fs-5#membarAddModalLabel 親チケットを追加
+                        h1.modal-title.fs-5#addMemberModalLabel 親チケットを追加
                         button.btn-close(type="button" data-bs-dismiss="modal" aria-label="キャンセル")
                       .modal-body
                         .row
@@ -217,7 +217,7 @@ html(lang="ja")
                 //- button.btn.btn-primary.btn-sm(type="button" data-bs-toggle="modal" title="成果物を追加する" data-bs-target="#exampleModal") ＋
                 a(href="step01.html")
                   img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="成果物を追加")
-                span.btn-help &nbsp;: 成果物を追加
+                //- span.btn-help &nbsp;: 成果物を追加
 
             .row.py-3.mt-2.bg-light
               .col-9
@@ -238,7 +238,7 @@ html(lang="ja")
           .alert.alert-danger.text-start(role="alert")
             | チケット追加 step09.
             br
-            | 「親チケットを追加」をクリック。
+            | 入力されたチケットIDがプロジェクトに存在しない場合は、エラーメッセージを表示する。
         .col-md-2.text-start.py-1
           a.nav-link.px-2.px-md-0(href="step10.html") next →
 

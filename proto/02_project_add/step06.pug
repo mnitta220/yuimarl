@@ -5,6 +5,7 @@ html(lang="ja")
     meta(name="viewport" content="width=device-width, initial-scale=1")
     title プロジェクトを作成 - Yuimarl
     link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous")
+    link(rel="stylesheet" href="../../static/css/style.css")
     link(rel="icon" type="image/x-icon" href="../../static/favicon.ico")
   body
     include ../includes/nav.pug
@@ -24,7 +25,7 @@ html(lang="ja")
               label.col-md-3.col-form-label.bg-light.mb-1(for="owner") オーナー
               .col-md-9.mb-1
                 .form-floating
-                  span 山田太郎 [taro.yamada@gmail.com]
+                  span 山田太郎 [taro.yamada@mail.com]
             //- メンバー
             .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="member") メンバー
@@ -38,20 +39,30 @@ html(lang="ja")
                         th(scope="col") ロール
                         th(scope="col")
                     tbody
-                      tr
+                      //- tr
                         td 岩鬼正美
-                        td masami.iwaki@gmail.com
+                        td masami.iwaki@mail.com
                         td メンバー
                         td
                           a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#") 更新
                           | &nbsp;
                           a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#") 削除
-                  button.btn.btn-primary.btn-sm#btnMemberAdd(data-bs-toggle="modal" type="button" title="メンバーを追加する" data-bs-target="#membarAddModal") ＋
-                .modal.fade#membarAddModal(tabindex="-1" aria-labelledby="membarAddModalLabel" aria-hidden="true")
+                      tr
+                        td 岩鬼正美
+                        td masami.iwaki@mail.com
+                        td メンバー
+                        td
+                          img.icon(src="../../static/ionicons/settings-outline.svg" title="設定")
+                          | &nbsp;
+                          img.icon(src="../../static/ionicons/trash-outline.svg" title="削除")
+                  //- button.btn.btn-primary.btn-sm#btnMemberAdd(data-bs-toggle="modal" type="button" title="メンバーを追加する" data-bs-target="#addMemberModal") ＋
+                  a(href="javascript:clickAddMember();")
+                    img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="メンバーを追加")
+                .modal.fade#addMemberModal(tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true")
                   .modal-dialog.modal-lg
                     .modal-content
                       .modal-header
-                        h1.modal-title.fs-5#membarAddModalLabel メンバーを検索
+                        h1.modal-title.fs-5#addMemberModalLabel メンバーを検索
                         button.btn-close(type="button" data-bs-dismiss="modal" aria-label="キャンセル")
                       .modal-body
                         .row
@@ -80,7 +91,7 @@ html(lang="ja")
                                   td
                                     input.form-check-input#flexCheckDefault(type="checkbox" value="" checked)
                                   td 岩鬼正美
-                                  td masami.iwaki@gmail.com
+                                  td masami.iwaki@mail.com
                                   td
                                     select.form-select#role(name="role")
                                       option(value="2") 管理者
@@ -102,7 +113,10 @@ html(lang="ja")
                       label.form-check-label(for="radio2") 英語
             .row.py-3.mt-2.bg-light
               .col-md-9
-                button.btn.btn-primary(type="submit") 作成する
+                //- button.btn.btn-primary(type="submit") 作成する
+                button.btn.btn-primary(type="submit")
+                  img.icon(src="../../static/ionicons/create-outline.svg")
+                  | &nbsp;作成
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light
@@ -114,7 +128,7 @@ html(lang="ja")
           a.nav-link.px-2.px-md-0(href="step05.html") ← prev
         .col-md-8
           .alert.alert-danger.text-start(role="alert")
-            | step06.
+            | プロジェクト作成 step06.
             br
             | 他のメンバーも追加する。
         .col-md-2.text-start.py-1
@@ -123,3 +137,11 @@ html(lang="ja")
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous")
+    script(src="https://code.jquery.com/jquery-3.7.1.min.js")
+    script.
+      function clickAddMember() {
+        new bootstrap.Modal("#addMemberModal").show();
+      }
+      //$(document).ready(function() {
+      //  new bootstrap.Modal("#addMemberModal").show();
+      //});

@@ -52,15 +52,15 @@ html(lang="ja")
                         th(scope="col")
                     tbody
                       tr
-                        td 山田太郎
-                        td taro.yamada@mail.com
+                        td 岩鬼正美
+                        td masami.iwaki@mail.com
                         td
                           img.icon(src="../../static/ionicons/trash-outline.svg" title="削除")
                           | &nbsp;
                           img.icon(src="../../static/ionicons/arrow-down-outline.svg" title="下に移動")
                       tr
-                        td 岩鬼正美
-                        td masami.iwaki@mail.com
+                        td 里中智
+                        td satoru.satonaka@mail.com
                         td
                           img.icon(src="../../static/ionicons/trash-outline.svg" title="削除")
                           | &nbsp;
@@ -68,8 +68,8 @@ html(lang="ja")
                           | &nbsp;
                           img.icon(src="../../static/ionicons/arrow-down-outline.svg" title="下に移動")
                       tr
-                        td 里中智
-                        td satoru.satonaka@mail.com
+                        td 山田太郎
+                        td taro.yamada@mail.com
                         td
                           img.icon(src="../../static/ionicons/trash-outline.svg" title="削除")
                           | &nbsp;
@@ -82,7 +82,7 @@ html(lang="ja")
                   .modal-dialog.modal-lg
                     .modal-content
                       .modal-header
-                        h1.modal-title.fs-5#membarAddModalLabel 担当者を追加
+                        h1.modal-title.fs-5#addMemberModalLabel 担当者を追加
                         button.btn-close(type="button" data-bs-dismiss="modal" aria-label="キャンセル")
                       .modal-body
                         .row.py-3
@@ -179,13 +179,13 @@ html(lang="ja")
                 p.my-1
                   a(href="javascript:clickAddParent();")
                     img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="親チケットを追加")
-                  span.btn-help &nbsp;: 親チケットを追加
+                  //- span.btn-help &nbsp;: 親チケットを追加
 
                 .modal.fade#addParentModal(tabindex="-1" aria-labelledby="addParentModalLabel" aria-hidden="true")
                   .modal-dialog.modal-md
                     .modal-content
                       .modal-header
-                        h1.modal-title.fs-5#membarAddModalLabel 親チケットを追加
+                        h1.modal-title.fs-5#addMemberModalLabel 親チケットを追加
                         button.btn-close(type="button" data-bs-dismiss="modal" aria-label="キャンセル")
                       .modal-body
                         .row
@@ -215,7 +215,7 @@ html(lang="ja")
                 //- button.btn.btn-primary.btn-sm(type="button" data-bs-toggle="modal" title="成果物を追加する" data-bs-target="#exampleModal") ＋
                 a(href="step01.html")
                   img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="成果物を追加")
-                span.btn-help &nbsp;: 成果物を追加
+                //- span.btn-help &nbsp;: 成果物を追加
 
             .row.py-3.mt-2.bg-light
               .col-9
@@ -235,6 +235,8 @@ html(lang="ja")
         .col-md-8
           .alert.alert-danger.text-start(role="alert")
             | チケット追加 step07.
+            br
+            | 追加した担当者は、「↑」、「↓」アイコンで上下に移動できる。担当者が1人だけの場合はこのアイコンが表示されない。
             br
             | 「親チケットを追加」をクリック。
         .col-md-2.text-start.py-1

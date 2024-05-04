@@ -5,6 +5,7 @@ html(lang="ja")
     meta(name="viewport" content="width=device-width, initial-scale=1")
     title Yuimarl
     link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous")
+    link(rel="stylesheet" href="../../static/css/style.css")
     link(rel="icon" type="image/x-icon" href="../../static/favicon.ico")
   body
     include ../includes/nav.pug
@@ -19,11 +20,16 @@ html(lang="ja")
                 .col-md-3
                   h3 プロジェクト
                 .col-md-9
-                  dl.row
+                  .row
                     .col
-                      a.btn.btn-primary(href="/project/add") プロジェクト一覧
-                      | &nbsp;&nbsp;
-                      a.btn.btn-primary(href="step02.html") プロジェクトを作成
+                      a(href="/project/add" title="プロジェクト一覧") 
+                        img.icon3(src="../../static/ionicons/list-outline.svg")
+                      span.btn-help &nbsp;: プロジェクト一覧
+                      //- | &nbsp;[プロジェクト一覧]
+                      | &nbsp;&nbsp;&nbsp;
+                      a(href="step02.html" title="プロジェクトを作成")
+                        img.icon3(src="../../static/ionicons/add-circle-outline.svg")
+                      span.btn-help &nbsp;: プロジェクトを作成
 
         //- チケット
         .py-3
@@ -42,7 +48,7 @@ html(lang="ja")
         .col-md-2.text-end.py-1
         .col-md-8
           .alert.alert-danger.text-start(role="alert")
-            | step01.
+            | プロジェクト作成 step01.
             br
             | ホーム画面で「プロジェクトを作成」をクリック。
         .col-md-2.text-start.py-1

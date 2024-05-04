@@ -1,176 +1,158 @@
 <!DOCTYPE html>
 <html lang="ja">
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>チケットを作成 - Yuimarl</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-  <link rel="stylesheet" href="../../static/css/style.css">
-  <link rel="icon" type="image/x-icon" href="../../static/favicon.ico">
-</head>
-
-<body>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
-    <div class="container"><a class="navbar-brand" href="/"><img class="mw-100" src="../../static/images/logo.png"
-          alt="Yuimarl"></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content"
-        aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation"><span
-          class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="navbar-content">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item active"><a class="nav-link" href="/">ホーム<span class="visually-hidden">(current)</span></a>
-          </li>
-          <li class="nav-item"><a class="nav-link" href="#about">プロジェクト</a></li>
-          <li class="nav-item"><a class="nav-link" href="#items">チケット</a></li>
-          <li class="nav-item"><a class="nav-link" href="#items">利用ガイド</a></li>
-          <li class="nav-item"><a class="nav-link" href="#items">ログアウト</a></li>
-        </ul>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>チケットを作成 - Yuimarl</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <link rel="icon" type="image/x-icon" href="../../static/favicon.ico">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+      <div class="container"><a class="navbar-brand" href="/"><img class="mw-100" src="../../static/images/logo.png" alt="Yuimarl"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbar-content">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item active"><a class="nav-link" href="/">ホーム<span class="visually-hidden">(current)</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#about">プロジェクト</a></li>
+            <li class="nav-item"><a class="nav-link" href="#items">チケット</a></li>
+            <li class="nav-item"><a class="nav-link" href="#items">利用ガイド</a></li>
+            <li class="nav-item"><a class="nav-link" href="#items">ログアウト</a></li>
+          </ul>
+        </div>
       </div>
-    </div>
-  </nav>
-  <main>
-    <div class="py-3">
-      <div class="container">
-        <h3 class="mb-3">チケット</h3>
-        <ul class="nav nav-tabs">
-          <li class="nav-item"><a class="nav-link active" href="#">基本情報</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">ノート</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">コメント</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">更新履歴</a></li>
-        </ul>
-        <form class="pt-2">
-          <!-- プロジェクト-->
-          <div class="row py-2">
-            <label class="col-md-3 col-form-label bg-light mb-1" for="ticket-id">プロジェクト</label>
-            <div class="col-md-9 mb-1">文化祭実行プロジェクト</div>
-          </div>
-          <!-- チケット名-->
-          <div class="row py-2">
-            <label class="col-md-3 col-form-label bg-light mb-1" for="name">チケット名</label>
-            <div class="col-md-9 mb-1">
-              <input class="form-control" id="name" type="text" maxlength="40" value="たこやき模擬店" required>
+    </nav>
+    <main>
+      <div class="py-3">
+        <div class="container">
+          <h3 class="mb-3">チケット</h3>
+          <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="nav-link active" href="#">基本情報</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">ノート</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">コメント</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">更新履歴</a></li>
+          </ul>
+          <form class="pt-2">
+            <!-- プロジェクト-->
+            <div class="row py-2">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="ticket-id">プロジェクト</label>
+              <div class="col-md-9 mb-1">文化祭実行プロジェクト</div>
             </div>
-          </div>
-          <!-- 内容-->
-          <div class="row py-2">
-            <label class="col-md-3 col-form-label bg-light mb-1" for="message">内容</label>
-            <div class="col-md-9 mb-1">
-              <textarea class="form-control" id="message" rows="3"
-                name="message">たこやき模擬店を出店するために、やるべきことを検討する。</textarea>
-            </div>
-          </div>
-          <!-- 担当者-->
-          <div class="row py-2">
-            <label class="col-md-3 col-form-label bg-light mb-1" for="member">担当者</label>
-            <div class="col-md-9 mb-1">
-              <div class="form-floating">
-                <table class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th scope="col">名前</th>
-                      <th scope="col">メールアドレス</th>
-                      <th scope="col"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>山田太郎</td>
-                      <td>taro.yamada@mail.com</td>
-                      <td><img class="icon" src="../../static/ionicons/trash-outline.svg" title="削除">&nbsp;<img
-                          class="icon" src="../../static/ionicons/arrow-down-outline.svg" title="下に移動"></td>
-                    </tr>
-                    <tr>
-                      <td>岩鬼正美</td>
-                      <td>masami.iwaki@mail.com</td>
-                      <td><img class="icon" src="../../static/ionicons/trash-outline.svg" title="削除">&nbsp;<img
-                          class="icon" src="../../static/ionicons/arrow-up-outline.svg" title="上に移動">&nbsp;<img
-                          class="icon" src="../../static/ionicons/arrow-down-outline.svg" title="下に移動"></td>
-                    </tr>
-                    <tr>
-                      <td>里中智</td>
-                      <td>satoru.satonaka@mail.com</td>
-                      <td><img class="icon" src="../../static/ionicons/trash-outline.svg" title="削除">&nbsp;<img
-                          class="icon" src="../../static/ionicons/arrow-up-outline.svg" title="上に移動"></td>
-                    </tr>
-                  </tbody>
-                </table><a href="javascript:clickAddCharge();"><img class="icon3"
-                    src="../../static/ionicons/add-circle-outline.svg" title="担当者を追加"></a>
+            <!-- チケット名-->
+            <div class="row py-2">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="name">チケット名</label>
+              <div class="col-md-9 mb-1">
+                <input class="form-control" id="name" type="text" maxlength="40" value="たこやき模擬店" required>
               </div>
-              <div class="modal fade" id="inChargeModal" tabindex="-1" aria-labelledby="chargeModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="addMemberModalLabel">担当者を追加</h1>
-                      <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="キャンセル"></button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="row py-3">
-                        <div class="col">
-                          <table class="table table-hover">
-                            <thead>
-                              <tr>
-                                <th scope="col">選択</th>
-                                <th scope="col">名前</th>
-                                <th scope="col">メールアドレス</th>
-                                <th scope="col">ロール</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>
-                                  <input class="form-check-input" id="flexCheckDefault" type="checkbox" value=""
-                                    checked>
-                                </td>
-                                <td>山田太郎</td>
-                                <td>taro.yamada@mail.com</td>
-                                <td>オーナー</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <input class="form-check-input" id="flexCheckDefault" type="checkbox" value=""
-                                    checked>
-                                </td>
-                                <td>岩鬼正美</td>
-                                <td>masami.iwaki@mail.com</td>
-                                <td>メンバー</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <input class="form-check-input" id="flexCheckDefault" type="checkbox" value="">
-                                </td>
-                                <td>殿馬一人</td>
-                                <td>kazuto.tonoma@mail.com</td>
-                                <td>管理者</td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <input class="form-check-input" id="flexCheckDefault" type="checkbox" value=""
-                                    checked>
-                                </td>
-                                <td>里中智</td>
-                                <td>satoru.satonaka@mail.com</td>
-                                <td>閲覧者</td>
-                              </tr>
-                            </tbody>
-                          </table>
+            </div>
+            <!-- 内容-->
+            <div class="row py-2">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="message">内容</label>
+              <div class="col-md-9 mb-1">
+                <textarea class="form-control" id="message" rows="3" name="message">たこやき模擬店を出店するために、やるべきことを検討する。</textarea>
+              </div>
+            </div>
+            <!-- 担当者-->
+            <div class="row py-2">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="member">担当者</label>
+              <div class="col-md-9 mb-1">
+                <div class="form-floating">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">名前</th>
+                        <th scope="col">メールアドレス</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>山田太郎</td>
+                        <td>taro.yamada@mail.com</td>
+                        <td><img class="icon" src="../../static/ionicons/trash-outline.svg" title="削除">&nbsp;<img class="icon" src="../../static/ionicons/arrow-down-outline.svg" title="下に移動"></td>
+                      </tr>
+                      <tr>
+                        <td>岩鬼正美</td>
+                        <td>masami.iwaki@mail.com</td>
+                        <td><img class="icon" src="../../static/ionicons/trash-outline.svg" title="削除">&nbsp;<img class="icon" src="../../static/ionicons/arrow-up-outline.svg" title="上に移動">&nbsp;<img class="icon" src="../../static/ionicons/arrow-down-outline.svg" title="下に移動"></td>
+                      </tr>
+                      <tr>
+                        <td>里中智</td>
+                        <td>satoru.satonaka@mail.com</td>
+                        <td><img class="icon" src="../../static/ionicons/trash-outline.svg" title="削除">&nbsp;<img class="icon" src="../../static/ionicons/arrow-up-outline.svg" title="上に移動"></td>
+                      </tr>
+                    </tbody>
+                  </table><a href="javascript:clickAddCharge();"><img class="icon3" src="../../static/ionicons/add-circle-outline.svg" title="担当者を追加"></a>
+                </div>
+                <div class="modal fade" id="inChargeModal" tabindex="-1" aria-labelledby="chargeModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="addMemberModalLabel">担当者を追加</h1>
+                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="キャンセル"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row py-3">
+                          <div class="col">
+                            <table class="table table-hover">
+                              <thead>
+                                <tr>
+                                  <th scope="col">選択</th>
+                                  <th scope="col">名前</th>
+                                  <th scope="col">メールアドレス</th>
+                                  <th scope="col">ロール</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>
+                                    <input class="form-check-input" id="flexCheckDefault" type="checkbox" value="" checked>
+                                  </td>
+                                  <td>山田太郎</td>
+                                  <td>taro.yamada@mail.com</td>
+                                  <td>オーナー</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <input class="form-check-input" id="flexCheckDefault" type="checkbox" value="" checked>
+                                  </td>
+                                  <td>岩鬼正美</td>
+                                  <td>masami.iwaki@mail.com</td>
+                                  <td>メンバー</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <input class="form-check-input" id="flexCheckDefault" type="checkbox" value="">
+                                  </td>
+                                  <td>殿馬一人</td>
+                                  <td>kazuto.tonoma@mail.com</td>
+                                  <td>管理者</td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                    <input class="form-check-input" id="flexCheckDefault" type="checkbox" value="" checked>
+                                  </td>
+                                  <td>里中智</td>
+                                  <td>satoru.satonaka@mail.com</td>
+                                  <td>閲覧者</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>
-                      <button class="btn btn-primary" type="button">担当者に追加</button>
+                      <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>
+                        <button class="btn btn-primary" type="button">担当者に追加</button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <!-- 開始日/終了日-->
-          <fieldset class="py-2">
-            <div class="row">
+            <!-- 開始日/終了日-->
+            <div class="row py-2">
               <legend class="col-form-label col-md-3 bg-light mb-1">開始日/終了日</legend>
               <div class="col-md-9 mb-1">
                 <div class="row">
@@ -185,10 +167,8 @@
                 </div>
               </div>
             </div>
-          </fieldset>
-          <!-- 進捗率-->
-          <fieldset class="py-2">
-            <div class="row">
+            <!-- 進捗率-->
+            <div class="row py-2">
               <legend class="col-form-label col-md-3 bg-light mb-1">進捗率</legend>
               <div class="col-md-9 mb-1">
                 <div class="row">
@@ -211,10 +191,8 @@
                 </div>
               </div>
             </div>
-          </fieldset>
-          <!-- 優先度-->
-          <fieldset class="py-2">
-            <div class="row">
+            <!-- 優先度-->
+            <div class="row py-2">
               <legend class="col-form-label col-md-3 bg-light mb-1">優先度</legend>
               <div class="col-md-9 mb-1">
                 <div class="form-check form-check-inline">
@@ -239,105 +217,95 @@
                 </div>
               </div>
             </div>
-          </fieldset>
-          <!-- 親チケット-->
-          <div class="row py-2">
-            <label class="col-md-3 col-form-label bg-light mb-1" for="category">親チケット</label>
-            <div class="col-md-9">
-              <p class="my-1"><a href="javascript:clickAddParent();"><img class="icon3"
-                    src="../../static/ionicons/add-circle-outline.svg" title="親チケットを追加"></a></p>
-              <div class="modal fade" id="addParentModal" tabindex="-1" aria-labelledby="addParentModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-md">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="addMemberModalLabel">親チケットを追加</h1>
-                      <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="キャンセル"></button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="row">
-                        <label class="col-md-3 col-form-label mb-1" for="email">チケットID</label>
-                        <div class="col-md-6 mb-1">
-                          <input class="form-control" id="email" type="text" maxlength="20" value="BN5">
+            <!-- 親チケット-->
+            <div class="row py-2">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="category">親チケット</label>
+              <div class="col-md-9">
+                <p class="my-1"><a href="javascript:clickAddParent();"><img class="icon3" src="../../static/ionicons/add-circle-outline.svg" title="親チケットを追加"></a></p>
+                <div class="modal fade" id="addParentModal" tabindex="-1" aria-labelledby="addParentModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="addMemberModalLabel">親チケットを追加</h1>
+                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="キャンセル"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                          <label class="col-md-3 col-form-label mb-1" for="email">チケットID</label>
+                          <div class="col-md-6 mb-1">
+                            <input class="form-control" id="email" type="text" maxlength="20" value="BN5">
+                          </div>
+                          <div class="col-md-3 mb-1">
+                            <button class="btn btn-info" type="button">検索</button>
+                          </div>
                         </div>
-                        <div class="col-md-3 mb-1">
-                          <button class="btn btn-info" type="button">検索</button>
+                        <div class="row py-3">
+                          <div class="col">
+                            <p>BN5 文化祭出し物</p>
+                          </div>
                         </div>
                       </div>
-                      <div class="row py-3">
-                        <div class="col">
-                          <p>BN5 文化祭出し物</p>
-                        </div>
+                      <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>
+                        <button class="btn btn-primary" type="button">親チケットを追加</button>
                       </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>
-                      <button class="btn btn-primary" type="button">親チケットを追加</button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <!-- 子チケット-->
-          <div class="row py-2 mb-1">
-            <label class="col-md-3 col-form-label bg-light mb-1" for="category">子チケット</label>
-            <div class="col-md-9"></div>
-          </div>
-          <!-- 成果物-->
-          <div class="row py-2">
-            <label class="col-md-3 col-form-label bg-light mb-1" for="category">成果物</label>
-            <div class="col-md-9 mb-1"><a href="step01.html"><img class="icon3"
-                  src="../../static/ionicons/add-circle-outline.svg" title="成果物を追加"></a></div>
-          </div>
-          <div class="row py-3 mt-2 bg-light">
-            <div class="col-9">
-              <button class="btn btn-primary" type="submit"><img class="icon"
-                  src="../../static/ionicons/save-outline.svg">&nbsp;追加</button>
+            <!-- 子チケット-->
+            <div class="row py-2 mb-1">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="category">子チケット</label>
+              <div class="col-md-9"></div>
             </div>
-            <div class="col-3 text-end"></div>
-          </div>
-        </form>
+            <!-- 成果物-->
+            <div class="row py-2">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="category">成果物</label>
+              <div class="col-md-9 mb-1"><a href="step01.html"><img class="icon3" src="../../static/ionicons/add-circle-outline.svg" title="成果物を追加"></a></div>
+            </div>
+            <div class="row py-3 mt-2 bg-light">
+              <div class="col-9">
+                <button class="btn btn-primary" type="submit"><img class="icon" src="../../static/ionicons/save-outline.svg">&nbsp;追加</button>
+              </div>
+              <div class="col-3 text-end"></div>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
-  </main>
-  <footer class="py-1 mt-3 bg-dark text-light">
-    <div class="container text-center pt-1">
-      <ul class="nav justify-content-center">
-        <li class="nav-item"><a class="nav-link" href="/">ホーム</a></li>
-        <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/yuimarl/"
-            target="_blank">製品ホームページ</a></li>
-        <li class="nav-item"><a class="nav-link" href="#about">利用規約</a></li>
-        <li class="nav-item"><a class="nav-link" href="/contact">お問い合わせ</a></li>
-        <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/" target="_blank">新田システム事務所</a></li>
-      </ul>
-      <p style="color: #a0a0a0"><small>Yuimarl version 0.0.12&nbsp;&nbsp;&nbsp;Copyright &copy; 2024 Masahiro
-          Nitta</small></p>
-    </div>
-    <hr>
-    <div class="row align-items-end">
-      <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step09.html">← prev</a></div>
-      <div class="col-md-8">
-        <div class="alert alert-danger text-start" role="alert">チケット追加 step10.<br>「親チケットを追加」をクリック。</div>
+    </main>
+    <footer class="py-1 mt-3 bg-dark text-light">
+      <div class="container text-center pt-1">
+        <ul class="nav justify-content-center">
+          <li class="nav-item"><a class="nav-link" href="/">ホーム</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/yuimarl/" target="_blank">製品ホームページ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">利用規約</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contact">お問い合わせ</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/" target="_blank">新田システム事務所</a></li>
+        </ul>
+        <p style="color: #a0a0a0"><small>Yuimarl version 0.0.12&nbsp;&nbsp;&nbsp;Copyright &copy; 2024 Masahiro Nitta</small></p>
       </div>
-      <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step11.html">next →</a></div>
-    </div>
-  </footer>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-    crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script>
-    function clickAddCharge() {
-      new bootstrap.Modal("#inChargeModal").show();
-    }
-    function clickAddParent() {
-      new bootstrap.Modal("#addParentModal").show();
-    }
-    $(document).ready(function () {
-      new bootstrap.Modal("#addParentModal").show();
-    });
-  </script>
-</body>
-
+      <hr>
+      <div class="row align-items-end">
+        <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step09.html">← prev</a></div>
+        <div class="col-md-8">
+          <div class="alert alert-danger text-start" role="alert">チケット追加 step10.<br>「親チケットを追加」をクリック。</div>
+        </div>
+        <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step11.html">next →</a></div>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+      function clickAddCharge() {
+        new bootstrap.Modal("#inChargeModal").show();
+      }
+      function clickAddParent() {
+        new bootstrap.Modal("#addParentModal").show();
+      }
+      $(document).ready(function() {
+        new bootstrap.Modal("#addParentModal").show();
+      });
+    </script>
+  </body>
 </html>

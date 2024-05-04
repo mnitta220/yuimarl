@@ -94,7 +94,7 @@ html(lang="ja")
                         button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Close
                         button.btn.btn-primary(type="button") Save changes
             //- 開始日/終了日
-            fieldset.py-2
+            .py-2
               .row
                 legend.col-form-label.col-md-3.bg-light.mb-1 開始日/終了日
                 .col-md-9.mb-1
@@ -106,7 +106,7 @@ html(lang="ja")
                       label.form-label(for="enddate") 終了日
                       input.form-control#enddate(type="date")
             //- 進捗率
-            fieldset.py-2
+            .py-2
               .row
                 legend.col-form-label.col-md-3.bg-light.mb-1 進捗率
                 .col-md-9.mb-1
@@ -129,7 +129,7 @@ html(lang="ja")
                         input.form-check-input#finished(type="checkbox" value="")
                         label.form-check-label(for="finished") 完了済
             //- 優先度
-            fieldset.py-2
+            .py-2
               .row
                 legend.col-form-label.col-md-3.bg-light.mb-1 優先度
                 .col-md-9.mb-1
@@ -149,7 +149,7 @@ html(lang="ja")
                     input.form-check-input#priority0(name="priority" type="radio" value="priority0" checked="checked")
                     label.form-check-label(for="priority0") 未設定
             //- 親チケット
-            fieldset.py-2
+            .py-2
               .row
                 legend.col-form-label.col-md-3.bg-light.mb-1 親チケット
                 .col-md-9.mb-1
@@ -158,7 +158,7 @@ html(lang="ja")
                       a(href="#") YM1000
                     dd.col-md-9 ドリンクサービスクーポン配布中です
             //- 子チケット
-            div.row.py-2
+            .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="category") 子チケット
               .col-md-9.mb-1
                 dl.row

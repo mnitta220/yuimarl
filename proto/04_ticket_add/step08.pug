@@ -29,18 +29,18 @@ html(lang="ja")
               label.col-md-3.col-form-label.bg-light.mb-1(for="ticket-id") プロジェクト
               .col-md-9.mb-1 文化祭実行プロジェクト
             // チケット名
-            .row.py-2
+            .row.pt-1.pb-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="name") チケット名
               .col-md-9.mb-1
                 input.form-control#name(type="text" maxlength="40" value="たこやき模擬店" required)
             // 内容
-            .row.py-2
+            .row.pt-1.pb-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="message") 内容
               .col-md-9.mb-1
                 textarea.form-control#message(rows="3" name="message")
                   | たこやき模擬店を出店するために、やるべきことを検討する。
             // 担当者
-            .row.py-2
+            .row.pt-1.pb-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="member") 担当者
               .col-md-9.mb-1
                 .form-floating
@@ -124,56 +124,53 @@ html(lang="ja")
                         button.btn.btn-primary(type="button") 担当者に追加
 
             // 開始日/終了日
-            fieldset.py-2
-              .row
-                legend.col-form-label.col-md-3.bg-light.mb-1 開始日/終了日
-                .col-md-9.mb-1
-                  .row
-                    .col-sm-6.mb-2
-                      label.form-label(for="startdate") 開始日
-                      input.form-control#startdate(type="date" value="2024-09-10")
-                    .col-sm-6.mb-1
-                      label.form-label(for="enddate") 終了日
-                      input.form-control#enddate(type="date")
+            .row.pt-1.pb-2
+              legend.col-form-label.col-md-3.bg-light.mb-1 開始日/終了日
+              .col-md-9.mb-1
+                .row
+                  .col-sm-6.mb-2
+                    label.form-label(for="startdate") 開始日
+                    input.form-control#startdate(type="date" value="2024-09-10")
+                  .col-sm-6.mb-1
+                    label.form-label(for="enddate") 終了日
+                    input.form-control#enddate(type="date")
             // 進捗率
-            fieldset.py-2
-              .row
-                legend.col-form-label.col-md-3.bg-light.mb-1 進捗率
-                .col-md-9.mb-1
-                  .row
-                    .col-sm-6.mb-2
-                      table
-                        tr
-                          td
-                            input.form-control#progress(type="number" min="0" max="100" value="10")
-                          td
-                            | &nbsp;%
-                    .col-sm-6.mb-1
-                      .form-check
-                        input.form-check-input#finished(type="checkbox" value="")
-                        label.form-check-label(for="finished") 完了済
+            .row.pt-1.pb-2
+              legend.col-form-label.col-md-3.bg-light.mb-1 進捗率
+              .col-md-9.mb-1
+                .row
+                  .col-sm-6.mb-2
+                    table
+                      tr
+                        td
+                          input.form-control#progress(type="number" min="0" max="100" value="10")
+                        td
+                          | &nbsp;%
+                  .col-sm-6.mb-1
+                    .form-check
+                      input.form-check-input#finished(type="checkbox" value="")
+                      label.form-check-label(for="finished") 完了済
             // 優先度
-            fieldset.py-2
-              .row
-                legend.col-form-label.col-md-3.bg-light.mb-1 優先度
-                .col-md-9.mb-1
-                  .form-check.form-check-inline
-                    input.form-check-input#priority1(name="priority" type="radio" value="priority1")
-                    label.form-check-label(for="priority1") 最優先
-                  .form-check.form-check-inline
-                    input.form-check-input#priority2(name="priority" type="radio" value="priority2" checked)
-                    label.form-check-label(for="priority2") 高
-                  .form-check.form-check-inline
-                    input.form-check-input#priority3(name="priority" type="radio" value="priority3")
-                    label.form-check-label(for="priority3") 中
-                  .form-check.form-check-inline
-                    input.form-check-input#priority4(name="priority" type="radio" value="priority4")
-                    label.form-check-label(for="priority4") 低
-                  .form-check.form-check-inline
-                    input.form-check-input#priority0(name="priority" type="radio" value="priority0")
-                    label.form-check-label(for="priority0") 未設定
+            .row.pt-1.pb-2
+              legend.col-form-label.col-md-3.bg-light.mb-1 優先度
+              .col-md-9.mb-1
+                .form-check.form-check-inline
+                  input.form-check-input#priority1(name="priority" type="radio" value="priority1")
+                  label.form-check-label(for="priority1") 最優先
+                .form-check.form-check-inline
+                  input.form-check-input#priority2(name="priority" type="radio" value="priority2" checked)
+                  label.form-check-label(for="priority2") 高
+                .form-check.form-check-inline
+                  input.form-check-input#priority3(name="priority" type="radio" value="priority3")
+                  label.form-check-label(for="priority3") 中
+                .form-check.form-check-inline
+                  input.form-check-input#priority4(name="priority" type="radio" value="priority4")
+                  label.form-check-label(for="priority4") 低
+                .form-check.form-check-inline
+                  input.form-check-input#priority0(name="priority" type="radio" value="priority0")
+                  label.form-check-label(for="priority0") 未設定
             // 親チケット
-            div.row.py-2
+            .row.pt-1.pb-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="category") 親チケット
               .col-md-9
                 p.my-1
@@ -200,7 +197,7 @@ html(lang="ja")
                         button.btn.btn-primary(type="button" disabled) 親チケットを追加
 
             // 子チケット
-            div.row.py-2.mb-1
+            .row.pt-1.pb-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="category") 子チケット
               .col-md-9
                 //- p.my-1
@@ -209,7 +206,7 @@ html(lang="ja")
                   span.btn-help &nbsp;: 子チケットを追加
 
             // 成果物
-            div.row.py-2
+            .row.pt-1.pb-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="category") 成果物
               .col-md-9.mb-1
                 //- button.btn.btn-primary.btn-sm(type="button" data-bs-toggle="modal" title="成果物を追加する" data-bs-target="#exampleModal") ＋

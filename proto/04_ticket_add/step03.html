@@ -40,7 +40,7 @@
               <div class="col-md-9 mb-1">文化祭実行プロジェクト</div>
             </div>
             <!-- チケット名-->
-            <div class="row py-2">
+            <div class="row pt-1 pb-2">
               <label class="col-md-3 col-form-label bg-light mb-1" for="name">チケット名</label>
               <div class="col-md-9 mb-1">
                 <input class="form-control is-invalid" id="name" type="text" maxlength="40" value="" required>
@@ -48,14 +48,14 @@
               </div>
             </div>
             <!-- 内容-->
-            <div class="row py-2">
+            <div class="row pt-1 pb-2">
               <label class="col-md-3 col-form-label bg-light mb-1" for="message">内容</label>
               <div class="col-md-9 mb-1">
                 <textarea class="form-control" id="message" rows="3" name="message"></textarea>
               </div>
             </div>
             <!-- 担当者-->
-            <div class="row py-2">
+            <div class="row pt-1 pb-2">
               <label class="col-md-3 col-form-label bg-light mb-1" for="member">担当者</label>
               <div class="col-md-9 mb-1">
                 <div class="form-floating"><img class="icon3" src="../../static/ionicons/add-circle-outline.svg" title="担当者を追加"></div>
@@ -77,91 +77,85 @@
               </div>
             </div>
             <!-- 開始日/終了日-->
-            <fieldset class="py-2">
-              <div class="row">
-                <legend class="col-form-label col-md-3 bg-light mb-1">開始日/終了日</legend>
-                <div class="col-md-9 mb-1">
-                  <div class="row">
-                    <div class="col-sm-6 mb-2">
-                      <label class="form-label" for="startdate">開始日</label>
-                      <input class="form-control" id="startdate" type="date">
-                    </div>
-                    <div class="col-sm-6 mb-1">
-                      <label class="form-label" for="enddate">終了日</label>
-                      <input class="form-control" id="enddate" type="date">
-                    </div>
+            <div class="row pt-1 pb-2">
+              <legend class="col-form-label col-md-3 bg-light mb-1">開始日/終了日</legend>
+              <div class="col-md-9 mb-1">
+                <div class="row">
+                  <div class="col-sm-6 mb-2">
+                    <label class="form-label" for="startdate">開始日</label>
+                    <input class="form-control" id="startdate" type="date">
+                  </div>
+                  <div class="col-sm-6 mb-1">
+                    <label class="form-label" for="enddate">終了日</label>
+                    <input class="form-control" id="enddate" type="date">
                   </div>
                 </div>
               </div>
-            </fieldset>
+            </div>
             <!-- 進捗率-->
-            <fieldset class="py-2">
-              <div class="row">
-                <legend class="col-form-label col-md-3 bg-light mb-1">進捗率</legend>
-                <div class="col-md-9 mb-1">
-                  <div class="row">
-                    <div class="col-sm-6 mb-2">
-                      <table>
-                        <tr>
-                          <td>
-                            <input class="form-control" id="progress" type="number" min="0" max="100" value="0">
-                          </td>
-                          <td>&nbsp;%</td>
-                        </tr>
-                      </table>
-                    </div>
-                    <div class="col-sm-6 mb-1">
-                      <div class="form-check">
-                        <input class="form-check-input" id="finished" type="checkbox" value="">
-                        <label class="form-check-label" for="finished">完了済</label>
-                      </div>
+            <div class="row pt-1 pb-2">
+              <legend class="col-form-label col-md-3 bg-light mb-1">進捗率</legend>
+              <div class="col-md-9 mb-1">
+                <div class="row">
+                  <div class="col-sm-6 mb-2">
+                    <table>
+                      <tr>
+                        <td>
+                          <input class="form-control" id="progress" type="number" min="0" max="100" value="0">
+                        </td>
+                        <td>&nbsp;%</td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="col-sm-6 mb-1">
+                    <div class="form-check">
+                      <input class="form-check-input" id="finished" type="checkbox" value="">
+                      <label class="form-check-label" for="finished">完了済</label>
                     </div>
                   </div>
                 </div>
               </div>
-            </fieldset>
+            </div>
             <!-- 優先度-->
-            <fieldset class="py-2">
-              <div class="row">
-                <legend class="col-form-label col-md-3 bg-light mb-1">優先度</legend>
-                <div class="col-md-9 mb-1">
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" id="priority1" name="priority" type="radio" value="priority1">
-                    <label class="form-check-label" for="priority1">最優先</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" id="priority2" name="priority" type="radio" value="priority2">
-                    <label class="form-check-label" for="priority2">高</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" id="priority3" name="priority" type="radio" value="priority3">
-                    <label class="form-check-label" for="priority3">中</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" id="priority4" name="priority" type="radio" value="priority4">
-                    <label class="form-check-label" for="priority4">低</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" id="priority0" name="priority" type="radio" value="priority0" checked="checked">
-                    <label class="form-check-label" for="priority0">未設定</label>
-                  </div>
+            <div class="row pt-1 pb-2">
+              <legend class="col-form-label col-md-3 bg-light mb-1">優先度</legend>
+              <div class="col-md-9 mb-1">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" id="priority1" name="priority" type="radio" value="priority1">
+                  <label class="form-check-label" for="priority1">最優先</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" id="priority2" name="priority" type="radio" value="priority2">
+                  <label class="form-check-label" for="priority2">高</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" id="priority3" name="priority" type="radio" value="priority3">
+                  <label class="form-check-label" for="priority3">中</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" id="priority4" name="priority" type="radio" value="priority4">
+                  <label class="form-check-label" for="priority4">低</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" id="priority0" name="priority" type="radio" value="priority0" checked="checked">
+                  <label class="form-check-label" for="priority0">未設定</label>
                 </div>
               </div>
-            </fieldset>
+            </div>
             <!-- 親チケット-->
-            <div class="row py-2">
+            <div class="row pt-1 pb-2">
               <label class="col-md-3 col-form-label bg-light mb-1" for="category">親チケット</label>
               <div class="col-md-9">
                 <p class="my-1"><a href="step01.html"><img class="icon3" src="../../static/ionicons/add-circle-outline.svg" title="親チケットを追加"></a></p>
               </div>
             </div>
             <!-- 子チケット-->
-            <div class="row py-2 mb-1">
+            <div class="row pt-1 pb-2">
               <label class="col-md-3 col-form-label bg-light mb-1" for="category">子チケット</label>
               <div class="col-md-9"></div>
             </div>
             <!-- 成果物-->
-            <div class="row py-2">
+            <div class="row pt-1 pb-2">
               <label class="col-md-3 col-form-label bg-light mb-1" for="category">成果物</label>
               <div class="col-md-9 mb-1"><a href="step01.html"><img class="icon3" src="../../static/ionicons/add-circle-outline.svg" title="成果物を追加"></a></div>
             </div>

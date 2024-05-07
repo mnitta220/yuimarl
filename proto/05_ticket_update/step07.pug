@@ -18,75 +18,60 @@ html(lang="ja")
             li.nav-item
               a.nav-link(href="#") 基本情報
             li.nav-item
-              a.nav-link(href="#") ノート
+              a.nav-link.active(href="#") ノート
             li.nav-item
-              a.nav-link.active(href="#") コメント
+              a.nav-link(href="#") コメント
             li.nav-item
               a.nav-link(href="#") 更新履歴
           form.pt-2
-            .row.py-2.ticket-comment
-              .col
-                .row
-                  .col-6
-                    b 殿馬一人
-                  .col-6.text-end
-                    small 2024/09/04 18:49
-                .row
-                  .col
-                    | たこやきのレシピを見つけました。
-                    br
-                    a(href="https://www.otafuku.co.jp/recipe/cook/taco/taco01.html" target="_blank") https://www.otafuku.co.jp/recipe/cook/taco/taco01.html
-            .row.py-2.ticket-comment
-              .col
-                .row
-                  .col-6
-                    b 山田太郎
-                  .col-6.text-end
-                    a(href="")
-                      img.icon(src="../../static/ionicons/create-outline2.svg" title="編集")
-                    | &nbsp;
-                    a(href="")
-                      img.icon(src="../../static/ionicons/trash-outline.svg" title="削除")
-                    | &nbsp;&nbsp;
-                    small 2024/09/05 16:23
-                .row
-                  .col
-                    | ありがとう！😍
-                    br
-                    | チケットのノートに追加しました。
-            .row.py-2.ticket-comment
-              .col
-                .row
-                  .col-6
-                    b 里中智
-                  .col-6.text-end
-                    small 2024/09/05 17:05
-                .row
-                  .col 「薄力粉」って知りませんでした。
+            // ノート
+            .row.py-2
+              .col-lg-6
+                small ［マークダウン］
+                textarea.form-control#markdown(rows="10")
+                  | ## たこやき模擬店
+                  | ### レシピ
+                  | * [クックパッド](https://cookpad.com/search/%E3%81%9F%E3%81%93%E7%84%BC%E3%81%8D)
+                  | * [小麦粉から作るたこ焼き](https://www.otafuku.co.jp/recipe/cook/taco/taco01.html)
+                  | ### 食材
+                  | * 薄力粉
+                  | * 卵
+                  | * 牛乳
+                  | * タコ
+                  | * 天かす
+                  | * ソース
+                  | * 青のり
+                  | * かつお節
+                  | * 紅しょうが
+                  | * マヨネーズ
+                  | * サラダ油
+                  | ### 店舗設営
+                  | * たこ焼き器レンタル
+                  | * フードパック
+                  | * 割りばし
+                  | * 輪ゴム
+                  | * のれん
+                  | ### 収益計画
+                  | 過去の事例を調べる。  
+                  | 8個入りパックの値段をいくらに設定するか？
+
+              .col-lg-6
+                small ［プレビュー］
+                .px-2.bg-light#preview
 
             .row.py-3.mt-2.bg-light
               .col-9
-                textarea.form-control.ticket-comment#message(rows="3" name="message")
-              .col-3.text-end
                 button.btn.btn-primary(type="submit")
-                  img.icon(src="../../static/ionicons/add-circle-outline2.svg")
-                  | &nbsp;コメント
-
-        .modal.fade#deleteCommentModal(tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true")
-          .modal-dialog.modal-md
-            .modal-content
-              .modal-header
-                h1.modal-title.fs-5#deleteCommentModalLabel コメントを削除
-                button.btn-close(type="button" data-bs-dismiss="modal" aria-label="キャンセル")
-              .modal-body
-                .row
-                  .col
-                    | コメントを削除します。
-                    br
-                    | よろしいですか？
-              .modal-footer
-                button.btn.btn-secondary(type="button" data-bs-dismiss="modal") キャンセル
-                button.btn.btn-primary(type="button") 削除
+                  img.icon(src="../../static/ionicons/save-outline.svg")
+                  | &nbsp;更新
+                | &nbsp;&nbsp;
+                button.btn.btn-primary(type="submit")
+                  img.icon(src="../../static/ionicons/refresh-outline.svg")
+                  | &nbsp;再読み込み
+              .col-3.text-end
+                button.btn.btn-secondary(type="submit")
+                  img.icon(src="../../static/ionicons/trash-outline2.svg")
+                  | &nbsp;削除
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light
@@ -95,20 +80,26 @@ html(lang="ja")
       hr
       .row.align-items-end
         .col-md-2.text-end.py-1
-          a.nav-link.px-2.px-md-0(href="step06.html") ← prev
+          a.nav-link.px-2.px-md-0(href="step03.html") ← prev
         .col-md-8
           .alert.alert-danger.text-start(role="alert")
-            | チケット更新 step07.
+            | チケット更新 step04.
             br
-            | 削除アイコンをクリックすると、削除確認メッセージが表示される。
+            | ノートタブをクリック。
         .col-md-2.text-start.py-1
-          a.nav-link.px-2.px-md-0(href="step08.html") next →
+          a.nav-link.px-2.px-md-0(href="step05.html") next →
 
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous")
     script(src="https://code.jquery.com/jquery-3.7.1.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/marked/marked.min.js")
     script.
+      $('#markdown').keyup(function () {
+        var html = marked.parse($(this).val());
+        $('#preview').html(html);
+      });
       $(document).ready(function() {
-        new bootstrap.Modal("#deleteCommentModal").show();
+        var html = marked.parse($('#markdown').val());
+        $('#preview').html(html);
       });

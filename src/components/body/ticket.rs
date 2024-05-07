@@ -37,11 +37,11 @@ impl Component for TicketBody {
 
                         *buf += r#"<form action="/ticket/create" method="POST">"#;
                         {
-                            // プロジェクト/チケットID
+                            // プロジェクト / チケットID
                             *buf += r#"<div class="row py-2">"#;
                             {
                                 *buf += r#"<label for="ticket-id" class="col-md-3 col-form-label bg-light mb-1">"#;
-                                *buf += r#"プロジェクト/チケットID"#;
+                                *buf += r#"プロジェクト / チケットID"#;
                                 *buf += r#"</label>"#;
                                 *buf += r#"<div class="col-md-9 mb-1">"#;
                                 {
@@ -223,14 +223,14 @@ impl Component for TicketBody {
                             }
                             *buf += r#"</div>"#;
 
-                            // 開始日/終了日
+                            // 開始日 / 終了日
                             *buf += r#"<fieldset class="py-2">"#;
                             {
                                 *buf += r#"<div class="row">"#;
                                 {
                                     *buf +=
                                         r#"<legend class="col-form-label col-md-3 bg-light mb-1">"#;
-                                    *buf += r#"開始日/終了日"#;
+                                    *buf += r#"開始日 / 終了日"#;
                                     *buf += r#"</legend>"#;
                                     *buf += r#"<div class="col-md-9 mb-1">"#;
                                     {

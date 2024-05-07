@@ -192,14 +192,14 @@ html(lang="ja")
                       .row.py-1
                         label.col-md-3.col-form-label.mb-1(for="deliverable") 成果物名
                         .col-md-9.mb-1
-                          input.form-control#deliverable(type="text" maxlength="40" value="" required)
+                          input.form-control#deliverable(type="text" maxlength="40" value="出店計画表" required)
                       .row.py-1
                         label.col-md-3.col-form-label.mb-1(for="path") ファイルパス / URL
                         .col-md-9.mb-1
-                          input.form-control#path(type="text" maxlength="100" value="")
+                          input.form-control#path(type="text" maxlength="100" value="//server/文化祭2024/出店/たこやき/出店計画表.xlsx")
                     .modal-footer
                       button.btn.btn-secondary(type="button" data-bs-dismiss="modal") キャンセル
-                      button.btn.btn-primary(type="button" disabled)
+                      button.btn.btn-primary(type="button")
                         img.icon(src="../../static/ionicons/add-circle-outline2.svg")
                         | &nbsp;追加
 
@@ -229,7 +229,7 @@ html(lang="ja")
           .alert.alert-danger.text-start(role="alert")
             | チケット更新 step04.
             br
-            | 「成果物を追加」をクリックすると、成果物を追加ダイアログが表示される。
+            | 成果物名とファイルパス/URLを入力して追加ボタンをクリックする。
         .col-md-2.text-start.py-1
           a.nav-link.px-2.px-md-0(href="step05.html") next →
 

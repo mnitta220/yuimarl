@@ -11,6 +11,67 @@ html(lang="ja")
     include ../includes/nav.pug
 
     main
+      //- お知らせ
+      .py-3
+        section#news
+          .container
+            .row
+              .col-md-3
+                h3 お知らせ
+              .col-md-9.py-0
+                //- .row
+                  .col
+                    table.table.table-sm.table-hover
+                      tbody
+                        tr
+                          td
+                            small 2024/09/06 17:03
+                          td
+                            | チケット&nbsp;
+                            a(href="") BN10 : たこやき模擬店
+                            | &nbsp;が更新されました。
+                          td.text-right
+                            a(href="step02.html" title="閉じる")
+                              img.icon(src="../../static/ionicons/close-outline.svg")
+                        tr
+                          td
+                            small 2024/09/08 15:41
+                          td
+                            | プロジェクト&nbsp;
+                            a(href="") 数学弱点克服プロジェクト
+                            | &nbsp;に追加されました。
+                          td.text-right
+                            a(href="step02.html" title="閉じる")
+                              img.icon(src="../../static/ionicons/close-outline.svg")
+                .row
+                  .col
+                    table.table.table-sm.table-hover
+                      tbody
+                        tr
+                          td
+                            .row
+                              .col-md-3
+                                small 2024/09/06 17:03
+                              .col-md-9
+                                | チケット&nbsp;
+                                a(href="") BN10 : たこやき模擬店
+                                | &nbsp;が更新されました。
+                          td.text-right
+                            a(href="step02.html" title="閉じる")
+                              img.icon(src="../../static/ionicons/close-outline.svg")
+                        tr
+                          td
+                            .row
+                              .col-md-3
+                                small 2024/09/08 15:41
+                              .col-md-9
+                                | プロジェクト&nbsp;
+                                a(href="") 英語強化プロジェクト
+                                | &nbsp;に追加されました。
+                          td.text-right
+                            a(href="step02.html" title="閉じる")
+                              img.icon(src="../../static/ionicons/close-outline.svg")
+
       form(action="/ticket/add" method="POST")
         // プロジェクト
         .py-3.bg-light
@@ -73,9 +134,9 @@ html(lang="ja")
           //- a.nav-link.px-2.px-md-0(href="step10.html") ← prev
         .col-md-8
           .alert.alert-danger.text-start(role="alert")
-            | チケット更新 step01.
+            | 問合せ step01.
             br
-            | 更新するチケットを選択する。
+            | 「お問い合わせ」をクリックする。
         .col-md-2.text-start.py-1
           a.nav-link.px-2.px-md-0(href="step02.html") next →
 

@@ -8,6 +8,17 @@ use firestore::*;
 use serde::{Deserialize, Serialize};
 use tower_cookies::Cookies;
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct FirebaseConfig {
+    pub api_key: String,
+    pub auth_domain: String,
+    pub project_id: String,
+    pub storage_bucket: String,
+    pub messaging_sender_id: String,
+    pub app_id: String,
+    pub measurement_id: String,
+}
+
 #[derive(Deserialize, Debug)]
 pub struct UserByEmainInput {
     pub email: String,
@@ -30,6 +41,27 @@ pub struct User {
 #[derive(Deserialize, Debug)]
 pub struct MemberAddInput {
     pub members: String,
+}
+
+pub async fn firebase_config() -> String {
+    tracing::debug!("GET /firebase_config");
+
+    let config = FirebaseConfig {
+        api_key: crate::API_KEY.get().unwrap().clone(),
+        auth_domain: crate::AUTH_DOMAIN.get().unwrap().clone(),
+        project_id: crate::GOOGLE_PROJECT_ID.get().unwrap().clone(),
+        storage_bucket: crate::STORAGE_BUCKET.get().unwrap().clone(),
+        messaging_sender_id: crate::MESSAGING_SENDER_ID.get().unwrap().clone(),
+        app_id: crate::APP_ID.get().unwrap().clone(),
+        measurement_id: crate::MEASUREMENT_ID.get().unwrap().clone(),
+    };
+
+    let buf = match serde_json::to_string(&config) {
+        Ok(r) => r,
+        Err(_) => "NG".to_string(),
+    };
+
+    buf
 }
 
 pub async fn user_by_email(Form(input): Form<UserByEmainInput>) -> String {

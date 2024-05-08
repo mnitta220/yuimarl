@@ -64,6 +64,7 @@ async fn main() {
         .route("/ticket/add", post(handlers::ticket::post_add_ticket))
         .route("/ticket/create", post(handlers::ticket::post_create_ticket))
         .route("/contact", get(handlers::contact::get_contact))
+        .route("/api/firebaseConfig", get(handlers::api::firebase_config))
         .route("/api/userByEmail", post(handlers::api::user_by_email))
         .route("/api/memberAdd", post(handlers::api::member_add))
         //.route("/_healthz", get(handlers_bk::health))

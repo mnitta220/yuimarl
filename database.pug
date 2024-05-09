@@ -1,0 +1,390 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title Yuimarl
+    link(rel="stylesheet" href="css/bootstrap.min.css")
+    link(rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css")
+    link(rel="stylesheet" href="css/style3.css")
+  body
+    main
+      .container
+        .row
+          .col-md-1
+          .col.col-md-10
+            include includes/logo.pug
+            include includes/nav.pug
+
+            .row
+              .col-md-9
+                .row
+                  .col
+                    h2.pt-3.pb-1 データベース
+                .row
+                  .col
+                    h3 コレクション
+                // user
+                .row
+                  .col
+                    hr
+                    h4 user
+                .row
+                  .col
+                    | ユーザー情報を保持する。
+                .row.py-2
+                  .col
+                    table.table.table-sm.table-bordered
+                      thead
+                        tr
+                          th(scope="col") 項目名
+                          th(scope="col") 型
+                          th(scope="col") 説明
+                      tbody
+                        tr
+                          td uid
+                          td string
+                          td 
+                        tr
+                          td name
+                          td string
+                          td 
+                        tr
+                          td email
+                          td string
+                          td 
+                        tr
+                          td photo_url
+                          td string
+                          td 
+                        tr
+                          td status
+                          td number
+                          td 0:未承認, 1:承認, 2:禁止
+                        tr
+                          td created_at
+                          td timestamp
+                          td 
+                        tr
+                          td last_login
+                          td timestamp
+                          td 
+                // session
+                .row
+                  .col
+                    hr
+                    h4 session
+                .row
+                  .col
+                    | セッション情報を保持する。
+                .row.py-2
+                  .col
+                    table.table.table-sm.table-bordered
+                      thead
+                        tr
+                          th(scope="col") 項目名
+                          th(scope="col") 型
+                          th(scope="col") 説明
+                      tbody
+                        tr
+                          td id
+                          td string
+                          td セッションID (uuid)
+                        tr
+                          td uid
+                          td string
+                          td ユーザーID
+                        tr
+                          td name
+                          td string
+                          td ユーザー名
+                        tr
+                          td email
+                          td string
+                          td 
+                        tr
+                          td photo_url
+                          td string
+                          td 
+                        tr
+                          td created_at
+                          td timestamp
+                          td 
+                // project
+                .row
+                  .col
+                    hr
+                    h4 project
+                .row
+                  .col
+                    | プロジェクト情報を保持する。
+                .row.py-2
+                  .col
+                    table.table.table-sm.table-bordered
+                      thead
+                        tr
+                          th(scope="col") 項目名
+                          th(scope="col") 型
+                          th(scope="col") 説明
+                      tbody
+                        tr
+                          td id
+                          td string
+                          td プロジェクトID (uuid)
+                        tr
+                          td project_name
+                          td string
+                          td プロジェクト名
+                        tr
+                          td owner
+                          td string
+                          td プロジェクトオーナー（プロジェクトの作成者）
+                        tr
+                          td prefix
+                          td string
+                          td チケット接頭辞
+                        tr
+                          td language
+                          td string
+                          td 言語（"ja"固定）
+                        tr
+                          td ticket_limit
+                          td string
+                          td 最大チケット番号（1000固定）
+                        tr
+                          td ticket_number
+                          td string
+                          td チケット番号
+                        tr
+                          td created_at
+                          td timestamp
+                          td 
+                // project_member
+                .row
+                  .col
+                    hr
+                    h4 project_member
+                .row
+                  .col
+                    | プロジェクトのメンバー情報を保持する。
+                .row.py-2
+                  .col
+                    table.table.table-sm.table-bordered
+                      thead
+                        tr
+                          th(scope="col") 項目名
+                          th(scope="col") 型
+                          th(scope="col") 説明
+                      tbody
+                        tr
+                          td id
+                          td string
+                          td (uuid)
+                        tr
+                          td project_id
+                          td string
+                          td プロジェクトID
+                        tr
+                          td member
+                          td string
+                          td メンバーのユーザーID
+                        tr
+                          td role
+                          td number
+                          td 1:オーナー, 2:管理者, 3:メンバー, 4:閲覧者
+                        tr
+                          td last_used
+                          td timestamp
+                          td 
+                // ticket
+                .row
+                  .col
+                    hr
+                    h4 ticket
+                .row
+                  .col
+                    | チケット情報を保持する。
+                .row.py-2
+                  .col
+                    table.table.table-sm.table-bordered
+                      thead
+                        tr
+                          th(scope="col") 項目名
+                          th(scope="col") 型
+                          th(scope="col") 説明
+                      tbody
+                        tr
+                          td id
+                          td string
+                          td (uuid)
+                        tr
+                          td id_disp
+                          td string
+                          td 表示用チケットID（接頭辞＋連番）
+                        tr
+                          td project_id
+                          td string
+                          td プロジェクトID
+                        tr
+                          td name
+                          td string
+                          td チケット名
+                        tr
+                          td description
+                          td string
+                          td 内容
+                        tr
+                          td start_date
+                          td string
+                          td 開始日
+                        tr
+                          td end_date
+                          td string
+                          td 終了日
+                        tr
+                          td progress
+                          td number
+                          td 進捗率
+                        tr
+                          td priority
+                          td string
+                          td 優先度
+                        tr
+                          td parent
+                          td string
+                          td 親チケット
+                        tr
+                          td deliverables
+                          td string
+                          td 成果物(JSON)
+                        tr
+                          td owner
+                          td string
+                          td 登録ユーザー
+                        tr
+                          td history
+                          td string
+                          td 更新履歴(JSON)
+                        tr
+                          td created_at
+                          td timestamp
+                          td 
+                // ticket_note
+                .row
+                  .col
+                    hr
+                    h4 ticket_note
+                .row
+                  .col
+                    | チケットのノートの情報を保持する。
+                .row.py-2
+                  .col
+                    table.table.table-sm.table-bordered
+                      thead
+                        tr
+                          th(scope="col") 項目名
+                          th(scope="col") 型
+                          th(scope="col") 説明
+                      tbody
+                        tr
+                          td id
+                          td string
+                          td チケットID
+                        tr
+                          td note
+                          td string
+                          td ノート（マークダウン）
+                        tr
+                          td history
+                          td string
+                          td 更新履歴(JSON)
+                // ticket_member
+                .row
+                  .col
+                    hr
+                    h4 ticket_member
+                .row
+                  .col
+                    | チケットの担当者の情報を保持する。
+                .row.py-2
+                  .col
+                    table.table.table-sm.table-bordered
+                      thead
+                        tr
+                          th(scope="col") 項目名
+                          th(scope="col") 型
+                          th(scope="col") 説明
+                      tbody
+                        tr
+                          td id
+                          td string
+                          td チケットID
+                        tr
+                          td uid
+                          td string
+                          td ユーザーID
+                        tr
+                          td seq
+                          td number
+                          td 表示順
+                // news
+                .row
+                  .col
+                    hr
+                    h4 news
+                .row
+                  .col
+                    | ユーザーへのお知らせの情報を保持する。
+                .row.py-2
+                  .col
+                    table.table.table-sm.table-bordered
+                      thead
+                        tr
+                          th(scope="col") 項目名
+                          th(scope="col") 型
+                          th(scope="col") 説明
+                      tbody
+                        tr
+                          td id
+                          td string
+                          td (uuid)
+                        tr
+                          td uid
+                          td string
+                          td ユーザーID
+                        tr
+                          td timestamp
+                          td timestamp
+                          td 日時
+                        tr
+                          td contents
+                          td string
+                          td お知らせ内容
+
+              .col-md-3
+                .submenu.mt-3
+                  h3 CONTENTS
+                  ul
+                    li
+                      a(href="https://mnitta220.github.io/") 新田システム事務所
+                    li
+                      a(href="index2.html") ホーム
+                      ul
+                        li
+                          a(href="devsetup.html") 開発環境構築
+                        li
+                          a(href="deploy.html") 運用環境構築
+                        li
+                          a(href="develop.html") 開発情報
+                          ul
+                            li
+                              a.current(href="database.html") データベース
+                        li
+                          a(href="howtouse.html") 使い方
+                        li
+                          a(href="agreement.html") 利用規約
+
+            include includes/footer.pug
+          .col-md-1
+
+    script(src="js/bootstrap.bundle.min.js")

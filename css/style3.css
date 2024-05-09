@@ -51,6 +51,10 @@ body {
   padding-left: 40px;
 }
 
+.submenu li li li a	{
+	padding-left: 60px;
+  }
+  
 .submenu li a:hover	{
   background-color: #fec;
 }
@@ -69,6 +73,11 @@ body {
 .submenu li li a:before	{
 	left: 20px;
 	color: #f80;
+}
+
+.submenu li li li a:before	{
+	left: 40px;
+	color: #23b4f2;
 }
 
 .submenu .current {

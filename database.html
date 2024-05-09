@@ -203,8 +203,13 @@
                           <td>言語（"ja"固定）</td>
                         </tr>
                         <tr>
+                          <td>member_limit</td>
+                          <td>number</td>
+                          <td>最大メンバー数（20固定）</td>
+                        </tr>
+                        <tr>
                           <td>ticket_limit</td>
-                          <td>string</td>
+                          <td>number</td>
                           <td>最大チケット番号（1000固定）</td>
                         </tr>
                         <tr>
@@ -216,6 +221,11 @@
                           <td>created_at</td>
                           <td>timestamp</td>
                           <td> </td>
+                        </tr>
+                        <tr>
+                          <td>deleted</td>
+                          <td>boolean</td>
+                          <td>false:有効, true:削除済</td>
                         </tr>
                       </tbody>
                     </table>
@@ -361,6 +371,11 @@
                           <td>created_at</td>
                           <td>timestamp</td>
                           <td> </td>
+                        </tr>
+                        <tr>
+                          <td>deleted</td>
+                          <td>boolean</td>
+                          <td>false:有効, true:削除済</td>
                         </tr>
                       </tbody>
                     </table>

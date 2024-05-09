@@ -148,8 +148,12 @@ html(lang="ja")
                           td string
                           td 言語（"ja"固定）
                         tr
+                          td member_limit
+                          td number
+                          td 最大メンバー数（20固定）
+                        tr
                           td ticket_limit
-                          td string
+                          td number
                           td 最大チケット番号（1000固定）
                         tr
                           td ticket_number
@@ -159,6 +163,10 @@ html(lang="ja")
                           td created_at
                           td timestamp
                           td 
+                        tr
+                          td deleted
+                          td boolean
+                          td false:有効, true:削除済
                 // project_member
                 .row
                   .col
@@ -269,6 +277,10 @@ html(lang="ja")
                           td created_at
                           td timestamp
                           td 
+                        tr
+                          td deleted
+                          td boolean
+                          td false:有効, true:削除済
                 // ticket_note
                 .row
                   .col

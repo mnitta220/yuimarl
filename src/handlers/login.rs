@@ -63,3 +63,11 @@ pub async fn post_login(
 
     Ok(Redirect::to("/"))
 }
+
+pub async fn get_logout(cookies: Cookies) -> Result<Redirect, AppError> {
+    tracing::info!("GET /logout");
+
+    super::session_delete(cookies);
+
+    Ok(Redirect::to("/login"))
+}

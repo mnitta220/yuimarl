@@ -51,6 +51,7 @@ async fn main() {
             "/login",
             get(handlers::login::get_login).post(handlers::login::post_login),
         )
+        .route("/logout", get(handlers::login::get_logout))
         .route(
             "/agree",
             get(handlers::agreement::get_agree).post(handlers::agreement::post_agree),

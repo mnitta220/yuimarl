@@ -13,6 +13,7 @@ impl Component for Head {
             *buf += r#"rel="stylesheet" "#;
             *buf += r#"integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" "#;
             *buf += r#"crossorigin="anonymous">"#;
+            *buf += r#"<link rel="stylesheet" href="/static/css/style.css">"#;
             *buf += r#"<link rel="icon" type="image/x-icon" href="/static/favicon.ico">"#;
         }
         *buf += r#"</head>"#;

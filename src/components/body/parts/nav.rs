@@ -50,19 +50,9 @@ impl Component for Nav {
                         }
                         *buf += r#"</li>"#;
 
-                        *buf += r#"<li class="nav-item dropdown">"#;
+                        *buf += r#"<li class="nav-item">"#;
                         {
-                            *buf += r##"<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" "##;
-                            *buf += r#"data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">"#;
-                            *buf += r#"インフォメーション"#;
-                            *buf += r#"</a>"#;
-                            *buf +=
-                                r#"<div class="dropdown-menu" aria-labelledby="navbarDropdown">"#;
-                            {
-                                *buf += r##"<a class="dropdown-item" href="#shop">お店</a>"##;
-                                *buf += r##"<a class="dropdown-item" href="#access">アクセス</a>"##;
-                            }
-                            *buf += r#"</div>"#;
+                            *buf += r##"<a class="nav-link" href="/logout">ログアウト</a>"##;
                         }
                         *buf += r#"</li>"#;
                     }

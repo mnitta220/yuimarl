@@ -27,15 +27,18 @@
       <div class="py-3">
         <div class="container">
           <h3 class="mb-3">プロジェクト</h3>
-          <form>
+          <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="nav-link active" href="#">基本情報</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">ノート</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">更新履歴</a></li>
+          </ul>
+          <form class="pt-2">
+            <!-- プロジェクト名-->
             <div class="row py-2">
               <label class="col-md-3 col-form-label bg-light mb-1" for="name">プロジェクト名</label>
               <div class="col-md-9 mb-1"><span>文化祭実行プロジェクト</span></div>
             </div>
-            <div class="row py-2">
-              <label class="col-md-3 col-form-label bg-light mb-1" for="owner">オーナー</label>
-              <div class="col-md-9 mb-1"><span>山田太郎 [taro.yamada@mail.com]</span></div>
-            </div>
+            <!-- メンバー-->
             <div class="row py-2">
               <label class="col-md-3 col-form-label bg-light mb-1" for="member">メンバー</label>
               <div class="col-md-9 mb-1">
@@ -43,97 +46,34 @@
                   <table class="table table-hover">
                     <thead>
                       <tr>
-                        <th scope="col">名前</th>
-                        <th scope="col">メールアドレス</th>
                         <th scope="col">ロール</th>
-                        <th scope="col"></th>
+                        <th scope="col">メールアドレス</th>
+                        <th scope="col">名前</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>殿馬一人</td>
-                        <td>kazuto.tonoma@mail.com</td>
+                        <td>オーナー</td>
+                        <td>taro.yamada@mail.com</td>
+                        <td>山田太郎</td>
+                      </tr>
+                      <tr>
                         <td>管理者</td>
-                        <td></td>
+                        <td>kazuto.tonoma@mail.com</td>
+                        <td>殿馬一人</td>
                       </tr>
                       <tr>
-                        <td>岩鬼正美</td>
-                        <td>masami.iwaki@mail.com</td>
                         <td>メンバー</td>
-                        <td></td>
+                        <td>masami.iwaki@mail.com</td>
+                        <td>岩鬼正美</td>
                       </tr>
                       <tr>
-                        <td>里中智</td>
-                        <td>satoru.satonaka@mail.com</td>
                         <td>閲覧者</td>
-                        <td></td>
+                        <td>satoru.satonaka@mail.com</td>
+                        <td>里中智</td>
                       </tr>
                     </tbody>
                   </table>
-                </div>
-                <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="addMemberModalLabel">メンバーを検索</h1>
-                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="キャンセル"></button>
-                      </div>
-                      <div class="modal-body">
-                        <div class="row">
-                          <label class="col-md-3 col-form-label mb-1" for="email">メールアドレス</label>
-                          <div class="col-md-6 mb-1">
-                            <input class="form-control" id="email" type="text" maxlength="50">
-                          </div>
-                          <div class="col-md-3 mb-1">
-                            <button class="btn btn-info" type="button">検索</button>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <label class="col-md-3 col-form-label mb-1" for="member-name">名前</label>
-                          <div class="col-md-6 mb-1">
-                            <input class="form-control" id="member-name" type="text" maxlength="50">
-                          </div>
-                          <div class="col-md-3 mb-1">
-                            <button class="btn btn-info" type="button">検索</button>
-                          </div>
-                        </div>
-                        <div class="row py-3">
-                          <div class="col">
-                            <table class="table table-hover">
-                              <thead>
-                                <tr>
-                                  <th scope="col">選択</th>
-                                  <th scope="col">名前</th>
-                                  <th scope="col">メールアドレス</th>
-                                  <th scope="col">ロール</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>
-                                    <input class="form-check-input" id="flexCheckDefault" type="checkbox" value="" checked>
-                                  </td>
-                                  <td>岩鬼正美</td>
-                                  <td>masami.iwaki@mail.com</td>
-                                  <td>
-                                    <select class="form-select" id="role" name="role">
-                                      <option value="2">管理者</option>
-                                      <option value="3" selected>メンバー</option>
-                                      <option value="4">閲覧者</option>
-                                    </select>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>
-                        <button class="btn btn-primary" type="button">メンバーに追加</button>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

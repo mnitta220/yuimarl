@@ -15,22 +15,35 @@ html(lang="ja")
         .container
           h3.mb-3 プロジェクトを作成
           form
-            //- プロジェクト名
+            // プロジェクト名
             .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="name") プロジェクト名
               .col-md-9.mb-1
                 input.form-control#name(type="text" maxlength="40" value="文化祭実行プロジェクト" required)
             //- オーナー
-            .row.py-2
+            //- .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="owner") オーナー
               .col-md-9.mb-1
                 .form-floating
                   span 山田太郎 [taro.yamada@mail.com]
-            //- メンバー
+            // メンバー
             .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="member") メンバー
               .col-md-9.mb-1
                 .form-floating
+                  table.table.table-hover
+                    thead
+                      tr
+                        th(scope="col") ロール
+                        th(scope="col") メールアドレス
+                        th(scope="col") 名前
+                        th(scope="col")
+                    tbody
+                      tr
+                        td オーナー
+                        td taro.yamada@mail.com
+                        td 山田太郎
+                        td
                   //- button.btn.btn-primary.btn-sm#btnMemberAdd(data-bs-toggle="modal" type="button" title="メンバーを追加する" data-bs-target="#addMemberModal") ＋
                   a(href="javascript:clickAddMember();")
                     img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="メンバーを追加")

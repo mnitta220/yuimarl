@@ -15,18 +15,18 @@ html(lang="ja")
         .container
           h3.mb-3 プロジェクトを作成
           form
-            //- プロジェクト名
+            // プロジェクト名
             .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="name") プロジェクト名
               .col-md-9.mb-1
                 input.form-control#name(type="text" maxlength="40" value="文化祭実行プロジェクト" required)
             //- オーナー
-            .row.py-2
+            //- .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="owner") オーナー
               .col-md-9.mb-1
                 .form-floating
                   span 山田太郎 [taro.yamada@mail.com]
-            //- メンバー
+            // メンバー
             .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="member") メンバー
               .col-md-9.mb-1
@@ -34,23 +34,20 @@ html(lang="ja")
                   table.table.table-hover
                     thead
                       tr
-                        th(scope="col") 名前
-                        th(scope="col") メールアドレス
                         th(scope="col") ロール
+                        th(scope="col") メールアドレス
+                        th(scope="col") 名前
                         th(scope="col")
                     tbody
-                      //- tr
-                        td 岩鬼正美
-                        td masami.iwaki@mail.com
-                        td メンバー
-                        td
-                          a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#") 更新
-                          | &nbsp;
-                          a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#") 削除
                       tr
-                        td 岩鬼正美
-                        td masami.iwaki@mail.com
+                        td オーナー
+                        td taro.yamada@mail.com
+                        td 山田太郎
+                        td
+                      tr
                         td メンバー
+                        td masami.iwaki@mail.com
+                        td 岩鬼正美
                         td
                           img.icon(src="../../static/ionicons/settings-outline.svg" title="設定")
                           | &nbsp;

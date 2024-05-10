@@ -59,8 +59,8 @@ pub async fn post_agree(cookies: Cookies) -> Result<Html<String>, AppError> {
         return Err(AppError(anyhow::anyhow!(e)));
     }
 
-    let projects = model::project::Project::my_projects(&session, &db).await?;
-    props.projects = projects;
+    //let projects = model::project::Project::my_projects(&session, &db).await?;
+    //props.projects = projects;
     props.session = Some(session);
 
     let mut page = HomePage::new(props);

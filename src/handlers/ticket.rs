@@ -149,8 +149,8 @@ pub async fn post_create_ticket(
     }
 
     props.project = project;
-    let projects = model::project::Project::my_projects(&session, &db).await?;
-    props.projects = projects;
+    //let projects = model::project::Project::my_projects(&session, &db).await?;
+    //props.projects = projects;
     props.session = Some(session);
     let mut page = HomePage::new(props);
 

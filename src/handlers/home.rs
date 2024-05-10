@@ -30,8 +30,9 @@ pub async fn get_home(cookies: Cookies) -> Result<Html<String>, AppError> {
         None => return Ok(Html(LoginPage::write())),
     };
 
-    let projects = model::project::Project::my_projects(&session, &db).await?;
-    props.projects = projects;
+    let (project, member) = model::project::Project::last_project(&session, &db).await?;
+    props.project = project;
+    props.member = member;
     props.session = Some(session);
     let mut page = HomePage::new(props);
 

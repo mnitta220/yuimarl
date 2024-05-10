@@ -153,39 +153,52 @@ impl Component for HomeBody {
 
                                     *buf += r#"<div class="col-md-9">"#;
                                     {
-                                        *buf += r#"<div class="row pb-3">"#;
-                                        {
-                                            *buf += r#"<div class="col">"#;
+                                        if let Some(p) = &props.project {
+                                            *buf += r#"<div class="row pb-3">"#;
                                             {
-                                                *buf += r#"<a href="/project/list">文化祭実行プロジェクト</a>"#;
-                                                *buf += r#"&nbsp;&nbsp;"#;
-                                                *buf += r#"<small>"#;
+                                                *buf += r#"<div class="col">"#;
                                                 {
-                                                    *buf += r#"<span class="badge bg-secondary text-light">"#;
-                                                    {
-                                                        *buf += r#"オーナー"#;
+                                                    *buf += r#"<a href="/project/list">"#;
+                                                    *buf += &p.project_name;
+                                                    *buf += r#"</a>&nbsp;&nbsp;"#;
+                                                    if let Some(m) = &props.member {
+                                                        *buf += r#"<small>"#;
+                                                        {
+                                                            *buf += r#"<span class="badge bg-secondary text-light">"#;
+                                                            {
+                                                                *buf += &m.role_to_string();
+                                                            }
+                                                            *buf += r#"</span>"#;
+                                                        }
+                                                        *buf += r#"</small>"#;
                                                     }
-                                                    *buf += r#"</span>"#;
                                                 }
-                                                *buf += r#"</small>"#;
+                                                *buf += r#"</div>"#;
                                             }
                                             *buf += r#"</div>"#;
                                         }
-                                        *buf += r#"</div>"#;
+
                                         *buf += r#"<div class="row">"#;
                                         {
                                             *buf += r#"<div class="col">"#;
                                             {
-                                                *buf += r#"<a href="/project/add" title="プロジェクト一覧">"#;
+                                                *buf += r#"<a href="/project/list" title="プロジェクト一覧">"#;
                                                 {
                                                     *buf += r#"<img class="icon3" src="/static/ionicons/list-outline.svg">"#;
                                                 }
-                                                *buf += r#"</a>&nbsp;&nbsp;&nbsp;"#;
-                                                *buf += r#"<a href="step02.html" title="プロジェクトを作成">"#;
+                                                *buf += r#"</a>"#;
+                                                if let None = &props.project {
+                                                    *buf += r#"<span class="btn-help">&nbsp;: プロジェクト一覧</span>"#;
+                                                }
+                                                *buf += r#"&nbsp;&nbsp;&nbsp;"#;
+                                                *buf += r#"<a href="/project/add" title="プロジェクトを作成">"#;
                                                 {
                                                     *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg">"#;
                                                 }
                                                 *buf += r#"</a>"#;
+                                                if let None = &props.project {
+                                                    *buf += r#"<span class="btn-help">&nbsp;: プロジェクトを作成</span>"#;
+                                                }
                                             }
                                             *buf += r#"</div>"#;
                                         }

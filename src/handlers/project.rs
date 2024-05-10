@@ -82,12 +82,15 @@ pub async fn post_project(
         let project = model::project::Project {
             id: "".to_string(),
             project_name: project_name,
-            language: "ja".to_string(),
             owner: "".to_string(),
             prefix: "".to_string(),
+            language: "ja".to_string(),
+            member_limit: model::project::MEMBER_LIMIT_DEFAULT,
             ticket_limit: model::project::TICKET_LIMIT_DEFAULT,
             ticket_number: 0,
+            note: "".to_string(),
             created_at: Utc::now(),
+            deleted: false,
         };
         let validation = model::project::ProjectValidation {
             project_name: Some("入力してください".to_string()),
@@ -112,12 +115,15 @@ pub async fn post_project(
         let project = model::project::Project {
             id: "".to_string(),
             project_name: project_name,
-            language: "ja".to_string(),
             owner: "".to_string(),
             prefix: "".to_string(),
+            language: "ja".to_string(),
+            member_limit: model::project::MEMBER_LIMIT_DEFAULT,
             ticket_limit: model::project::TICKET_LIMIT_DEFAULT,
             ticket_number: 0,
+            note: "".to_string(),
             created_at: Utc::now(),
+            deleted: false,
         };
         let validation = model::project::ProjectValidation {
             project_name: Some("同じ名前のプロジェクトが存在します".to_string()),
@@ -133,8 +139,8 @@ pub async fn post_project(
         return Err(AppError(anyhow::anyhow!(e)));
     }
 
-    let projects = model::project::Project::my_projects(&session, &db).await?;
-    props.projects = projects;
+    //let projects = model::project::Project::my_projects(&session, &db).await?;
+    //props.projects = projects;
     props.session = Some(session);
 
     let mut page = HomePage::new(props);

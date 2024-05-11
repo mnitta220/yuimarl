@@ -49,6 +49,14 @@ pub enum ProjectRole {
     Viewer = 4,
 }
 
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct ProjectMemberSub {
+    pub uid: String,
+    pub name: String,
+    pub email: String,
+    pub role: i32,
+}
+
 impl Project {
     pub async fn find(id: &str, db: &FirestoreDb) -> Result<Option<Self>> {
         let obj_by_id: Option<Project> = match db
@@ -223,6 +231,7 @@ impl Project {
     pub async fn insert(
         input: &crate::handlers::project::ProjectInput,
         session: &Session,
+        members: serde_json::Value,
         db: &FirestoreDb,
     ) -> Result<()> {
         let mut prj = Project {
@@ -272,47 +281,51 @@ impl Project {
             };
         }
 
-        let mut member = ProjectMember {
-            id: "".to_string(),
-            project_id: prj.id.clone(),
-            member: session.uid.clone(),
-            role: ProjectRole::Owner as i32,
-            last_used: Utc::now(),
-        };
-        let mut count = 0u32;
-
-        loop {
-            count += 1;
-            if count > 9 {
-                return Err(anyhow::anyhow!(
-                    "Failed to create project_member".to_string()
-                ));
-            }
-            let id = Uuid::now_v7().to_string();
-            member.id = id.clone();
-
-            match db
-                .fluent()
-                .insert()
-                .into(&COLLECTION_MEMBER)
-                .document_id(id)
-                .object(&member)
-                .execute::<ProjectMember>()
-                .await
-            {
-                Ok(_) => {
-                    break;
-                }
-                Err(e) => match &e {
-                    firestore::errors::FirestoreError::DataConflictError(e) => {
-                        tracing::error!("DataConflictError: {:?}", e);
-                        continue;
-                    }
-                    _ => {
-                        return Err(anyhow::anyhow!(e.to_string()));
-                    }
-                },
+        let empty_vec: Vec<serde_json::Value> = Vec::new();
+        let mem = members["members"].as_array().unwrap_or_else(|| &empty_vec);
+        for m in mem {
+            let mut member = ProjectMember {
+                id: "".to_string(),
+                project_id: prj.id.clone(),
+                member: String::from(m["uid"].as_str().unwrap()),
+                role: m["role"].as_i64().unwrap() as i32,
+                last_used: Utc::now(),
             };
+            let mut count = 0u32;
+
+            loop {
+                count += 1;
+                if count > 9 {
+                    return Err(anyhow::anyhow!(
+                        "Failed to create project_member".to_string()
+                    ));
+                }
+                let id = Uuid::now_v7().to_string();
+                member.id = id.clone();
+
+                match db
+                    .fluent()
+                    .insert()
+                    .into(&COLLECTION_MEMBER)
+                    .document_id(id)
+                    .object(&member)
+                    .execute::<ProjectMember>()
+                    .await
+                {
+                    Ok(_) => {
+                        break;
+                    }
+                    Err(e) => match &e {
+                        firestore::errors::FirestoreError::DataConflictError(e) => {
+                            tracing::error!("DataConflictError: {:?}", e);
+                            continue;
+                        }
+                        _ => {
+                            return Err(anyhow::anyhow!(e.to_string()));
+                        }
+                    },
+                };
+            }
         }
 
         tracing::debug!("Project inserted {:?}", prj);
@@ -492,6 +505,18 @@ impl ProjectMember {
         Ok("".to_string())
     }
 
+    pub fn role_to_string(&self) -> String {
+        match self.role {
+            1 => "オーナー".to_string(),
+            2 => "管理者".to_string(),
+            3 => "メンバー".to_string(),
+            4 => "閲覧者".to_string(),
+            _ => "Unknown".to_string(),
+        }
+    }
+}
+
+impl ProjectMemberSub {
     pub fn role_to_string(&self) -> String {
         match self.role {
             1 => "オーナー".to_string(),

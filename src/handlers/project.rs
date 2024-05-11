@@ -27,6 +27,29 @@ pub async fn get_add_project(cookies: Cookies) -> Result<Html<String>, AppError>
 
             match session {
                 Some(s) => {
+                    let project = model::project::Project {
+                        id: "".to_string(),
+                        project_name: "".to_string(),
+                        owner: s.uid.clone(),
+                        prefix: "".to_string(),
+                        language: "ja".to_string(),
+                        member_limit: model::project::MEMBER_LIMIT_DEFAULT,
+                        ticket_limit: model::project::TICKET_LIMIT_DEFAULT,
+                        ticket_number: 1,
+                        note: "".to_string(),
+                        created_at: Utc::now(),
+                        deleted: false,
+                    };
+                    props.project = Some(project);
+
+                    let member = model::project::ProjectMemberSub {
+                        uid: s.uid.clone(),
+                        name: s.name.clone(),
+                        email: s.email.clone(),
+                        role: model::project::ProjectRole::Owner as i32,
+                    };
+                    props.members.push(member);
+
                     props.session = Some(s);
                     let mut page = ProjectPage::new(props);
                     page.write()
@@ -43,16 +66,23 @@ pub async fn get_add_project(cookies: Cookies) -> Result<Html<String>, AppError>
 #[derive(Deserialize, Debug)]
 pub struct ProjectInput {
     pub project_name: String,
-    //pub language: String,
     pub prefix: String,
+    pub members: String,
 }
 
 pub async fn post_project(
     cookies: Cookies,
     Form(input): Form<ProjectInput>,
 ) -> Result<Html<String>, AppError> {
-    //tracing::debug!("POST /project {}, {}", input.project_name, input.language);
+    tracing::debug!("POST /project {}, {}", input.project_name, input.members);
+
     let project_name = input.project_name.trim().to_string();
+    let members: serde_json::Value = match serde_json::from_str(&input.members) {
+        Ok(m) => m,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
@@ -82,7 +112,7 @@ pub async fn post_project(
         let project = model::project::Project {
             id: "".to_string(),
             project_name: project_name,
-            owner: "".to_string(),
+            owner: String::from(&session.uid),
             prefix: "".to_string(),
             language: "ja".to_string(),
             member_limit: model::project::MEMBER_LIMIT_DEFAULT,
@@ -135,12 +165,10 @@ pub async fn post_project(
         return Ok(Html(page.write()));
     }
 
-    if let Err(e) = model::project::Project::insert(&input, &session, &db).await {
+    if let Err(e) = model::project::Project::insert(&input, &session, members, &db).await {
         return Err(AppError(anyhow::anyhow!(e)));
     }
 
-    //let projects = model::project::Project::my_projects(&session, &db).await?;
-    //props.projects = projects;
     props.session = Some(session);
 
     let mut page = HomePage::new(props);
@@ -153,6 +181,7 @@ pub struct MemberAddInput {
     pub add_members: String,
 }
 
+/*
 pub async fn post_member_add(
     cookies: Cookies,
     Form(input): Form<MemberAddInput>,
@@ -203,29 +232,9 @@ pub async fn post_member_add(
         }
     };
 
-    /*
-    let v: Vec<&str> = input.add_members.split(',').collect();
-    let mut i = 0;
-    let mut uid: &str;
-    let mut role: &str;
-
-    loop {
-        if i >= v.len() {
-            break;
-        }
-        uid = v[i];
-        i += 1;
-        if i >= v.len() {
-            break;
-        }
-        role = v[i];
-        i += 1;
-        tracing::info!("uid={} role={}", uid, role);
-    }
-    */
-
     props.session = Some(session);
     let mut page = ProjectPage::new(props);
 
     Ok(Html(page.write()))
 }
+*/

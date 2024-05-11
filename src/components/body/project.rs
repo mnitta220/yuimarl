@@ -38,8 +38,10 @@ impl Component for ProjectBody {
                                 *buf += r#"プロジェクト名</label>"#;
                                 *buf += r#"<div class="col-md-9 mb-1">"#;
                                 {
-                                    *buf += r#"<input class="form-control" id="name" type="text" maxlength="40" value=""#;
-                                    *buf += r#"文化祭実行プロジェクト"#;
+                                    *buf += r#"<input class="form-control" id="project_name" name="project_name" type="text" maxlength="40" value=""#;
+                                    if let Some(p) = &props.project {
+                                        *buf += &p.project_name;
+                                    }
                                     *buf += r#"" required>"#;
                                 }
                                 *buf += r#"</div>"#;
@@ -53,8 +55,11 @@ impl Component for ProjectBody {
                                 *buf += r#"チケットID接頭辞</label>"#;
                                 *buf += r#"<div class="col-md-9 mb-1">"#;
                                 {
-                                    *buf += r#"<input class="form-control" id="prefix" type="text" maxlength="10" value=""#;
-                                    *buf += r#"BN" required>"#;
+                                    *buf += r#"<input class="form-control" id="prefix" name="prefix" type="text" maxlength="10" value=""#;
+                                    if let Some(p) = &props.project {
+                                        *buf += &p.prefix;
+                                    }
+                                    *buf += r#"" required>"#;
                                 }
                                 *buf += r#"</div>"#;
                             }
@@ -85,16 +90,21 @@ impl Component for ProjectBody {
                                             }
                                             *buf += r#"</thead>"#;
 
-                                            *buf += r#"<tbody>"#;
+                                            *buf += r#"<tbody id="members-tbody">"#;
                                             {
-                                                *buf += r#"<tr>"#;
-                                                {
-                                                    *buf += r#"<td>オーナー</td>"#;
-                                                    *buf += r#"<td>taro.yamada@mail.com</td>"#;
-                                                    *buf += r#"<td>山田太郎</td>"#;
-                                                    *buf += r#"<td></td>"#;
+                                                for member in &props.members {
+                                                    *buf += r#"<tr>"#;
+                                                    {
+                                                        *buf += r#"<td>"#;
+                                                        *buf += &member.role_to_string();
+                                                        *buf += r#"</td><td>"#;
+                                                        *buf += &member.email;
+                                                        *buf += r#"</td><td>"#;
+                                                        *buf += &member.name;
+                                                        *buf += r#"</td><td></td>"#;
+                                                    }
+                                                    *buf += r#"</tr>"#;
                                                 }
-                                                *buf += r#"</tr>"#;
                                             }
                                             *buf += r#"</tbody>"#;
                                         }
@@ -108,6 +118,12 @@ impl Component for ProjectBody {
                                     *buf += r#"</div>"#;
                                 }
                                 *buf += r#"</div>"#;
+                                *buf +=
+                                    r#"<input type="hidden" id="members" name="members" value=""#;
+                                if let Ok(r) = serde_json::to_string(&props.members) {
+                                    super::super::escape_html(&r, buf);
+                                }
+                                *buf += r#"">"#;
                             }
                             *buf += r#"</div>"#;
 
@@ -192,7 +208,7 @@ impl Component for ProjectBody {
                                         *buf += r#"<div class="modal-footer">"#;
                                         {
                                             *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
-                                            *buf += r#"<button class="btn btn-primary" id="btnAddMember" type="button" disabled>メンバーに追加</button>"#;
+                                            *buf += r#"<button class="btn btn-primary" id="btnAddMember" type="button" data-bs-dismiss="modal" disabled>メンバーに追加</button>"#;
                                         }
                                         *buf += r#"</div>"#;
                                     }
@@ -493,6 +509,8 @@ impl Component for ProjectBody {
 
             self.footer.write(props, buf);
             *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
+            *buf += r#"<script src="/static/js/project.js"></script>"#;
+            /*
             *buf += r##"<script>
                 function clickAddMember() {
                     new bootstrap.Modal("#addMemberModal").show();
@@ -573,19 +591,20 @@ impl Component for ProjectBody {
                     //    $('#add_members').val(buf);
                     //    $('#membarAddForm').submit();
                     //}
-                    $.ajax({
-                        type: "POST",
-                        url: "/api/memberAdd",
-                        data: {
-                            members: buf
-                        },
-                        success: function(result) {
-                            console.log('***result=' + result);
-                            //var ret = JSON.parse(result);
-                        }
-                    });
+                    //$.ajax({
+                    //    type: "POST",
+                    //    url: "/api/memberAdd",
+                    //    data: {
+                    //        members: buf
+                    //    },
+                    //    success: function(result) {
+                    //        console.log('***result=' + result);
+                    //        //var ret = JSON.parse(result);
+                    //    }
+                    //});
                 });
             </script>"##;
+            */
 
             /*
             *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;

@@ -11,12 +11,19 @@ const COLLECTION_NAME: &'static str = "user";
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct User {
     pub uid: String,
-    pub name: String,
     pub email: String,
+    pub name: String,
     pub photo_url: String,
     pub status: i32, // 0:未承認, 1:承認済, 2:禁止
     pub created_at: DateTime<Utc>,
     pub last_login: DateTime<Utc>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct UserSub {
+    pub uid: String,
+    pub email: String,
+    pub name: String,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -51,8 +58,8 @@ impl User {
     pub async fn insert(session: &Session, db: &FirestoreDb) -> Result<()> {
         let user = User {
             uid: session.uid.clone(),
-            name: session.name.clone(),
             email: session.email.clone(),
+            name: session.name.clone(),
             photo_url: session.photo_url.clone(),
             status: UserStatus::Approved as i32,
             created_at: Utc::now(),
@@ -74,7 +81,15 @@ impl User {
         Ok(())
     }
 
-    pub async fn search_by_email(email: &String, db: &FirestoreDb) -> Result<Vec<Self>> {
+    pub fn to_sub(&self) -> UserSub {
+        UserSub {
+            uid: self.uid.clone(),
+            email: self.email.clone(),
+            name: self.name.clone(),
+        }
+    }
+
+    pub async fn search_by_email(email: &String, db: &FirestoreDb) -> Result<Vec<UserSub>> {
         let object_stream: BoxStream<FirestoreResult<User>> = match db
             .fluent()
             .select()
@@ -103,6 +118,12 @@ impl User {
             }
         };
 
-        Ok(users)
+        let mut subs = Vec::new();
+
+        for user in users {
+            subs.push(user.to_sub());
+        }
+
+        Ok(subs)
     }
 }

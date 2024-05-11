@@ -23,16 +23,18 @@ pub struct UserByEmainInput {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserResult {
     pub result: String,
-    pub users: Vec<User>,
+    pub users: Vec<model::user::UserSub>,
     pub message: String,
 }
 
+/*
 #[derive(Serialize, Deserialize, Debug)]
 pub struct User {
     pub uid: String,
     pub email: String,
     pub name: String,
 }
+*/
 
 #[derive(Deserialize, Debug)]
 pub struct MemberAddInput {
@@ -99,20 +101,24 @@ pub async fn user_by_email(Form(input): Form<UserByEmainInput>) -> String {
         }
     };
 
+    /*
     let mut ret = Vec::new();
 
     for user in users {
-        let u = User {
+        /*
+        let u = model::user::User {
             uid: user.uid,
             email: user.email,
             name: user.name,
         };
-        ret.push(u);
+        */
+        ret.push(user);
     }
+    */
 
     let result = UserResult {
         result: "OK".to_string(),
-        users: ret,
+        users: users,
         message: "".to_string(),
     };
 

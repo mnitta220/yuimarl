@@ -47,20 +47,20 @@ html(lang="ja")
                   table.table.table-hover
                     thead
                       tr
-                        th(scope="col") 名前
                         th(scope="col") メールアドレス
+                        th(scope="col") 名前
                         th(scope="col")
                     tbody
                       tr
-                        td 山田太郎
                         td taro.yamada@mail.com
+                        td 山田太郎
                         td
                           img.icon(src="../../static/ionicons/remove-circle-outline.svg" title="削除")
                           | &nbsp;
                           img.icon(src="../../static/ionicons/arrow-down-outline.svg" title="下に移動")
                       tr
-                        td 岩鬼正美
                         td masami.iwaki@mail.com
+                        td 岩鬼正美
                         td
                           img.icon(src="../../static/ionicons/remove-circle-outline.svg" title="削除")
                           | &nbsp;
@@ -68,8 +68,8 @@ html(lang="ja")
                           | &nbsp;
                           img.icon(src="../../static/ionicons/arrow-down-outline.svg" title="下に移動")
                       tr
-                        td 里中智
                         td satoru.satonaka@mail.com
+                        td 里中智
                         td
                           img.icon(src="../../static/ionicons/remove-circle-outline.svg" title="削除")
                           | &nbsp;
@@ -91,34 +91,34 @@ html(lang="ja")
                               thead
                                 tr
                                   th(scope="col") 選択
-                                  th(scope="col") 名前
-                                  th(scope="col") メールアドレス
                                   th(scope="col") ロール
+                                  th(scope="col") メールアドレス
+                                  th(scope="col") 名前
                               tbody
                                 tr
                                   td
                                     input.form-check-input#flexCheckDefault(type="checkbox" value="" checked)
-                                  td 山田太郎
-                                  td taro.yamada@mail.com
                                   td オーナー
-                                tr
-                                  td
-                                    input.form-check-input#flexCheckDefault(type="checkbox" value="" checked)
-                                  td 岩鬼正美
-                                  td masami.iwaki@mail.com
-                                  td メンバー
+                                  td taro.yamada@mail.com
+                                  td 山田太郎
                                 tr
                                   td
                                     input.form-check-input#flexCheckDefault(type="checkbox" value="")
-                                  td 殿馬一人
-                                  td kazuto.tonoma@mail.com
                                   td 管理者
+                                  td kazuto.tonoma@mail.com
+                                  td 殿馬一人
                                 tr
                                   td
                                     input.form-check-input#flexCheckDefault(type="checkbox" value="" checked)
-                                  td 里中智
-                                  td satoru.satonaka@mail.com
+                                  td メンバー
+                                  td masami.iwaki@mail.com
+                                  td 岩鬼正美
+                                tr
+                                  td
+                                    input.form-check-input#flexCheckDefault(type="checkbox" value="" checked)
                                   td 閲覧者
+                                  td satoru.satonaka@mail.com
+                                  td 里中智
                       .modal-footer
                         button.btn.btn-secondary(type="button" data-bs-dismiss="modal") キャンセル
                         button.btn.btn-primary(type="button") 担当者に追加

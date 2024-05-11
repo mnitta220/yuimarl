@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Yuimarl</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style3.css">
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+  </head>
+  <body>
+    <main>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-1"></div>
+          <div class="col col-md-10">
+            <div class="row py-2">
+              <div class="col-auto">
+                <div class="logoImg"><a href="index.html"><img src="images/logo.gif" alt="Yuimarl"></a></div>
+              </div>
+            </div>
+            <div class="row bg-dark px-2 px-md-0">
+              <nav class="navbar navbar-expand-md navbar-dark sticky-top px-2">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbar-content">
+                  <ul class="navbar-nav me-auto">
+                    <li class="nav-item active"><a class="nav-link" href="index.html">ホーム</a></li>
+                  </ul>
+                </div>
+              </nav>
+            </div>
+            <div class="row">
+              <div class="col-md-9">
+                <div class="row">
+                  <div class="col">
+                    <h2 class="pt-3 pb-1">システムの仕様</h2>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <hr>
+                    <h3>ユーザー認証</h3>
+                    <p>以下のいずれかのメールアドレスまたはアカウントでログインする。</p>
+                    <ul>
+                      <li>メールアドレス</li>
+                      <li>Google</li>
+                      <li>Facebook</li>
+                      <li>X</li>
+                      <li>Github</li>
+                      <li>Apple</li>
+                      <li>Yahoo!</li>
+                    </ul>
+                    <p>利用規約に合意したら、システムのユーザーとして登録される。</p>
+                    <hr>
+                    <h3>プロジェクト</h3>
+                    <ul>
+                      <li>プロジェクトを作成したユーザーがオーナーになる。</li>
+                      <li>一人のユーザーが登録できるのは、最大で10個のプロジェクト。（他のユーザーが作成したプロジェクトには、何個でも参加できる）</li>
+                      <li>登録済みのユーザーを検索して、プロジェクトのメンバーとして登録することができる。メンバーには、オーナー/管理者/メンバー/閲覧者のいずれかのロールを付与する。</li>
+                      <li>ロールが付与されていないユーザーは、閲覧も更新もできない。</li>
+                      <li>１つのプロジェクトには、（オーナーを含めて）最大で20人のメンバーを追加することができる。</li>
+                      <li>プロジェクトに21人以上のユーザーを追加したい場合は、有料での対応となる。</li>
+                    </ul>
+                    <h5>ロールの権限</h5>
+                    <table class="table table-bordered">
+                      <tr>
+                        <th>機能</th>
+                        <th>オーナー</th>
+                        <th>管理者</th>
+                        <th>メンバー</th>
+                        <th>閲覧者</th>
+                      </tr>
+                      <tr>
+                        <td>プロジェクトを削除</td>
+                        <td>〇</td>
+                        <td>×</td>
+                        <td>×</td>
+                        <td>×</td>
+                      </tr>
+                      <tr>
+                        <td>メンバーを追加</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>×</td>
+                        <td>×</td>
+                      </tr>
+                      <tr>
+                        <td>メンバー情報を閲覧</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                      </tr>
+                      <tr>
+                        <td>メンバー情報を更新</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>×</td>
+                        <td>×</td>
+                      </tr>
+                      <tr>
+                        <td>メンバーを削除</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>×</td>
+                        <td>×</td>
+                      </tr>
+                      <tr>
+                        <td>チケットを作成</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>×</td>
+                      </tr>
+                    </table>
+                    <hr>
+                    <h3>チケット</h3>
+                    <ul>
+                      <li>チケットには、接頭辞＋連番のIDが付与される。</li>
+                      <li>１つのプロジェクトには、最大で1000個のチケットを作成することができる。（削除したチケットも1個とカウントされる）</li>
+                      <li>1001個以上のチケットを作成したい場合は、有料での対応となる。</li>
+                    </ul>
+                    <h5>ロールの権限</h5>
+                    <table class="table table-bordered">
+                      <tr>
+                        <th>機能</th>
+                        <th>作成者</th>
+                        <th>担当者</th>
+                        <th>オーナー</th>
+                        <th>管理者</th>
+                        <th>メンバー</th>
+                        <th>閲覧者</th>
+                      </tr>
+                      <tr>
+                        <td>チケットを閲覧</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                      </tr>
+                      <tr>
+                        <td>チケットを更新</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>×</td>
+                        <td>×</td>
+                      </tr>
+                      <tr>
+                        <td>コメントを追加</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>×</td>
+                      </tr>
+                      <tr>
+                        <td>チケットを削除</td>
+                        <td>〇</td>
+                        <td>×</td>
+                        <td>〇</td>
+                        <td>〇</td>
+                        <td>×</td>
+                        <td>×</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="submenu mt-3">
+                  <h3>CONTENTS</h3>
+                  <ul>
+                    <li><a href="https://mnitta220.github.io/">新田システム事務所</a></li>
+                    <li><a href="index2.html">ホーム</a>
+                      <ul>
+                        <li><a href="devsetup.html">開発環境構築</a></li>
+                        <li><a href="deploy.html">運用環境構築</a></li>
+                        <li><a href="develop.html">開発情報</a>
+                          <ul>
+                            <li><a class="current" href="specification.html">システムの仕様</a></li>
+                            <li><a href="database.html">データベース</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="howtouse.html">使い方</a></li>
+                        <li><a href="agreement.html">利用規約</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="row bg-dark px-3">
+              <footer class="py-1 text-light">
+                <div class="container text-center">
+                  <ul class="nav justify-content-center">
+                    <li class="nav-item"><a class="nav-link" href="../privacy.html">プライバシー・ポリシー</a></li>
+                  </ul>
+                  <p style="color: #a0a0a0"><small>Copyright &copy; 2024 Masahiro Nitta. All Rights Reserved.</small></p>
+                </div>
+              </footer>
+            </div>
+          </div>
+          <div class="col-md-1"></div>
+        </div>
+      </div>
+    </main>
+    <script src="js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

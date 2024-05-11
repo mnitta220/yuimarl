@@ -23,6 +23,91 @@ html(lang="ja")
                   .col
                     h2.pt-3.pb-1 開発情報
                     p 工事中
+                    h3 システムの仕様
+                    h4 ユーザー認証
+                    hr
+                    h4 プロジェクト
+                    h5 ロールの権限
+                    table.table.table-bordered
+                      tr
+                        th 機能
+                        th オーナー
+                        th 管理者
+                        th メンバー
+                        th 閲覧者
+                      tr
+                        td プロジェクトを削除
+                        td 〇
+                        td ×
+                        td ×
+                        td ×
+                      tr
+                        td メンバーを追加
+                        td 〇
+                        td 〇
+                        td ×
+                        td ×
+                      tr
+                        td メンバー情報を閲覧
+                        td 〇
+                        td 〇
+                        td 〇
+                        td 〇
+                      tr
+                        td メンバー情報を更新
+                        td 〇
+                        td 〇
+                        td ×
+                        td ×
+                      tr
+                        td メンバーを削除
+                        td 〇
+                        td 〇
+                        td ×
+                        td ×
+                      tr
+                        td チケットを作成
+                        td 〇
+                        td 〇
+                        td 〇
+                        td ×
+
+                    hr
+                    h4 チケット
+                    h5 ロールの権限
+                    table.table.table-bordered
+                      tr
+                        th 機能
+                        th 作成者
+                        th 担当者
+                        th オーナー
+                        th 管理者
+                        th メンバー
+                        th 閲覧者
+                      tr
+                        td チケットを閲覧
+                        td 〇
+                        td 〇
+                        td 〇
+                        td 〇
+                        td 〇
+                        td 〇
+                      tr
+                        td チケットを更新
+                        td 〇
+                        td 〇
+                        td 〇
+                        td 〇
+                        td ×
+                        td ×
+                      tr
+                        td チケットを削除
+                        td 〇
+                        td ×
+                        td 〇
+                        td 〇
+                        td ×
+                        td ×
 
               .col-md-3
                 .submenu.mt-3

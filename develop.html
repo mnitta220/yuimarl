@@ -35,7 +35,50 @@
                 <div class="row">
                   <div class="col">
                     <h2 class="pt-3 pb-1">開発情報</h2>
-                    <p>工事中</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <hr>
+                    <h3>開発の手順</h3>
+                    <p>Yuimarlの開発は、以下の手順で行います。</p>
+                    <ol>
+                      <li><a href="#step01">仕様書を作成する</a></li>
+                      <li><a href="#step02">プロトタイプを作成する</a></li>
+                      <li><a href="#step03">コントローラーとコンポーネントのコードを作る</a></li>
+                      <li><a href="#step04">モデルのコードを作る</a></li>
+                      <li><a href="#step05">Rustのコードを完成させる</a></li>
+                      <li><a href="#step06">Dockerイメージを作る</a></li>
+                      <li><a href="#step07">開発環境にデプロイしてテストする</a></li>
+                      <li><a href="#step08">本番環境にリリースする</a></li>
+                    </ol>
+                    <hr>
+                    <h5 id="step01">仕様書を作成する</h5>
+                    <p>システムの仕様を決めて仕様書を作成します。</p><a href="spec.html">Yuimarlの仕様</a>
+                    <hr>
+                    <h5 id="step02">プロトタイプを作成する</h5>
+                    <p>画面のプロトタイプを作成します。<br>プロトタイプは、画面操作のシナリオを作成し、各画目の pug を作成し、pug をコンパイルして html を生成します。<br>生成された html をブラウザで表示して確認し、必要に応じて修正します。</p>
+                    <p>たとえば、プロジェクト作成のシナリオのプロトタイプは、次の場所にあります。<br><a href="https://github.com/mnitta220/yuimarl/tree/main/proto/02_project_add" target="_blank">https://github.com/mnitta220/yuimarl/tree/main/proto/02_project_add</a></p>
+                    <p>proto/02_project_add のフォルダにある pug をコンパイルするには、次のコマンドを実行します。</p><code>pug -P proto/02_project_add</code><br>
+                    <hr>
+                    <h5 id="step03">コントローラーとコンポーネントのコードを作る</h5>
+                    <p>
+                       プロトタイプの固定 html を表示する Rust のコードを実装します。</p>
+                    <hr>
+                    <h5 id="step04">モデルのコードを作る</h5>
+                    <p>Firestore に保存するデータの定義を作成し、モデルのコードを実装します。</p>
+                    <ul>
+                      <li><a href="database.html">データベース</a></li>
+                      <li> <a href="https://github.com/mnitta220/yuimarl/tree/main/src/model" target="_blank">モデルのソースコード</a></li>
+                    </ul>
+                    <hr>
+                    <h5 id="step05">Rustのコードを完成させる</h5>
+                    <hr>
+                    <h5 id="step06">Dockerイメージを作る</h5>
+                    <hr>
+                    <h5 id="step07">開発環境にデプロイしてテストする</h5>
+                    <hr>
+                    <h5 id="step08">本番環境にリリースする</h5>
                   </div>
                 </div>
               </div>
@@ -50,7 +93,7 @@
                         <li><a href="deploy.html">運用環境構築</a></li>
                         <li><a class="current" href="develop.html">開発情報</a>
                           <ul>
-                            <li><a href="specification.html">システムの仕様</a></li>
+                            <li><a href="spec.html">Yuimarlの仕様</a></li>
                             <li><a href="database.html">データベース</a></li>
                           </ul>
                         </li>

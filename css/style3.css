@@ -153,3 +153,10 @@ body {
 	background-color: #5e577b;
 	color: #fff;
 }
+
+code{
+  color: #fff;
+  background-color: #333;
+  border-radius: 4px;
+  padding: 12px;
+}

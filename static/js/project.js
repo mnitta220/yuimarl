@@ -1,11 +1,13 @@
 var members = [];
+var addMemberModal = new bootstrap.Modal("#addMemberModal");
+var updateMemberModal = new bootstrap.Modal("#updateMemberModal");
 
 $(document).ready(function () {
     members = JSON.parse($("#members").val());
 });
 
 function clickAddMember() {
-    new bootstrap.Modal("#addMemberModal").show();
+    addMemberModal.show();
 }
 
 function roleToString(role) {
@@ -22,6 +24,51 @@ function roleToString(role) {
     return 'Unknown';
 }
 
+function removeMember(i) {
+    members.splice(i, 1);
+    setMemberList();
+}
+
+function updateMember(i) {
+    var buf = '';
+    buf += '<table class="table table-hover">';
+    buf += '<thead>';
+    buf += '<tr>';
+    buf += '<th scope="col">メールアドレス</th>';
+    buf += '<th scope="col">名前</th>';
+    buf += '<th scope="col">ロール</th>';
+    buf += '</tr>';
+    buf += '</thead>';
+    buf += '<tbody>';
+    buf += '<tr><td>';
+    buf += members[i].email + '</td><td>';
+    buf += members[i].name + '</td><td>';
+    buf += '<select class="form-select" id="updateMemberRole" name="updateMemberRole">';
+    buf += '<option value="2"';
+    if (members[i].role == 2) {
+        buf += ' selected';
+    }
+    buf += '>管理者</option>';
+    buf += '<option value="3"';
+    if (members[i].role == 3) {
+        buf += ' selected';
+    }
+    buf += '>メンバー</option>';
+    buf += '<option value="4"';
+    if (members[i].role == 4) {
+        buf += ' selected';
+    }
+    buf += '>閲覧者</option>';
+    buf += '</select>';
+    buf += '</td></tr>';
+    buf += '</tbody>';
+    buf += '</table>';
+    buf += '<input type="hidden" id="updateMemberIdx" value="' + i + '">';
+    $("div#updateMember").html(buf);
+
+    updateMemberModal.show();
+}
+
 $('#search-email').on('click', function () {
     $("#add_members").val("");
     $.ajax({
@@ -31,7 +78,6 @@ $('#search-email').on('click', function () {
             email: $("input#email").val()
         },
         success: function (result) {
-            console.log('***2 result=' + result);
             var ret = JSON.parse(result);
             var buf = '';
             if (ret.result == "OK") {
@@ -103,9 +149,21 @@ $('#btnAddMember').on('click', function () {
 
     $("#email").val("");
     $("#member-name").val("");
-    $("#members").val('{"members":' + JSON.stringify(members) + '}');
     $("div#searched").html("");
-    new bootstrap.Modal("#addMemberModal").hide();
+    addMemberModal.hide();
+    setMemberList();
+});
+
+$('#btnUpdateMember').on('click', function () {
+    var idx = $("#updateMemberIdx").val();
+    members[idx].role = Number($("#updateMemberRole").val());
+    $("div#updateMember").html("");
+    updateMemberModal.hide();
+    setMemberList();
+});
+
+function setMemberList() {
+    $("#members").val('{"members":' + JSON.stringify(members) + '}');
     var buf = '';
     for (var i in members) {
         buf += '<tr><td>';
@@ -114,8 +172,16 @@ $('#btnAddMember').on('click', function () {
         buf += members[i].email;
         buf += '</td><td>';
         buf += members[i].name;
-        buf += '</td><td></td></tr>';
+        buf += '</td><td>';
+        if (i > 0) {
+            buf += '<a href="javascript:updateMember(' + i + ')">';
+            buf += '<img class="icon" src="/static/ionicons/settings-outline.svg" title="設定">';
+            buf += '</a>&nbsp;<a href="javascript:removeMember(' + i + ')">';
+            buf += '<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">';
+            buf += '</a>';
+        }
+        buf += '</td></tr>';
     }
 
     $("#members-tbody").html(buf);
-});
+}

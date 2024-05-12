@@ -36,7 +36,7 @@ pub async fn get_add_project(cookies: Cookies) -> Result<Html<String>, AppError>
                         member_limit: model::project::MEMBER_LIMIT_DEFAULT,
                         ticket_limit: model::project::TICKET_LIMIT_DEFAULT,
                         ticket_number: 1,
-                        note: "".to_string(),
+                        note: None,
                         created_at: Utc::now(),
                         deleted: false,
                     };
@@ -118,7 +118,7 @@ pub async fn post_project(
             member_limit: model::project::MEMBER_LIMIT_DEFAULT,
             ticket_limit: model::project::TICKET_LIMIT_DEFAULT,
             ticket_number: 0,
-            note: "".to_string(),
+            note: None,
             created_at: Utc::now(),
             deleted: false,
         };
@@ -151,7 +151,7 @@ pub async fn post_project(
             member_limit: model::project::MEMBER_LIMIT_DEFAULT,
             ticket_limit: model::project::TICKET_LIMIT_DEFAULT,
             ticket_number: 0,
-            note: "".to_string(),
+            note: None,
             created_at: Utc::now(),
             deleted: false,
         };
@@ -165,11 +165,15 @@ pub async fn post_project(
         return Ok(Html(page.write()));
     }
 
-    if let Err(e) = model::project::Project::insert(&input, &session, members, &db).await {
-        return Err(AppError(anyhow::anyhow!(e)));
-    }
+    let prj = match model::project::Project::insert(&input, &session, members, &db).await {
+        Ok(p) => p,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
 
     props.session = Some(session);
+    props.project = Some(prj);
 
     let mut page = HomePage::new(props);
 

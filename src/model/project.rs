@@ -22,7 +22,7 @@ pub struct Project {
     pub member_limit: i32,         // 最大メンバー数
     pub ticket_limit: i32,         // 最大チケット番号
     pub ticket_number: i32,        // チケット番号
-    pub note: String,              // ノート（マークダウン）
+    pub note: Option<String>,      // ノート（マークダウン）
     pub created_at: DateTime<Utc>, // 作成日時
     pub deleted: bool,             // 削除フラグ
 }
@@ -34,11 +34,11 @@ pub struct ProjectValidation {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct ProjectMember {
-    pub id: String,               // ID(uuid)
-    pub project_id: String,       // プロジェクトID
-    pub member: String,           // メンバーのユーザーID
-    pub role: i32,                // ロール 1:オーナー, 2:管理者, 3:メンバー, 4:閲覧者
-    pub last_used: DateTime<Utc>, // 最終使用日時
+    pub id: String,                       // ID(uuid)
+    pub project_id: String,               // プロジェクトID
+    pub member: String,                   // メンバーのユーザーID
+    pub role: i32,                        // ロール 1:オーナー, 2:管理者, 3:メンバー, 4:閲覧者
+    pub last_used: Option<DateTime<Utc>>, // 最終使用日時
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -233,7 +233,7 @@ impl Project {
         session: &Session,
         members: serde_json::Value,
         db: &FirestoreDb,
-    ) -> Result<()> {
+    ) -> Result<Self> {
         let mut prj = Project {
             id: "".to_string(),
             project_name: input.project_name.trim().to_string(),
@@ -243,7 +243,7 @@ impl Project {
             member_limit: MEMBER_LIMIT_DEFAULT,
             ticket_limit: TICKET_LIMIT_DEFAULT,
             ticket_number: 0,
-            note: "".to_string(),
+            note: None,
             created_at: Utc::now(),
             deleted: false,
         };
@@ -283,14 +283,18 @@ impl Project {
 
         let empty_vec: Vec<serde_json::Value> = Vec::new();
         let mem = members["members"].as_array().unwrap_or_else(|| &empty_vec);
+        let mut i = 0;
         for m in mem {
             let mut member = ProjectMember {
                 id: "".to_string(),
                 project_id: prj.id.clone(),
                 member: String::from(m["uid"].as_str().unwrap()),
                 role: m["role"].as_i64().unwrap() as i32,
-                last_used: Utc::now(),
+                last_used: None,
             };
+            if i == 0 {
+                member.last_used = Some(Utc::now());
+            }
             let mut count = 0u32;
 
             loop {
@@ -326,11 +330,12 @@ impl Project {
                     },
                 };
             }
+            i += 1;
         }
 
         tracing::debug!("Project inserted {:?}", prj);
 
-        Ok(())
+        Ok(prj)
     }
 }
 
@@ -380,7 +385,7 @@ impl ProjectMember {
         match ProjectMember::find(project_id, member, db).await {
             Ok(mut members) => {
                 for m in members.iter_mut() {
-                    m.last_used = Utc::now();
+                    m.last_used = Some(Utc::now());
                     tracing::debug!("update_last_used member={}", m.id);
                     if let Err(e) = db
                         .fluent()
@@ -465,7 +470,7 @@ impl ProjectMember {
                 project_id: project_id.to_string(),
                 member: uid.to_string(),
                 role: role.parse::<i32>().unwrap(),
-                last_used: Utc::now(),
+                last_used: None,
             };
             let mut count = 0u32;
 

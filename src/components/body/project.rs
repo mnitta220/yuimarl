@@ -38,11 +38,27 @@ impl Component for ProjectBody {
                                 *buf += r#"プロジェクト名</label>"#;
                                 *buf += r#"<div class="col-md-9 mb-1">"#;
                                 {
-                                    *buf += r#"<input class="form-control" id="project_name" name="project_name" type="text" maxlength="40" value=""#;
+                                    *buf += r#"<input class="form-control"#;
+                                    if let Some(v) = &props.project_validation {
+                                        if let Some(_) = &v.project_name {
+                                            *buf += r#" is-invalid"#;
+                                        }
+                                    }
+                                    *buf += r#"" id="project_name" name="project_name" type="text" maxlength="40" value=""#;
                                     if let Some(p) = &props.project {
-                                        *buf += &p.project_name;
+                                        if let Some(n) = &p.project_name {
+                                            *buf += n;
+                                        }
                                     }
                                     *buf += r#"" required>"#;
+
+                                    if let Some(v) = &props.project_validation {
+                                        if let Some(e) = &v.project_name {
+                                            *buf += r#"<div class="invalid-feedback">"#;
+                                            *buf += e;
+                                            *buf += r#"</div>"#;
+                                        }
+                                    }
                                 }
                                 *buf += r#"</div>"#;
                             }
@@ -57,7 +73,9 @@ impl Component for ProjectBody {
                                 {
                                     *buf += r#"<input class="form-control" id="prefix" name="prefix" type="text" maxlength="10" value=""#;
                                     if let Some(p) = &props.project {
-                                        *buf += &p.prefix;
+                                        if let Some(p) = &p.prefix {
+                                            *buf += p;
+                                        }
                                     }
                                     *buf += r#"" required>"#;
                                 }
@@ -99,9 +117,13 @@ impl Component for ProjectBody {
                                                         *buf += r#"<td>"#;
                                                         *buf += &member.role_to_string();
                                                         *buf += r#"</td><td>"#;
-                                                        *buf += &member.email;
+                                                        if let Some(e) = &member.email {
+                                                            *buf += e;
+                                                        }
                                                         *buf += r#"</td><td>"#;
-                                                        *buf += &member.name;
+                                                        if let Some(n) = &member.name {
+                                                            *buf += n;
+                                                        }
                                                         *buf += r#"</td><td>"#;
                                                         if i > 0 {
                                                             *buf += r#"<a href="javascript:alert('hello');">"#;

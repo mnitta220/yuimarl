@@ -12,7 +12,7 @@ pub struct Props {
     pub session: Option<model::session::Session>,
     pub project: Option<model::project::Project>,
     pub member: Option<model::project::ProjectMember>,
-    pub members: Vec<model::project::ProjectMemberSub>,
+    pub members: Vec<model::project::ProjectMember>,
     pub project_validation: Option<model::project::ProjectValidation>,
     //pub projects: Vec<model::project::Project>,
     pub ticket: Option<model::ticket::Ticket>,

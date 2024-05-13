@@ -14,17 +14,17 @@ pub const TICKET_LIMIT_DEFAULT: i32 = 1000;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Project {
-    pub id: String,                // ID(uuid)
-    pub project_name: String,      // プロジェクト名
-    pub owner: String,             // プロジェクトオーナー
-    pub prefix: String,            // チケット接頭辞
-    pub language: String,          // 言語
-    pub member_limit: i32,         // 最大メンバー数
-    pub ticket_limit: i32,         // 最大チケット番号
-    pub ticket_number: i32,        // チケット番号
-    pub note: Option<String>,      // ノート（マークダウン）
-    pub created_at: DateTime<Utc>, // 作成日時
-    pub deleted: bool,             // 削除フラグ
+    pub id: Option<String>,                // ID(uuid)
+    pub project_name: Option<String>,      // プロジェクト名
+    pub owner: Option<String>,             // プロジェクトオーナー
+    pub prefix: Option<String>,            // チケット接頭辞
+    pub language: Option<String>,          // 言語
+    pub member_limit: Option<i32>,         // 最大メンバー数
+    pub ticket_limit: Option<i32>,         // 最大チケット番号
+    pub ticket_number: Option<i32>,        // チケット番号
+    pub note: Option<String>,              // ノート（マークダウン）
+    pub created_at: Option<DateTime<Utc>>, // 作成日時
+    pub deleted: bool,                     // 削除フラグ
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -34,10 +34,12 @@ pub struct ProjectValidation {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct ProjectMember {
-    pub id: String,                       // ID(uuid)
-    pub project_id: String,               // プロジェクトID
-    pub member: String,                   // メンバーのユーザーID
-    pub role: i32,                        // ロール 1:オーナー, 2:管理者, 3:メンバー, 4:閲覧者
+    pub id: Option<String>,               // ID(uuid)
+    pub project_id: Option<String>,       // プロジェクトID
+    pub uid: Option<String>,              // メンバーのユーザーID
+    pub role: Option<i32>,                // ロール 1:オーナー, 2:管理者, 3:メンバー, 4:閲覧者
+    pub name: Option<String>,             // メンバーの名前
+    pub email: Option<String>,            // メンバーのメールアドレス
     pub last_used: Option<DateTime<Utc>>, // 最終使用日時
 }
 
@@ -49,15 +51,23 @@ pub enum ProjectRole {
     Viewer = 4,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct ProjectMemberSub {
-    pub uid: String,
-    pub name: String,
-    pub email: String,
-    pub role: i32,
-}
-
 impl Project {
+    pub fn new() -> Self {
+        Project {
+            id: None,
+            project_name: None,
+            owner: None,
+            prefix: None,
+            language: None,
+            member_limit: None,
+            ticket_limit: None,
+            ticket_number: None,
+            note: None,
+            created_at: None,
+            deleted: false,
+        }
+    }
+
     pub async fn find(id: &str, db: &FirestoreDb) -> Result<Option<Self>> {
         let obj_by_id: Option<Project> = match db
             .fluent()
@@ -86,9 +96,9 @@ impl Project {
         let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
-            .fields(paths!(ProjectMember::{id, project_id, member, role, last_used})) // Optionally select the fields needed
+            .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used})) // Optionally select the fields needed
             .from(COLLECTION_MEMBER)
-            .filter(|q| q.for_all([q.field(path!(ProjectMember::member)).eq(&session.uid)]))
+            .filter(|q| q.for_all([q.field(path!(ProjectMember::uid)).eq(&session.uid)]))
             .order_by([(
                 path!(ProjectMember::last_used),
                 FirestoreQueryDirection::Descending,
@@ -116,7 +126,7 @@ impl Project {
                 .select()
                 .by_id_in(&COLLECTION_NAME)
                 .obj::<Project>()
-                .one(&member.project_id)
+                .one(&member.project_id.clone().unwrap_or_default())
                 .await
             {
                 Ok(p) => match p {
@@ -200,7 +210,7 @@ impl Project {
         let object_stream: BoxStream<FirestoreResult<Project>> = match db
             .fluent()
             .select()
-            .fields(paths!(Project::{id, project_name, language, owner, created_at})) // Optionally select the fields needed
+            .fields(paths!(Project::{id, project_name, owner, prefix, deleted})) // Optionally select the fields needed
             .from(COLLECTION_NAME)
             .filter(|q| {
                 q.for_all([
@@ -233,35 +243,31 @@ impl Project {
         session: &Session,
         members: serde_json::Value,
         db: &FirestoreDb,
-    ) -> Result<Self> {
-        let mut prj = Project {
-            id: "".to_string(),
-            project_name: input.project_name.trim().to_string(),
-            owner: session.uid.clone(),
-            prefix: input.prefix.trim().to_string(),
-            language: "ja".to_string(),
-            member_limit: MEMBER_LIMIT_DEFAULT,
-            ticket_limit: TICKET_LIMIT_DEFAULT,
-            ticket_number: 0,
-            note: None,
-            created_at: Utc::now(),
-            deleted: false,
-        };
+    ) -> Result<(Project, Vec<ProjectMember>)> {
+        let mut prj = Project::new();
+        let mut project_members = Vec::new();
+        prj.project_name = Some(input.project_name.trim().to_string());
+        prj.owner = Some(session.uid.clone());
+        prj.prefix = Some(input.prefix.trim().to_string());
+        prj.member_limit = Some(MEMBER_LIMIT_DEFAULT);
+        prj.ticket_limit = Some(TICKET_LIMIT_DEFAULT);
+        prj.ticket_number = Some(0);
+        prj.created_at = Some(Utc::now());
         let mut count = 0u32;
+        let mut id = Uuid::now_v7().to_string();
 
         loop {
             count += 1;
             if count > 9 {
                 return Err(anyhow::anyhow!("Failed to create project".to_string()));
             }
-            let id = Uuid::now_v7().to_string();
-            prj.id = id.clone();
+            prj.id = Some(id.clone());
 
             match db
                 .fluent()
                 .insert()
                 .into(&COLLECTION_NAME)
-                .document_id(id)
+                .document_id(id.clone())
                 .object(&prj)
                 .execute::<Project>()
                 .await
@@ -272,6 +278,7 @@ impl Project {
                 Err(e) => match &e {
                     firestore::errors::FirestoreError::DataConflictError(e) => {
                         tracing::error!("DataConflictError: {:?}", e);
+                        id = Uuid::now_v7().to_string();
                         continue;
                     }
                     _ => {
@@ -284,14 +291,12 @@ impl Project {
         let empty_vec: Vec<serde_json::Value> = Vec::new();
         let mem = members["members"].as_array().unwrap_or_else(|| &empty_vec);
         let mut i = 0;
+
         for m in mem {
-            let mut member = ProjectMember {
-                id: "".to_string(),
-                project_id: prj.id.clone(),
-                member: String::from(m["uid"].as_str().unwrap()),
-                role: m["role"].as_i64().unwrap() as i32,
-                last_used: None,
-            };
+            let mut member = ProjectMember::new();
+            member.project_id = Some(id.clone());
+            member.uid = Some(String::from(m["uid"].as_str().unwrap()));
+            member.role = Some(m["role"].as_i64().unwrap() as i32);
             if i == 0 {
                 member.last_used = Some(Utc::now());
             }
@@ -305,7 +310,7 @@ impl Project {
                     ));
                 }
                 let id = Uuid::now_v7().to_string();
-                member.id = id.clone();
+                member.id = Some(id.clone());
 
                 match db
                     .fluent()
@@ -317,6 +322,7 @@ impl Project {
                     .await
                 {
                     Ok(_) => {
+                        project_members.push(member);
                         break;
                     }
                     Err(e) => match &e {
@@ -335,21 +341,33 @@ impl Project {
 
         tracing::debug!("Project inserted {:?}", prj);
 
-        Ok(prj)
+        Ok((prj, project_members))
     }
 }
 
 impl ProjectMember {
+    pub fn new() -> Self {
+        Self {
+            id: None,
+            project_id: None,
+            uid: None,
+            role: None,
+            last_used: None,
+            name: None,
+            email: None,
+        }
+    }
+
     pub async fn find(project_id: &str, member: &str, db: &FirestoreDb) -> Result<Vec<Self>> {
         let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
-            .fields(paths!(ProjectMember::{id, project_id, member, role, last_used})) // Optionally select the fields needed
+            .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used})) // Optionally select the fields needed
             .from(COLLECTION_MEMBER)
             .filter(|q| {
                 q.for_all([
                     q.field(path!(ProjectMember::project_id)).eq(&project_id),
-                    q.field(path!(ProjectMember::member)).eq(&member),
+                    q.field(path!(ProjectMember::uid)).eq(&member),
                 ])
             })
             .order_by([(
@@ -385,19 +403,20 @@ impl ProjectMember {
         match ProjectMember::find(project_id, member, db).await {
             Ok(mut members) => {
                 for m in members.iter_mut() {
-                    m.last_used = Some(Utc::now());
-                    tracing::debug!("update_last_used member={}", m.id);
-                    if let Err(e) = db
-                        .fluent()
-                        .update()
-                        .fields(paths!(ProjectMember::last_used))
-                        .in_col(&COLLECTION_MEMBER)
-                        .document_id(&m.id)
-                        .object(m)
-                        .execute::<ProjectMember>()
-                        .await
-                    {
-                        return Err(anyhow::anyhow!(e.to_string()));
+                    if let Some(id) = &m.id {
+                        m.last_used = Some(Utc::now());
+                        if let Err(e) = db
+                            .fluent()
+                            .update()
+                            .fields(paths!(ProjectMember::last_used))
+                            .in_col(&COLLECTION_MEMBER)
+                            .document_id(id)
+                            .object(m)
+                            .execute::<ProjectMember>()
+                            .await
+                        {
+                            return Err(anyhow::anyhow!(e.to_string()));
+                        }
                     }
                 }
             }
@@ -434,19 +453,19 @@ impl ProjectMember {
             let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
                 .fluent()
                 .select()
-                .fields(paths!(ProjectMember::{id, project_id, member, role, last_used})) // Optionally select the fields needed
+                .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used})) // Optionally select the fields needed
                 .from(COLLECTION_MEMBER)
                 .filter(|q| {
                     q.for_all([
                         q.field(path!(ProjectMember::project_id)).eq(&project_id),
-                        q.field(path!(ProjectMember::member)).eq(&uid),
+                        q.field(path!(ProjectMember::uid)).eq(&uid),
                     ])
                 })
                 .order_by([(
                     path!(ProjectMember::last_used),
                     FirestoreQueryDirection::Descending,
                 )])
-                .obj() // Reading documents as structures using Serde gRPC deserializer
+                .obj()
                 .stream_query_with_errors()
                 .await
             {
@@ -465,13 +484,11 @@ impl ProjectMember {
             if project_members.len() > 0 {
                 return Ok(format!("{}はすでに存在します。", uid));
             }
-            let mut member = ProjectMember {
-                id: "".to_string(),
-                project_id: project_id.to_string(),
-                member: uid.to_string(),
-                role: role.parse::<i32>().unwrap(),
-                last_used: None,
-            };
+
+            let mut member = ProjectMember::new();
+            member.project_id = Some(project_id.to_string());
+            member.uid = Some(uid.to_string());
+            member.role = Some(role.parse::<i32>().unwrap());
             let mut count = 0u32;
 
             loop {
@@ -480,7 +497,7 @@ impl ProjectMember {
                     return Err(anyhow::anyhow!("Failed to create project".to_string()));
                 }
                 let id = Uuid::now_v7().to_string();
-                member.id = id.clone();
+                member.id = Some(id.clone());
 
                 match db
                     .fluent()
@@ -512,23 +529,14 @@ impl ProjectMember {
 
     pub fn role_to_string(&self) -> String {
         match self.role {
-            1 => "オーナー".to_string(),
-            2 => "管理者".to_string(),
-            3 => "メンバー".to_string(),
-            4 => "閲覧者".to_string(),
-            _ => "Unknown".to_string(),
-        }
-    }
-}
-
-impl ProjectMemberSub {
-    pub fn role_to_string(&self) -> String {
-        match self.role {
-            1 => "オーナー".to_string(),
-            2 => "管理者".to_string(),
-            3 => "メンバー".to_string(),
-            4 => "閲覧者".to_string(),
-            _ => "Unknown".to_string(),
+            Some(r) => match r {
+                1 => "オーナー".to_string(),
+                2 => "管理者".to_string(),
+                3 => "メンバー".to_string(),
+                4 => "閲覧者".to_string(),
+                _ => "Unknown".to_string(),
+            },
+            None => "Unknown".to_string(),
         }
     }
 }

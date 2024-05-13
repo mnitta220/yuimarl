@@ -158,19 +158,23 @@ impl Component for HomeBody {
                                             {
                                                 *buf += r#"<div class="col">"#;
                                                 {
-                                                    *buf += r#"<a href="/project/list">"#;
-                                                    *buf += &p.project_name;
-                                                    *buf += r#"</a>&nbsp;&nbsp;"#;
-                                                    if let Some(m) = &props.member {
-                                                        *buf += r#"<small>"#;
+                                                    if let Some(n) = &p.project_name {
+                                                        *buf += r#"<a href="/project/list">"#;
                                                         {
-                                                            *buf += r#"<span class="badge bg-secondary text-light">"#;
-                                                            {
-                                                                *buf += &m.role_to_string();
-                                                            }
-                                                            *buf += r#"</span>"#;
+                                                            *buf += n;
                                                         }
-                                                        *buf += r#"</small>"#;
+                                                        *buf += r#"</a>"#;
+                                                        if let Some(m) = &props.member {
+                                                            *buf += r#"&nbsp;&nbsp;<small>"#;
+                                                            {
+                                                                *buf += r#"<span class="badge bg-secondary text-light">"#;
+                                                                {
+                                                                    *buf += &m.role_to_string();
+                                                                }
+                                                                *buf += r#"</span>"#;
+                                                            }
+                                                            *buf += r#"</small>"#;
+                                                        }
                                                     }
                                                 }
                                                 *buf += r#"</div>"#;

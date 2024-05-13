@@ -19,7 +19,7 @@ impl TicketBody {
 impl Component for TicketBody {
     fn write(&self, props: &Props, buf: &mut String) {
         let (progress, priority) = match &props.ticket {
-            Some(t) => (t.progress, t.priority.clone()),
+            Some(t) => (t.progress, t.priority.clone().unwrap_or("0".to_string())),
             None => (0, "0".to_string()),
         };
 
@@ -46,7 +46,9 @@ impl Component for TicketBody {
                                 *buf += r#"<div class="col-md-9 mb-1">"#;
                                 {
                                     if let Some(p) = &props.project {
-                                        *buf += &p.project_name;
+                                        if let Some(n) = &p.project_name {
+                                            *buf += n;
+                                        }
                                     }
                                 }
                                 *buf += r#"</div>"#;
@@ -69,7 +71,9 @@ impl Component for TicketBody {
                                     }
                                     *buf += r#"" id="name" name="name" maxlength="40" value=""#;
                                     if let Some(t) = &props.ticket {
-                                        *buf += &t.name;
+                                        if let Some(n) = &t.name {
+                                            *buf += n;
+                                        }
                                     }
                                     *buf += r#"" required>"#;
 
@@ -98,7 +102,9 @@ impl Component for TicketBody {
                                     {
                                         *buf += r#"<textarea class="form-control" id="note" name="note" rows="4">"#;
                                         if let Some(t) = &props.ticket {
-                                            *buf += &t.note;
+                                            if let Some(n) = &t.note {
+                                                *buf += n;
+                                            }
                                         }
                                         *buf += r#"</textarea>"#;
                                     }
@@ -241,7 +247,9 @@ impl Component for TicketBody {
                                                 *buf += r#"<label for="start_date" class="form-label">開始日</label>"#;
                                                 *buf += r#"<input type="date" class="form-control" id="start_date" name="start_date" value=""#;
                                                 if let Some(t) = &props.ticket {
-                                                    *buf += &t.start_date;
+                                                    if let Some(s) = &t.start_date {
+                                                        *buf += s;
+                                                    }
                                                 }
                                                 *buf += r#"">"#;
                                             }
@@ -252,7 +260,9 @@ impl Component for TicketBody {
                                                 *buf += r#"<label for="end_date" class="form-label">終了日</label>"#;
                                                 *buf += r#"<input type="date" class="form-control" id="end_date" name="end_date" value=""#;
                                                 if let Some(t) = &props.ticket {
-                                                    *buf += &t.end_date;
+                                                    if let Some(s) = &t.end_date {
+                                                        *buf += s;
+                                                    }
                                                 }
                                                 *buf += r#"">"#;
                                             }

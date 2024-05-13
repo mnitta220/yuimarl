@@ -5,7 +5,6 @@ use crate::{
 };
 use anyhow::Result;
 use axum::{extract::Form, response::Html};
-use chrono::Utc;
 use firestore::*;
 use serde::Deserialize;
 use tower_cookies::Cookies;
@@ -117,20 +116,13 @@ pub async fn post_create_ticket(
     };
 
     if name.len() == 0 {
-        let ticket = model::ticket::Ticket {
-            id: "".to_string(),
-            project_id: project_id.clone(),
-            id_disp: "".to_string(),
-            name: input.name,
-            note: input.note,
-            start_date: input.start_date,
-            end_date: input.end_date,
-            progress: progress,
-            priority: input.priority,
-            parent: "".to_string(),
-            owner: session.uid.clone(),
-            created_at: Utc::now(),
-        };
+        let mut ticket = model::ticket::Ticket::new();
+        ticket.project_id = Some(project_id.clone());
+        ticket.name = Some(input.name);
+        ticket.note = Some(input.note);
+        ticket.start_date = Some(input.start_date);
+        ticket.end_date = Some(input.end_date);
+        ticket.progress = progress;
         let validation = model::ticket::TicketValidation {
             name: Some("入力してください".to_string()),
         };
@@ -149,8 +141,6 @@ pub async fn post_create_ticket(
     }
 
     props.project = project;
-    //let projects = model::project::Project::my_projects(&session, &db).await?;
-    //props.projects = projects;
     props.session = Some(session);
     let mut page = HomePage::new(props);
 

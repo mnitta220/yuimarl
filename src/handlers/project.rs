@@ -5,7 +5,6 @@ use crate::{
 };
 use anyhow::Result;
 use axum::{extract::Form, response::Html};
-use chrono::Utc;
 use firestore::*;
 use serde::Deserialize;
 use tower_cookies::Cookies;
@@ -27,27 +26,11 @@ pub async fn get_add_project(cookies: Cookies) -> Result<Html<String>, AppError>
 
             match session {
                 Some(s) => {
-                    let project = model::project::Project {
-                        id: "".to_string(),
-                        project_name: "".to_string(),
-                        owner: s.uid.clone(),
-                        prefix: "".to_string(),
-                        language: "ja".to_string(),
-                        member_limit: model::project::MEMBER_LIMIT_DEFAULT,
-                        ticket_limit: model::project::TICKET_LIMIT_DEFAULT,
-                        ticket_number: 1,
-                        note: None,
-                        created_at: Utc::now(),
-                        deleted: false,
-                    };
-                    props.project = Some(project);
-
-                    let member = model::project::ProjectMemberSub {
-                        uid: s.uid.clone(),
-                        name: s.name.clone(),
-                        email: s.email.clone(),
-                        role: model::project::ProjectRole::Owner as i32,
-                    };
+                    let mut member = model::project::ProjectMember::new();
+                    member.uid = Some(s.uid.clone());
+                    member.name = Some(s.name.clone());
+                    member.email = Some(s.email.clone());
+                    member.role = Some(model::project::ProjectRole::Owner as i32);
                     props.members.push(member);
 
                     props.session = Some(s);
@@ -109,19 +92,9 @@ pub async fn post_project(
     };
 
     if project_name.len() == 0 {
-        let project = model::project::Project {
-            id: "".to_string(),
-            project_name: project_name,
-            owner: String::from(&session.uid),
-            prefix: "".to_string(),
-            language: "ja".to_string(),
-            member_limit: model::project::MEMBER_LIMIT_DEFAULT,
-            ticket_limit: model::project::TICKET_LIMIT_DEFAULT,
-            ticket_number: 0,
-            note: None,
-            created_at: Utc::now(),
-            deleted: false,
-        };
+        let mut project = model::project::Project::new();
+        project.project_name = Some(project_name);
+        project.prefix = Some(input.prefix);
         let validation = model::project::ProjectValidation {
             project_name: Some("入力してください".to_string()),
         };
@@ -142,19 +115,9 @@ pub async fn post_project(
     };
 
     if p.len() > 0 {
-        let project = model::project::Project {
-            id: "".to_string(),
-            project_name: project_name,
-            owner: "".to_string(),
-            prefix: "".to_string(),
-            language: "ja".to_string(),
-            member_limit: model::project::MEMBER_LIMIT_DEFAULT,
-            ticket_limit: model::project::TICKET_LIMIT_DEFAULT,
-            ticket_number: 0,
-            note: None,
-            created_at: Utc::now(),
-            deleted: false,
-        };
+        let mut project = model::project::Project::new();
+        project.project_name = Some(project_name);
+        project.prefix = Some(input.prefix);
         let validation = model::project::ProjectValidation {
             project_name: Some("同じ名前のプロジェクトが存在します".to_string()),
         };
@@ -165,80 +128,24 @@ pub async fn post_project(
         return Ok(Html(page.write()));
     }
 
-    let prj = match model::project::Project::insert(&input, &session, members, &db).await {
-        Ok(p) => p,
-        Err(e) => {
-            return Err(AppError(anyhow::anyhow!(e)));
-        }
-    };
+    let (prj, project_members) =
+        match model::project::Project::insert(&input, &session, members, &db).await {
+            Ok(p) => p,
+            Err(e) => {
+                return Err(AppError(anyhow::anyhow!(e)));
+            }
+        };
 
     props.session = Some(session);
     props.project = Some(prj);
+    if project_members.len() > 0 {
+        if let Some(member) = project_members.get(0) {
+            props.member = Some(member.clone());
+        }
+    }
+    props.members = project_members;
 
     let mut page = HomePage::new(props);
 
     Ok(Html(page.write()))
 }
-
-#[derive(Deserialize, Debug)]
-pub struct MemberAddInput {
-    pub add_members: String,
-}
-
-/*
-pub async fn post_member_add(
-    cookies: Cookies,
-    Form(input): Form<MemberAddInput>,
-) -> Result<Html<String>, AppError> {
-    tracing::info!("POST /member/add, {}", input.add_members);
-
-    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
-        Ok(db) => db,
-        Err(e) => {
-            return Err(AppError(anyhow::anyhow!(e)));
-        }
-    };
-
-    let session_id = match super::session_info(cookies, true) {
-        Ok(session_id) => session_id,
-        Err(_) => {
-            return Ok(Html(LoginPage::write()));
-        }
-    };
-
-    let mut props = page::Props::new(&session_id);
-    let session = model::session::Session::find(&session_id, &db).await?;
-
-    let session = match session {
-        Some(s) => s,
-        None => {
-            return Ok(Html(LoginPage::write()));
-        }
-    };
-
-    let project_id = match &session.project_id {
-        Some(p) => p,
-        None => {
-            return Ok(Html(LoginPage::write()));
-        }
-    };
-
-    let r = match model::project::ProjectMember::add_project_member(
-        project_id,
-        &input.add_members,
-        &db,
-    )
-    .await
-    {
-        Ok(r) => r,
-        Err(e) => {
-            return Err(AppError(anyhow::anyhow!(e)));
-        }
-    };
-
-    props.session = Some(session);
-    let mut page = ProjectPage::new(props);
-
-    Ok(Html(page.write()))
-}
-*/

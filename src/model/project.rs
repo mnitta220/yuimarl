@@ -41,6 +41,7 @@ pub struct ProjectMember {
     pub name: Option<String>,             // メンバーの名前
     pub email: Option<String>,            // メンバーのメールアドレス
     pub last_used: Option<DateTime<Utc>>, // 最終使用日時
+    pub project_name: Option<String>,     // プロジェクト名
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -96,7 +97,7 @@ impl Project {
         let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
-            .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used})) // Optionally select the fields needed
+            .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used}))
             .from(COLLECTION_MEMBER)
             .filter(|q| q.for_all([q.field(path!(ProjectMember::uid)).eq(&session.uid)]))
             .order_by([(
@@ -149,59 +150,6 @@ impl Project {
         Ok((None, None))
     }
 
-    /*
-    pub async fn my_projects(session: &Session, db: &FirestoreDb) -> Result<Vec<Self>> {
-        let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
-            .fluent()
-            .select()
-            .fields(paths!(ProjectMember::{id, project_id, member, role, last_used})) // Optionally select the fields needed
-            .from(COLLECTION_MEMBER)
-            .filter(|q| q.for_all([q.field(path!(ProjectMember::member)).eq(&session.uid)]))
-            .order_by([(
-                path!(ProjectMember::last_used),
-                FirestoreQueryDirection::Descending,
-            )])
-            .obj() // Reading documents as structures using Serde gRPC deserializer
-            .stream_query_with_errors()
-            .await
-        {
-            Ok(s) => s,
-            Err(e) => {
-                return Err(anyhow::anyhow!(e.to_string()));
-            }
-        };
-
-        let project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
-            Ok(s) => s,
-            Err(e) => {
-                return Err(anyhow::anyhow!(e.to_string()));
-            }
-        };
-
-        let mut projects: Vec<Project> = Vec::new();
-        for member in project_members {
-            let prj: Option<Project> = match db
-                .fluent()
-                .select()
-                .by_id_in(&COLLECTION_NAME)
-                .obj()
-                .one(&member.project_id)
-                .await
-            {
-                Ok(p) => p,
-                Err(e) => {
-                    return Err(anyhow::anyhow!(e.to_string()));
-                }
-            };
-            if let Some(p) = prj {
-                projects.push(p);
-            }
-        }
-
-        Ok(projects)
-    }
-    */
-
     pub async fn find_by_owner_and_name(
         owner: &String,
         project_name: &String,
@@ -210,7 +158,7 @@ impl Project {
         let object_stream: BoxStream<FirestoreResult<Project>> = match db
             .fluent()
             .select()
-            .fields(paths!(Project::{id, project_name, owner, prefix, deleted})) // Optionally select the fields needed
+            .fields(paths!(Project::{id, project_name, owner, prefix, deleted}))
             .from(COLLECTION_NAME)
             .filter(|q| {
                 q.for_all([
@@ -218,7 +166,7 @@ impl Project {
                     q.field(path!(Project::project_name)).eq(project_name),
                 ])
             })
-            .obj() // Reading documents as structures using Serde gRPC deserializer
+            .obj()
             .stream_query_with_errors()
             .await
         {
@@ -241,12 +189,10 @@ impl Project {
     pub async fn insert(
         input: &crate::handlers::project::ProjectInput,
         session: &Session,
-        //members: serde_json::Value,
         project_members: &mut Vec<ProjectMember>,
         db: &FirestoreDb,
     ) -> Result<Project> {
         let mut prj = Project::new();
-        //let mut project_members = Vec::new();
         prj.project_name = Some(input.project_name.trim().to_string());
         prj.owner = Some(session.uid.clone());
         prj.prefix = Some(input.prefix.trim().to_string());
@@ -289,18 +235,9 @@ impl Project {
             };
         }
 
-        //let empty_vec: Vec<serde_json::Value> = Vec::new();
-        //let mem = members["members"].as_array().unwrap_or_else(|| &empty_vec);
-        //let mut i = 0;
-
         for member in project_members {
-            //let mut member = ProjectMember::new();
             member.project_id = Some(id.clone());
-            //member.uid = Some(String::from(m["uid"].as_str().unwrap()));
-            //member.role = Some(m["role"].as_i64().unwrap() as i32);
-            //if i == 0 {
             member.last_used = Some(Utc::now());
-            //}
             let mut count = 0u32;
 
             loop {
@@ -323,7 +260,6 @@ impl Project {
                     .await
                 {
                     Ok(_) => {
-                        //project_members.push(member);
                         break;
                     }
                     Err(e) => match &e {
@@ -337,7 +273,6 @@ impl Project {
                     },
                 };
             }
-            //i += 1;
         }
 
         tracing::debug!("Project inserted {:?}", prj);
@@ -356,6 +291,7 @@ impl ProjectMember {
             last_used: None,
             name: None,
             email: None,
+            project_name: None,
         }
     }
 
@@ -363,7 +299,7 @@ impl ProjectMember {
         let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
-            .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used})) // Optionally select the fields needed
+            .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used}))
             .from(COLLECTION_MEMBER)
             .filter(|q| {
                 q.for_all([
@@ -375,7 +311,7 @@ impl ProjectMember {
                 path!(ProjectMember::last_used),
                 FirestoreQueryDirection::Descending,
             )])
-            .obj() // Reading documents as structures using Serde gRPC deserializer
+            .obj()
             .stream_query_with_errors()
             .await
         {
@@ -454,7 +390,7 @@ impl ProjectMember {
             let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
                 .fluent()
                 .select()
-                .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used})) // Optionally select the fields needed
+                .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used}))
                 .from(COLLECTION_MEMBER)
                 .filter(|q| {
                     q.for_all([
@@ -526,6 +462,58 @@ impl ProjectMember {
         }
 
         Ok("".to_string())
+    }
+
+    pub async fn my_projects(session: &Session, db: &FirestoreDb) -> Result<Vec<Self>> {
+        let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used}))
+            .from(COLLECTION_MEMBER)
+            .filter(|q| q.for_all([q.field(path!(ProjectMember::uid)).eq(&session.uid)]))
+            .order_by([(
+                path!(ProjectMember::last_used),
+                FirestoreQueryDirection::Descending,
+            )])
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let mut project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        for member in &mut project_members {
+            if let Some(id) = &member.project_id {
+                let prj: Option<Project> = match db
+                    .fluent()
+                    .select()
+                    .by_id_in(&COLLECTION_NAME)
+                    .obj()
+                    .one(id)
+                    .await
+                {
+                    Ok(p) => p,
+                    Err(e) => {
+                        return Err(anyhow::anyhow!(e.to_string()));
+                    }
+                };
+                if let Some(p) = prj {
+                    member.project_name = p.project_name;
+                }
+            }
+        }
+
+        Ok(project_members)
     }
 
     pub fn role_to_string(&self) -> String {

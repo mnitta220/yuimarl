@@ -11,57 +11,55 @@ html(lang="ja")
     include ../includes/nav.pug
 
     main
-      form(action="/ticket/add" method="POST")
-        //- プロジェクト一覧
-        .py-3
-          section
-            .container
-              .row
-                .col
-                  h3 プロジェクト一覧
-              .row
-                .col
-                  table.table.table-hover
-                    thead
-                      tr
-                        th(scope="col") プロジェクト名
-                        th(scope="col") ロール
-                        th(scope="col") 最新使用日
-                        th(scope="col")
-                    tbody
-                      tr.table-light
-                        td
-                          a(href="step03.html") 文化祭実行プロジェクト
-                        td オーナー
-                        td 2024/05/01
-                        td 
-                          .badge.bg-secondary.text-light 選択中
-                      tr
-                        td
-                          a(href="step03.html") 野球部強化プロジェクト
-                        td メンバー
-                        td 2024/04/10
-                        td
-                          a(href="step02.html" title="選択")
-                            img.icon3(src="../../static/ionicons/open-outline.svg")
-                          span.btn-help &nbsp;選択
-                          //- a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#") 選択
-                      tr
-                        td
-                          a(href="step03.html") 数学弱点克服プロジェクト
-                        td 管理者
-                        td 2024/03/24
-                        td 
-                          a(href="step02.html" title="選択")
-                            img.icon3(src="../../static/ionicons/open-outline.svg")
-                          span.btn-help &nbsp;選択
-                          //- a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#") 選択
+      //- プロジェクト一覧
+      .py-3
+        .container
+          .row
+            .col
+              h3 プロジェクト一覧
+          .row
+            .col
+              table.table.table-hover
+                thead
+                  tr
+                    th(scope="col") プロジェクト名
+                    th(scope="col") ロール
+                    th(scope="col") 最新使用日
+                    th(scope="col")
+                tbody
+                  tr.table-light
+                    td
+                      a(href="step03.html") 文化祭実行プロジェクト
+                    td オーナー
+                    td 2024/05/01
+                    td 
+                      .badge.bg-secondary.text-light 選択中
+                  tr
+                    td
+                      a(href="step03.html") 野球部強化プロジェクト
+                    td メンバー
+                    td 2024/04/10
+                    td
+                      a(href="step02.html" title="選択")
+                        img.icon3(src="../../static/ionicons/open-outline.svg")
+                      span.btn-help &nbsp;選択
+                      //- a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#") 選択
+                  tr
+                    td
+                      a(href="step03.html") 数学弱点克服プロジェクト
+                    td 管理者
+                    td 2024/03/24
+                    td 
+                      a(href="step02.html" title="選択")
+                        img.icon3(src="../../static/ionicons/open-outline.svg")
+                      span.btn-help &nbsp;選択
+                      //- a.badge.bg-info.text-dark.link-underline.link-underline-opacity-0(href="#") 選択
 
-              .row
-                .col
-                  //- a.btn.btn-primary(href="step02.html") プロジェクトを作成
-                  a(href="step02.html" title="プロジェクトを作成")
-                    img.icon3(src="../../static/ionicons/add-circle-outline.svg")
+          .row
+            .col
+              //- a.btn.btn-primary(href="step02.html") プロジェクトを作成
+              a(href="step02.html" title="プロジェクトを作成")
+                img.icon3(src="../../static/ionicons/add-circle-outline.svg")
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light

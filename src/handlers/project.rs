@@ -1,6 +1,9 @@
 use crate::{
     model,
-    pages::{home_page::HomePage, login_page::LoginPage, page, project_page::ProjectPage},
+    pages::{
+        home_page::HomePage, login_page::LoginPage, page, project_list_page::ProjectListPage,
+        project_page::ProjectPage,
+    },
     AppError,
 };
 use anyhow::Result;
@@ -34,6 +37,36 @@ pub async fn get_add_project(cookies: Cookies) -> Result<Html<String>, AppError>
 
     props.session = Some(session);
     let mut page = ProjectPage::new(props);
+
+    Ok(Html(page.write()))
+}
+
+pub async fn get_project_list(cookies: Cookies) -> Result<Html<String>, AppError> {
+    tracing::debug!("GET /project/list");
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
+    let session = match super::get_session_info(cookies, true, &db).await {
+        Ok(session_id) => session_id,
+        Err(_) => return Ok(Html(LoginPage::write())),
+    };
+    let mut props = page::Props::new(&session.id);
+
+    let projects = match model::project::ProjectMember::my_projects(&session, &db).await {
+        Ok(projects) => projects,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
+    props.session = Some(session);
+    props.members = projects;
+    let mut page = ProjectListPage::new(props);
 
     Ok(Html(page.write()))
 }

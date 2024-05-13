@@ -163,7 +163,7 @@ $('#btnUpdateMember').on('click', function () {
 });
 
 function setMemberList() {
-    $("#members").val('{"members":' + JSON.stringify(members) + '}');
+    $("#members").val(JSON.stringify(members));
     var buf = '';
     for (var i in members) {
         buf += '<tr><td>';

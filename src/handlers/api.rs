@@ -116,7 +116,7 @@ pub async fn member_add(cookies: Cookies, Form(input): Form<MemberAddInput>) -> 
         }
     };
 
-    let session_id = match super::session_info(cookies, true) {
+    let session_id = match super::get_session_id(cookies, true) {
         Ok(session_id) => session_id,
         Err(e) => {
             return format!("メンバーの追加に失敗しました。 [{}]", e.to_string());

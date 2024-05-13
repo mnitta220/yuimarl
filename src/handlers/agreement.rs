@@ -11,7 +11,7 @@ use tower_cookies::Cookies;
 pub async fn get_agree(cookies: Cookies) -> Result<Html<String>, AppError> {
     tracing::debug!("GET /agree");
 
-    let session_id = match super::session_info(cookies, false) {
+    let session_id = match super::get_session_id(cookies, false) {
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
@@ -24,7 +24,7 @@ pub async fn get_agree(cookies: Cookies) -> Result<Html<String>, AppError> {
 pub async fn get_disagree(cookies: Cookies) -> Result<Html<String>, AppError> {
     tracing::debug!("GET /agree");
 
-    let session_id = match super::session_info(cookies, false) {
+    let session_id = match super::get_session_id(cookies, false) {
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
@@ -44,23 +44,16 @@ pub async fn post_agree(cookies: Cookies) -> Result<Html<String>, AppError> {
         }
     };
 
-    let session_id = match super::session_info(cookies, false) {
+    let session = match super::get_session_info(cookies, false, &db).await {
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
-    let mut props = page::Props::new(&session_id);
-    let session = model::session::Session::find(&session_id, &db).await?;
+    let mut props = page::Props::new(&session.id);
 
-    let session = match session {
-        Some(s) => s,
-        None => return Ok(Html(LoginPage::write())),
-    };
     if let Err(e) = model::user::User::insert(&session, &db).await {
         return Err(AppError(anyhow::anyhow!(e)));
     }
 
-    //let projects = model::project::Project::my_projects(&session, &db).await?;
-    //props.projects = projects;
     props.session = Some(session);
 
     let mut page = HomePage::new(props);

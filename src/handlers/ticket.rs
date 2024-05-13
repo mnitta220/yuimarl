@@ -27,19 +27,13 @@ pub async fn post_add_ticket(
         }
     };
 
-    let session_id = match super::session_info(cookies, true) {
+    let mut session = match super::get_session_info(cookies, true, &db).await {
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
-
-    let mut props = page::Props::new(&session_id);
-    let session = model::session::Session::find(&session_id, &db).await?;
+    let mut props = page::Props::new(&session.id);
     let project = model::project::Project::find(&input.project, &db).await?;
 
-    let mut session = match session {
-        Some(s) => s,
-        None => return Ok(Html(LoginPage::write())),
-    };
     if let Err(e) =
         model::project::ProjectMember::update_last_used(&input.project, &session.uid, &db).await
     {
@@ -88,17 +82,11 @@ pub async fn post_create_ticket(
         }
     };
 
-    let session_id = match super::session_info(cookies, true) {
+    let session = match super::get_session_info(cookies, true, &db).await {
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
-    let mut props = page::Props::new(&session_id);
-    let session = model::session::Session::find(&session_id, &db).await?;
-
-    let session = match session {
-        Some(s) => s,
-        None => return Ok(Html(LoginPage::write())),
-    };
+    let mut props = page::Props::new(&session.id);
 
     let project_id = match &session.project_id {
         Some(p) => p,

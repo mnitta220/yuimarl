@@ -241,11 +241,12 @@ impl Project {
     pub async fn insert(
         input: &crate::handlers::project::ProjectInput,
         session: &Session,
-        members: serde_json::Value,
+        //members: serde_json::Value,
+        project_members: &mut Vec<ProjectMember>,
         db: &FirestoreDb,
-    ) -> Result<(Project, Vec<ProjectMember>)> {
+    ) -> Result<Project> {
         let mut prj = Project::new();
-        let mut project_members = Vec::new();
+        //let mut project_members = Vec::new();
         prj.project_name = Some(input.project_name.trim().to_string());
         prj.owner = Some(session.uid.clone());
         prj.prefix = Some(input.prefix.trim().to_string());
@@ -288,18 +289,18 @@ impl Project {
             };
         }
 
-        let empty_vec: Vec<serde_json::Value> = Vec::new();
-        let mem = members["members"].as_array().unwrap_or_else(|| &empty_vec);
-        let mut i = 0;
+        //let empty_vec: Vec<serde_json::Value> = Vec::new();
+        //let mem = members["members"].as_array().unwrap_or_else(|| &empty_vec);
+        //let mut i = 0;
 
-        for m in mem {
-            let mut member = ProjectMember::new();
+        for member in project_members {
+            //let mut member = ProjectMember::new();
             member.project_id = Some(id.clone());
-            member.uid = Some(String::from(m["uid"].as_str().unwrap()));
-            member.role = Some(m["role"].as_i64().unwrap() as i32);
-            if i == 0 {
-                member.last_used = Some(Utc::now());
-            }
+            //member.uid = Some(String::from(m["uid"].as_str().unwrap()));
+            //member.role = Some(m["role"].as_i64().unwrap() as i32);
+            //if i == 0 {
+            member.last_used = Some(Utc::now());
+            //}
             let mut count = 0u32;
 
             loop {
@@ -317,12 +318,12 @@ impl Project {
                     .insert()
                     .into(&COLLECTION_MEMBER)
                     .document_id(id)
-                    .object(&member)
+                    .object(&member.clone())
                     .execute::<ProjectMember>()
                     .await
                 {
                     Ok(_) => {
-                        project_members.push(member);
+                        //project_members.push(member);
                         break;
                     }
                     Err(e) => match &e {
@@ -336,12 +337,12 @@ impl Project {
                     },
                 };
             }
-            i += 1;
+            //i += 1;
         }
 
         tracing::debug!("Project inserted {:?}", prj);
 
-        Ok((prj, project_members))
+        Ok(prj)
     }
 }
 

@@ -37,7 +37,7 @@ pub async fn post_login(
         }
     };
 
-    let session_id = super::session_info(cookies, false)?;
+    let session_id = super::get_session_id(cookies, false)?;
 
     let session = model::session::Session {
         id: session_id,

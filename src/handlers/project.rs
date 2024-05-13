@@ -19,31 +19,23 @@ pub async fn get_add_project(cookies: Cookies) -> Result<Html<String>, AppError>
         }
     };
 
-    let buf = match super::session_info(cookies, true) {
-        Ok(session_id) => {
-            let mut props = page::Props::new(&session_id);
-            let session = model::session::Session::find(&session_id, &db).await?;
-
-            match session {
-                Some(s) => {
-                    let mut member = model::project::ProjectMember::new();
-                    member.uid = Some(s.uid.clone());
-                    member.name = Some(s.name.clone());
-                    member.email = Some(s.email.clone());
-                    member.role = Some(model::project::ProjectRole::Owner as i32);
-                    props.members.push(member);
-
-                    props.session = Some(s);
-                    let mut page = ProjectPage::new(props);
-                    page.write()
-                }
-                None => LoginPage::write(),
-            }
-        }
-        Err(_) => LoginPage::write(),
+    let session = match super::get_session_info(cookies, true, &db).await {
+        Ok(session_id) => session_id,
+        Err(_) => return Ok(Html(LoginPage::write())),
     };
+    let mut props = page::Props::new(&session.id);
 
-    Ok(Html(buf))
+    let mut member = model::project::ProjectMember::new();
+    member.uid = Some(session.uid.clone());
+    member.name = Some(session.name.clone());
+    member.email = Some(session.email.clone());
+    member.role = Some(model::project::ProjectRole::Owner as i32);
+    props.members.push(member);
+
+    props.session = Some(session);
+    let mut page = ProjectPage::new(props);
+
+    Ok(Html(page.write()))
 }
 
 #[derive(Deserialize, Debug)]
@@ -60,7 +52,8 @@ pub async fn post_project(
     tracing::debug!("POST /project {}, {}", input.project_name, input.members);
 
     let project_name = input.project_name.trim().to_string();
-    let members: serde_json::Value = match serde_json::from_str(&input.members) {
+    let members = format!(r#"{{"members":{}}}"#, input.members);
+    let members: serde_json::Value = match serde_json::from_str(&members) {
         Ok(m) => m,
         Err(e) => {
             return Err(AppError(anyhow::anyhow!(e)));
@@ -74,22 +67,23 @@ pub async fn post_project(
         }
     };
 
-    let session_id = match super::session_info(cookies, true) {
+    let session = match super::get_session_info(cookies, true, &db).await {
         Ok(session_id) => session_id,
-        Err(_) => {
-            return Ok(Html(LoginPage::write()));
-        }
+        Err(_) => return Ok(Html(LoginPage::write())),
     };
+    let mut props = page::Props::new(&session.id);
+    let mut project_members = Vec::new();
+    let empty_vec: Vec<serde_json::Value> = Vec::new();
+    let mem = members["members"].as_array().unwrap_or_else(|| &empty_vec);
 
-    let mut props = page::Props::new(&session_id);
-    let session = model::session::Session::find(&session_id, &db).await?;
-
-    let session = match session {
-        Some(s) => s,
-        None => {
-            return Ok(Html(LoginPage::write()));
-        }
-    };
+    for m in mem {
+        let mut member = model::project::ProjectMember::new();
+        member.uid = Some(String::from(m["uid"].as_str().unwrap()));
+        member.email = Some(String::from(m["email"].as_str().unwrap()));
+        member.name = Some(String::from(m["name"].as_str().unwrap()));
+        member.role = Some(m["role"].as_i64().unwrap() as i32);
+        project_members.push(member);
+    }
 
     if project_name.len() == 0 {
         let mut project = model::project::Project::new();
@@ -101,6 +95,7 @@ pub async fn post_project(
         props.session = Some(session);
         props.project = Some(project);
         props.project_validation = Some(validation);
+        props.members = project_members;
         let mut page = ProjectPage::new(props);
         return Ok(Html(page.write()));
     }
@@ -124,12 +119,13 @@ pub async fn post_project(
         props.session = Some(session);
         props.project = Some(project);
         props.project_validation = Some(validation);
+        props.members = project_members;
         let mut page = ProjectPage::new(props);
         return Ok(Html(page.write()));
     }
 
-    let (prj, project_members) =
-        match model::project::Project::insert(&input, &session, members, &db).await {
+    let prj =
+        match model::project::Project::insert(&input, &session, &mut project_members, &db).await {
             Ok(p) => p,
             Err(e) => {
                 return Err(AppError(anyhow::anyhow!(e)));

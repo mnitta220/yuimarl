@@ -74,11 +74,15 @@ impl Component for ProjectListBody {
                                             {
                                                 *buf += r#"<td>"#;
                                                 {
-                                                    *buf += r#"<a href="step03.html">"#;
-                                                    if let Some(name) = &prj.project_name {
-                                                        *buf += name;
+                                                    if let Some(project_id) = &prj.project_id {
+                                                        *buf += r#"<a href="/project/"#;
+                                                        *buf += project_id;
+                                                        *buf += r#"">"#;
+                                                        if let Some(name) = &prj.project_name {
+                                                            *buf += name;
+                                                        }
+                                                        *buf += r#"</a>"#;
                                                     }
-                                                    *buf += r#"</a>"#;
                                                 }
                                                 *buf += r#"</td>"#;
 

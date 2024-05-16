@@ -7,7 +7,7 @@ use crate::{
     AppError,
 };
 use anyhow::Result;
-use axum::{extract::Form, response::Html};
+use axum::{extract::Form, extract::Path, response::Html};
 use firestore::*;
 use serde::Deserialize;
 use tower_cookies::Cookies;
@@ -27,12 +27,14 @@ pub async fn get_add_project(cookies: Cookies) -> Result<Html<String>, AppError>
         Err(_) => return Ok(Html(LoginPage::write())),
     };
     let mut props = page::Props::new(&session.id);
+    props.project = None;
 
     let mut member = model::project::ProjectMember::new();
     member.uid = Some(session.uid.clone());
     member.name = Some(session.name.clone());
     member.email = Some(session.email.clone());
     member.role = Some(model::project::ProjectRole::Owner as i32);
+    props.members.clear();
     props.members.push(member);
 
     props.session = Some(session);
@@ -71,18 +73,66 @@ pub async fn get_project_list(cookies: Cookies) -> Result<Html<String>, AppError
     Ok(Html(page.write()))
 }
 
+pub async fn get_project(
+    cookies: Cookies,
+    Path(id): Path<String>,
+) -> Result<Html<String>, AppError> {
+    tracing::debug!("GET /project {}", id);
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
+    let session = match super::get_session_info(cookies, true, &db).await {
+        Ok(session_id) => session_id,
+        Err(_) => return Ok(Html(LoginPage::write())),
+    };
+    let mut props = page::Props::new(&session.id);
+
+    let project = match model::project::Project::find(&id, &db).await {
+        Ok(project) => project,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+    props.project = project;
+
+    let members = match model::project::ProjectMember::members_of_project(&id, &db).await {
+        Ok(members) => members,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
+    props.members = members;
+
+    props.session = Some(session);
+    let mut page = ProjectPage::new(props);
+
+    Ok(Html(page.write()))
+}
+
 #[derive(Deserialize, Debug)]
 pub struct ProjectInput {
     pub project_name: String,
     pub prefix: String,
     pub members: String,
+    pub project_id: String,
 }
 
 pub async fn post_project(
     cookies: Cookies,
     Form(input): Form<ProjectInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::debug!("POST /project {}, {}", input.project_name, input.members);
+    tracing::info!(
+        "POST /project {}, {}, {}",
+        input.project_id,
+        input.project_name,
+        input.members
+    );
 
     let project_name = input.project_name.trim().to_string();
     let members = format!(r#"{{"members":{}}}"#, input.members);
@@ -133,17 +183,23 @@ pub async fn post_project(
         return Ok(Html(page.write()));
     }
 
-    let p = match model::project::Project::find_by_owner_and_name(&session.uid, &project_name, &db)
-        .await
-    {
-        Ok(p) => p,
-        Err(e) => {
-            return Err(AppError(anyhow::anyhow!(e)));
-        }
-    };
+    let projects =
+        match model::project::Project::find_by_owner_and_name(&session.uid, &project_name, &db)
+            .await
+        {
+            Ok(p) => p,
+            Err(e) => {
+                return Err(AppError(anyhow::anyhow!(e)));
+            }
+        };
 
-    if p.len() > 0 {
+    for prj in projects {
+        if prj.id.unwrap() == input.project_id {
+            continue;
+        }
+
         let mut project = model::project::Project::new();
+        project.id = Some(input.project_id.clone());
         project.project_name = Some(project_name);
         project.prefix = Some(input.prefix);
         let validation = model::project::ProjectValidation {
@@ -157,16 +213,30 @@ pub async fn post_project(
         return Ok(Html(page.write()));
     }
 
-    let prj =
-        match model::project::Project::insert(&input, &session, &mut project_members, &db).await {
+    if input.project_id.len() == 0 {
+        let prj = match model::project::Project::insert(&input, &session, &mut project_members, &db)
+            .await
+        {
             Ok(p) => p,
             Err(e) => {
                 return Err(AppError(anyhow::anyhow!(e)));
             }
         };
 
-    props.session = Some(session);
-    props.project = Some(prj);
+        props.session = Some(session);
+        props.project = Some(prj);
+    } else {
+        let prj = match model::project::Project::update(&input, &mut project_members, &db).await {
+            Ok(p) => p,
+            Err(e) => {
+                return Err(AppError(anyhow::anyhow!(e)));
+            }
+        };
+
+        props.session = Some(session);
+        props.project = Some(prj);
+    }
+
     if project_members.len() > 0 {
         if let Some(member) = project_members.get(0) {
             props.member = Some(member.clone());

@@ -28,7 +28,13 @@ impl Component for ProjectBody {
                 {
                     *buf += r#"<div class="container">"#;
                     {
-                        *buf += r#"<h3 class="mb-3">プロジェクトを作成</h3>"#;
+                        *buf += r#"<h3 class="mb-3">プロジェクトを"#;
+                        if let None = &props.project {
+                            *buf += r#"作成"#;
+                        } else {
+                            *buf += r#"更新"#;
+                        }
+                        *buf += r#"</h3>"#;
                         *buf += r#"<form action="/project/add" method="POST">"#;
                         {
                             // プロジェクト名
@@ -170,13 +176,28 @@ impl Component for ProjectBody {
                                 {
                                     *buf += r#"<button class="btn btn-primary" type="submit">"#;
                                     {
-                                        *buf += r#"<img class="icon" src="/static/ionicons/create-outline.svg">&nbsp;作成"#;
+                                        *buf += r#"<img class="icon" src="/static/ionicons/create-outline.svg">&nbsp;"#;
+                                        if let None = &props.project {
+                                            *buf += r#"作成"#;
+                                        } else {
+                                            *buf += r#"更新"#;
+                                        }
                                     }
                                     *buf += r#"</button>"#;
                                 }
                                 *buf += r#"</div>"#;
                             }
                             *buf += r#"</div>"#;
+
+                            let mut project_id = "";
+                            if let Some(p) = &props.project {
+                                if let Some(id) = &p.id {
+                                    project_id = id;
+                                }
+                            }
+                            *buf += r#"<input type="hidden" name="project_id" value=""#;
+                            *buf += &project_id;
+                            *buf += r#"">"#;
                         }
                         *buf += r#"</form>"#;
 

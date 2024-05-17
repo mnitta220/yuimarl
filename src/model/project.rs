@@ -5,6 +5,7 @@ use firestore::*;
 use futures::stream::BoxStream;
 use futures::TryStreamExt;
 use serde::{Deserialize, Serialize};
+use std::cmp::Ordering;
 use uuid::Uuid;
 
 pub const COLLECTION_NAME: &'static str = "project";
@@ -36,7 +37,7 @@ pub struct ProjectValidation {
 pub struct ProjectMember {
     pub id: Option<String>,               // ID(uuid)
     pub project_id: Option<String>,       // プロジェクトID
-    pub uid: Option<String>,              // メンバーのユーザーID
+    pub uid: String,                      // メンバーのユーザーID
     pub role: Option<i32>,                // ロール 1:オーナー, 2:管理者, 3:メンバー, 4:閲覧者
     pub name: Option<String>,             // メンバーの名前
     pub email: Option<String>,            // メンバーのメールアドレス
@@ -313,18 +314,136 @@ impl Project {
             return Err(anyhow::anyhow!(e.to_string()));
         }
 
-        let current_members = match ProjectMember::members_of_project(&input.project_id, db).await {
-            Ok(m) => m,
-            Err(e) => {
-                return Err(anyhow::anyhow!(e.to_string()));
-            }
-        };
+        let current_members =
+            match ProjectMember::members_of_project(&input.project_id, true, db).await {
+                Ok(m) => m,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
 
+        project_members.sort_by(|a, b| a.uid.cmp(&b.uid));
+
+        /*
+         * プロジェクトメンバーの更新処理
+         * 現在のメンバーと更新後のメンバーをマッチングして、更新処理を行う。
+         */
         let mut c = 0;
         let mut current = current_members.get(c);
         let mut u = 0;
         let mut upd = project_members.get(u);
 
+        loop {
+            if let Some(up) = upd {
+                if let Some(cur) = current {
+                    match up.uid.cmp(&cur.uid) {
+                        Ordering::Less => {
+                            if let Some(up) = upd {
+                                let mut up = up.clone();
+                                up.project_id = Some(String::from(&input.project_id));
+                                let id = Uuid::now_v7().to_string();
+                                up.id = Some(id.clone());
+                                up.last_used = Some(Utc::now());
+
+                                if let Err(e) = db
+                                    .fluent()
+                                    .insert()
+                                    .into(&COLLECTION_MEMBER)
+                                    .document_id(id)
+                                    .object(&up)
+                                    .execute::<ProjectMember>()
+                                    .await
+                                {
+                                    return Err(anyhow::anyhow!(e.to_string()));
+                                }
+                            }
+                            u += 1;
+                            upd = project_members.get(u);
+                        }
+                        Ordering::Greater => {
+                            if let Some(id) = &cur.id {
+                                if let Err(e) = db
+                                    .fluent()
+                                    .delete()
+                                    .from(&COLLECTION_MEMBER)
+                                    .document_id(id)
+                                    .execute()
+                                    .await
+                                {
+                                    return Err(anyhow::anyhow!(e.to_string()));
+                                }
+                            }
+                            c += 1;
+                            current = current_members.get(c);
+                        }
+                        Ordering::Equal => {
+                            let mut cur = cur.clone();
+                            cur.role = up.role;
+                            cur.name = up.name.clone();
+                            if let Err(e) = db
+                                .fluent()
+                                .update()
+                                .fields(paths!(ProjectMember::last_used))
+                                .in_col(&COLLECTION_MEMBER)
+                                .document_id(&cur.id.as_ref().unwrap())
+                                .object(&cur)
+                                .execute::<ProjectMember>()
+                                .await
+                            {
+                                return Err(anyhow::anyhow!(e.to_string()));
+                            }
+
+                            c += 1;
+                            current = current_members.get(c);
+                            u += 1;
+                            upd = project_members.get(u);
+                        }
+                    }
+                } else {
+                    let mut up = up.clone();
+                    up.project_id = Some(String::from(&input.project_id));
+                    let id = Uuid::now_v7().to_string();
+                    up.id = Some(id.clone());
+                    up.last_used = Some(Utc::now());
+
+                    if let Err(e) = db
+                        .fluent()
+                        .insert()
+                        .into(&COLLECTION_MEMBER)
+                        .document_id(id)
+                        .object(&up)
+                        .execute::<ProjectMember>()
+                        .await
+                    {
+                        return Err(anyhow::anyhow!(e.to_string()));
+                    }
+
+                    u += 1;
+                    upd = project_members.get(u);
+                }
+            } else {
+                if let Some(cur) = current {
+                    if let Some(id) = &cur.id {
+                        if let Err(e) = db
+                            .fluent()
+                            .delete()
+                            .from(&COLLECTION_MEMBER)
+                            .document_id(id)
+                            .execute()
+                            .await
+                        {
+                            return Err(anyhow::anyhow!(e.to_string()));
+                        }
+                    }
+                } else {
+                    break;
+                }
+                c += 1;
+                current = current_members.get(c);
+            }
+        }
+
+        /*
         loop {
             if current.is_none() && upd.is_none() {
                 break;
@@ -371,87 +490,75 @@ impl Project {
                 current = current_members.get(c);
             } else {
                 if let Some(up) = upd {
-                    match &up.email {
-                        Some(umail) => {
-                            if let Some(cur) = current {
-                                match &cur.email {
-                                    Some(cmail) => {
-                                        if umail == cmail {
-                                            let mut cur = cur.clone();
-                                            cur.role = up.role;
-                                            cur.name = up.name.clone();
-                                            if let Err(e) = db
-                                                .fluent()
-                                                .update()
-                                                .fields(paths!(ProjectMember::last_used))
-                                                .in_col(&COLLECTION_MEMBER)
-                                                .document_id(&cur.id.as_ref().unwrap())
-                                                .object(&cur)
-                                                .execute::<ProjectMember>()
-                                                .await
-                                            {
-                                                return Err(anyhow::anyhow!(e.to_string()));
-                                            }
+                    if let Some(cur) = current {
+                        match up.uid.cmp(&cur.uid) {
+                            Ordering::Less => {
+                                if let Some(up) = upd {
+                                    let mut up = up.clone();
+                                    up.project_id = Some(String::from(&input.project_id));
+                                    let id = Uuid::now_v7().to_string();
+                                    up.id = Some(id.clone());
+                                    up.last_used = Some(Utc::now());
 
-                                            c += 1;
-                                            current = current_members.get(c);
-                                            u += 1;
-                                            upd = project_members.get(u);
-                                        } else if umail < cmail {
-                                            if let Some(up) = upd {
-                                                let mut up = up.clone();
-                                                up.project_id =
-                                                    Some(String::from(&input.project_id));
-                                                let id = Uuid::now_v7().to_string();
-                                                up.id = Some(id.clone());
-                                                up.last_used = Some(Utc::now());
-
-                                                if let Err(e) = db
-                                                    .fluent()
-                                                    .insert()
-                                                    .into(&COLLECTION_MEMBER)
-                                                    .document_id(id)
-                                                    .object(&up)
-                                                    .execute::<ProjectMember>()
-                                                    .await
-                                                {
-                                                    return Err(anyhow::anyhow!(e.to_string()));
-                                                }
-                                            }
-                                            u += 1;
-                                            upd = project_members.get(u);
-                                        } else {
-                                            if let Some(id) = &cur.id {
-                                                if let Err(e) = db
-                                                    .fluent()
-                                                    .delete()
-                                                    .from(&COLLECTION_MEMBER)
-                                                    .document_id(id)
-                                                    .execute()
-                                                    .await
-                                                {
-                                                    return Err(anyhow::anyhow!(e.to_string()));
-                                                }
-                                            }
-                                            c += 1;
-                                            current = current_members.get(c);
-                                        }
-                                    }
-                                    None => {
-                                        c += 1;
-                                        current = current_members.get(c);
+                                    if let Err(e) = db
+                                        .fluent()
+                                        .insert()
+                                        .into(&COLLECTION_MEMBER)
+                                        .document_id(id)
+                                        .object(&up)
+                                        .execute::<ProjectMember>()
+                                        .await
+                                    {
+                                        return Err(anyhow::anyhow!(e.to_string()));
                                     }
                                 }
+                                u += 1;
+                                upd = project_members.get(u);
                             }
-                        }
-                        None => {
-                            u += 1;
-                            upd = project_members.get(u);
+                            Ordering::Greater => {
+                                if let Some(id) = &cur.id {
+                                    if let Err(e) = db
+                                        .fluent()
+                                        .delete()
+                                        .from(&COLLECTION_MEMBER)
+                                        .document_id(id)
+                                        .execute()
+                                        .await
+                                    {
+                                        return Err(anyhow::anyhow!(e.to_string()));
+                                    }
+                                }
+                                c += 1;
+                                current = current_members.get(c);
+                            }
+                            Ordering::Equal => {
+                                let mut cur = cur.clone();
+                                cur.role = up.role;
+                                cur.name = up.name.clone();
+                                if let Err(e) = db
+                                    .fluent()
+                                    .update()
+                                    .fields(paths!(ProjectMember::last_used))
+                                    .in_col(&COLLECTION_MEMBER)
+                                    .document_id(&cur.id.as_ref().unwrap())
+                                    .object(&cur)
+                                    .execute::<ProjectMember>()
+                                    .await
+                                {
+                                    return Err(anyhow::anyhow!(e.to_string()));
+                                }
+
+                                c += 1;
+                                current = current_members.get(c);
+                                u += 1;
+                                upd = project_members.get(u);
+                            }
                         }
                     }
                 }
             }
         }
+        */
 
         tracing::debug!("Project updated {:?}", prj);
 
@@ -460,11 +567,11 @@ impl Project {
 }
 
 impl ProjectMember {
-    pub fn new() -> Self {
+    pub fn new(uid: String) -> Self {
         Self {
             id: None,
             project_id: None,
-            uid: None,
+            uid: uid,
             role: None,
             last_used: None,
             name: None,
@@ -473,14 +580,17 @@ impl ProjectMember {
         }
     }
 
-    pub async fn members_of_project(project_id: &str, db: &FirestoreDb) -> Result<Vec<Self>> {
-        let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
-            .fluent()
-            .select()
-            .fields(paths!(ProjectMember::{id, uid, role, email, name, last_used}))
-            .from(COLLECTION_MEMBER)
-            .filter(|q| q.for_all([q.field(path!(ProjectMember::project_id)).eq(&project_id)]))
-            .order_by([
+    pub async fn members_of_project(
+        project_id: &str,
+        order_by_uid: bool,
+        db: &FirestoreDb,
+    ) -> Result<Vec<Self>> {
+        let order = match order_by_uid {
+            true => vec![(
+                path!(ProjectMember::uid),
+                FirestoreQueryDirection::Ascending,
+            )],
+            false => vec![
                 (
                     path!(ProjectMember::role),
                     FirestoreQueryDirection::Ascending,
@@ -489,7 +599,16 @@ impl ProjectMember {
                     path!(ProjectMember::email),
                     FirestoreQueryDirection::Ascending,
                 ),
-            ])
+            ],
+        };
+
+        let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(ProjectMember::{id, uid, role, email, name, last_used}))
+            .from(COLLECTION_MEMBER)
+            .filter(|q| q.for_all([q.field(path!(ProjectMember::project_id)).eq(&project_id)]))
+            .order_by(order)
             .obj()
             .stream_query_with_errors()
             .await
@@ -627,9 +746,9 @@ impl ProjectMember {
                 return Ok(format!("{}はすでに存在します。", uid));
             }
 
-            let mut member = ProjectMember::new();
+            let mut member = ProjectMember::new(uid.to_string());
             member.project_id = Some(project_id.to_string());
-            member.uid = Some(uid.to_string());
+            //member.uid = Some(uid.to_string());
             member.role = Some(role.parse::<i32>().unwrap());
             let mut count = 0u32;
 

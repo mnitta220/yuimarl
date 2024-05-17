@@ -29,8 +29,8 @@ pub async fn get_add_project(cookies: Cookies) -> Result<Html<String>, AppError>
     let mut props = page::Props::new(&session.id);
     props.project = None;
 
-    let mut member = model::project::ProjectMember::new();
-    member.uid = Some(session.uid.clone());
+    let mut member = model::project::ProjectMember::new(session.uid.clone());
+    //member.uid = Some(session.uid.clone());
     member.name = Some(session.name.clone());
     member.email = Some(session.email.clone());
     member.role = Some(model::project::ProjectRole::Owner as i32);
@@ -100,7 +100,7 @@ pub async fn get_project(
     };
     props.project = project;
 
-    let members = match model::project::ProjectMember::members_of_project(&id, &db).await {
+    let members = match model::project::ProjectMember::members_of_project(&id, false, &db).await {
         Ok(members) => members,
         Err(e) => {
             return Err(AppError(anyhow::anyhow!(e)));
@@ -160,8 +160,9 @@ pub async fn post_project(
     let mem = members["members"].as_array().unwrap_or_else(|| &empty_vec);
 
     for m in mem {
-        let mut member = model::project::ProjectMember::new();
-        member.uid = Some(String::from(m["uid"].as_str().unwrap()));
+        let mut member =
+            model::project::ProjectMember::new(String::from(m["uid"].as_str().unwrap()));
+        //member.uid = Some(String::from(m["uid"].as_str().unwrap()));
         member.email = Some(String::from(m["email"].as_str().unwrap()));
         member.name = Some(String::from(m["name"].as_str().unwrap()));
         member.role = Some(m["role"].as_i64().unwrap() as i32);

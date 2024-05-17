@@ -159,7 +159,9 @@ impl Component for HomeBody {
                                                 *buf += r#"<div class="col">"#;
                                                 {
                                                     if let Some(n) = &p.project_name {
-                                                        *buf += r#"<a href="/project/list">"#;
+                                                        *buf += r#"<a href="/project/"#;
+                                                        *buf += &p.id.clone().unwrap();
+                                                        *buf += r#"">"#;
                                                         {
                                                             *buf += n;
                                                         }

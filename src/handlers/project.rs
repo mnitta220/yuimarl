@@ -83,7 +83,6 @@ pub async fn get_project(
     cookies: Cookies,
     Query(params): Query<Params>,
 ) -> Result<Html<String>, AppError> {
-    //tracing::info!("GET /project {} {}", id, params.tab.unwrap_or_default());
     let id = params.id.unwrap_or_default();
     let tab = params.tab.unwrap_or_default();
     tracing::info!("GET /project id={} tab={}", id, tab);
@@ -148,7 +147,7 @@ pub async fn post_project(
     cookies: Cookies,
     Form(input): Form<ProjectInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::info!(
+    tracing::debug!(
         "POST /project {}, {}, {}",
         input.project_id,
         input.project_name,
@@ -265,6 +264,45 @@ pub async fn post_project(
         }
     }
     props.members = project_members;
+
+    let mut page = HomePage::new(props);
+
+    Ok(Html(page.write()))
+}
+
+#[derive(Deserialize, Debug)]
+pub struct UpdNoteInput {
+    pub markdown: String,
+    pub project_id: String,
+}
+
+pub async fn post_upd_note(
+    cookies: Cookies,
+    Form(input): Form<UpdNoteInput>,
+) -> Result<Html<String>, AppError> {
+    tracing::info!("POST /post_upd_note {}", input.markdown,);
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
+    let session = match super::get_session_info(cookies, true, &db).await {
+        Ok(session_id) => session_id,
+        Err(_) => return Ok(Html(LoginPage::write())),
+    };
+    let mut props = page::Props::new(&session.id);
+    let prj = match model::project::Project::update_note(&input, &db).await {
+        Ok(p) => p,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
+    props.session = Some(session);
+    props.project = Some(prj);
 
     let mut page = HomePage::new(props);
 

@@ -1,11 +1,14 @@
 use super::super::Component;
-use super::parts::{footer::Footer, nav::Nav, project_info::ProjectInfo};
+use super::parts::{
+    footer::Footer, nav::Nav, project_info::ProjectInfo, project_note::ProjectNote,
+};
 use crate::ProjectTab;
 use crate::Props;
 
 pub struct ProjectBody {
     pub nav: Box<dyn Component + Send>,
     pub project_info: Box<dyn Component + Send>,
+    pub project_note: Box<dyn Component + Send>,
     pub footer: Box<dyn Component + Send>,
 }
 
@@ -14,6 +17,7 @@ impl ProjectBody {
         ProjectBody {
             nav: Box::new(Nav {}),
             project_info: Box::new(ProjectInfo {}),
+            project_note: Box::new(ProjectNote {}),
             footer: Box::new(Footer {}),
         }
     }
@@ -79,9 +83,13 @@ impl Component for ProjectBody {
                             }
                             *buf += r#"</div>"#;
                         }
+
                         match &props.project_tab {
                             ProjectTab::Info => {
                                 self.project_info.write(props, buf);
+                            }
+                            ProjectTab::Note => {
+                                self.project_note.write(props, buf);
                             }
                             _ => {}
                         }
@@ -94,7 +102,16 @@ impl Component for ProjectBody {
 
             self.footer.write(props, buf);
             *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
-            *buf += r#"<script src="/static/js/project0012.js"></script>"#;
+            match &props.project_tab {
+                ProjectTab::Info => {
+                    *buf += r#"<script src="/static/js/project0012.js"></script>"#;
+                }
+                ProjectTab::Note => {
+                    *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;
+                    *buf += r#"<script src="/static/js/markdown0012.js"></script>"#;
+                }
+                _ => {}
+            }
         }
         *buf += r#"</body>"#;
     }

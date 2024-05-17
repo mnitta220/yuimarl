@@ -3,7 +3,7 @@ html(lang="ja")
   head
     meta(charset="utf-8")
     meta(name="viewport" content="width=device-width, initial-scale=1")
-    title チケットを更新 - Yuimarl
+    title プロジェクト - Yuimarl
     link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous")
     link(rel="stylesheet" href="../../static/css/style0012.css")
     link(rel="icon" type="image/x-icon" href="../../static/favicon.ico")
@@ -13,15 +13,13 @@ html(lang="ja")
     main
       .py-3
         .container
-          h3.mb-3 チケット
+          h3.mb-3 プロジェクト
           .pb-2
             ul.nav.nav-tabs
               li.nav-item
                 a.nav-link(href="#") 基本情報
               li.nav-item
                 a.nav-link(href="#") ノート
-              li.nav-item
-                a.nav-link(href="#") コメント
               li.nav-item
                 a.nav-link.active(href="#") 更新履歴
           .pb-2
@@ -38,7 +36,7 @@ html(lang="ja")
                       tr
                         td 2024/09/05 16:31
                         td 山田太郎
-                        td チケット作成
+                        td プロジェクト作成
                       tr
                         td 2024/09/05 17:03
                         td 山田太郎
@@ -63,16 +61,16 @@ html(lang="ja")
       hr
       .row.align-items-end
         .col-md-2.text-end.py-1
-          a.nav-link.px-2.px-md-0(href="step11.html") ← prev
+          a.nav-link.px-2.px-md-0(href="step07.html") ← prev
         .col-md-8
           .alert.alert-danger.text-start(role="alert")
-            | チケット更新 step12.
+            | プロジェクト一覧 step08.
             br
-            | 更新履歴タブをクリックすると、チケットの基本情報かノートを更新した履歴が表示される。
+            | 更新履歴タブをクリックすると、プロジェクトの基本情報かノートを更新した履歴が表示される。
             br
-            | 表示されるのは、チケット作成と、直近の50履歴。
+            | 表示されるのは、プロジェクト作成と、直近の50履歴。
         .col-md-2.text-start.py-1
-          //- a.nav-link.px-2.px-md-0(href="step11.html") next →
+          //- a.nav-link.px-2.px-md-0(href="step08.html") next →
 
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"

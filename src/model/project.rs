@@ -450,6 +450,40 @@ impl Project {
 
         Ok(prj)
     }
+
+    pub async fn update_note(
+        input: &crate::handlers::project::UpdNoteInput,
+        db: &FirestoreDb,
+    ) -> Result<Project> {
+        let prj = match Project::find(&input.project_id, db).await {
+            Ok(p) => p,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+        let mut prj = match prj {
+            Some(p) => p,
+            None => {
+                return Err(anyhow::anyhow!("Project not found".to_string()));
+            }
+        };
+        prj.note = Some(input.markdown.trim().to_string());
+
+        if let Err(e) = db
+            .fluent()
+            .update()
+            .fields(paths!(Project::{note}))
+            .in_col(&COLLECTION_NAME)
+            .document_id(&input.project_id)
+            .object(&prj)
+            .execute::<Project>()
+            .await
+        {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+
+        Ok(prj)
+    }
 }
 
 impl ProjectMember {

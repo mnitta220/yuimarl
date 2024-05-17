@@ -155,14 +155,20 @@ impl Component for ProjectInfo {
             }
             *buf += r#"</div>"#;
 
+            /*
             let mut project_id = "";
             if let Some(p) = &props.project {
                 if let Some(id) = &p.id {
                     project_id = id;
                 }
             }
+            */
             *buf += r#"<input type="hidden" name="project_id" value=""#;
-            *buf += &project_id;
+            if let Some(p) = &props.project {
+                if let Some(id) = &p.id {
+                    *buf += id;
+                }
+            }
             *buf += r#"">"#;
         }
         *buf += r#"</form>"#;

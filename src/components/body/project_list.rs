@@ -75,7 +75,7 @@ impl Component for ProjectListBody {
                                                 *buf += r#"<td>"#;
                                                 {
                                                     if let Some(project_id) = &prj.project_id {
-                                                        *buf += r#"<a href="/project/"#;
+                                                        *buf += r#"<a href="/project/info?id="#;
                                                         *buf += project_id;
                                                         *buf += r#"">"#;
                                                         if let Some(name) = &prj.project_name {

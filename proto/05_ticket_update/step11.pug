@@ -20,40 +20,73 @@ html(lang="ja")
             li.nav-item
               a.nav-link(href="#") ノート
             li.nav-item
-              a.nav-link(href="#") コメント
+              a.nav-link.active(href="#") コメント
             li.nav-item
-              a.nav-link.active(href="#") 更新履歴
-          .py-2
-            .row
+              a.nav-link(href="#") 更新履歴
+          form.pt-2
+            .row.py-2.ticket-comment
               .col
-                .form-floating
-                  table.table.table-hover
-                    thead
-                      tr
-                        th(scope="col") 日時
-                        th(scope="col") 更新者
-                        th(scope="col") 更新箇所
-                    tbody
-                      tr
-                        td 2024/09/05 16:31
-                        td 山田太郎
-                        td チケット作成
-                      tr
-                        td 2024/09/05 17:03
-                        td 山田太郎
-                        td 基本情報
-                      tr
-                        td 2024/09/05 17:10
-                        td 山田太郎
-                        td ノート
-                      tr
-                        td 2024/09/06 12:46
-                        td 岩鬼正美
-                        td 基本情報
-                      tr
-                        td 2024/09/07 08:54
-                        td 殿馬一人
-                        td ノート
+                .row
+                  .col-6
+                    b 殿馬一人
+                  .col-6.text-end
+                    small 2024/09/04 18:49
+                .row
+                  .col
+                    | たこやきのレシピを見つけました。
+                    br
+                    a(href="https://www.otafuku.co.jp/recipe/cook/taco/taco01.html" target="_blank") https://www.otafuku.co.jp/recipe/cook/taco/taco01.html
+            .row.py-2.ticket-comment
+              .col
+                .row
+                  .col-6
+                    b 山田太郎
+                  .col-6.text-end
+                    a(href="")
+                      img.icon(src="../../static/ionicons/create-outline2.svg" title="編集")
+                    | &nbsp;
+                    a(href="")
+                      img.icon(src="../../static/ionicons/trash-outline.svg" title="削除")
+                    | &nbsp;&nbsp;
+                    small 2024/09/05 16:23
+                .row
+                  .col
+                    | ありがとう！😍
+                    br
+                    | チケットのノートに追加しました。
+            .row.py-2.ticket-comment
+              .col
+                .row
+                  .col-6
+                    b 里中智
+                  .col-6.text-end
+                    small 2024/09/05 17:05
+                .row
+                  .col 「薄力粉」って知りませんでした。
+
+            .row.py-3.mt-2.bg-light
+              .col-9
+                textarea.form-control.ticket-comment#message(rows="3" name="message")
+              .col-3.text-end
+                button.btn.btn-primary(type="submit")
+                  img.icon(src="../../static/ionicons/add-circle-outline2.svg")
+                  | &nbsp;コメント
+
+        .modal.fade#deleteCommentModal(tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true")
+          .modal-dialog.modal-md
+            .modal-content
+              .modal-header
+                h1.modal-title.fs-5#deleteCommentModalLabel コメントを削除
+                button.btn-close(type="button" data-bs-dismiss="modal" aria-label="キャンセル")
+              .modal-body
+                .row
+                  .col
+                    | コメントを削除します。
+                    br
+                    | よろしいですか？
+              .modal-footer
+                button.btn.btn-secondary(type="button" data-bs-dismiss="modal") キャンセル
+                button.btn.btn-primary(type="button") 削除
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light
@@ -67,12 +100,15 @@ html(lang="ja")
           .alert.alert-danger.text-start(role="alert")
             | チケット更新 step11.
             br
-            | 更新履歴タブをクリックすると、チケットの基本情報かノートを更新した履歴が表示される。
-            br
-            | 表示されるのは、チケット作成と、直近の50履歴。
+            | 削除アイコンをクリックすると、削除確認メッセージが表示される。
         .col-md-2.text-start.py-1
-          //- a.nav-link.px-2.px-md-0(href="step11.html") next →
+          a.nav-link.px-2.px-md-0(href="step12.html") next →
 
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous")
+    script(src="https://code.jquery.com/jquery-3.7.1.min.js")
+    script.
+      $(document).ready(function() {
+        new bootstrap.Modal("#deleteCommentModal").show();
+      });

@@ -18,6 +18,7 @@ pub struct Props {
     pub ticket: Option<model::ticket::Ticket>,
     pub ticket_validation: Option<model::ticket::TicketValidation>,
     pub tickets: Vec<model::ticket::Ticket>,
+    pub project_tab: ProjectTab,
 }
 
 impl Props {
@@ -33,8 +34,17 @@ impl Props {
             ticket: None,
             ticket_validation: None,
             tickets: Vec::new(),
+            project_tab: ProjectTab::Info,
         }
     }
+}
+
+/// プロジェクト画面のタブ
+#[derive(Clone, Copy, PartialEq)]
+pub enum ProjectTab {
+    Info = 1,    // 基本情報
+    Note = 2,    // ノート
+    History = 3, // 更新履歴
 }
 
 pub struct Page {

@@ -3,7 +3,7 @@ html(lang="ja")
   head
     meta(charset="utf-8")
     meta(name="viewport" content="width=device-width, initial-scale=1")
-    title チケットを更新 - Yuimarl
+    title プロジェクト - Yuimarl
     link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous")
     link(rel="stylesheet" href="../../static/css/style0012.css")
     link(rel="icon" type="image/x-icon" href="../../static/favicon.ico")
@@ -13,7 +13,7 @@ html(lang="ja")
     main
       .py-3
         .container
-          h3.mb-3 チケット
+          h3.mb-3 プロジェクト
           .pb-2
             ul.nav.nav-tabs
               li.nav-item
@@ -21,10 +21,8 @@ html(lang="ja")
               li.nav-item
                 a.nav-link.active(href="#") ノート
               li.nav-item
-                a.nav-link(href="#") コメント
-              li.nav-item
                 a.nav-link(href="#") 更新履歴
-          form
+          form(action="/project/add" method="POST")
             // 編集スイッチ
             .row.py-2
               .col
@@ -36,7 +34,8 @@ html(lang="ja")
               .col-lg-6
                 small ［マークダウン］
                 textarea.form-control#markdown(rows="10")
-                  | ## たこやき模擬店
+                  | ## 文化祭実行プロジェクト
+                  | ### 実行委員会
                   | ### レシピ
                   | * [クックパッド](https://cookpad.com/search/%E3%81%9F%E3%81%93%E7%84%BC%E3%81%8D)
                   | * [小麦粉から作るたこ焼き](https://www.otafuku.co.jp/recipe/cook/taco/taco01.html)
@@ -90,14 +89,14 @@ html(lang="ja")
       hr
       .row.align-items-end
         .col-md-2.text-end.py-1
-          a.nav-link.px-2.px-md-0(href="step07.html") ← prev
+          a.nav-link.px-2.px-md-0(href="step06.html") ← prev
         .col-md-8
           .alert.alert-danger.text-start(role="alert")
-            | チケット更新 step08.
+            | プロジェクト一覧 step07.
             br
             | 編集スイッチをONにすると、マークダウンエディタで編集できるようになる。
         .col-md-2.text-start.py-1
-          a.nav-link.px-2.px-md-0(href="step09.html") next →
+          a.nav-link.px-2.px-md-0(href="step08.html") next →
 
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
@@ -111,6 +110,7 @@ html(lang="ja")
         $('#preview2').html(html);
       });
       $('#edit').change(function () {
+        console.log($(this).prop('checked'));
         if ($(this).prop('checked')) {
           $('#note1').removeClass('d-none');
           $('#note2').addClass('d-none');

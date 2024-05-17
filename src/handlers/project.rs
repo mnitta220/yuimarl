@@ -7,10 +7,16 @@ use crate::{
     AppError,
 };
 use anyhow::Result;
-use axum::{extract::Form, extract::Path, response::Html};
+use axum::{extract::Form, extract::Query, response::Html};
 use firestore::*;
 use serde::Deserialize;
 use tower_cookies::Cookies;
+
+#[derive(Debug, Deserialize)]
+pub struct Params {
+    id: Option<String>,
+    tab: Option<String>,
+}
 
 pub async fn get_add_project(cookies: Cookies) -> Result<Html<String>, AppError> {
     tracing::debug!("GET /project/add");
@@ -75,9 +81,12 @@ pub async fn get_project_list(cookies: Cookies) -> Result<Html<String>, AppError
 
 pub async fn get_project(
     cookies: Cookies,
-    Path(id): Path<String>,
+    Query(params): Query<Params>,
 ) -> Result<Html<String>, AppError> {
-    tracing::debug!("GET /project {}", id);
+    //tracing::info!("GET /project {} {}", id, params.tab.unwrap_or_default());
+    let id = params.id.unwrap_or_default();
+    let tab = params.tab.unwrap_or_default();
+    tracing::info!("GET /project id={} tab={}", id, tab);
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
@@ -91,6 +100,18 @@ pub async fn get_project(
         Err(_) => return Ok(Html(LoginPage::write())),
     };
     let mut props = page::Props::new(&session.id);
+
+    match tab.as_ref() {
+        "note" => {
+            props.project_tab = crate::ProjectTab::Note;
+        }
+        "history" => {
+            props.project_tab = crate::ProjectTab::History;
+        }
+        _ => {
+            props.project_tab = crate::ProjectTab::Info;
+        }
+    }
 
     let project = match model::project::Project::find(&id, &db).await {
         Ok(project) => project,

@@ -50,16 +50,10 @@ html(lang="ja")
                     | &nbsp;&nbsp;
                     small 2024/09/05 16:23
                 .row
-                  .col-9
-                    textarea.form-control.ticket-comment#message(rows="3" name="message")
-                      | ありがとう！😍👍
-                      | チケットのノートに追加しました。
-                  .col-3.text-end
-                    button.btn.btn-primary(type="submit")
-                      img.icon(src="../../static/ionicons/save-outline.svg")
-                      | &nbsp;更新
-                    | &nbsp;&nbsp;
-                    button.btn.btn-secondary(type="submit") キャンセル
+                  .col
+                    | ありがとう！😍
+                    br
+                    | チケットのノートに追加しました。
             .row.py-2.ticket-comment
               .col
                 .row
@@ -70,7 +64,7 @@ html(lang="ja")
                 .row
                   .col 「薄力粉」って知りませんでした。
 
-            //- .row.py-3.mt-2.bg-light
+            .row.py-3.mt-2.bg-light
               .col-9
                 textarea.form-control.ticket-comment#message(rows="3" name="message")
               .col-3.text-end
@@ -90,7 +84,11 @@ html(lang="ja")
           .alert.alert-danger.text-start(role="alert")
             | チケット更新 step09.
             br
-            | 自分のコメントの編集アイコンをクリックすると、コメントを編集できる。
+            | コメントタブをクリック。
+            br
+            | チケットのコメントが日時の順に表示される。
+            br
+            | 自分のコメントには、編集アイコンと削除アイコンが表示される。
         .col-md-2.text-start.py-1
           a.nav-link.px-2.px-md-0(href="step10.html") next →
 

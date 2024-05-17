@@ -8,6 +8,7 @@ use axum::{
 };
 use dotenv::dotenv;
 use once_cell::sync::OnceCell;
+use pages::page::ProjectTab;
 use pages::page::Props;
 use std::time::Duration;
 use tower::{BoxError, ServiceBuilder};
@@ -62,7 +63,8 @@ async fn main() {
             get(handlers::project::get_add_project).post(handlers::project::post_project),
         )
         .route("/project/list", get(handlers::project::get_project_list))
-        .route("/project/:id", get(handlers::project::get_project))
+        //.route("/project/:id", get(handlers::project::get_project))
+        .route("/project/info", get(handlers::project::get_project))
         //.route("/member/add", post(handlers::project::post_member_add))
         .route("/ticket/add", post(handlers::ticket::post_add_ticket))
         .route("/ticket/create", post(handlers::ticket::post_create_ticket))

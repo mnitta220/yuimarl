@@ -14,18 +14,25 @@ html(lang="ja")
       .py-3
         .container
           h3.mb-3 チケット
-          ul.nav.nav-tabs
-            li.nav-item
-              a.nav-link(href="#") 基本情報
-            li.nav-item
-              a.nav-link.active(href="#") ノート
-            li.nav-item
-              a.nav-link(href="#") コメント
-            li.nav-item
-              a.nav-link(href="#") 更新履歴
-          form.pt-2
-            // ノート
+          .pb-2
+            ul.nav.nav-tabs
+              li.nav-item
+                a.nav-link(href="#") 基本情報
+              li.nav-item
+                a.nav-link.active(href="#") ノート
+              li.nav-item
+                a.nav-link(href="#") コメント
+              li.nav-item
+                a.nav-link(href="#") 更新履歴
+          form
+            // 編集スイッチ
             .row.py-2
+              .col
+                .form-check.form-switch
+                  input.form-check-input#edit(type="checkbox" role="switch")
+                  label.form-check-label(for="edit") 編集
+            // ノート
+            .row.py-2.d-none#note1
               .col-lg-6
                 small ［マークダウン］
                 textarea.form-control#markdown(rows="10")
@@ -57,7 +64,10 @@ html(lang="ja")
 
               .col-lg-6
                 small ［プレビュー］
-                .px-2.bg-light#preview
+                .px-2.bg-light.preview#preview1
+            .row.py-2#note2
+              .col
+                .px-2.bg-light.preview#preview2
 
             .row.py-3.mt-2.bg-light
               .col-9
@@ -97,9 +107,20 @@ html(lang="ja")
     script.
       $('#markdown').keyup(function () {
         var html = marked.parse($(this).val());
-        $('#preview').html(html);
+        $('#preview1').html(html);
+        $('#preview2').html(html);
+      });
+      $('#edit').change(function () {
+        if ($(this).prop('checked')) {
+          $('#note1').removeClass('d-none');
+          $('#note2').addClass('d-none');
+        } else {
+          $('#note2').removeClass('d-none');
+          $('#note1').addClass('d-none');
+        }
       });
       $(document).ready(function() {
         var html = marked.parse($('#markdown').val());
-        $('#preview').html(html);
+        $('#preview1').html(html);
+        $('#preview2').html(html);
       });

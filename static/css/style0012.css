@@ -30,7 +30,7 @@
   font-size: 10.5pt;
 }
 
-#preview {
+.preview {
   width: 100%;
   height: 360px;
   border: 1px solid #ddd;
@@ -39,33 +39,33 @@
   padding-top: 3px;
 }
 
-#preview > table {
+.preview > table {
   border-collapse: collapse;
   border: solid 1px #aaa;
 }
-#preview > table th,
-#preview > table td {
+.preview > table th,
+.preview > table td {
   padding: 2px 5px;
 }
-#preview > table th {
+.preview > table th {
   border: solid 1px #aaa;
   background-color: #efefef;
 }
-#preview > table td {
+.preview > table td {
   border: solid 1px #aaa;
 }
-#preview p code{
+.preview p code{
     background-color: #efefef;
     border-radius: 4px;
     padding: 2px 4px;
 }
-#preview pre{
+.preview pre{
   color: #fff;
   background-color: #333;
   border-radius: 4px;
   padding: 16px;
 }
-#preview blockquote{
+.preview blockquote{
   padding: 0.1em 0.7em;
   border-left: 6px solid #dddddd;
 }

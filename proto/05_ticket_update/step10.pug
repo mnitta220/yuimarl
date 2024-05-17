@@ -50,10 +50,16 @@ html(lang="ja")
                     | &nbsp;&nbsp;
                     small 2024/09/05 16:23
                 .row
-                  .col
-                    | ありがとう！😍
-                    br
-                    | チケットのノートに追加しました。
+                  .col-9
+                    textarea.form-control.ticket-comment#message(rows="3" name="message")
+                      | ありがとう！😍👍
+                      | チケットのノートに追加しました。
+                  .col-3.text-end
+                    button.btn.btn-primary(type="submit")
+                      img.icon(src="../../static/ionicons/save-outline.svg")
+                      | &nbsp;更新
+                    | &nbsp;&nbsp;
+                    button.btn.btn-secondary(type="submit") キャンセル
             .row.py-2.ticket-comment
               .col
                 .row
@@ -64,29 +70,13 @@ html(lang="ja")
                 .row
                   .col 「薄力粉」って知りませんでした。
 
-            .row.py-3.mt-2.bg-light
+            //- .row.py-3.mt-2.bg-light
               .col-9
                 textarea.form-control.ticket-comment#message(rows="3" name="message")
               .col-3.text-end
                 button.btn.btn-primary(type="submit")
                   img.icon(src="../../static/ionicons/add-circle-outline2.svg")
                   | &nbsp;コメント
-
-        .modal.fade#deleteCommentModal(tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true")
-          .modal-dialog.modal-md
-            .modal-content
-              .modal-header
-                h1.modal-title.fs-5#deleteCommentModalLabel コメントを削除
-                button.btn-close(type="button" data-bs-dismiss="modal" aria-label="キャンセル")
-              .modal-body
-                .row
-                  .col
-                    | コメントを削除します。
-                    br
-                    | よろしいですか？
-              .modal-footer
-                button.btn.btn-secondary(type="button" data-bs-dismiss="modal") キャンセル
-                button.btn.btn-primary(type="button") 削除
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light
@@ -100,7 +90,7 @@ html(lang="ja")
           .alert.alert-danger.text-start(role="alert")
             | チケット更新 step10.
             br
-            | 削除アイコンをクリックすると、削除確認メッセージが表示される。
+            | 自分のコメントの編集アイコンをクリックすると、コメントを編集できる。
         .col-md-2.text-start.py-1
           a.nav-link.px-2.px-md-0(href="step11.html") next →
 
@@ -108,7 +98,3 @@ html(lang="ja")
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous")
     script(src="https://code.jquery.com/jquery-3.7.1.min.js")
-    script.
-      $(document).ready(function() {
-        new bootstrap.Modal("#deleteCommentModal").show();
-      });

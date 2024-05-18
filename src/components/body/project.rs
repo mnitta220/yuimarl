@@ -1,6 +1,7 @@
 use super::super::Component;
 use super::parts::{
-    footer::Footer, nav::Nav, project_info::ProjectInfo, project_note::ProjectNote,
+    footer::Footer, nav::Nav, project_history::ProjectHistory, project_info::ProjectInfo,
+    project_note::ProjectNote,
 };
 use crate::ProjectTab;
 use crate::Props;
@@ -9,6 +10,7 @@ pub struct ProjectBody {
     pub nav: Box<dyn Component + Send>,
     pub project_info: Box<dyn Component + Send>,
     pub project_note: Box<dyn Component + Send>,
+    pub project_history: Box<dyn Component + Send>,
     pub footer: Box<dyn Component + Send>,
 }
 
@@ -18,6 +20,7 @@ impl ProjectBody {
             nav: Box::new(Nav {}),
             project_info: Box::new(ProjectInfo {}),
             project_note: Box::new(ProjectNote {}),
+            project_history: Box::new(ProjectHistory {}),
             footer: Box::new(Footer {}),
         }
     }
@@ -91,7 +94,9 @@ impl Component for ProjectBody {
                             ProjectTab::Note => {
                                 self.project_note.write(props, buf);
                             }
-                            _ => {}
+                            ProjectTab::History => {
+                                self.project_history.write(props, buf);
+                            }
                         }
                     }
                     *buf += r#"</div>"#;

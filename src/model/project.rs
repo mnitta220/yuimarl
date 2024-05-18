@@ -25,6 +25,8 @@ pub struct Project {
     pub ticket_number: Option<i32>,        // チケット番号
     pub note: Option<String>,              // ノート（マークダウン）
     pub created_at: Option<DateTime<Utc>>, // 作成日時
+    pub updated_at: Option<DateTime<Utc>>, // 更新日時
+    pub history: Option<String>,           // 更新履歴 (JSON)
     pub deleted: bool,                     // 削除フラグ
 }
 
@@ -53,6 +55,21 @@ pub enum ProjectRole {
     Viewer = 4,
 }
 
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct History {
+    pub timestamp: DateTime<Utc>,
+    pub uid: String,
+    pub user_name: String,
+    pub event: i32,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub enum HistoryEvent {
+    ProjectCreate = 1,
+    ProjectUpdate = 2,
+    UpdateNote = 3,
+}
+
 impl Project {
     pub fn new() -> Self {
         Project {
@@ -66,6 +83,8 @@ impl Project {
             ticket_number: None,
             note: None,
             created_at: None,
+            updated_at: None,
+            history: None,
             deleted: false,
         }
     }
@@ -194,13 +213,27 @@ impl Project {
         db: &FirestoreDb,
     ) -> Result<Project> {
         let mut prj = Project::new();
+        let now = Utc::now();
         prj.project_name = Some(input.project_name.trim().to_string());
         prj.owner = Some(session.uid.clone());
         prj.prefix = Some(input.prefix.trim().to_string());
         prj.member_limit = Some(MEMBER_LIMIT_DEFAULT);
         prj.ticket_limit = Some(TICKET_LIMIT_DEFAULT);
         prj.ticket_number = Some(0);
-        prj.created_at = Some(Utc::now());
+        prj.created_at = Some(now);
+        prj.updated_at = Some(now);
+
+        let history = History {
+            timestamp: now,
+            uid: session.uid.clone(),
+            user_name: session.name.clone(),
+            event: HistoryEvent::ProjectCreate as i32,
+        };
+        let history = vec![history];
+        if let Ok(h) = serde_json::to_string(&history) {
+            prj.history = Some(h);
+        }
+
         let mut count = 0u32;
         let mut id = Uuid::now_v7().to_string();
 
@@ -283,6 +316,7 @@ impl Project {
 
     pub async fn update(
         input: &crate::handlers::project::ProjectInput,
+        session: &Session,
         project_members: &mut Vec<ProjectMember>,
         db: &FirestoreDb,
     ) -> Result<Project> {
@@ -298,13 +332,37 @@ impl Project {
                 return Err(anyhow::anyhow!("Project not found".to_string()));
             }
         };
+        let now = Utc::now();
         prj.project_name = Some(input.project_name.trim().to_string());
         prj.prefix = Some(input.prefix.trim().to_string());
+        prj.updated_at = Some(now);
+
+        let history = History {
+            timestamp: now,
+            uid: session.uid.clone(),
+            user_name: session.name.clone(),
+            event: HistoryEvent::ProjectUpdate as i32,
+        };
+
+        let mut histories = Vec::new();
+        if let Some(h) = &prj.history {
+            let h: Vec<History> = match serde_json::from_str(&h) {
+                Ok(h) => h,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+            histories = h;
+        }
+        histories.push(history);
+        if let Ok(h) = serde_json::to_string(&histories) {
+            prj.history = Some(h);
+        }
 
         if let Err(e) = db
             .fluent()
             .update()
-            .fields(paths!(Project::{project_name, prefix}))
+            .fields(paths!(Project::{project_name, prefix, updated_at, history}))
             .in_col(&COLLECTION_NAME)
             .document_id(&input.project_id)
             .object(&prj)

@@ -4,6 +4,16 @@ pub struct ProjectNote {}
 
 impl Component for ProjectNote {
     fn write(&self, props: &Props, buf: &mut String) {
+        // ノートが空の場合は、編集スイッチをONにする
+        let mut edit_switch = true;
+        if let Some(p) = &props.project {
+            if let Some(note) = &p.note {
+                if !note.is_empty() {
+                    edit_switch = false;
+                }
+            }
+        }
+
         *buf += r#"<form action="/project/upd_note" method="POST">"#;
         {
             // 編集スイッチ
@@ -13,7 +23,11 @@ impl Component for ProjectNote {
                 {
                     *buf += r#"<div class="form-check form-switch">"#;
                     {
-                        *buf += r#"<input class="form-check-input" id="edit" type="checkbox" role="switch">"#;
+                        *buf += r#"<input class="form-check-input" id="edit" type="checkbox" role="switch""#;
+                        if edit_switch {
+                            *buf += r#" checked"#;
+                        }
+                        *buf += r#">"#;
                         *buf += r#"<label class="form-check-label" for="edit">編集</label>"#;
                     }
                     *buf += r#"</div>"#;
@@ -23,7 +37,11 @@ impl Component for ProjectNote {
             *buf += r#"</div>"#;
 
             // ノート
-            *buf += r#"<div class="row py-2 d-none" id="note1">"#;
+            *buf += r#"<div class="row py-2"#;
+            if !edit_switch {
+                *buf += r#" d-none"#;
+            }
+            *buf += r#"" id="note1">"#;
             {
                 *buf += r#"<div class="col-lg-6">"#;
                 {
@@ -47,7 +65,11 @@ impl Component for ProjectNote {
             }
             *buf += r#"</div>"#;
 
-            *buf += r#"<div class="row py-2" id="note2">"#;
+            *buf += r#"<div class="row py-2"#;
+            if edit_switch {
+                *buf += r#" d-none"#;
+            }
+            *buf += r#"" id="note2">"#;
             {
                 *buf += r#"<div class="col">"#;
                 {

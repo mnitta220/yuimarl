@@ -247,7 +247,9 @@ pub async fn post_project(
         props.session = Some(session);
         props.project = Some(prj);
     } else {
-        let prj = match model::project::Project::update(&input, &mut project_members, &db).await {
+        let prj = match model::project::Project::update(&input, &session, &mut project_members, &db)
+            .await
+        {
             Ok(p) => p,
             Err(e) => {
                 return Err(AppError(anyhow::anyhow!(e)));

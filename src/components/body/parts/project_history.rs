@@ -1,9 +1,10 @@
-use crate::{components::Component, Props};
+use crate::{components::Component, model, Props};
+use chrono::{DateTime, FixedOffset};
 
 pub struct ProjectHistory {}
 
 impl Component for ProjectHistory {
-    fn write(&self, _props: &Props, buf: &mut String) {
+    fn write(&self, props: &Props, buf: &mut String) {
         *buf += r#"<div class="pb-2">"#;
         {
             *buf += r#"<div class="row">"#;
@@ -26,31 +27,39 @@ impl Component for ProjectHistory {
                             }
                             *buf += r#"</thead>"#;
 
-                            *buf += r#"<tbody>"#;
-                            {
-                                *buf += r#"<tr>"#;
-                                {
-                                    *buf += r#"<td>2024/09/05 16:31</td>"#;
-                                    *buf += r#"<td>山田太郎</td>"#;
-                                    *buf += r#"<td>プロジェクト作成</td>"#;
+                            if let Some(p) = &props.project {
+                                if let Some(h) = &p.history {
+                                    let histories: Vec<model::project::History> =
+                                        match serde_json::from_str(&h) {
+                                            Ok(h) => h,
+                                            Err(_) => Vec::new(),
+                                        };
+                                    *buf += r#"<tbody>"#;
+                                    {
+                                        for history in histories {
+                                            *buf += r#"<tr>"#;
+                                            {
+                                                *buf += r#"<td>"#;
+                                                // UTCからJSTに変換
+                                                let jst: DateTime<FixedOffset> =
+                                                    history.timestamp.with_timezone(
+                                                        &FixedOffset::east_opt(9 * 3600).unwrap(),
+                                                    );
+                                                *buf += &jst.format("%Y/%m/%d %H:%M").to_string();
+                                                *buf += r#"</td>"#;
+                                                *buf += r#"<td>"#;
+                                                *buf += &history.user_name;
+                                                *buf += r#"</td>"#;
+                                                *buf += r#"<td>"#;
+                                                *buf += &history.history_to_string();
+                                                *buf += r#"</td>"#;
+                                            }
+                                            *buf += r#"</tr>"#;
+                                        }
+                                    }
+                                    *buf += r#"</tbody>"#;
                                 }
-                                *buf += r#"</tr>"#;
-                                *buf += r#"<tr>"#;
-                                {
-                                    *buf += r#"<td>2024/09/05 16:31</td>"#;
-                                    *buf += r#"<td>山田太郎</td>"#;
-                                    *buf += r#"<td>プロジェクト作成</td>"#;
-                                }
-                                *buf += r#"</tr>"#;
-                                *buf += r#"<tr>"#;
-                                {
-                                    *buf += r#"<td>2024/09/05 16:31</td>"#;
-                                    *buf += r#"<td>山田太郎</td>"#;
-                                    *buf += r#"<td>プロジェクト作成</td>"#;
-                                }
-                                *buf += r#"</tr>"#;
                             }
-                            *buf += r#"</tbody>"#;
                         }
                         *buf += r#"</table>"#;
                     }

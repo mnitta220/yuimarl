@@ -296,7 +296,7 @@ pub async fn post_upd_note(
         Err(_) => return Ok(Html(LoginPage::write())),
     };
     let mut props = page::Props::new(&session.id);
-    let prj = match model::project::Project::update_note(&input, &db).await {
+    let prj = match model::project::Project::update_note(&input, &session, &db).await {
         Ok(p) => p,
         Err(e) => {
             return Err(AppError(anyhow::anyhow!(e)));

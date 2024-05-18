@@ -12,6 +12,7 @@ pub const COLLECTION_NAME: &'static str = "project";
 const COLLECTION_MEMBER: &'static str = "project_member";
 pub const MEMBER_LIMIT_DEFAULT: i32 = 20;
 pub const TICKET_LIMIT_DEFAULT: i32 = 1000;
+pub const MAX_HISTORY: usize = 50;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Project {
@@ -355,6 +356,14 @@ impl Project {
             histories = h;
         }
         histories.push(history);
+
+        loop {
+            if histories.len() <= MAX_HISTORY {
+                break;
+            }
+            histories.remove(0);
+        }
+
         if let Ok(h) = serde_json::to_string(&histories) {
             prj.history = Some(h);
         }
@@ -511,6 +520,7 @@ impl Project {
 
     pub async fn update_note(
         input: &crate::handlers::project::UpdNoteInput,
+        session: &Session,
         db: &FirestoreDb,
     ) -> Result<Project> {
         let prj = match Project::find(&input.project_id, db).await {
@@ -525,12 +535,44 @@ impl Project {
                 return Err(anyhow::anyhow!("Project not found".to_string()));
             }
         };
+        let now = Utc::now();
         prj.note = Some(input.markdown.trim().to_string());
+        prj.updated_at = Some(now);
+
+        let history = History {
+            timestamp: now,
+            uid: session.uid.clone(),
+            user_name: session.name.clone(),
+            event: HistoryEvent::UpdateNote as i32,
+        };
+
+        let mut histories = Vec::new();
+        if let Some(h) = &prj.history {
+            let h: Vec<History> = match serde_json::from_str(&h) {
+                Ok(h) => h,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+            histories = h;
+        }
+        histories.push(history);
+
+        loop {
+            if histories.len() <= MAX_HISTORY {
+                break;
+            }
+            histories.remove(0);
+        }
+
+        if let Ok(h) = serde_json::to_string(&histories) {
+            prj.history = Some(h);
+        }
 
         if let Err(e) = db
             .fluent()
             .update()
-            .fields(paths!(Project::{note}))
+            .fields(paths!(Project::{note, updated_at, history}))
             .in_col(&COLLECTION_NAME)
             .document_id(&input.project_id)
             .object(&prj)
@@ -829,6 +871,17 @@ impl ProjectMember {
                 _ => "Unknown".to_string(),
             },
             None => "Unknown".to_string(),
+        }
+    }
+}
+
+impl History {
+    pub fn history_to_string(&self) -> String {
+        match self.event {
+            1 => "プロジェクト作成".to_string(),
+            2 => "基本情報".to_string(),
+            3 => "ノート".to_string(),
+            _ => "Unknown".to_string(),
         }
     }
 }

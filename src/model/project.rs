@@ -71,14 +71,14 @@ impl Project {
         let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
-            .fields(paths!(ProjectMember::{id, project_id, member, role, last_used})) // Optionally select the fields needed
+            .fields(paths!(ProjectMember::{id, project_id, member, role, last_used}))
             .from(COLLECTION_MEMBER)
             .filter(|q| q.for_all([q.field(path!(ProjectMember::member)).eq(&session.uid)]))
             .order_by([(
                 path!(ProjectMember::last_used),
                 FirestoreQueryDirection::Descending,
             )])
-            .obj() // Reading documents as structures using Serde gRPC deserializer
+            .obj()
             .stream_query_with_errors()
             .await
         {
@@ -126,7 +126,7 @@ impl Project {
         let object_stream: BoxStream<FirestoreResult<Project>> = match db
             .fluent()
             .select()
-            .fields(paths!(Project::{id, project_name, language, owner, created_at})) // Optionally select the fields needed
+            .fields(paths!(Project::{id, project_name, language, owner, created_at}))
             .from(COLLECTION_NAME)
             .filter(|q| {
                 q.for_all([
@@ -134,7 +134,7 @@ impl Project {
                     q.field(path!(Project::project_name)).eq(project_name),
                 ])
             })
-            .obj() // Reading documents as structures using Serde gRPC deserializer
+            .obj()
             .stream_query_with_errors()
             .await
         {
@@ -257,7 +257,7 @@ impl ProjectMember {
         let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
-            .fields(paths!(ProjectMember::{id, project_id, member, role, last_used})) // Optionally select the fields needed
+            .fields(paths!(ProjectMember::{id, project_id, member, role, last_used}))
             .from(COLLECTION_MEMBER)
             .filter(|q| {
                 q.for_all([
@@ -269,7 +269,7 @@ impl ProjectMember {
                 path!(ProjectMember::last_used),
                 FirestoreQueryDirection::Descending,
             )])
-            .obj() // Reading documents as structures using Serde gRPC deserializer
+            .obj()
             .stream_query_with_errors()
             .await
         {

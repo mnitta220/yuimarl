@@ -2,7 +2,7 @@ use crate::model;
 use axum::extract::Form;
 use firestore::*;
 use serde::{Deserialize, Serialize};
-use tower_cookies::Cookies;
+//use tower_cookies::Cookies;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FirebaseConfig {
@@ -106,6 +106,7 @@ pub async fn user_by_email(Form(input): Form<UserByEmainInput>) -> String {
     buf
 }
 
+/*
 pub async fn member_add(cookies: Cookies, Form(input): Form<MemberAddInput>) -> String {
     tracing::debug!("GET /member_add");
 
@@ -159,3 +160,4 @@ pub async fn member_add(cookies: Cookies, Form(input): Form<MemberAddInput>) -> 
         r
     }
 }
+*/

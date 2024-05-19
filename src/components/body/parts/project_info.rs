@@ -11,6 +11,7 @@ impl Component for ProjectInfo {
             {
                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="name">"#;
                 *buf += r#"プロジェクト名</label>"#;
+
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 {
                     *buf += r#"<input class="form-control"#;
@@ -44,6 +45,7 @@ impl Component for ProjectInfo {
             {
                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="prefix">"#;
                 *buf += r#"チケットID接頭辞</label>"#;
+
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 {
                     *buf += r#"<input class="form-control" id="prefix" name="prefix" type="text" maxlength="10" value=""#;
@@ -63,6 +65,7 @@ impl Component for ProjectInfo {
             {
                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="member">"#;
                 *buf += r#"メンバー</label>"#;
+
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 {
                     *buf += r#"<div class="form-floating">"#;
@@ -120,6 +123,7 @@ impl Component for ProjectInfo {
                             *buf += r#"</tbody>"#;
                         }
                         *buf += r#"</table>"#;
+
                         *buf += r#"<a href="javascript:clickAddMember();">"#;
                         {
                             *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="メンバーを追加">"#;
@@ -129,6 +133,7 @@ impl Component for ProjectInfo {
                     *buf += r#"</div>"#;
                 }
                 *buf += r#"</div>"#;
+
                 *buf += r#"<input type="hidden" id="members" name="members" value=""#;
                 if let Ok(r) = serde_json::to_string(&props.members) {
                     super::super::super::escape_html(&r, buf);
@@ -139,37 +144,65 @@ impl Component for ProjectInfo {
 
             *buf += r#"<div class="row py-3 mt-2 bg-light">"#;
             {
-                *buf += r#"<div class="col-md-9">"#;
-                {
-                    *buf += r#"<button class="btn btn-primary" type="submit">"#;
+                if let Some(p) = &props.project {
+                    *buf += r#"<div class="col-9">"#;
                     {
-                        if let None = &props.project {
-                            *buf += r#"<img class="icon" src="/static/ionicons/create-outline.svg">&nbsp;作成"#;
-                        } else {
+                        *buf += r#"<button class="btn btn-primary" type="submit">"#;
+                        {
                             *buf += r#"<img class="icon" src="/static/ionicons/save-outline.svg">&nbsp;更新"#;
                         }
+                        *buf += r#"</button>&nbsp;&nbsp;"#;
+
+                        if let Some(id) = &p.id {
+                            *buf += r#"<a class="btn btn-primary" href="/project/info?id="#;
+                            *buf += id;
+                            *buf += r#"" role="button">"#;
+                            {
+                                *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
+                            }
+                            *buf += r#"</a>"#;
+                        }
                     }
-                    *buf += r#"</button>"#;
+                    *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="col-3 text-end">"#;
+                    {
+                        *buf += r#"<button class="btn btn-secondary" type="submit">"#;
+                        {
+                            *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
+                        }
+                        *buf += r#"</button>"#;
+                    }
+                    *buf += r#"</div>"#;
+                } else {
+                    *buf += r#"<div class="col">"#;
+                    {
+                        *buf += r#"<button class="btn btn-primary" type="submit">"#;
+                        {
+                            *buf += r#"<img class="icon" src="/static/ionicons/create-outline.svg">&nbsp;作成"#;
+                        }
+                        *buf += r#"</button>"#;
+                    }
+                    *buf += r#"</div>"#;
                 }
-                *buf += r#"</div>"#;
             }
             *buf += r#"</div>"#;
 
-            /*
-            let mut project_id = "";
             if let Some(p) = &props.project {
-                if let Some(id) = &p.id {
-                    project_id = id;
-                }
-            }
-            */
-            *buf += r#"<input type="hidden" name="project_id" value=""#;
-            if let Some(p) = &props.project {
+                *buf += r#"<input type="hidden" name="project_id" value=""#;
                 if let Some(id) = &p.id {
                     *buf += id;
                 }
+                *buf += r#"">"#;
+                *buf += r#"<input type="hidden" name="timestamp" value=""#;
+                if let Some(up) = &p.updated_at {
+                    *buf += &up.timestamp().to_string();
+                }
+                *buf += r#"">"#;
+            } else {
+                *buf += r#"<input type="hidden" name="project_id" value="">"#;
+                *buf += r#"<input type="hidden" name="timestamp" value="">"#;
             }
-            *buf += r#"">"#;
         }
         *buf += r#"</form>"#;
 
@@ -197,6 +230,7 @@ impl Component for ProjectInfo {
                                 *buf += r#"<input class="form-control" id="email" type="text" maxlength="50">"#;
                             }
                             *buf += r#"</div>"#;
+
                             *buf += r#"<div class="col-md-3 mb-1">"#;
                             {
                                 *buf += r#"<button class="btn btn-info" id="search-email" type="button">検索</button>"#;
@@ -213,6 +247,7 @@ impl Component for ProjectInfo {
                                 *buf += r#"<input class="form-control" id="member-name" type="text" maxlength="50">"#;
                             }
                             *buf += r#"</div>"#;
+
                             *buf += r#"<div class="col-md-3 mb-1">"#;
                             {
                                 *buf +=

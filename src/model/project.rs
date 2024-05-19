@@ -33,6 +33,7 @@ pub struct Project {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct ProjectValidation {
+    pub project_info: Option<String>,
     pub project_name: Option<String>,
 }
 
@@ -586,6 +587,15 @@ impl Project {
     }
 }
 
+impl ProjectValidation {
+    pub fn new() -> Self {
+        Self {
+            project_info: None,
+            project_name: None,
+        }
+    }
+}
+
 impl ProjectMember {
     pub fn new(uid: String) -> Self {
         Self {
@@ -600,6 +610,7 @@ impl ProjectMember {
         }
     }
 
+    /// プロジェクトのメンバーを取得する
     pub async fn members_of_project(
         project_id: &str,
         order_by_uid: bool,
@@ -647,6 +658,43 @@ impl ProjectMember {
         };
 
         Ok(project_members)
+    }
+
+    /// プロジェクトメンバー情報を取得する
+    pub async fn find(project_id: &str, uid: &str, db: &FirestoreDb) -> Result<Option<Self>> {
+        let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(ProjectMember::{id, uid, role, email, name, last_used}))
+            .from(COLLECTION_MEMBER)
+            .filter(|q| {
+                q.for_all([
+                    q.field(path!(ProjectMember::project_id)).eq(&project_id),
+                    q.field(path!(ProjectMember::uid)).eq(&uid),
+                ])
+            })
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        if let Some(m) = project_members.get(0) {
+            Ok(Some(m.clone()))
+        } else {
+            Ok(None)
+        }
     }
 
     pub async fn update_last_used(project_id: &str, member: &str, db: &FirestoreDb) -> Result<()> {
@@ -709,6 +757,7 @@ impl ProjectMember {
         Ok(())
     }
 
+    /*
     pub async fn add_project_member(
         project_id: &str,
         add_members: &String,
@@ -730,7 +779,7 @@ impl ProjectMember {
             }
             role = v[i];
             i += 1;
-            tracing::info!("uid={} role={}", uid, role);
+            //tracing::info!("uid={} role={}", uid, role);
             let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
                 .fluent()
                 .select()
@@ -808,7 +857,9 @@ impl ProjectMember {
 
         Ok("".to_string())
     }
+    */
 
+    /// 自分のプロジェクトを検索する
     pub async fn my_projects(session: &Session, db: &FirestoreDb) -> Result<Vec<Self>> {
         let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
@@ -861,6 +912,7 @@ impl ProjectMember {
         Ok(project_members)
     }
 
+    /// ロールを文字列に変換する
     pub fn role_to_string(&self) -> String {
         match self.role {
             Some(r) => match r {

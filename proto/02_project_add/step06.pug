@@ -25,12 +25,6 @@ html(lang="ja")
               label.col-md-3.col-form-label.bg-light.mb-1(for="prefix") チケットID接頭辞
               .col-md-9.mb-1
                 input.form-control#prefix(type="text" maxlength="10" value="BN" required)
-            //- オーナー
-            //- .row.py-2
-              label.col-md-3.col-form-label.bg-light.mb-1(for="owner") オーナー
-              .col-md-9.mb-1
-                .form-floating
-                  span 山田太郎 [taro.yamada@mail.com]
             // メンバー
             .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="member") メンバー
@@ -57,7 +51,6 @@ html(lang="ja")
                           img.icon(src="../../static/ionicons/settings-outline.svg" title="設定")
                           | &nbsp;
                           img.icon(src="../../static/ionicons/remove-circle-outline.svg" title="削除")
-                  //- button.btn.btn-primary.btn-sm#btnMemberAdd(data-bs-toggle="modal" type="button" title="メンバーを追加する" data-bs-target="#addMemberModal") ＋
                   a(href="javascript:clickAddMember();")
                     img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="メンバーを追加")
                 .modal.fade#addMemberModal(tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true")
@@ -102,20 +95,8 @@ html(lang="ja")
                       .modal-footer
                         button.btn.btn-secondary(type="button" data-bs-dismiss="modal") キャンセル
                         button.btn.btn-primary(type="button") メンバーに追加
-            //-
-              fieldset.py-2
-                .row
-                  legend.col-form-label.col-md-3.bg-light.mb-1 言語
-                  .col-md-9.mb-1
-                    .form-check.form-check-inline
-                      input.form-check-input#radio1(type="radio" name="questionnaire" value="answer1" checked="checked")
-                      label.form-check-label(for="radio1") 日本語
-                    .form-check.form-check-inline
-                      input.form-check-input#radio2(type="radio" name="questionnaire" value="answer2")
-                      label.form-check-label(for="radio2") 英語
             .row.py-3.mt-2.bg-light
               .col-md-9
-                //- button.btn.btn-primary(type="submit") 作成する
                 button.btn.btn-primary(type="submit")
                   img.icon(src="../../static/ionicons/create-outline.svg")
                   | &nbsp;作成
@@ -144,6 +125,3 @@ html(lang="ja")
       function clickAddMember() {
         new bootstrap.Modal("#addMemberModal").show();
       }
-      //$(document).ready(function() {
-      //  new bootstrap.Modal("#addMemberModal").show();
-      //});

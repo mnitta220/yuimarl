@@ -39,10 +39,23 @@ impl Component for ProjectBody {
                     *buf += r#"<div class="container">"#;
                     {
                         *buf += r#"<h3 class="mb-3">プロジェクト"#;
-                        if let None = &props.project {
+                        if props.project.is_none() {
                             *buf += r#"を作成"#;
                         }
                         *buf += r#"</h3>"#;
+
+                        if let Some(v) = &props.project_validation {
+                            if let Some(e) = &v.project_info {
+                                *buf += r#"<div class="row p-2">"#;
+                                {
+                                    *buf += r#"<div class="alert alert-danger text-start" role="alert">"#;
+                                    *buf += e;
+                                    *buf += r#"</div>"#;
+                                }
+                                *buf += r#"</div>"#;
+                            }
+                        }
+
                         if let Some(p) = &props.project {
                             *buf += r#"<div class="pb-2">"#;
                             {
@@ -59,6 +72,7 @@ impl Component for ProjectBody {
                                         *buf += r#"&tab=info">基本情報</a>"#;
                                     }
                                     *buf += r#"</li>"#;
+
                                     *buf += r#"<li class="nav-item">"#;
                                     {
                                         *buf += r#"<a class="nav-link"#;
@@ -70,6 +84,7 @@ impl Component for ProjectBody {
                                         *buf += r#"&tab=note">ノート</a>"#;
                                     }
                                     *buf += r#"</li>"#;
+
                                     *buf += r#"<li class="nav-item">"#;
                                     {
                                         *buf += r#"<a class="nav-link"#;
@@ -85,6 +100,22 @@ impl Component for ProjectBody {
                                 *buf += r#"</ul>"#;
                             }
                             *buf += r#"</div>"#;
+
+                            /*
+                                *buf += r#"<input type="hidden" name="project_id" value=""#;
+                                if let Some(id) = &p.id {
+                                    *buf += id;
+                                }
+                                *buf += r#"">"#;
+                                *buf += r#"<input type="hidden" name="timestamp" value=""#;
+                                if let Some(up) = &p.updated_at {
+                                    *buf += &up.timestamp().to_string();
+                                }
+                                *buf += r#"">"#;
+                            } else {
+                                *buf += r#"<input type="hidden" name="project_id" value="">"#;
+                                *buf += r#"<input type="hidden" name="timestamp" value="">"#;
+                                */
                         }
 
                         match &props.project_tab {

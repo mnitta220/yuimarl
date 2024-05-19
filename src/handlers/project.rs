@@ -85,7 +85,7 @@ pub async fn get_project(
 ) -> Result<Html<String>, AppError> {
     let id = params.id.unwrap_or_default();
     let tab = params.tab.unwrap_or_default();
-    tracing::info!("GET /project id={} tab={}", id, tab);
+    tracing::debug!("GET /project id={} tab={}", id, tab);
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
@@ -141,17 +141,18 @@ pub struct ProjectInput {
     pub prefix: String,
     pub members: String,
     pub project_id: String,
+    pub timestamp: String,
 }
 
 pub async fn post_project(
     cookies: Cookies,
     Form(input): Form<ProjectInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::debug!(
+    tracing::info!(
         "POST /project {}, {}, {}",
         input.project_id,
         input.project_name,
-        input.members
+        input.timestamp
     );
 
     let project_name = input.project_name.trim().to_string();
@@ -182,7 +183,6 @@ pub async fn post_project(
     for m in mem {
         let mut member =
             model::project::ProjectMember::new(String::from(m["uid"].as_str().unwrap()));
-        //member.uid = Some(String::from(m["uid"].as_str().unwrap()));
         member.email = Some(String::from(m["email"].as_str().unwrap()));
         member.name = Some(String::from(m["name"].as_str().unwrap()));
         member.role = Some(m["role"].as_i64().unwrap() as i32);
@@ -193,9 +193,8 @@ pub async fn post_project(
         let mut project = model::project::Project::new();
         project.project_name = Some(project_name);
         project.prefix = Some(input.prefix);
-        let validation = model::project::ProjectValidation {
-            project_name: Some("入力してください".to_string()),
-        };
+        let mut validation = model::project::ProjectValidation::new();
+        validation.project_name = Some("入力してください".to_string());
         props.session = Some(session);
         props.project = Some(project);
         props.project_validation = Some(validation);
@@ -223,9 +222,8 @@ pub async fn post_project(
         project.id = Some(input.project_id.clone());
         project.project_name = Some(project_name);
         project.prefix = Some(input.prefix);
-        let validation = model::project::ProjectValidation {
-            project_name: Some("同じ名前のプロジェクトが存在します".to_string()),
-        };
+        let mut validation = model::project::ProjectValidation::new();
+        validation.project_name = Some("同じ名前のプロジェクトが存在します".to_string());
         props.session = Some(session);
         props.project = Some(project);
         props.project_validation = Some(validation);
@@ -235,6 +233,10 @@ pub async fn post_project(
     }
 
     if input.project_id.len() == 0 {
+        // プロジェクト作成
+
+        // TODO プロジェクト作成件数の制限を超えていたら作成できない。
+
         let prj = match model::project::Project::insert(&input, &session, &mut project_members, &db)
             .await
         {
@@ -247,6 +249,76 @@ pub async fn post_project(
         props.session = Some(session);
         props.project = Some(prj);
     } else {
+        // プロジェクト更新
+
+        // プロジェクトを更新できるのは、オーナーか管理者のみ
+        let member =
+            match model::project::ProjectMember::find(&input.project_id, &session.uid, &db).await {
+                Ok(member) => member,
+                Err(e) => {
+                    return Err(AppError(anyhow::anyhow!(e)));
+                }
+            };
+
+        let mut ok = false;
+        if let Some(member) = member {
+            if let Some(role) = member.role {
+                if role == model::project::ProjectRole::Owner as i32
+                    || role == model::project::ProjectRole::Administrator as i32
+                {
+                    ok = true;
+                }
+            }
+        }
+        if ok == false {
+            let mut project = model::project::Project::new();
+            project.id = Some(input.project_id.clone());
+            project.project_name = Some(project_name);
+            project.prefix = Some(input.prefix);
+            let mut validation = model::project::ProjectValidation::new();
+            validation.project_info =
+                Some("プロジェクト情報を更新する権限がありません".to_string());
+            props.session = Some(session);
+            props.project = Some(project);
+            props.project_validation = Some(validation);
+            props.members = project_members;
+            let mut page = ProjectPage::new(props);
+            return Ok(Html(page.write()));
+        }
+
+        // TODO 読み込み時のタイムスタンプと現在のタイムスタンプを比較し、他のユーザーが更新していたら更新できない。
+        let p = match model::project::Project::find(&input.project_id, &db).await {
+            Ok(p) => p,
+            Err(e) => {
+                return Err(AppError(anyhow::anyhow!(e)));
+            }
+        };
+        let mut ok = false;
+        if let Some(p) = p {
+            if p.deleted == false {
+                if let Some(t) = p.updated_at {
+                    if t.timestamp().to_string() == input.timestamp {
+                        ok = true;
+                    }
+                }
+            }
+        }
+        if ok == false {
+            let mut project = model::project::Project::new();
+            project.id = Some(input.project_id.clone());
+            project.project_name = Some(project_name);
+            project.prefix = Some(input.prefix);
+            let mut validation = model::project::ProjectValidation::new();
+            validation.project_info =
+                Some("他のユーザーがプロジェクトを更新しため、更新できませんでした。<br>再読み込みを行ってください。".to_string());
+            props.session = Some(session);
+            props.project = Some(project);
+            props.project_validation = Some(validation);
+            props.members = project_members;
+            let mut page = ProjectPage::new(props);
+            return Ok(Html(page.write()));
+        }
+
         let prj = match model::project::Project::update(&input, &session, &mut project_members, &db)
             .await
         {
@@ -282,7 +354,7 @@ pub async fn post_upd_note(
     cookies: Cookies,
     Form(input): Form<UpdNoteInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::info!("POST /post_upd_note {}", input.markdown,);
+    tracing::debug!("POST /post_upd_note {}", input.markdown,);
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,

@@ -71,6 +71,7 @@ impl Component for HomeBody {
                                                             *buf += r#"</div>"#;
                                                         }
                                                         *buf += r#"</td>"#;
+
                                                         *buf += r#"<td class="text-right">"#;
                                                         {
                                                             *buf += r#"<a href="step02.html" title="閉じる">"#;
@@ -82,6 +83,7 @@ impl Component for HomeBody {
                                                         *buf += r#"</td>"#;
                                                     }
                                                     *buf += r#"</tr>"#;
+
                                                     *buf += r#"<tr>"#;
                                                     {
                                                         *buf += r#"<td>"#;
@@ -159,13 +161,14 @@ impl Component for HomeBody {
                                                 *buf += r#"<div class="col">"#;
                                                 {
                                                     if let Some(n) = &p.project_name {
-                                                        *buf += r#"<a href="/project/"#;
+                                                        *buf += r#"<a href="/project/info?id="#;
                                                         *buf += &p.id.clone().unwrap();
                                                         *buf += r#"">"#;
                                                         {
                                                             *buf += n;
                                                         }
                                                         *buf += r#"</a>"#;
+
                                                         if let Some(m) = &props.member {
                                                             *buf += r#"&nbsp;&nbsp;<small>"#;
                                                             {
@@ -221,7 +224,6 @@ impl Component for HomeBody {
                     *buf += r#"</div>"#;
 
                     // チケット
-                    //if props.projects.len() > 0 {
                     *buf += r#"<div class="py-3">"#;
                     {
                         *buf += r#"<section id="tickets" class="mb-3">"#;
@@ -269,7 +271,6 @@ impl Component for HomeBody {
                         *buf += r#"</section>"#;
                     }
                     *buf += r#"</div>"#;
-                    //}
                 }
                 *buf += r#"</form>"#;
             }

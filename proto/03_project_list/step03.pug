@@ -75,7 +75,6 @@ html(lang="ja")
                           img.icon(src="../../static/ionicons/settings-outline.svg" title="設定")
                           | &nbsp;
                           img.icon(src="../../static/ionicons/remove-circle-outline.svg" title="削除")
-                  //- button.btn.btn-primary.btn-sm#btnMemberAdd(data-bs-toggle="modal" type="button" title="メンバーを追加する" data-bs-target="#addMemberModal") ＋
                   a(href="javascript:clickAddMember();")
                     img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="メンバーを追加")
                 .modal.fade#addMemberModal(tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true")
@@ -126,11 +125,11 @@ html(lang="ja")
                   img.icon(src="../../static/ionicons/save-outline.svg")
                   | &nbsp;更新
                 | &nbsp;&nbsp;
-                button.btn.btn-primary(type="submit")
+                a.btn.btn-primary(href="#" role="button")
                   img.icon(src="../../static/ionicons/refresh-outline.svg")
                   | &nbsp;再読み込み
               .col-3.text-end
-                button.btn.btn-secondary(type="submit")
+                a.btn.btn-secondary(href="#" role="button")
                   img.icon(src="../../static/ionicons/trash-outline2.svg")
                   | &nbsp;削除
 

@@ -32,486 +32,418 @@
             </div>
             <div class="row">
               <div class="col-md-9">
-                <div class="row">
-                  <div class="col">
-                    <h2 class="pt-3 pb-1">データベース</h2>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <p>Firestore Database のコレクション</p>
-                  </div>
-                </div>
-                <!-- user-->
-                <div class="row">
-                  <div class="col">
+                <section>
+                  <h2 class="pt-3 pb-1">データベース</h2>
+                  <p class="pb-3">Firestore Database のコレクション</p>
+                  <section>
                     <hr>
-                    <h3>user</h3>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">ユーザー情報を保持する。</div>
-                </div>
-                <div class="row py-2">
-                  <div class="col">
-                    <table class="table table-sm table-bordered">
-                      <thead>
-                        <tr>
-                          <th scope="col">項目名</th>
-                          <th scope="col">型</th>
-                          <th scope="col">説明</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>uid</td>
-                          <td>string</td>
-                          <td> </td>
-                        </tr>
-                        <tr>
-                          <td>name</td>
-                          <td>string</td>
-                          <td> </td>
-                        </tr>
-                        <tr>
-                          <td>email</td>
-                          <td>string</td>
-                          <td> </td>
-                        </tr>
-                        <tr>
-                          <td>photo_url</td>
-                          <td>string</td>
-                          <td> </td>
-                        </tr>
-                        <tr>
-                          <td>status</td>
-                          <td>number</td>
-                          <td>0:未承認, 1:承認, 2:禁止</td>
-                        </tr>
-                        <tr>
-                          <td>created_at</td>
-                          <td>timestamp</td>
-                          <td> </td>
-                        </tr>
-                        <tr>
-                          <td>last_login</td>
-                          <td>timestamp</td>
-                          <td> </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <!-- session-->
-                <div class="row">
-                  <div class="col">
+                    <!-- user-->
+                    <section class="py-2">
+                      <h3>user</h3>
+                      <p>ユーザー情報を保持する。</p>
+                      <table class="table table-sm table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col">項目名</th>
+                            <th scope="col">型</th>
+                            <th scope="col">説明</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>uid</td>
+                            <td>string</td>
+                            <td> </td>
+                          </tr>
+                          <tr>
+                            <td>name</td>
+                            <td>string</td>
+                            <td> </td>
+                          </tr>
+                          <tr>
+                            <td>email</td>
+                            <td>string</td>
+                            <td> </td>
+                          </tr>
+                          <tr>
+                            <td>photo_url</td>
+                            <td>string</td>
+                            <td> </td>
+                          </tr>
+                          <tr>
+                            <td>status</td>
+                            <td>number</td>
+                            <td>0:未承認, 1:承認, 2:禁止</td>
+                          </tr>
+                          <tr>
+                            <td>created_at</td>
+                            <td>timestamp</td>
+                            <td> </td>
+                          </tr>
+                          <tr>
+                            <td>last_login</td>
+                            <td>timestamp</td>
+                            <td> </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </section>
                     <hr>
-                    <h3>session</h3>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">セッション情報を保持する。</div>
-                </div>
-                <div class="row py-2">
-                  <div class="col">
-                    <table class="table table-sm table-bordered">
-                      <thead>
-                        <tr>
-                          <th scope="col">項目名</th>
-                          <th scope="col">型</th>
-                          <th scope="col">説明</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>string</td>
-                          <td>セッションID (uuid)</td>
-                        </tr>
-                        <tr>
-                          <td>uid</td>
-                          <td>string</td>
-                          <td>ユーザーID</td>
-                        </tr>
-                        <tr>
-                          <td>name</td>
-                          <td>string</td>
-                          <td>ユーザー名</td>
-                        </tr>
-                        <tr>
-                          <td>email</td>
-                          <td>string</td>
-                          <td> </td>
-                        </tr>
-                        <tr>
-                          <td>photo_url</td>
-                          <td>string</td>
-                          <td> </td>
-                        </tr>
-                        <tr>
-                          <td>created_at</td>
-                          <td>timestamp</td>
-                          <td> </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <!-- project-->
-                <div class="row">
-                  <div class="col">
+                    <!-- session-->
+                    <section class="py-2">
+                      <h3>session</h3>
+                      <p>セッション情報を保持する。</p>
+                      <table class="table table-sm table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col">項目名</th>
+                            <th scope="col">型</th>
+                            <th scope="col">説明</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>id</td>
+                            <td>string</td>
+                            <td>セッションID (uuid)</td>
+                          </tr>
+                          <tr>
+                            <td>uid</td>
+                            <td>string</td>
+                            <td>ユーザーID</td>
+                          </tr>
+                          <tr>
+                            <td>name</td>
+                            <td>string</td>
+                            <td>ユーザー名</td>
+                          </tr>
+                          <tr>
+                            <td>email</td>
+                            <td>string</td>
+                            <td> </td>
+                          </tr>
+                          <tr>
+                            <td>photo_url</td>
+                            <td>string</td>
+                            <td> </td>
+                          </tr>
+                          <tr>
+                            <td>created_at</td>
+                            <td>timestamp</td>
+                            <td> </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </section>
                     <hr>
-                    <h3>project</h3>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">プロジェクト情報を保持する。</div>
-                </div>
-                <div class="row py-2">
-                  <div class="col">
-                    <table class="table table-sm table-bordered">
-                      <thead>
-                        <tr>
-                          <th scope="col">項目名</th>
-                          <th scope="col">型</th>
-                          <th scope="col">説明</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>string</td>
-                          <td>プロジェクトID (uuid)</td>
-                        </tr>
-                        <tr>
-                          <td>project_name</td>
-                          <td>string</td>
-                          <td>プロジェクト名</td>
-                        </tr>
-                        <tr>
-                          <td>owner</td>
-                          <td>string</td>
-                          <td>プロジェクトオーナー（プロジェクトの作成者）</td>
-                        </tr>
-                        <tr>
-                          <td>prefix</td>
-                          <td>string</td>
-                          <td>チケット接頭辞</td>
-                        </tr>
-                        <tr>
-                          <td>language</td>
-                          <td>string</td>
-                          <td>言語（"ja"固定）</td>
-                        </tr>
-                        <tr>
-                          <td>member_limit</td>
-                          <td>number</td>
-                          <td>最大メンバー数（20固定）</td>
-                        </tr>
-                        <tr>
-                          <td>ticket_limit</td>
-                          <td>number</td>
-                          <td>最大チケット番号（1000固定）</td>
-                        </tr>
-                        <tr>
-                          <td>ticket_number</td>
-                          <td>string</td>
-                          <td>チケット番号</td>
-                        </tr>
-                        <tr>
-                          <td>note</td>
-                          <td>string</td>
-                          <td>ノート（マークダウン）</td>
-                        </tr>
-                        <tr>
-                          <td>created_at</td>
-                          <td>timestamp</td>
-                          <td>作成日時</td>
-                        </tr>
-                        <tr>
-                          <td>deleted</td>
-                          <td>boolean</td>
-                          <td>削除フラグ true:削除済</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <!-- project_member-->
-                <div class="row">
-                  <div class="col">
+                    <!-- project-->
+                    <section class="py-2">
+                      <h3>project</h3>
+                      <p>プロジェクト情報を保持する。</p>
+                      <table class="table table-sm table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col">項目名</th>
+                            <th scope="col">型</th>
+                            <th scope="col">説明</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>id</td>
+                            <td>string</td>
+                            <td>プロジェクトID (uuid)</td>
+                          </tr>
+                          <tr>
+                            <td>project_name</td>
+                            <td>string</td>
+                            <td>プロジェクト名</td>
+                          </tr>
+                          <tr>
+                            <td>owner</td>
+                            <td>string</td>
+                            <td>プロジェクトオーナー（プロジェクトの作成者）</td>
+                          </tr>
+                          <tr>
+                            <td>prefix</td>
+                            <td>string</td>
+                            <td>チケット接頭辞</td>
+                          </tr>
+                          <tr>
+                            <td>language</td>
+                            <td>string</td>
+                            <td>言語（"ja"固定）</td>
+                          </tr>
+                          <tr>
+                            <td>member_limit</td>
+                            <td>number</td>
+                            <td>最大メンバー数（20固定）</td>
+                          </tr>
+                          <tr>
+                            <td>ticket_limit</td>
+                            <td>number</td>
+                            <td>最大チケット番号（1000固定）</td>
+                          </tr>
+                          <tr>
+                            <td>ticket_number</td>
+                            <td>string</td>
+                            <td>チケット番号</td>
+                          </tr>
+                          <tr>
+                            <td>note</td>
+                            <td>string</td>
+                            <td>ノート（マークダウン）</td>
+                          </tr>
+                          <tr>
+                            <td>created_at</td>
+                            <td>timestamp</td>
+                            <td>作成日時</td>
+                          </tr>
+                          <tr>
+                            <td>deleted</td>
+                            <td>boolean</td>
+                            <td>削除フラグ true:削除済</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </section>
                     <hr>
-                    <h3>project_member</h3>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">プロジェクトのメンバー情報を保持する。</div>
-                </div>
-                <div class="row py-2">
-                  <div class="col">
-                    <table class="table table-sm table-bordered">
-                      <thead>
-                        <tr>
-                          <th scope="col">項目名</th>
-                          <th scope="col">型</th>
-                          <th scope="col">説明</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>string</td>
-                          <td>(uuid)</td>
-                        </tr>
-                        <tr>
-                          <td>project_id</td>
-                          <td>string</td>
-                          <td>プロジェクトID</td>
-                        </tr>
-                        <tr>
-                          <td>member</td>
-                          <td>string</td>
-                          <td>メンバーのユーザーID</td>
-                        </tr>
-                        <tr>
-                          <td>role</td>
-                          <td>number</td>
-                          <td>ロール 1:オーナー, 2:管理者, 3:メンバー, 4:閲覧者</td>
-                        </tr>
-                        <tr>
-                          <td>last_used</td>
-                          <td>timestamp</td>
-                          <td>最終使用日時</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <!-- ticket-->
-                <div class="row">
-                  <div class="col">
+                    <!-- project_member-->
+                    <section class="py-2">
+                      <h3>project_member</h3>
+                      <p>プロジェクトのメンバー情報を保持する。</p>
+                      <table class="table table-sm table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col">項目名</th>
+                            <th scope="col">型</th>
+                            <th scope="col">説明</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>id</td>
+                            <td>string</td>
+                            <td>(uuid)</td>
+                          </tr>
+                          <tr>
+                            <td>project_id</td>
+                            <td>string</td>
+                            <td>プロジェクトID</td>
+                          </tr>
+                          <tr>
+                            <td>member</td>
+                            <td>string</td>
+                            <td>メンバーのユーザーID</td>
+                          </tr>
+                          <tr>
+                            <td>role</td>
+                            <td>number</td>
+                            <td>ロール 1:オーナー, 2:管理者, 3:メンバー, 4:閲覧者</td>
+                          </tr>
+                          <tr>
+                            <td>last_used</td>
+                            <td>timestamp</td>
+                            <td>最終使用日時</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </section>
                     <hr>
-                    <h3>ticket</h3>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">チケット情報を保持する。</div>
-                </div>
-                <div class="row py-2">
-                  <div class="col">
-                    <table class="table table-sm table-bordered">
-                      <thead>
-                        <tr>
-                          <th scope="col">項目名</th>
-                          <th scope="col">型</th>
-                          <th scope="col">説明</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>string</td>
-                          <td>(uuid)</td>
-                        </tr>
-                        <tr>
-                          <td>id_disp</td>
-                          <td>string</td>
-                          <td>表示用チケットID（接頭辞＋連番）</td>
-                        </tr>
-                        <tr>
-                          <td>project_id</td>
-                          <td>string</td>
-                          <td>プロジェクトID</td>
-                        </tr>
-                        <tr>
-                          <td>name</td>
-                          <td>string</td>
-                          <td>チケット名</td>
-                        </tr>
-                        <tr>
-                          <td>description</td>
-                          <td>string</td>
-                          <td>内容</td>
-                        </tr>
-                        <tr>
-                          <td>start_date</td>
-                          <td>string</td>
-                          <td>開始日</td>
-                        </tr>
-                        <tr>
-                          <td>end_date</td>
-                          <td>string</td>
-                          <td>終了日</td>
-                        </tr>
-                        <tr>
-                          <td>progress</td>
-                          <td>number</td>
-                          <td>進捗率</td>
-                        </tr>
-                        <tr>
-                          <td>priority</td>
-                          <td>string</td>
-                          <td>優先度</td>
-                        </tr>
-                        <tr>
-                          <td>parent</td>
-                          <td>string</td>
-                          <td>親チケット</td>
-                        </tr>
-                        <tr>
-                          <td>deliverables</td>
-                          <td>string</td>
-                          <td>成果物(JSON)</td>
-                        </tr>
-                        <tr>
-                          <td>owner</td>
-                          <td>string</td>
-                          <td>登録ユーザー</td>
-                        </tr>
-                        <tr>
-                          <td>history</td>
-                          <td>string</td>
-                          <td>更新履歴(JSON)</td>
-                        </tr>
-                        <tr>
-                          <td>created_at</td>
-                          <td>timestamp</td>
-                          <td> </td>
-                        </tr>
-                        <tr>
-                          <td>deleted</td>
-                          <td>boolean</td>
-                          <td>false:有効, true:削除済</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <!-- ticket_note-->
-                <div class="row">
-                  <div class="col">
+                    <!-- ticket-->
+                    <section class="py-2">
+                      <h3>ticket</h3>
+                      <p>チケット情報を保持する。</p>
+                      <table class="table table-sm table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col">項目名</th>
+                            <th scope="col">型</th>
+                            <th scope="col">説明</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>id</td>
+                            <td>string</td>
+                            <td>(uuid)</td>
+                          </tr>
+                          <tr>
+                            <td>id_disp</td>
+                            <td>string</td>
+                            <td>表示用チケットID（接頭辞＋連番）</td>
+                          </tr>
+                          <tr>
+                            <td>project_id</td>
+                            <td>string</td>
+                            <td>プロジェクトID</td>
+                          </tr>
+                          <tr>
+                            <td>name</td>
+                            <td>string</td>
+                            <td>チケット名</td>
+                          </tr>
+                          <tr>
+                            <td>description</td>
+                            <td>string</td>
+                            <td>内容</td>
+                          </tr>
+                          <tr>
+                            <td>start_date</td>
+                            <td>string</td>
+                            <td>開始日</td>
+                          </tr>
+                          <tr>
+                            <td>end_date</td>
+                            <td>string</td>
+                            <td>終了日</td>
+                          </tr>
+                          <tr>
+                            <td>progress</td>
+                            <td>number</td>
+                            <td>進捗率</td>
+                          </tr>
+                          <tr>
+                            <td>priority</td>
+                            <td>string</td>
+                            <td>優先度</td>
+                          </tr>
+                          <tr>
+                            <td>parent</td>
+                            <td>string</td>
+                            <td>親チケット</td>
+                          </tr>
+                          <tr>
+                            <td>deliverables</td>
+                            <td>string</td>
+                            <td>成果物(JSON)</td>
+                          </tr>
+                          <tr>
+                            <td>owner</td>
+                            <td>string</td>
+                            <td>登録ユーザー</td>
+                          </tr>
+                          <tr>
+                            <td>history</td>
+                            <td>string</td>
+                            <td>更新履歴(JSON)</td>
+                          </tr>
+                          <tr>
+                            <td>created_at</td>
+                            <td>timestamp</td>
+                            <td> </td>
+                          </tr>
+                          <tr>
+                            <td>deleted</td>
+                            <td>boolean</td>
+                            <td>false:有効, true:削除済</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </section>
                     <hr>
-                    <h3>ticket_note</h3>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">チケットのノートの情報を保持する。</div>
-                </div>
-                <div class="row py-2">
-                  <div class="col">
-                    <table class="table table-sm table-bordered">
-                      <thead>
-                        <tr>
-                          <th scope="col">項目名</th>
-                          <th scope="col">型</th>
-                          <th scope="col">説明</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>string</td>
-                          <td>チケットID</td>
-                        </tr>
-                        <tr>
-                          <td>note</td>
-                          <td>string</td>
-                          <td>ノート（マークダウン）</td>
-                        </tr>
-                        <tr>
-                          <td>history</td>
-                          <td>string</td>
-                          <td>更新履歴(JSON)</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <!-- ticket_member-->
-                <div class="row">
-                  <div class="col">
+                    <!-- ticket_note-->
+                    <section class="py-2">
+                      <h3>ticket_note</h3>
+                      <p>チケットのノートの情報を保持する。</p>
+                      <table class="table table-sm table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col">項目名</th>
+                            <th scope="col">型</th>
+                            <th scope="col">説明</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>id</td>
+                            <td>string</td>
+                            <td>チケットID</td>
+                          </tr>
+                          <tr>
+                            <td>note</td>
+                            <td>string</td>
+                            <td>ノート（マークダウン）</td>
+                          </tr>
+                          <tr>
+                            <td>history</td>
+                            <td>string</td>
+                            <td>更新履歴(JSON)</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </section>
                     <hr>
-                    <h3>ticket_member</h3>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">チケットの担当者の情報を保持する。</div>
-                </div>
-                <div class="row py-2">
-                  <div class="col">
-                    <table class="table table-sm table-bordered">
-                      <thead>
-                        <tr>
-                          <th scope="col">項目名</th>
-                          <th scope="col">型</th>
-                          <th scope="col">説明</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>string</td>
-                          <td>チケットID</td>
-                        </tr>
-                        <tr>
-                          <td>uid</td>
-                          <td>string</td>
-                          <td>ユーザーID</td>
-                        </tr>
-                        <tr>
-                          <td>seq</td>
-                          <td>number</td>
-                          <td>表示順</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <!-- news-->
-                <div class="row">
-                  <div class="col">
+                    <!-- ticket_member-->
+                    <section class="py-2">
+                      <h3>ticket_member</h3>
+                      <p>チケットの担当者の情報を保持する。</p>
+                      <table class="table table-sm table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col">項目名</th>
+                            <th scope="col">型</th>
+                            <th scope="col">説明</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>id</td>
+                            <td>string</td>
+                            <td>チケットID</td>
+                          </tr>
+                          <tr>
+                            <td>uid</td>
+                            <td>string</td>
+                            <td>ユーザーID</td>
+                          </tr>
+                          <tr>
+                            <td>seq</td>
+                            <td>number</td>
+                            <td>表示順</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </section>
                     <hr>
-                    <h3>news</h3>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">ユーザーへのお知らせの情報を保持する。</div>
-                </div>
-                <div class="row py-2">
-                  <div class="col">
-                    <table class="table table-sm table-bordered">
-                      <thead>
-                        <tr>
-                          <th scope="col">項目名</th>
-                          <th scope="col">型</th>
-                          <th scope="col">説明</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>string</td>
-                          <td>(uuid)</td>
-                        </tr>
-                        <tr>
-                          <td>uid</td>
-                          <td>string</td>
-                          <td>ユーザーID</td>
-                        </tr>
-                        <tr>
-                          <td>timestamp</td>
-                          <td>timestamp</td>
-                          <td>日時</td>
-                        </tr>
-                        <tr>
-                          <td>contents</td>
-                          <td>string</td>
-                          <td>お知らせ内容</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                    <!-- news-->
+                    <section class="py-2">
+                      <h3>news</h3>
+                      <p>ユーザーへのお知らせの情報を保持する。</p>
+                      <table class="table table-sm table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col">項目名</th>
+                            <th scope="col">型</th>
+                            <th scope="col">説明</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>id</td>
+                            <td>string</td>
+                            <td>(uuid)</td>
+                          </tr>
+                          <tr>
+                            <td>uid</td>
+                            <td>string</td>
+                            <td>ユーザーID</td>
+                          </tr>
+                          <tr>
+                            <td>timestamp</td>
+                            <td>timestamp</td>
+                            <td>日時</td>
+                          </tr>
+                          <tr>
+                            <td>contents</td>
+                            <td>string</td>
+                            <td>お知らせ内容</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </section>
+                  </section>
+                </section>
               </div>
               <div class="col-md-3">
                 <div class="submenu mt-3">

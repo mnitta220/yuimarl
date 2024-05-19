@@ -19,125 +19,128 @@ html(lang="ja")
 
             .row
               .col-md-9
-                .row
-                  .col
-                    h2.pt-3.pb-1 Yuimarlの仕様
-                .row
-                  .col
-                    hr
-                    h3 ユーザー認証
-                    p 以下のいずれかのメールアドレスまたはアカウントでログインする。
-                    ul
-                      li メールアドレス
-                      li Google
-                      li Facebook
-                      li X
-                      li Github
-                      li Apple
-                      li Yahoo!
-                    p 利用規約に同意したら、システムのユーザーとして登録される。
-                    hr
-                    h3 プロジェクト
-                    ul
-                      li プロジェクトを作成したユーザーがオーナーになる。
-                      li 一人のユーザーが登録できるのは、最大で10個のプロジェクト。（他のユーザーが作成したプロジェクトには、何個でも参加できる）
-                      li 登録済みのユーザーを検索して、プロジェクトのメンバーとして登録することができる。メンバーには、オーナー/管理者/メンバー/閲覧者のいずれかのロールを付与する。
-                      li ロールが付与されていないユーザーは、閲覧も更新もできない。
-                      li １つのプロジェクトには、（オーナーを含めて）最大で20人のメンバーを追加することができる。
-                      li プロジェクトに21人以上のユーザーを追加したい場合は、有料での対応となる。
-                    h5 ロールの権限
-                    table.table.table-bordered
-                      tr
-                        th 機能
-                        th オーナー
-                        th 管理者
-                        th メンバー
-                        th 閲覧者
-                      tr
-                        td プロジェクトを削除
-                        td 〇
-                        td ×
-                        td ×
-                        td ×
-                      tr
-                        td メンバーを追加
-                        td 〇
-                        td 〇
-                        td ×
-                        td ×
-                      tr
-                        td メンバー情報を閲覧
-                        td 〇
-                        td 〇
-                        td 〇
-                        td 〇
-                      tr
-                        td メンバー情報を更新
-                        td 〇
-                        td 〇
-                        td ×
-                        td ×
-                      tr
-                        td メンバーを削除
-                        td 〇
-                        td 〇
-                        td ×
-                        td ×
-                      tr
-                        td チケットを作成
-                        td 〇
-                        td 〇
-                        td 〇
-                        td ×
+                section
+                  h2.pt-3.pb-1 Yuimarlの仕様
+                  hr
+                  section
+                    section.pb-2
+                      h3 ユーザー認証
+                      p 以下のいずれかのメールアドレスまたはアカウントでログインする。
+                      ul
+                        li メールアドレス
+                        li Google
+                        li Facebook
+                        li X
+                        li Github
+                        li Apple
+                        li Yahoo!
+                      p 利用規約に同意したら、システムのユーザーとして登録される。
+                      hr
+                    section.pb-2
+                      h3 プロジェクト
+                      ul
+                        li プロジェクトを作成したユーザーがオーナーになる。
+                        li 一人のユーザーが登録できるのは、最大で10個のプロジェクト。（他のユーザーが作成したプロジェクトには、何個でも参加できる）
+                        li 登録済みのユーザーを検索して、プロジェクトのメンバーとして登録することができる。メンバーには、オーナー/管理者/メンバー/閲覧者のいずれかのロールを付与する。
+                        li ロールが付与されていないユーザーは、閲覧も更新もできない。
+                        li １つのプロジェクトには、（オーナーを含めて）最大で20人のメンバーを追加することができる。
+                        li プロジェクトに21人以上のユーザーを追加したい場合は、有料での対応となる。
+                      section.pb-2
+                        h5 ロールの権限
+                        table.table.table-bordered
+                          tr
+                            th 機能
+                            th オーナー
+                            th 管理者
+                            th メンバー
+                            th 閲覧者
+                          tr
+                            td プロジェクトを削除
+                            td 〇
+                            td ×
+                            td ×
+                            td ×
+                          tr
+                            td メンバーを追加
+                            td 〇
+                            td 〇
+                            td ×
+                            td ×
+                          tr
+                            td メンバー情報を閲覧
+                            td 〇
+                            td 〇
+                            td 〇
+                            td 〇
+                          tr
+                            td メンバー情報を更新
+                            td 〇
+                            td 〇
+                            td ×
+                            td ×
+                          tr
+                            td メンバーを削除
+                            td 〇
+                            td 〇
+                            td ×
+                            td ×
+                          tr
+                            td チケットを作成
+                            td 〇
+                            td 〇
+                            td 〇
+                            td ×
 
-                    hr
-                    h3 チケット
-                    ul
-                      li チケットには、接頭辞＋連番のIDが付与される。
-                      li １つのプロジェクトには、最大で1000個のチケットを作成することができる。（削除したチケットも1個とカウントされる）
-                      li 1001個以上のチケットを作成したい場合は、有料での対応となる。
-                    h5 ロールの権限
-                    table.table.table-bordered
-                      tr
-                        th 機能
-                        th 作成者
-                        th 担当者
-                        th オーナー
-                        th 管理者
-                        th メンバー
-                        th 閲覧者
-                      tr
-                        td チケットを閲覧
-                        td 〇
-                        td 〇
-                        td 〇
-                        td 〇
-                        td 〇
-                        td 〇
-                      tr
-                        td チケットを更新
-                        td 〇
-                        td 〇
-                        td 〇
-                        td 〇
-                        td ×
-                        td ×
-                      tr
-                        td コメントを追加
-                        td 〇
-                        td 〇
-                        td 〇
-                        td 〇
-                        td 〇
-                        td ×
-                      tr
-                        td チケットを削除
-                        td 〇
-                        td ×
-                        td 〇
-                        td 〇
-                        td ×
-                        td ×
+                      hr
+                    section.pb-2
+                      h3 チケット
+                      ul
+                        li チケットには、接頭辞＋連番のIDが付与される。
+                        li １つのプロジェクトには、最大で1000個のチケットを作成することができる。（削除したチケットも1個とカウントされる）
+                        li 1001個以上のチケットを作成したい場合は、有料での対応となる。
+                      section.pb-2
+                        h5 ロールの権限
+                        table.table.table-bordered
+                          tr
+                            th 機能
+                            th 作成者
+                            th 担当者
+                            th オーナー
+                            th 管理者
+                            th メンバー
+                            th 閲覧者
+                          tr
+                            td チケットを閲覧
+                            td 〇
+                            td 〇
+                            td 〇
+                            td 〇
+                            td 〇
+                            td 〇
+                          tr
+                            td チケットを更新
+                            td 〇
+                            td 〇
+                            td 〇
+                            td 〇
+                            td ×
+                            td ×
+                          tr
+                            td コメントを追加
+                            td 〇
+                            td 〇
+                            td 〇
+                            td 〇
+                            td 〇
+                            td ×
+                          tr
+                            td チケットを削除
+                            td 〇
+                            td ×
+                            td 〇
+                            td 〇
+                            td ×
+                            td ×
 
               .col-md-3
                 .submenu.mt-3

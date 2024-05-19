@@ -19,83 +19,90 @@ html(lang="ja")
 
             .row
               .col-md-9
-                .row
-                  .col
-                    h2.pt-3.pb-1 開発情報
-                .row
-                  .col
+                section.pt-3
+                  h2.pb-1 開発情報
+                  section
                     hr
-                    h3 開発の手順
-                    p Yuimarlの開発は、以下の手順で行います。
-                    ol
-                      li
-                        a(href="#step01") 仕様書を作成する
-                      li
-                        a(href="#step02") 画面を設計する
-                      li
-                        a(href="#step03") コントローラーとコンポーネントのコードを作る
-                      li
-                        a(href="#step04") モデルのコードを作る
-                      li
-                        a(href="#step05") Rustのコードを完成させる
-                      li
-                        a(href="#step06") Dockerイメージを作る
-                      li
-                        a(href="#step07") 開発環境にデプロイしてテストする
-                      li
-                        a(href="#step08") 本番環境にリリースする
-                    hr
-                    h5#step01 仕様書を作成する
-                    p システムの仕様を決めて仕様書を作成します。
-                    a(href="spec.html") Yuimarlの仕様
-                    hr
-                    h5#step02 画面を設計する
-                    p
-                      | 画面を設計して、プロトタイプを作成します。
-                      br
-                      | プロトタイプは、proto フォルダにあります。
-                      br
-                      a(href="images/screen03.png")
-                        img.border.border-info.border-1.img-fluid(src="images/screen03.png" alt="protoフォルダ")
-                    p
-                      | Yuimarl では&nbsp;
-                      a(href="https://getbootstrap.jp/" target="_blank") Bootstrap
-                      | &nbsp;が使われているので、Bootstrap についての知識が必要です。（参考書籍: 『Bootstrap 5 フロントエンド開発の教科書』&nbsp;）
-                      br
-                      | プロトタイプは、画面操作のシナリオを作成し、各画目の&nbsp;
-                      a(href="https://pugjs.org/api/getting-started.html" target="_blank") pug
-                      | &nbsp;を作成し、pug をコンパイルして html を生成します。
-                      br
-                      | 生成された html をブラウザで表示して確認し、必要に応じて修正します。
-                    p
-                      | たとえば、プロジェクト作成のシナリオのプロトタイプは、次の場所にあります。
-                      br
-                      a(href="https://github.com/mnitta220/yuimarl/tree/main/proto/02_project_add" target="_blank") https://github.com/mnitta220/yuimarl/tree/main/proto/02_project_add
-                    p proto/02_project_add のフォルダにある pug をコンパイルするには、次のコマンドを実行します。
-                    code
-                      | pug -P proto/02_project_add
-                    br
-                    hr
-                    h5#step03 コントローラーとコンポーネントのコードを作る
-                    p 
-                      | プロトタイプの固定 html を表示する Rust のコードを実装します。
-                    hr
-                    h5#step04 モデルのコードを作る
-                    p
-                      | Firestore に保存するデータの定義を作成し、モデルのコードを実装します。
-                    ul
-                      li
-                        a(href="database.html") データベース
-                      li 
-                        a(href="https://github.com/mnitta220/yuimarl/tree/main/src/model" target="_blank") モデルのソースコード
-                    hr
-                    h5#step05 Rustのコードを完成させる
-                    hr
-                    h5#step06 Dockerイメージを作る
-                    hr
-                    h5#step07 開発環境にデプロイしてテストする
-                    hr
-                    h5#step08 本番環境にリリースする
+                    section
+                      h3 開発の手順
+                      p Yuimarlの開発は、以下の手順で行います。
+                      ol.pb-2
+                        li
+                          a(href="#step01") 仕様書を作成する
+                        li
+                          a(href="#step02") 画面を設計する
+                        li
+                          a(href="#step03") コントローラーとコンポーネントのコードを作る
+                        li
+                          a(href="#step04") モデルのコードを作る
+                        li
+                          a(href="#step05") Rustのコードを完成させる
+                        li
+                          a(href="#step06") Dockerイメージを作る
+                        li
+                          a(href="#step07") 開発環境にデプロイしてテストする
+                        li
+                          a(href="#step08") 本番環境にリリースする
+                      hr
+                      section.pb-2
+                        h4#step01 仕様書を作成する
+                        p システムの仕様を決めて仕様書を作成します。
+                        a(href="spec.html") Yuimarlの仕様
+                      hr
+                      section.pb-2
+                        h4#step02 画面を設計する
+                        p
+                          | 画面を設計して、プロトタイプを作成します。
+                          br
+                          | プロトタイプは、proto フォルダにあります。
+                          br
+                          a(href="images/screen03.png")
+                            img.border.border-info.border-1.img-fluid(src="images/screen03.png" alt="protoフォルダ")
+                        p
+                          | Yuimarl では&nbsp;
+                          a(href="https://getbootstrap.jp/" target="_blank") Bootstrap
+                          | &nbsp;が使われているので、Bootstrap についての知識が必要です。（参考書籍: 『Bootstrap 5 フロントエンド開発の教科書』&nbsp;）
+                          br
+                          | プロトタイプは、画面操作のシナリオを作成し、各画目の&nbsp;
+                          a(href="https://pugjs.org/api/getting-started.html" target="_blank") pug
+                          | &nbsp;を作成し、pug をコンパイルして html を生成します。
+                          br
+                          | 生成された html をブラウザで表示して確認し、必要に応じて修正します。
+                        p
+                          | たとえば、プロジェクト作成のシナリオのプロトタイプは、次の場所にあります。
+                          br
+                          a(href="https://github.com/mnitta220/yuimarl/tree/main/proto/02_project_add" target="_blank") https://github.com/mnitta220/yuimarl/tree/main/proto/02_project_add
+                        p proto/02_project_add のフォルダにある pug をコンパイルするには、次のコマンドを実行します。
+                        code
+                          | pug -P proto/02_project_add
+                        br
+                      hr
+                      section.pb-2
+                        h4#step03 コントローラーとコンポーネントのコードを作る
+                        p 
+                          | プロトタイプの固定 html を表示する Rust のコードを実装します。
+                      hr
+                      section.pb-2
+                        h4#step04 モデルのコードを作る
+                        p
+                          | Firestore に保存するデータの定義を作成し、モデルのコードを実装します。
+                        ul
+                          li
+                            a(href="database.html") データベース
+                          li 
+                            a(href="https://github.com/mnitta220/yuimarl/tree/main/src/model" target="_blank") モデルのソースコード
+                      hr
+                      section.pb-2
+                        h4#step05 Rustのコードを完成させる
+                      hr
+                      section.pb-2
+                        h4#step06 Dockerイメージを作る
+                      hr
+                      section.pb-2
+                        h4#step07 開発環境にデプロイしてテストする
+                      hr
+                      section.pb-2
+                        h4#step08 本番環境にリリースする
 
               .col-md-3
                 .submenu.mt-3

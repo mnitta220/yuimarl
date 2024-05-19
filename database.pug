@@ -19,364 +19,323 @@ html(lang="ja")
 
             .row
               .col-md-9
-                .row
-                  .col
-                    h2.pt-3.pb-1 データベース
-                .row
-                  .col
-                    p Firestore Database のコレクション
-                // user
-                .row
-                  .col
+                section
+                  h2.pt-3.pb-1 データベース
+                  p.pb-3 Firestore Database のコレクション
+
+                  section
                     hr
-                    h3 user
-                .row
-                  .col
-                    | ユーザー情報を保持する。
-                .row.py-2
-                  .col
-                    table.table.table-sm.table-bordered
-                      thead
-                        tr
-                          th(scope="col") 項目名
-                          th(scope="col") 型
-                          th(scope="col") 説明
-                      tbody
-                        tr
-                          td uid
-                          td string
-                          td 
-                        tr
-                          td name
-                          td string
-                          td 
-                        tr
-                          td email
-                          td string
-                          td 
-                        tr
-                          td photo_url
-                          td string
-                          td 
-                        tr
-                          td status
-                          td number
-                          td 0:未承認, 1:承認, 2:禁止
-                        tr
-                          td created_at
-                          td timestamp
-                          td 
-                        tr
-                          td last_login
-                          td timestamp
-                          td 
-                // session
-                .row
-                  .col
+                    // user
+                    section.py-2
+                      h3 user
+                      p ユーザー情報を保持する。
+                      table.table.table-sm.table-bordered
+                        thead
+                          tr
+                            th(scope="col") 項目名
+                            th(scope="col") 型
+                            th(scope="col") 説明
+                        tbody
+                          tr
+                            td uid
+                            td string
+                            td 
+                          tr
+                            td name
+                            td string
+                            td 
+                          tr
+                            td email
+                            td string
+                            td 
+                          tr
+                            td photo_url
+                            td string
+                            td 
+                          tr
+                            td status
+                            td number
+                            td 0:未承認, 1:承認, 2:禁止
+                          tr
+                            td created_at
+                            td timestamp
+                            td 
+                          tr
+                            td last_login
+                            td timestamp
+                            td 
                     hr
-                    h3 session
-                .row
-                  .col
-                    | セッション情報を保持する。
-                .row.py-2
-                  .col
-                    table.table.table-sm.table-bordered
-                      thead
-                        tr
-                          th(scope="col") 項目名
-                          th(scope="col") 型
-                          th(scope="col") 説明
-                      tbody
-                        tr
-                          td id
-                          td string
-                          td セッションID (uuid)
-                        tr
-                          td uid
-                          td string
-                          td ユーザーID
-                        tr
-                          td name
-                          td string
-                          td ユーザー名
-                        tr
-                          td email
-                          td string
-                          td 
-                        tr
-                          td photo_url
-                          td string
-                          td 
-                        tr
-                          td created_at
-                          td timestamp
-                          td 
-                // project
-                .row
-                  .col
+                    // session
+                    section.py-2
+                      h3 session
+                      p セッション情報を保持する。
+                      table.table.table-sm.table-bordered
+                        thead
+                          tr
+                            th(scope="col") 項目名
+                            th(scope="col") 型
+                            th(scope="col") 説明
+                        tbody
+                          tr
+                            td id
+                            td string
+                            td セッションID (uuid)
+                          tr
+                            td uid
+                            td string
+                            td ユーザーID
+                          tr
+                            td name
+                            td string
+                            td ユーザー名
+                          tr
+                            td email
+                            td string
+                            td 
+                          tr
+                            td photo_url
+                            td string
+                            td 
+                          tr
+                            td created_at
+                            td timestamp
+                            td 
                     hr
-                    h3 project
-                .row
-                  .col
-                    | プロジェクト情報を保持する。
-                .row.py-2
-                  .col
-                    table.table.table-sm.table-bordered
-                      thead
-                        tr
-                          th(scope="col") 項目名
-                          th(scope="col") 型
-                          th(scope="col") 説明
-                      tbody
-                        tr
-                          td id
-                          td string
-                          td プロジェクトID (uuid)
-                        tr
-                          td project_name
-                          td string
-                          td プロジェクト名
-                        tr
-                          td owner
-                          td string
-                          td プロジェクトオーナー（プロジェクトの作成者）
-                        tr
-                          td prefix
-                          td string
-                          td チケット接頭辞
-                        tr
-                          td language
-                          td string
-                          td 言語（"ja"固定）
-                        tr
-                          td member_limit
-                          td number
-                          td 最大メンバー数（20固定）
-                        tr
-                          td ticket_limit
-                          td number
-                          td 最大チケット番号（1000固定）
-                        tr
-                          td ticket_number
-                          td string
-                          td チケット番号
-                        tr
-                          td note
-                          td string
-                          td ノート（マークダウン）
-                        tr
-                          td created_at
-                          td timestamp
-                          td 作成日時
-                        tr
-                          td deleted
-                          td boolean
-                          td 削除フラグ true:削除済
-                // project_member
-                .row
-                  .col
+                    // project
+                    section.py-2
+                      h3 project
+                      p プロジェクト情報を保持する。
+                      table.table.table-sm.table-bordered
+                        thead
+                          tr
+                            th(scope="col") 項目名
+                            th(scope="col") 型
+                            th(scope="col") 説明
+                        tbody
+                          tr
+                            td id
+                            td string
+                            td プロジェクトID (uuid)
+                          tr
+                            td project_name
+                            td string
+                            td プロジェクト名
+                          tr
+                            td owner
+                            td string
+                            td プロジェクトオーナー（プロジェクトの作成者）
+                          tr
+                            td prefix
+                            td string
+                            td チケット接頭辞
+                          tr
+                            td language
+                            td string
+                            td 言語（"ja"固定）
+                          tr
+                            td member_limit
+                            td number
+                            td 最大メンバー数（20固定）
+                          tr
+                            td ticket_limit
+                            td number
+                            td 最大チケット番号（1000固定）
+                          tr
+                            td ticket_number
+                            td string
+                            td チケット番号
+                          tr
+                            td note
+                            td string
+                            td ノート（マークダウン）
+                          tr
+                            td created_at
+                            td timestamp
+                            td 作成日時
+                          tr
+                            td deleted
+                            td boolean
+                            td 削除フラグ true:削除済
                     hr
-                    h3 project_member
-                .row
-                  .col
-                    | プロジェクトのメンバー情報を保持する。
-                .row.py-2
-                  .col
-                    table.table.table-sm.table-bordered
-                      thead
-                        tr
-                          th(scope="col") 項目名
-                          th(scope="col") 型
-                          th(scope="col") 説明
-                      tbody
-                        tr
-                          td id
-                          td string
-                          td (uuid)
-                        tr
-                          td project_id
-                          td string
-                          td プロジェクトID
-                        tr
-                          td member
-                          td string
-                          td メンバーのユーザーID
-                        tr
-                          td role
-                          td number
-                          td ロール 1:オーナー, 2:管理者, 3:メンバー, 4:閲覧者
-                        tr
-                          td last_used
-                          td timestamp
-                          td 最終使用日時
-                // ticket
-                .row
-                  .col
+                    // project_member
+                    section.py-2
+                      h3 project_member
+                      p プロジェクトのメンバー情報を保持する。
+                      table.table.table-sm.table-bordered
+                        thead
+                          tr
+                            th(scope="col") 項目名
+                            th(scope="col") 型
+                            th(scope="col") 説明
+                        tbody
+                          tr
+                            td id
+                            td string
+                            td (uuid)
+                          tr
+                            td project_id
+                            td string
+                            td プロジェクトID
+                          tr
+                            td member
+                            td string
+                            td メンバーのユーザーID
+                          tr
+                            td role
+                            td number
+                            td ロール 1:オーナー, 2:管理者, 3:メンバー, 4:閲覧者
+                          tr
+                            td last_used
+                            td timestamp
+                            td 最終使用日時
                     hr
-                    h3 ticket
-                .row
-                  .col
-                    | チケット情報を保持する。
-                .row.py-2
-                  .col
-                    table.table.table-sm.table-bordered
-                      thead
-                        tr
-                          th(scope="col") 項目名
-                          th(scope="col") 型
-                          th(scope="col") 説明
-                      tbody
-                        tr
-                          td id
-                          td string
-                          td (uuid)
-                        tr
-                          td id_disp
-                          td string
-                          td 表示用チケットID（接頭辞＋連番）
-                        tr
-                          td project_id
-                          td string
-                          td プロジェクトID
-                        tr
-                          td name
-                          td string
-                          td チケット名
-                        tr
-                          td description
-                          td string
-                          td 内容
-                        tr
-                          td start_date
-                          td string
-                          td 開始日
-                        tr
-                          td end_date
-                          td string
-                          td 終了日
-                        tr
-                          td progress
-                          td number
-                          td 進捗率
-                        tr
-                          td priority
-                          td string
-                          td 優先度
-                        tr
-                          td parent
-                          td string
-                          td 親チケット
-                        tr
-                          td deliverables
-                          td string
-                          td 成果物(JSON)
-                        tr
-                          td owner
-                          td string
-                          td 登録ユーザー
-                        tr
-                          td history
-                          td string
-                          td 更新履歴(JSON)
-                        tr
-                          td created_at
-                          td timestamp
-                          td 
-                        tr
-                          td deleted
-                          td boolean
-                          td false:有効, true:削除済
-                // ticket_note
-                .row
-                  .col
+                    // ticket
+                    section.py-2
+                      h3 ticket
+                      p チケット情報を保持する。
+                      table.table.table-sm.table-bordered
+                        thead
+                          tr
+                            th(scope="col") 項目名
+                            th(scope="col") 型
+                            th(scope="col") 説明
+                        tbody
+                          tr
+                            td id
+                            td string
+                            td (uuid)
+                          tr
+                            td id_disp
+                            td string
+                            td 表示用チケットID（接頭辞＋連番）
+                          tr
+                            td project_id
+                            td string
+                            td プロジェクトID
+                          tr
+                            td name
+                            td string
+                            td チケット名
+                          tr
+                            td description
+                            td string
+                            td 内容
+                          tr
+                            td start_date
+                            td string
+                            td 開始日
+                          tr
+                            td end_date
+                            td string
+                            td 終了日
+                          tr
+                            td progress
+                            td number
+                            td 進捗率
+                          tr
+                            td priority
+                            td string
+                            td 優先度
+                          tr
+                            td parent
+                            td string
+                            td 親チケット
+                          tr
+                            td deliverables
+                            td string
+                            td 成果物(JSON)
+                          tr
+                            td owner
+                            td string
+                            td 登録ユーザー
+                          tr
+                            td history
+                            td string
+                            td 更新履歴(JSON)
+                          tr
+                            td created_at
+                            td timestamp
+                            td 
+                          tr
+                            td deleted
+                            td boolean
+                            td false:有効, true:削除済
                     hr
-                    h3 ticket_note
-                .row
-                  .col
-                    | チケットのノートの情報を保持する。
-                .row.py-2
-                  .col
-                    table.table.table-sm.table-bordered
-                      thead
-                        tr
-                          th(scope="col") 項目名
-                          th(scope="col") 型
-                          th(scope="col") 説明
-                      tbody
-                        tr
-                          td id
-                          td string
-                          td チケットID
-                        tr
-                          td note
-                          td string
-                          td ノート（マークダウン）
-                        tr
-                          td history
-                          td string
-                          td 更新履歴(JSON)
-                // ticket_member
-                .row
-                  .col
+                    // ticket_note
+                    section.py-2
+                      h3 ticket_note
+                      p チケットのノートの情報を保持する。
+                      table.table.table-sm.table-bordered
+                        thead
+                          tr
+                            th(scope="col") 項目名
+                            th(scope="col") 型
+                            th(scope="col") 説明
+                        tbody
+                          tr
+                            td id
+                            td string
+                            td チケットID
+                          tr
+                            td note
+                            td string
+                            td ノート（マークダウン）
+                          tr
+                            td history
+                            td string
+                            td 更新履歴(JSON)
                     hr
-                    h3 ticket_member
-                .row
-                  .col
-                    | チケットの担当者の情報を保持する。
-                .row.py-2
-                  .col
-                    table.table.table-sm.table-bordered
-                      thead
-                        tr
-                          th(scope="col") 項目名
-                          th(scope="col") 型
-                          th(scope="col") 説明
-                      tbody
-                        tr
-                          td id
-                          td string
-                          td チケットID
-                        tr
-                          td uid
-                          td string
-                          td ユーザーID
-                        tr
-                          td seq
-                          td number
-                          td 表示順
-                // news
-                .row
-                  .col
+                    // ticket_member
+                    section.py-2
+                      h3 ticket_member
+                      p チケットの担当者の情報を保持する。
+                      table.table.table-sm.table-bordered
+                        thead
+                          tr
+                            th(scope="col") 項目名
+                            th(scope="col") 型
+                            th(scope="col") 説明
+                        tbody
+                          tr
+                            td id
+                            td string
+                            td チケットID
+                          tr
+                            td uid
+                            td string
+                            td ユーザーID
+                          tr
+                            td seq
+                            td number
+                            td 表示順
                     hr
-                    h3 news
-                .row
-                  .col
-                    | ユーザーへのお知らせの情報を保持する。
-                .row.py-2
-                  .col
-                    table.table.table-sm.table-bordered
-                      thead
-                        tr
-                          th(scope="col") 項目名
-                          th(scope="col") 型
-                          th(scope="col") 説明
-                      tbody
-                        tr
-                          td id
-                          td string
-                          td (uuid)
-                        tr
-                          td uid
-                          td string
-                          td ユーザーID
-                        tr
-                          td timestamp
-                          td timestamp
-                          td 日時
-                        tr
-                          td contents
-                          td string
-                          td お知らせ内容
+                    // news
+                    section.py-2
+                      h3 news
+                      p ユーザーへのお知らせの情報を保持する。
+                      table.table.table-sm.table-bordered
+                        thead
+                          tr
+                            th(scope="col") 項目名
+                            th(scope="col") 型
+                            th(scope="col") 説明
+                        tbody
+                          tr
+                            td id
+                            td string
+                            td (uuid)
+                          tr
+                            td uid
+                            td string
+                            td ユーザーID
+                          tr
+                            td timestamp
+                            td timestamp
+                            td 日時
+                          tr
+                            td contents
+                            td string
+                            td お知らせ内容
 
               .col-md-3
                 .submenu.mt-3

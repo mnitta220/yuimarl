@@ -65,18 +65,19 @@ html(lang="ja")
       include ../includes/footer2.pug
 
       hr
-      .row.align-items-end
-        .col-md-2.text-end.py-1
-          a.nav-link.px-2.px-md-0(href="step01.html") ← prev
-        .col-md-8
-          .alert.alert-danger.text-start(role="alert")
-            | プロジェクト一覧 step02.
-            br
-            | プロジェクト一覧には、ログインユーザーが関連付けられているプロジェクトが、最新使用日時の降順で一覧表示される。
-            br
-            | 最後に使ったプロジェクトが「選択中」となる。それ以外の「選択」をクリックすると、それが「選択中」になり、ホーム画面に遷移する。
-        .col-md-2.text-start.py-1
-          a.nav-link.px-2.px-md-0(href="step03.html") next →
+      .container
+        .row.align-items-end
+          .col-md-2.text-end.py-1
+            a.nav-link.px-2.px-md-0(href="step01.html") ← prev
+          .col-md-8
+            .alert.alert-danger.text-start(role="alert")
+              | プロジェクト一覧 step02.
+              br
+              | プロジェクト一覧には、ログインユーザーが関連付けられているプロジェクトが、最新使用日時の降順で一覧表示される。
+              br
+              | 最後に使ったプロジェクトが「選択中」となる。それ以外の「選択」をクリックすると、それが「選択中」になり、ホーム画面に遷移する。
+          .col-md-2.text-start.py-1
+            a.nav-link.px-2.px-md-0(href="step03.html") next →
 
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"

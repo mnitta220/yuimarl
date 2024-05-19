@@ -167,7 +167,7 @@ impl Component for ProjectInfo {
 
                     *buf += r#"<div class="col-3 text-end">"#;
                     {
-                        *buf += r#"<button class="btn btn-secondary" type="submit">"#;
+                        *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#projectDelModal">"##;
                         {
                             *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
                         }
@@ -315,6 +315,42 @@ impl Component for ProjectInfo {
                     {
                         *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
                         *buf += r#"<button class="btn btn-primary" id="btnUpdateMember" type="button">メンバーを更新</button>"#;
+                    }
+                    *buf += r#"</div>"#;
+                }
+                *buf += r#"</div>"#;
+            }
+            *buf += r#"</div>"#;
+        }
+        *buf += r#"</div>"#;
+
+        *buf += r#"<div class="modal fade" id="projectDelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">"#;
+        {
+            *buf += r#"<div class="modal-dialog">"#;
+            {
+                *buf += r#"<div class="modal-content">"#;
+                {
+                    *buf += r#"<div class="modal-header">"#;
+                    {
+                        *buf += r#"<h1 class="modal-title fs-5" id="projectDelModalLabel">プロジェクト削除</h1>"#;
+                        *buf += r#"<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="modal-body">"#;
+                    {
+                        *buf += r#"<p>プロジェクトを削除してもよいですか？</p>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="modal-footer">"#;
+                    {
+                        *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
+                        *buf += r#"<button class="btn btn-danger" type="button">"#;
+                        {
+                            *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
+                        }
+                        *buf += r#"</button>"#;
                     }
                     *buf += r#"</div>"#;
                 }

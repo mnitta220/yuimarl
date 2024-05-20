@@ -20,6 +20,7 @@ mod components;
 mod handlers;
 mod model;
 mod pages;
+mod validation;
 
 static GOOGLE_PROJECT_ID: OnceCell<String> = OnceCell::new();
 static API_KEY: OnceCell<String> = OnceCell::new();

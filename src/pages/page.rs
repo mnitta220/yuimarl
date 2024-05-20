@@ -1,6 +1,6 @@
 use crate::{
     components::{head::Head, Component},
-    model,
+    model, validation,
 };
 
 // buffer size for outputting HTML content.
@@ -13,7 +13,7 @@ pub struct Props {
     pub project: Option<model::project::Project>,
     pub member: Option<model::project::ProjectMember>,
     pub members: Vec<model::project::ProjectMember>,
-    pub project_validation: Option<model::project::ProjectValidation>,
+    pub project_validation: Option<validation::project::ProjectValidation>,
     //pub projects: Vec<model::project::Project>,
     pub ticket: Option<model::ticket::Ticket>,
     pub ticket_validation: Option<model::ticket::TicketValidation>,

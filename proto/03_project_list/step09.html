@@ -29,62 +29,55 @@
           <h3 class="mb-3">プロジェクト</h3>
           <div class="pb-2">
             <ul class="nav nav-tabs">
-              <li class="nav-item"><a class="nav-link active" href="#">基本情報</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">基本情報</a></li>
               <li class="nav-item"><a class="nav-link" href="#">ノート</a></li>
-              <li class="nav-item"><a class="nav-link" href="#">更新履歴</a></li>
+              <li class="nav-item"><a class="nav-link active" href="#">更新履歴</a></li>
             </ul>
           </div>
-          <form>
-            <!-- プロジェクト名-->
-            <div class="row py-2">
-              <label class="col-md-3 col-form-label bg-light mb-1" for="name">プロジェクト名</label>
-              <div class="col-md-9 mb-1"><span>文化祭実行プロジェクト</span></div>
-            </div>
-            <!-- チケットID接頭辞-->
-            <div class="row py-2">
-              <label class="col-md-3 col-form-label bg-light mb-1" for="prefix">チケットID接頭辞</label>
-              <div class="col-md-9 mb-1"><span>BN</span></div>
-            </div>
-            <!-- メンバー-->
-            <div class="row py-2">
-              <label class="col-md-3 col-form-label bg-light mb-1" for="member">メンバー</label>
-              <div class="col-md-9 mb-1">
+          <div class="pb-2">
+            <div class="row">
+              <div class="col">
                 <div class="form-floating">
                   <table class="table table-hover">
                     <thead>
                       <tr>
-                        <th scope="col">ロール</th>
-                        <th scope="col">メールアドレス</th>
-                        <th scope="col">名前</th>
+                        <th scope="col">日時 (JST)</th>
+                        <th scope="col">更新者</th>
+                        <th scope="col">更新箇所</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>オーナー</td>
-                        <td>taro.yamada@mail.com</td>
+                        <td>2024/09/05 16:31</td>
                         <td>山田太郎</td>
+                        <td>プロジェクト作成</td>
                       </tr>
                       <tr>
-                        <td>管理者</td>
-                        <td>kazuto.tonoma@mail.com</td>
-                        <td>殿馬一人</td>
+                        <td>2024/09/05 17:03</td>
+                        <td>山田太郎</td>
+                        <td>基本情報</td>
                       </tr>
                       <tr>
-                        <td>メンバー</td>
-                        <td>masami.iwaki@mail.com</td>
+                        <td>2024/09/05 17:10</td>
+                        <td>山田太郎</td>
+                        <td>ノート</td>
+                      </tr>
+                      <tr>
+                        <td>2024/09/06 12:46</td>
                         <td>岩鬼正美</td>
+                        <td>基本情報</td>
                       </tr>
                       <tr>
-                        <td>閲覧者</td>
-                        <td>satoru.satonaka@mail.com</td>
-                        <td>里中智</td>
+                        <td>2024/09/07 08:54</td>
+                        <td>殿馬一人</td>
+                        <td>ノート</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </main>
@@ -102,11 +95,11 @@
       <hr>
       <div class="container">
         <div class="row align-items-end">
-          <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step05.html">← prev</a></div>
+          <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step08.html">← prev</a></div>
           <div class="col-md-8">
-            <div class="alert alert-danger text-start" role="alert">プロジェクト一覧 step06.<br>ログインユーザーのロールがメンバーまたは閲覧者の場合は、プロジェクトを更新できない画面になる。</div>
+            <div class="alert alert-danger text-start" role="alert">プロジェクト一覧 step09.<br>更新履歴タブをクリックすると、プロジェクトの基本情報かノートを更新した履歴が表示される。<br>表示されるのは、プロジェクト作成と、直近の50履歴。</div>
           </div>
-          <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step07.html">next →</a></div>
+          <div class="col-md-2 text-start py-1"></div>
         </div>
       </div>
     </footer>

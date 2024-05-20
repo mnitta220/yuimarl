@@ -100,22 +100,6 @@ impl Component for ProjectBody {
                                 *buf += r#"</ul>"#;
                             }
                             *buf += r#"</div>"#;
-
-                            /*
-                                *buf += r#"<input type="hidden" name="project_id" value=""#;
-                                if let Some(id) = &p.id {
-                                    *buf += id;
-                                }
-                                *buf += r#"">"#;
-                                *buf += r#"<input type="hidden" name="timestamp" value=""#;
-                                if let Some(up) = &p.updated_at {
-                                    *buf += &up.timestamp().to_string();
-                                }
-                                *buf += r#"">"#;
-                            } else {
-                                *buf += r#"<input type="hidden" name="project_id" value="">"#;
-                                *buf += r#"<input type="hidden" name="timestamp" value="">"#;
-                                */
                         }
 
                         match &props.project_tab {

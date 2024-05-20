@@ -27,10 +27,10 @@ html(lang="ja")
             .row.py-2
               .col
                 .form-check.form-switch
-                  input.form-check-input#edit(type="checkbox" role="switch" checked)
+                  input.form-check-input#edit(type="checkbox" role="switch")
                   label.form-check-label(for="edit") 編集
             // ノート
-            .row.py-2#note1
+            .row.py-2.d-none#note1
               .col-lg-6
                 small ［マークダウン］
                 textarea.form-control#markdown(rows="10")
@@ -64,7 +64,7 @@ html(lang="ja")
               .col-lg-6
                 small ［プレビュー］
                 .px-2.bg-light.preview#preview1
-            .row.py-2.d-none#note2
+            .row.py-2#note2
               .col
                 .px-2.bg-light.preview#preview2
 
@@ -91,7 +91,7 @@ html(lang="ja")
             .alert.alert-danger.text-start(role="alert")
               | プロジェクト一覧 step07.
               br
-              | 編集スイッチをONにすると、マークダウンエディタで編集できるようになる。
+              | ノートタブをクリック。
           .col-md-2.text-start.py-1
             a.nav-link.px-2.px-md-0(href="step08.html") next →
 
@@ -107,7 +107,6 @@ html(lang="ja")
         $('#preview2').html(html);
       });
       $('#edit').change(function () {
-        console.log($(this).prop('checked'));
         if ($(this).prop('checked')) {
           $('#note1').removeClass('d-none');
           $('#note2').addClass('d-none');

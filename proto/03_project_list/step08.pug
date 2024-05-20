@@ -19,40 +19,64 @@ html(lang="ja")
               li.nav-item
                 a.nav-link(href="#") 基本情報
               li.nav-item
-                a.nav-link(href="#") ノート
+                a.nav-link.active(href="#") ノート
               li.nav-item
-                a.nav-link.active(href="#") 更新履歴
-          .pb-2
-            .row
+                a.nav-link(href="#") 更新履歴
+          form(action="/project/add" method="POST")
+            // 編集スイッチ
+            .row.py-2
               .col
-                .form-floating
-                  table.table.table-hover
-                    thead
-                      tr
-                        th(scope="col") 日時 (JST)
-                        th(scope="col") 更新者
-                        th(scope="col") 更新箇所
-                    tbody
-                      tr
-                        td 2024/09/05 16:31
-                        td 山田太郎
-                        td プロジェクト作成
-                      tr
-                        td 2024/09/05 17:03
-                        td 山田太郎
-                        td 基本情報
-                      tr
-                        td 2024/09/05 17:10
-                        td 山田太郎
-                        td ノート
-                      tr
-                        td 2024/09/06 12:46
-                        td 岩鬼正美
-                        td 基本情報
-                      tr
-                        td 2024/09/07 08:54
-                        td 殿馬一人
-                        td ノート
+                .form-check.form-switch
+                  input.form-check-input#edit(type="checkbox" role="switch" checked)
+                  label.form-check-label(for="edit") 編集
+            // ノート
+            .row.py-2#note1
+              .col-lg-6
+                small ［マークダウン］
+                textarea.form-control#markdown(rows="10")
+                  | ## 文化祭実行プロジェクト
+                  | ### 実行委員会
+                  | ### レシピ
+                  | * [クックパッド](https://cookpad.com/search/%E3%81%9F%E3%81%93%E7%84%BC%E3%81%8D)
+                  | * [小麦粉から作るたこ焼き](https://www.otafuku.co.jp/recipe/cook/taco/taco01.html)
+                  | ### 食材
+                  | * 薄力粉
+                  | * 卵
+                  | * 牛乳
+                  | * タコ
+                  | * 天かす
+                  | * ソース
+                  | * 青のり
+                  | * かつお節
+                  | * 紅しょうが
+                  | * マヨネーズ
+                  | * サラダ油
+                  | ### 店舗設営
+                  | * たこ焼き器レンタル
+                  | * フードパック
+                  | * 割りばし
+                  | * 輪ゴム
+                  | * のれん
+                  | ### 収益計画
+                  | 過去の事例を調べる。  
+                  | 8個入りパックの値段をいくらに設定するか？
+
+              .col-lg-6
+                small ［プレビュー］
+                .px-2.bg-light.preview#preview1
+            .row.py-2.d-none#note2
+              .col
+                .px-2.bg-light.preview#preview2
+
+            .row.py-3.mt-2.bg-light
+              .col
+                button.btn.btn-primary(type="submit")
+                  img.icon(src="../../static/ionicons/save-outline.svg")
+                  | &nbsp;更新
+                | &nbsp;&nbsp;
+                button.btn.btn-primary(type="submit")
+                  img.icon(src="../../static/ionicons/refresh-outline.svg")
+                  | &nbsp;再読み込み
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light
@@ -67,12 +91,33 @@ html(lang="ja")
             .alert.alert-danger.text-start(role="alert")
               | プロジェクト一覧 step08.
               br
-              | 更新履歴タブをクリックすると、プロジェクトの基本情報かノートを更新した履歴が表示される。
-              br
-              | 表示されるのは、プロジェクト作成と、直近の50履歴。
+              | 編集スイッチをONにすると、マークダウンエディタで編集できるようになる。
           .col-md-2.text-start.py-1
-            //- a.nav-link.px-2.px-md-0(href="step08.html") next →
+            a.nav-link.px-2.px-md-0(href="step09.html") next →
 
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous")
+    script(src="https://code.jquery.com/jquery-3.7.1.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+    script.
+      $('#markdown').keyup(function () {
+        var html = marked.parse($(this).val());
+        $('#preview1').html(html);
+        $('#preview2').html(html);
+      });
+      $('#edit').change(function () {
+        console.log($(this).prop('checked'));
+        if ($(this).prop('checked')) {
+          $('#note1').removeClass('d-none');
+          $('#note2').addClass('d-none');
+        } else {
+          $('#note2').removeClass('d-none');
+          $('#note1').addClass('d-none');
+        }
+      });
+      $(document).ready(function() {
+        var html = marked.parse($('#markdown').val());
+        $('#preview1').html(html);
+        $('#preview2').html(html);
+      });

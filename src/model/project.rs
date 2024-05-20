@@ -31,11 +31,13 @@ pub struct Project {
     pub deleted: bool,                     // 削除フラグ
 }
 
+/*
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct ProjectValidation {
     pub project_info: Option<String>,
     pub project_name: Option<String>,
 }
+*/
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct ProjectMember {
@@ -587,6 +589,7 @@ impl Project {
     }
 }
 
+/*
 impl ProjectValidation {
     pub fn new() -> Self {
         Self {
@@ -595,6 +598,7 @@ impl ProjectValidation {
         }
     }
 }
+*/
 
 impl ProjectMember {
     pub fn new(uid: String) -> Self {

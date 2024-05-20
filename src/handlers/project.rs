@@ -4,10 +4,11 @@ use crate::{
         home_page::HomePage, login_page::LoginPage, page, project_list_page::ProjectListPage,
         project_page::ProjectPage,
     },
-    AppError,
+    validation, AppError,
 };
 use anyhow::Result;
 use axum::{extract::Form, extract::Query, response::Html};
+use chrono::DateTime;
 use firestore::*;
 use serde::Deserialize;
 use tower_cookies::Cookies;
@@ -36,7 +37,6 @@ pub async fn get_add_project(cookies: Cookies) -> Result<Html<String>, AppError>
     props.project = None;
 
     let mut member = model::project::ProjectMember::new(session.uid.clone());
-    //member.uid = Some(session.uid.clone());
     member.name = Some(session.name.clone());
     member.email = Some(session.email.clone());
     member.role = Some(model::project::ProjectRole::Owner as i32);
@@ -148,7 +148,7 @@ pub async fn post_project(
     cookies: Cookies,
     Form(input): Form<ProjectInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::info!(
+    tracing::debug!(
         "POST /project {}, {}, {}",
         input.project_id,
         input.project_name,
@@ -175,6 +175,7 @@ pub async fn post_project(
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
+
     let mut props = page::Props::new(&session.id);
     let mut project_members = Vec::new();
     let empty_vec: Vec<serde_json::Value> = Vec::new();
@@ -189,44 +190,26 @@ pub async fn post_project(
         project_members.push(member);
     }
 
-    if project_name.len() == 0 {
-        let mut project = model::project::Project::new();
-        project.project_name = Some(project_name);
-        project.prefix = Some(input.prefix);
-        let mut validation = model::project::ProjectValidation::new();
-        validation.project_name = Some("入力してください".to_string());
-        props.session = Some(session);
-        props.project = Some(project);
-        props.project_validation = Some(validation);
-        props.members = project_members;
-        let mut page = ProjectPage::new(props);
-        return Ok(Html(page.write()));
-    }
-
-    let projects =
-        match model::project::Project::find_by_owner_and_name(&session.uid, &project_name, &db)
+    let v =
+        match validation::project::ProjectValidation::validate_post_project(&input, &session, &db)
             .await
         {
-            Ok(p) => p,
+            Ok(v) => v,
             Err(e) => {
-                return Err(AppError(anyhow::anyhow!(e)));
+                return Err(AppError(e));
             }
         };
 
-    for prj in projects {
-        if prj.id.unwrap() == input.project_id {
-            continue;
-        }
-
+    if let Some(v) = v {
         let mut project = model::project::Project::new();
         project.id = Some(input.project_id.clone());
         project.project_name = Some(project_name);
         project.prefix = Some(input.prefix);
-        let mut validation = model::project::ProjectValidation::new();
-        validation.project_name = Some("同じ名前のプロジェクトが存在します".to_string());
+        let t = input.timestamp.parse::<i64>().unwrap_or_default();
+        project.updated_at = DateTime::from_timestamp_micros(t);
         props.session = Some(session);
         props.project = Some(project);
-        props.project_validation = Some(validation);
+        props.project_validation = Some(v);
         props.members = project_members;
         let mut page = ProjectPage::new(props);
         return Ok(Html(page.write()));
@@ -234,9 +217,6 @@ pub async fn post_project(
 
     if input.project_id.len() == 0 {
         // プロジェクト作成
-
-        // TODO プロジェクト作成件数の制限を超えていたら作成できない。
-
         let prj = match model::project::Project::insert(&input, &session, &mut project_members, &db)
             .await
         {
@@ -250,75 +230,6 @@ pub async fn post_project(
         props.project = Some(prj);
     } else {
         // プロジェクト更新
-
-        // プロジェクトを更新できるのは、オーナーか管理者のみ
-        let member =
-            match model::project::ProjectMember::find(&input.project_id, &session.uid, &db).await {
-                Ok(member) => member,
-                Err(e) => {
-                    return Err(AppError(anyhow::anyhow!(e)));
-                }
-            };
-
-        let mut ok = false;
-        if let Some(member) = member {
-            if let Some(role) = member.role {
-                if role == model::project::ProjectRole::Owner as i32
-                    || role == model::project::ProjectRole::Administrator as i32
-                {
-                    ok = true;
-                }
-            }
-        }
-        if ok == false {
-            let mut project = model::project::Project::new();
-            project.id = Some(input.project_id.clone());
-            project.project_name = Some(project_name);
-            project.prefix = Some(input.prefix);
-            let mut validation = model::project::ProjectValidation::new();
-            validation.project_info =
-                Some("プロジェクト情報を更新する権限がありません".to_string());
-            props.session = Some(session);
-            props.project = Some(project);
-            props.project_validation = Some(validation);
-            props.members = project_members;
-            let mut page = ProjectPage::new(props);
-            return Ok(Html(page.write()));
-        }
-
-        // TODO 読み込み時のタイムスタンプと現在のタイムスタンプを比較し、他のユーザーが更新していたら更新できない。
-        let p = match model::project::Project::find(&input.project_id, &db).await {
-            Ok(p) => p,
-            Err(e) => {
-                return Err(AppError(anyhow::anyhow!(e)));
-            }
-        };
-        let mut ok = false;
-        if let Some(p) = p {
-            if p.deleted == false {
-                if let Some(t) = p.updated_at {
-                    if t.timestamp().to_string() == input.timestamp {
-                        ok = true;
-                    }
-                }
-            }
-        }
-        if ok == false {
-            let mut project = model::project::Project::new();
-            project.id = Some(input.project_id.clone());
-            project.project_name = Some(project_name);
-            project.prefix = Some(input.prefix);
-            let mut validation = model::project::ProjectValidation::new();
-            validation.project_info =
-                Some("他のユーザーがプロジェクトを更新しため、更新できませんでした。<br>再読み込みを行ってください。".to_string());
-            props.session = Some(session);
-            props.project = Some(project);
-            props.project_validation = Some(validation);
-            props.members = project_members;
-            let mut page = ProjectPage::new(props);
-            return Ok(Html(page.write()));
-        }
-
         let prj = match model::project::Project::update(&input, &session, &mut project_members, &db)
             .await
         {

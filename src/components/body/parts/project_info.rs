@@ -196,7 +196,7 @@ impl Component for ProjectInfo {
                 *buf += r#"">"#;
                 *buf += r#"<input type="hidden" name="timestamp" value=""#;
                 if let Some(up) = &p.updated_at {
-                    *buf += &up.timestamp().to_string();
+                    *buf += &up.timestamp_micros().to_string();
                 }
                 *buf += r#"">"#;
             } else {
@@ -339,7 +339,7 @@ impl Component for ProjectInfo {
 
                     *buf += r#"<div class="modal-body">"#;
                     {
-                        *buf += r#"<p>プロジェクトを削除してもよいですか？</p>"#;
+                        *buf += r#"<p>プロジェクトを削除してもよろしいですか？</p>"#;
                     }
                     *buf += r#"</div>"#;
 

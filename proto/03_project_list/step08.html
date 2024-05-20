@@ -30,54 +30,66 @@
           <div class="pb-2">
             <ul class="nav nav-tabs">
               <li class="nav-item"><a class="nav-link" href="#">基本情報</a></li>
-              <li class="nav-item"><a class="nav-link" href="#">ノート</a></li>
-              <li class="nav-item"><a class="nav-link active" href="#">更新履歴</a></li>
+              <li class="nav-item"><a class="nav-link active" href="#">ノート</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">更新履歴</a></li>
             </ul>
           </div>
-          <div class="pb-2">
-            <div class="row">
+          <form action="/project/add" method="POST">
+            <!-- 編集スイッチ-->
+            <div class="row py-2">
               <div class="col">
-                <div class="form-floating">
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th scope="col">日時 (JST)</th>
-                        <th scope="col">更新者</th>
-                        <th scope="col">更新箇所</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>2024/09/05 16:31</td>
-                        <td>山田太郎</td>
-                        <td>プロジェクト作成</td>
-                      </tr>
-                      <tr>
-                        <td>2024/09/05 17:03</td>
-                        <td>山田太郎</td>
-                        <td>基本情報</td>
-                      </tr>
-                      <tr>
-                        <td>2024/09/05 17:10</td>
-                        <td>山田太郎</td>
-                        <td>ノート</td>
-                      </tr>
-                      <tr>
-                        <td>2024/09/06 12:46</td>
-                        <td>岩鬼正美</td>
-                        <td>基本情報</td>
-                      </tr>
-                      <tr>
-                        <td>2024/09/07 08:54</td>
-                        <td>殿馬一人</td>
-                        <td>ノート</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" id="edit" type="checkbox" role="switch" checked>
+                  <label class="form-check-label" for="edit">編集</label>
                 </div>
               </div>
             </div>
-          </div>
+            <!-- ノート-->
+            <div class="row py-2" id="note1">
+              <div class="col-lg-6"><small>［マークダウン］</small>
+                <textarea class="form-control" id="markdown" rows="10">## 文化祭実行プロジェクト
+### 実行委員会
+### レシピ
+* [クックパッド](https://cookpad.com/search/%E3%81%9F%E3%81%93%E7%84%BC%E3%81%8D)
+* [小麦粉から作るたこ焼き](https://www.otafuku.co.jp/recipe/cook/taco/taco01.html)
+### 食材
+* 薄力粉
+* 卵
+* 牛乳
+* タコ
+* 天かす
+* ソース
+* 青のり
+* かつお節
+* 紅しょうが
+* マヨネーズ
+* サラダ油
+### 店舗設営
+* たこ焼き器レンタル
+* フードパック
+* 割りばし
+* 輪ゴム
+* のれん
+### 収益計画
+過去の事例を調べる。  
+8個入りパックの値段をいくらに設定するか？</textarea>
+              </div>
+              <div class="col-lg-6"><small>［プレビュー］</small>
+                <div class="px-2 bg-light preview" id="preview1"></div>
+              </div>
+            </div>
+            <div class="row py-2 d-none" id="note2">
+              <div class="col">
+                <div class="px-2 bg-light preview" id="preview2"></div>
+              </div>
+            </div>
+            <div class="row py-3 mt-2 bg-light">
+              <div class="col">
+                <button class="btn btn-primary" type="submit"><img class="icon" src="../../static/ionicons/save-outline.svg">&nbsp;更新</button>&nbsp;&nbsp;
+                <button class="btn btn-primary" type="submit"><img class="icon" src="../../static/ionicons/refresh-outline.svg">&nbsp;再読み込み</button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </main>
@@ -97,12 +109,36 @@
         <div class="row align-items-end">
           <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step07.html">← prev</a></div>
           <div class="col-md-8">
-            <div class="alert alert-danger text-start" role="alert">プロジェクト一覧 step08.<br>更新履歴タブをクリックすると、プロジェクトの基本情報かノートを更新した履歴が表示される。<br>表示されるのは、プロジェクト作成と、直近の50履歴。</div>
+            <div class="alert alert-danger text-start" role="alert">プロジェクト一覧 step08.<br>編集スイッチをONにすると、マークダウンエディタで編集できるようになる。</div>
           </div>
-          <div class="col-md-2 text-start py-1"></div>
+          <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step09.html">next →</a></div>
         </div>
       </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+      $('#markdown').keyup(function () {
+        var html = marked.parse($(this).val());
+        $('#preview1').html(html);
+        $('#preview2').html(html);
+      });
+      $('#edit').change(function () {
+        console.log($(this).prop('checked'));
+        if ($(this).prop('checked')) {
+          $('#note1').removeClass('d-none');
+          $('#note2').addClass('d-none');
+        } else {
+          $('#note2').removeClass('d-none');
+          $('#note1').addClass('d-none');
+        }
+      });
+      $(document).ready(function() {
+        var html = marked.parse($('#markdown').val());
+        $('#preview1').html(html);
+        $('#preview2').html(html);
+      });
+    </script>
   </body>
 </html>

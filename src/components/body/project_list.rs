@@ -137,7 +137,7 @@ impl Component for ProjectListBody {
                         {
                             *buf += r#"<div class="col">"#;
                             {
-                                *buf += r#"<a href="/add_project" title="プロジェクトを作成">"#;
+                                *buf += r#"<a href="/project_add" title="プロジェクトを作成">"#;
                                 {
                                     *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg">"#;
                                 }

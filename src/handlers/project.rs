@@ -19,8 +19,8 @@ pub struct Params {
     tab: Option<String>,
 }
 
-pub async fn get_add_project(cookies: Cookies) -> Result<Html<String>, AppError> {
-    tracing::debug!("GET /add_project");
+pub async fn get_project_add(cookies: Cookies) -> Result<Html<String>, AppError> {
+    tracing::debug!("GET /project_add");
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
@@ -50,8 +50,8 @@ pub async fn get_add_project(cookies: Cookies) -> Result<Html<String>, AppError>
     Ok(Html(page.write()))
 }
 
-pub async fn get_list_project(cookies: Cookies) -> Result<Html<String>, AppError> {
-    tracing::debug!("GET /list_project");
+pub async fn get_project_list(cookies: Cookies) -> Result<Html<String>, AppError> {
+    tracing::debug!("GET /project_list");
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,

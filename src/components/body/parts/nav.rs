@@ -34,7 +34,7 @@ impl Component for Nav {
 
                         *buf += r#"<li class="nav-item">"#;
                         {
-                            *buf += r#"<a class="nav-link" href="/list_project">プロジェクト</a>"#;
+                            *buf += r#"<a class="nav-link" href="/project_list">プロジェクト</a>"#;
                         }
                         *buf += r#"</li>"#;
 

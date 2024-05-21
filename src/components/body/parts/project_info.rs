@@ -7,7 +7,7 @@ impl Component for ProjectInfo {
         if props.is_create {
             *buf += r#"<form action="/project" method="POST">"#;
         } else {
-            *buf += r#"<form action="/put_project" method="POST">"#;
+            *buf += r#"<form action="/project_put" method="POST">"#;
         }
         {
             // プロジェクト名

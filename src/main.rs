@@ -63,9 +63,9 @@ async fn main() {
             "/project",
             get(handlers::project::get_project).post(handlers::project::post_project),
         )
-        .route("/add_project", get(handlers::project::get_add_project))
-        .route("/put_project", post(handlers::project::put_project))
-        .route("/list_project", get(handlers::project::get_list_project))
+        .route("/project_add", get(handlers::project::get_project_add))
+        .route("/project_put", post(handlers::project::put_project))
+        .route("/project_list", get(handlers::project::get_project_list))
         .route("/project_note", post(handlers::project::post_note))
         .route("/ticket/add", post(handlers::ticket::post_add_ticket))
         .route("/ticket/create", post(handlers::ticket::post_create_ticket))

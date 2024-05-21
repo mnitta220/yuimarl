@@ -192,7 +192,7 @@ impl Component for HomeBody {
                                         {
                                             *buf += r#"<div class="col">"#;
                                             {
-                                                *buf += r#"<a href="/list_project" title="プロジェクト一覧">"#;
+                                                *buf += r#"<a href="/project_list" title="プロジェクト一覧">"#;
                                                 {
                                                     *buf += r#"<img class="icon3" src="/static/ionicons/list-outline.svg">"#;
                                                 }
@@ -201,7 +201,7 @@ impl Component for HomeBody {
                                                     *buf += r#"<span class="btn-help">&nbsp;: プロジェクト一覧</span>"#;
                                                 }
                                                 *buf += r#"&nbsp;&nbsp;&nbsp;"#;
-                                                *buf += r#"<a href="/add_project" title="プロジェクトを作成">"#;
+                                                *buf += r#"<a href="/project_add" title="プロジェクトを作成">"#;
                                                 {
                                                     *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg">"#;
                                                 }

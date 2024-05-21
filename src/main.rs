@@ -3,7 +3,7 @@ use axum::{
     error_handling::HandleErrorLayer,
     http::StatusCode,
     response::{IntoResponse, Response},
-    routing::{get, post},
+    routing::{get, post, put},
     Router,
 };
 use dotenv::dotenv;
@@ -60,20 +60,18 @@ async fn main() {
         )
         .route("/agree/no", get(handlers::agreement::get_disagree))
         .route(
-            "/project/add",
-            get(handlers::project::get_add_project).post(handlers::project::post_project),
+            "/project",
+            get(handlers::project::get_project).post(handlers::project::post_project),
         )
-        .route("/project/list", get(handlers::project::get_project_list))
-        .route("/project/upd_note", post(handlers::project::post_upd_note))
-        //.route("/project/:id", get(handlers::project::get_project))
-        .route("/project/info", get(handlers::project::get_project))
-        //.route("/member/add", post(handlers::project::post_member_add))
+        .route("/add_project", get(handlers::project::get_add_project))
+        .route("/put_project", post(handlers::project::put_project))
+        .route("/list_project", get(handlers::project::get_list_project))
+        .route("/project_note", post(handlers::project::post_note))
         .route("/ticket/add", post(handlers::ticket::post_add_ticket))
         .route("/ticket/create", post(handlers::ticket::post_create_ticket))
         .route("/contact", get(handlers::contact::get_contact))
         .route("/api/firebaseConfig", get(handlers::api::firebase_config))
         .route("/api/userByEmail", post(handlers::api::user_by_email))
-        //.route("/api/memberAdd", post(handlers::api::member_add))
         //.route("/_healthz", get(handlers_bk::health))
         .nest_service("/static", ServeDir::new("static"))
         .layer(

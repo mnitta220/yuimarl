@@ -20,6 +20,7 @@ impl ProjectValidation {
     pub async fn validate_post_project(
         input: &handlers::project::ProjectInput,
         session: &model::session::Session,
+        is_create: bool,
         db: &FirestoreDb,
     ) -> Result<Option<Self>> {
         let project_name = input.project_name.trim().to_string();
@@ -49,7 +50,7 @@ impl ProjectValidation {
             return Ok(Some(validation));
         }
 
-        if input.project_id.len() == 0 {
+        if is_create {
             // プロジェクト作成
 
             // TODO プロジェクト作成件数の制限を超えていたら作成できない。
@@ -91,6 +92,7 @@ impl ProjectValidation {
                     return Err(anyhow::anyhow!(e));
                 }
             };
+
             let mut ok = false;
             if let Some(p) = p {
                 if p.deleted == false {

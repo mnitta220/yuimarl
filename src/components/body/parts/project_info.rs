@@ -4,7 +4,11 @@ pub struct ProjectInfo {}
 
 impl Component for ProjectInfo {
     fn write(&self, props: &Props, buf: &mut String) {
-        *buf += r#"<form action="/project/add" method="POST">"#;
+        if props.is_create {
+            *buf += r#"<form action="/project" method="POST">"#;
+        } else {
+            *buf += r#"<form action="/put_project" method="POST">"#;
+        }
         {
             // プロジェクト名
             *buf += r#"<div class="row py-2">"#;
@@ -144,37 +148,7 @@ impl Component for ProjectInfo {
 
             *buf += r#"<div class="row py-3 mt-2 bg-light">"#;
             {
-                if let Some(p) = &props.project {
-                    *buf += r#"<div class="col-9">"#;
-                    {
-                        *buf += r#"<button class="btn btn-primary" type="submit">"#;
-                        {
-                            *buf += r#"<img class="icon" src="/static/ionicons/save-outline.svg">&nbsp;更新"#;
-                        }
-                        *buf += r#"</button>&nbsp;&nbsp;"#;
-
-                        if let Some(id) = &p.id {
-                            *buf += r#"<a class="btn btn-primary" href="/project/info?id="#;
-                            *buf += id;
-                            *buf += r#"" role="button">"#;
-                            {
-                                *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
-                            }
-                            *buf += r#"</a>"#;
-                        }
-                    }
-                    *buf += r#"</div>"#;
-
-                    *buf += r#"<div class="col-3 text-end">"#;
-                    {
-                        *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#projectDelModal">"##;
-                        {
-                            *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
-                        }
-                        *buf += r#"</button>"#;
-                    }
-                    *buf += r#"</div>"#;
-                } else {
+                if props.is_create {
                     *buf += r#"<div class="col">"#;
                     {
                         *buf += r#"<button class="btn btn-primary" type="submit">"#;
@@ -184,10 +158,56 @@ impl Component for ProjectInfo {
                         *buf += r#"</button>"#;
                     }
                     *buf += r#"</div>"#;
+                    *buf += r#"<input type="hidden" name="project_id" value="">"#;
+                    *buf += r#"<input type="hidden" name="timestamp" value="">"#;
+                } else {
+                    if let Some(p) = &props.project {
+                        *buf += r#"<div class="col-9">"#;
+                        {
+                            *buf += r#"<button class="btn btn-primary" type="submit">"#;
+                            {
+                                *buf += r#"<img class="icon" src="/static/ionicons/save-outline.svg">&nbsp;更新"#;
+                            }
+                            *buf += r#"</button>&nbsp;&nbsp;"#;
+
+                            if let Some(id) = &p.id {
+                                //*buf += r#"<a class="btn btn-primary" href="/project/info?id="#;
+                                *buf += r#"<a class="btn btn-primary" href="/project?id="#;
+                                *buf += id;
+                                *buf += r#"" role="button">"#;
+                                {
+                                    *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
+                                }
+                                *buf += r#"</a>"#;
+                            }
+                        }
+                        *buf += r#"</div>"#;
+
+                        *buf += r#"<div class="col-3 text-end">"#;
+                        {
+                            *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#projectDelModal">"##;
+                            {
+                                *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
+                            }
+                            *buf += r#"</button>"#;
+                        }
+                        *buf += r#"</div>"#;
+                        *buf += r#"<input type="hidden" name="project_id" value=""#;
+                        if let Some(id) = &p.id {
+                            *buf += id;
+                        }
+                        *buf += r#"">"#;
+                        *buf += r#"<input type="hidden" name="timestamp" value=""#;
+                        if let Some(up) = &p.updated_at {
+                            *buf += &up.timestamp_micros().to_string();
+                        }
+                        *buf += r#"">"#;
+                    }
                 }
             }
             *buf += r#"</div>"#;
 
+            /*
             if let Some(p) = &props.project {
                 *buf += r#"<input type="hidden" name="project_id" value=""#;
                 if let Some(id) = &p.id {
@@ -203,6 +223,7 @@ impl Component for ProjectInfo {
                 *buf += r#"<input type="hidden" name="project_id" value="">"#;
                 *buf += r#"<input type="hidden" name="timestamp" value="">"#;
             }
+            */
         }
         *buf += r#"</form>"#;
 

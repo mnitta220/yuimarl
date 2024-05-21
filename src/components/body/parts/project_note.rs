@@ -15,7 +15,7 @@ impl Component for ProjectNote {
         }
 
         if let Some(p) = &props.project {
-            *buf += r#"<form action="/project/upd_note" method="POST">"#;
+            *buf += r#"<form action="/project_note" method="POST">"#;
             {
                 // 編集スイッチ
                 *buf += r#"<div class="row py-2">"#;
@@ -89,7 +89,8 @@ impl Component for ProjectNote {
                         *buf += r#"</button>&nbsp;&nbsp;"#;
 
                         if let Some(id) = &p.id {
-                            *buf += r#"<a class="btn btn-primary" href="/project/info?id="#;
+                            //*buf += r#"<a class="btn btn-primary" href="/project/info?id="#;
+                            *buf += r#"<a class="btn btn-primary" href="/project?id="#;
                             *buf += id;
                             *buf += r#"&tab=note" role="button">"#;
                             {

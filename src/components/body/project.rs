@@ -39,7 +39,7 @@ impl Component for ProjectBody {
                     *buf += r#"<div class="container">"#;
                     {
                         *buf += r#"<h3 class="mb-3">プロジェクト"#;
-                        if props.project.is_none() {
+                        if props.is_create {
                             *buf += r#"を作成"#;
                         }
                         *buf += r#"</h3>"#;
@@ -56,50 +56,55 @@ impl Component for ProjectBody {
                             }
                         }
 
-                        if let Some(p) = &props.project {
-                            *buf += r#"<div class="pb-2">"#;
-                            {
-                                *buf += r#"<ul class="nav nav-tabs">"#;
+                        if props.is_create == false {
+                            if let Some(p) = &props.project {
+                                *buf += r#"<div class="pb-2">"#;
                                 {
-                                    *buf += r#"<li class="nav-item">"#;
+                                    *buf += r#"<ul class="nav nav-tabs">"#;
                                     {
-                                        *buf += r#"<a class="nav-link"#;
-                                        if props.project_tab == ProjectTab::Info {
-                                            *buf += r#" active"#;
+                                        *buf += r#"<li class="nav-item">"#;
+                                        {
+                                            *buf += r#"<a class="nav-link"#;
+                                            if props.project_tab == ProjectTab::Info {
+                                                *buf += r#" active"#;
+                                            }
+                                            //*buf += r#"" href="/project/info?id="#;
+                                            *buf += r#"" href="/project?id="#;
+                                            *buf += &p.id.clone().unwrap();
+                                            *buf += r#"&tab=info">基本情報</a>"#;
                                         }
-                                        *buf += r#"" href="/project/info?id="#;
-                                        *buf += &p.id.clone().unwrap();
-                                        *buf += r#"&tab=info">基本情報</a>"#;
-                                    }
-                                    *buf += r#"</li>"#;
+                                        *buf += r#"</li>"#;
 
-                                    *buf += r#"<li class="nav-item">"#;
-                                    {
-                                        *buf += r#"<a class="nav-link"#;
-                                        if props.project_tab == ProjectTab::Note {
-                                            *buf += r#" active"#;
+                                        *buf += r#"<li class="nav-item">"#;
+                                        {
+                                            *buf += r#"<a class="nav-link"#;
+                                            if props.project_tab == ProjectTab::Note {
+                                                *buf += r#" active"#;
+                                            }
+                                            //*buf += r#"" href="/project/info?id="#;
+                                            *buf += r#"" href="/project?id="#;
+                                            *buf += &p.id.clone().unwrap();
+                                            *buf += r#"&tab=note">ノート</a>"#;
                                         }
-                                        *buf += r#"" href="/project/info?id="#;
-                                        *buf += &p.id.clone().unwrap();
-                                        *buf += r#"&tab=note">ノート</a>"#;
-                                    }
-                                    *buf += r#"</li>"#;
+                                        *buf += r#"</li>"#;
 
-                                    *buf += r#"<li class="nav-item">"#;
-                                    {
-                                        *buf += r#"<a class="nav-link"#;
-                                        if props.project_tab == ProjectTab::History {
-                                            *buf += r#" active"#;
+                                        *buf += r#"<li class="nav-item">"#;
+                                        {
+                                            *buf += r#"<a class="nav-link"#;
+                                            if props.project_tab == ProjectTab::History {
+                                                *buf += r#" active"#;
+                                            }
+                                            //*buf += r#"" href="/project/info?id="#;
+                                            *buf += r#"" href="/project?id="#;
+                                            *buf += &p.id.clone().unwrap();
+                                            *buf += r#"&tab=history">更新履歴</a>"#;
                                         }
-                                        *buf += r#"" href="/project/info?id="#;
-                                        *buf += &p.id.clone().unwrap();
-                                        *buf += r#"&tab=history">更新履歴</a>"#;
+                                        *buf += r#"</li>"#;
                                     }
-                                    *buf += r#"</li>"#;
+                                    *buf += r#"</ul>"#;
                                 }
-                                *buf += r#"</ul>"#;
+                                *buf += r#"</div>"#;
                             }
-                            *buf += r#"</div>"#;
                         }
 
                         match &props.project_tab {

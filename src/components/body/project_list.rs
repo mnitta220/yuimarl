@@ -75,7 +75,8 @@ impl Component for ProjectListBody {
                                                 *buf += r#"<td>"#;
                                                 {
                                                     if let Some(project_id) = &prj.project_id {
-                                                        *buf += r#"<a href="/project/info?id="#;
+                                                        //*buf += r#"<a href="/project/info?id="#;
+                                                        *buf += r#"<a href="/project?id="#;
                                                         *buf += project_id;
                                                         *buf += r#"">"#;
                                                         if let Some(name) = &prj.project_name {
@@ -136,7 +137,7 @@ impl Component for ProjectListBody {
                         {
                             *buf += r#"<div class="col">"#;
                             {
-                                *buf += r#"<a href="/project/add" title="プロジェクトを作成">"#;
+                                *buf += r#"<a href="/add_project" title="プロジェクトを作成">"#;
                                 {
                                     *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg">"#;
                                 }

@@ -19,6 +19,7 @@ pub struct Props {
     pub ticket_validation: Option<model::ticket::TicketValidation>,
     pub tickets: Vec<model::ticket::Ticket>,
     pub project_tab: ProjectTab,
+    pub is_create: bool,
 }
 
 impl Props {
@@ -35,6 +36,7 @@ impl Props {
             ticket_validation: None,
             tickets: Vec::new(),
             project_tab: ProjectTab::Info,
+            is_create: false,
         }
     }
 }

@@ -1,14 +1,10 @@
-use crate::{components::Component, Props};
+use crate::{components::Component, model, Props};
 
 pub struct ProjectInfo {}
 
 impl Component for ProjectInfo {
     fn write(&self, props: &Props, buf: &mut String) {
-        if props.is_create {
-            *buf += r#"<form action="/project" method="POST">"#;
-        } else {
-            *buf += r#"<form action="/project_put" method="POST">"#;
-        }
+        *buf += r#"<form name="post_project" id="post_project" action="/project" method="POST">"#;
         {
             // プロジェクト名
             *buf += r#"<div class="row py-2">"#;
@@ -171,7 +167,6 @@ impl Component for ProjectInfo {
                             *buf += r#"</button>&nbsp;&nbsp;"#;
 
                             if let Some(id) = &p.id {
-                                //*buf += r#"<a class="btn btn-primary" href="/project/info?id="#;
                                 *buf += r#"<a class="btn btn-primary" href="/project?id="#;
                                 *buf += id;
                                 *buf += r#"" role="button">"#;
@@ -185,13 +180,20 @@ impl Component for ProjectInfo {
 
                         *buf += r#"<div class="col-3 text-end">"#;
                         {
-                            *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#projectDelModal">"##;
-                            {
-                                *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
+                            if let Some(m) = &props.member {
+                                if let Some(r) = m.role {
+                                    if r == model::project::ProjectRole::Owner as i32 {
+                                        *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#projectDelModal">"##;
+                                        {
+                                            *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
+                                        }
+                                        *buf += r#"</button>"#;
+                                    }
+                                }
                             }
-                            *buf += r#"</button>"#;
                         }
                         *buf += r#"</div>"#;
+
                         *buf += r#"<input type="hidden" name="project_id" value=""#;
                         if let Some(id) = &p.id {
                             *buf += id;
@@ -207,23 +209,13 @@ impl Component for ProjectInfo {
             }
             *buf += r#"</div>"#;
 
-            /*
-            if let Some(p) = &props.project {
-                *buf += r#"<input type="hidden" name="project_id" value=""#;
-                if let Some(id) = &p.id {
-                    *buf += id;
-                }
-                *buf += r#"">"#;
-                *buf += r#"<input type="hidden" name="timestamp" value=""#;
-                if let Some(up) = &p.updated_at {
-                    *buf += &up.timestamp_micros().to_string();
-                }
-                *buf += r#"">"#;
+            *buf += r#"<input type="hidden" name="action" id="action" value=""#;
+            if props.is_create {
+                *buf += r#"post"#;
             } else {
-                *buf += r#"<input type="hidden" name="project_id" value="">"#;
-                *buf += r#"<input type="hidden" name="timestamp" value="">"#;
+                *buf += r#"put"#;
             }
-            */
+            *buf += r#"">"#;
         }
         *buf += r#"</form>"#;
 
@@ -367,7 +359,8 @@ impl Component for ProjectInfo {
                     *buf += r#"<div class="modal-footer">"#;
                     {
                         *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
-                        *buf += r#"<button class="btn btn-danger" type="button">"#;
+                        *buf +=
+                            r#"<button id="btnProjectDel" class="btn btn-danger" type="button">"#;
                         {
                             *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
                         }

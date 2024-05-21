@@ -68,7 +68,6 @@ impl Component for ProjectBody {
                                             if props.project_tab == ProjectTab::Info {
                                                 *buf += r#" active"#;
                                             }
-                                            //*buf += r#"" href="/project/info?id="#;
                                             *buf += r#"" href="/project?id="#;
                                             *buf += &p.id.clone().unwrap();
                                             *buf += r#"&tab=info">基本情報</a>"#;
@@ -81,7 +80,6 @@ impl Component for ProjectBody {
                                             if props.project_tab == ProjectTab::Note {
                                                 *buf += r#" active"#;
                                             }
-                                            //*buf += r#"" href="/project/info?id="#;
                                             *buf += r#"" href="/project?id="#;
                                             *buf += &p.id.clone().unwrap();
                                             *buf += r#"&tab=note">ノート</a>"#;
@@ -94,7 +92,6 @@ impl Component for ProjectBody {
                                             if props.project_tab == ProjectTab::History {
                                                 *buf += r#" active"#;
                                             }
-                                            //*buf += r#"" href="/project/info?id="#;
                                             *buf += r#"" href="/project?id="#;
                                             *buf += &p.id.clone().unwrap();
                                             *buf += r#"&tab=history">更新履歴</a>"#;
@@ -129,7 +126,7 @@ impl Component for ProjectBody {
             *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
             match &props.project_tab {
                 ProjectTab::Info => {
-                    *buf += r#"<script src="/static/js/project0012.js"></script>"#;
+                    *buf += r#"<script src="/static/js/project0012b.js"></script>"#;
                 }
                 ProjectTab::Note => {
                     *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;

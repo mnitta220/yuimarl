@@ -185,3 +185,9 @@ function setMemberList() {
 
     $("#members-tbody").html(buf);
 }
+
+$('#btnProjectDel').on('click', function () {
+    console.log('delete');
+    $("#action").val('delete');
+    $('#post_project').submit();
+});

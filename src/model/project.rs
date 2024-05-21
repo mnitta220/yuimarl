@@ -188,6 +188,7 @@ impl Project {
                 q.for_all([
                     q.field(path!(Project::owner)).eq(owner),
                     q.field(path!(Project::project_name)).eq(project_name),
+                    q.field(path!(Project::deleted)).eq(false),
                 ])
             })
             .obj()
@@ -587,18 +588,81 @@ impl Project {
 
         Ok(prj)
     }
-}
 
-/*
-impl ProjectValidation {
-    pub fn new() -> Self {
-        Self {
-            project_info: None,
-            project_name: None,
+    pub async fn delete(
+        input: &crate::handlers::project::ProjectInput,
+        session: &Session,
+        //project_members: &mut Vec<ProjectMember>,
+        db: &FirestoreDb,
+    ) -> Result<()> {
+        let prj = match Project::find(&input.project_id, db).await {
+            Ok(p) => p,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+        let mut prj = match prj {
+            Some(p) => p,
+            None => {
+                return Ok(());
+            }
+        };
+        if prj.deleted {
+            return Ok(());
         }
+
+        let now = Utc::now();
+        prj.updated_at = Some(now);
+        prj.deleted = true;
+
+        let history = History {
+            timestamp: now,
+            uid: session.uid.clone(),
+            user_name: session.name.clone(),
+            event: HistoryEvent::ProjectUpdate as i32,
+        };
+
+        let mut histories = Vec::new();
+        if let Some(h) = &prj.history {
+            let h: Vec<History> = match serde_json::from_str(&h) {
+                Ok(h) => h,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+            histories = h;
+        }
+        histories.push(history);
+
+        loop {
+            if histories.len() <= MAX_HISTORY {
+                break;
+            }
+            histories.remove(0);
+        }
+
+        if let Ok(h) = serde_json::to_string(&histories) {
+            prj.history = Some(h);
+        }
+
+        if let Err(e) = db
+            .fluent()
+            .update()
+            .fields(paths!(Project::{updated_at, history, deleted}))
+            .in_col(&COLLECTION_NAME)
+            .document_id(&input.project_id)
+            .object(&prj)
+            .execute::<Project>()
+            .await
+        {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+
+        tracing::debug!("Project deleted {:?}", prj);
+
+        Ok(())
     }
 }
-*/
 
 impl ProjectMember {
     pub fn new(uid: String) -> Self {
@@ -892,6 +956,7 @@ impl ProjectMember {
             }
         };
 
+        let mut members = Vec::new();
         for member in &mut project_members {
             if let Some(id) = &member.project_id {
                 let prj: Option<Project> = match db
@@ -908,12 +973,18 @@ impl ProjectMember {
                     }
                 };
                 if let Some(p) = prj {
-                    member.project_name = p.project_name;
+                    if p.deleted {
+                        continue;
+                    }
+                    //member.project_name = p.project_name;
+                    let mut m = member.clone();
+                    m.project_name = p.project_name;
+                    members.push(m);
                 }
             }
         }
 
-        Ok(project_members)
+        Ok(members)
     }
 
     /// ロールを文字列に変換する

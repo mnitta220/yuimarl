@@ -1,6 +1,7 @@
 use crate::{
     components::{head::Head, Component},
-    model, validation,
+    handlers::validation,
+    model,
 };
 
 // buffer size for outputting HTML content.
@@ -10,6 +11,7 @@ const PAGE_BUFFER_SIZE: usize = 20_000;
 pub struct Props {
     pub session_id: String,
     pub session: Option<model::session::Session>,
+    pub title: Option<String>,
     pub project: Option<model::project::Project>,
     pub member: Option<model::project::ProjectMember>,
     pub members: Vec<model::project::ProjectMember>,
@@ -18,7 +20,7 @@ pub struct Props {
     pub ticket: Option<model::ticket::Ticket>,
     pub ticket_validation: Option<model::ticket::TicketValidation>,
     pub tickets: Vec<model::ticket::Ticket>,
-    pub project_tab: ProjectTab,
+    pub tab: Tab,
     pub is_create: bool,
 }
 
@@ -27,6 +29,7 @@ impl Props {
         Props {
             session_id: session_id.clone(),
             session: None,
+            title: None,
             project: None,
             member: None,
             members: Vec::new(),
@@ -35,7 +38,7 @@ impl Props {
             ticket: None,
             ticket_validation: None,
             tickets: Vec::new(),
-            project_tab: ProjectTab::Info,
+            tab: Tab::Info,
             is_create: false,
         }
     }
@@ -43,7 +46,7 @@ impl Props {
 
 /// プロジェクト画面のタブ
 #[derive(Clone, Copy, PartialEq)]
-pub enum ProjectTab {
+pub enum Tab {
     Info = 1,    // 基本情報
     Note = 2,    // ノート
     History = 3, // 更新履歴

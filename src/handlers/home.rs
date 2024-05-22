@@ -22,9 +22,17 @@ pub async fn get_home(cookies: Cookies) -> Result<Html<String>, AppError> {
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
-    let mut props = page::Props::new(&session.id);
 
-    let (project, member) = model::project::Project::last_project(&session, &db).await?;
+    let mut props = page::Props::new(&session.id);
+    props.title = Some("ホーム".to_string());
+
+    let (project, member) = match model::project::Project::current_project(&session, &db).await {
+        Ok((project, member)) => (project, member),
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
     props.project = project;
     props.member = member;
     props.session = Some(session);

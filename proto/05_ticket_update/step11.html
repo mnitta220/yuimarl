@@ -27,13 +27,15 @@
       <div class="py-3">
         <div class="container">
           <h3 class="mb-3">チケット</h3>
-          <ul class="nav nav-tabs">
-            <li class="nav-item"><a class="nav-link" href="#">基本情報</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">ノート</a></li>
-            <li class="nav-item"><a class="nav-link active" href="#">コメント</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">更新履歴</a></li>
-          </ul>
-          <form class="pt-2">
+          <div class="pb-2">
+            <ul class="nav nav-tabs">
+              <li class="nav-item"><a class="nav-link" href="#">基本情報</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">ノート</a></li>
+              <li class="nav-item"><a class="nav-link active" href="#">コメント</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">更新履歴</a></li>
+            </ul>
+          </div>
+          <form action="/ticket_add" method="POST">
             <div class="row py-2 ticket-comment">
               <div class="col">
                 <div class="row">
@@ -81,17 +83,15 @@
           <div class="modal-dialog modal-md">
             <div class="modal-content">
               <div class="modal-header">
-                <h1 class="modal-title fs-5" id="deleteCommentModalLabel">コメントを削除</h1>
+                <h1 class="modal-title fs-5" id="deleteCommentModalLabel">コメント削除</h1>
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="キャンセル"></button>
               </div>
               <div class="modal-body">
-                <div class="row">
-                  <div class="col">コメントを削除します。<br>よろしいですか？</div>
-                </div>
+                <p>コメントを削除します。<br>よろしいですか？</p>
               </div>
               <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>
-                <button class="btn btn-primary" type="button">削除</button>
+                <button class="btn btn-danger" type="button"><img class="icon" src="../../static/ionicons/trash-outline2.svg">&nbsp;削除</button>
               </div>
             </div>
           </div>

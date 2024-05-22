@@ -1,10 +1,11 @@
+use super::validation;
 use crate::{
     model,
     pages::{
         home_page::HomePage, login_page::LoginPage, page, project_list_page::ProjectListPage,
         project_page::ProjectPage,
     },
-    validation, AppError,
+    AppError,
 };
 use anyhow::Result;
 use axum::{extract::Form, extract::Query, response::Html};
@@ -34,6 +35,7 @@ pub async fn get_project_add(cookies: Cookies) -> Result<Html<String>, AppError>
         Err(_) => return Ok(Html(LoginPage::write())),
     };
     let mut props = page::Props::new(&session.id);
+    props.title = Some("プロジェクトを作成".to_string());
     props.is_create = true;
     props.project = None;
 
@@ -65,6 +67,7 @@ pub async fn get_project_list(cookies: Cookies) -> Result<Html<String>, AppError
         Err(_) => return Ok(Html(LoginPage::write())),
     };
     let mut props = page::Props::new(&session.id);
+    props.title = Some("プロジェクト一覧".to_string());
 
     let projects = match model::project::ProjectMember::my_projects(&session, &db).await {
         Ok(projects) => projects,
@@ -100,16 +103,17 @@ pub async fn get_project(
         Err(_) => return Ok(Html(LoginPage::write())),
     };
     let mut props = page::Props::new(&session.id);
+    props.title = Some("プロジェクト".to_string());
 
     match tab.as_ref() {
         "note" => {
-            props.project_tab = crate::ProjectTab::Note;
+            props.tab = crate::Tab::Note;
         }
         "history" => {
-            props.project_tab = crate::ProjectTab::History;
+            props.tab = crate::Tab::History;
         }
         _ => {
-            props.project_tab = crate::ProjectTab::Info;
+            props.tab = crate::Tab::Info;
         }
     }
 
@@ -189,6 +193,19 @@ pub async fn post_project(
     if input.action == "post" {
         props.is_create = true;
     }
+
+    let action = match input.action.as_ref() {
+        "post" => super::Action::Create,
+        "put" => super::Action::Update,
+        "delete" => super::Action::Delete,
+        _ => {
+            return Err(AppError(anyhow::anyhow!(format!(
+                "invalid action: {}",
+                input.action
+            ))));
+        }
+    };
+
     let mut project_members = Vec::new();
     let empty_vec: Vec<serde_json::Value> = Vec::new();
     let mem = members["members"].as_array().unwrap_or_else(|| &empty_vec);
@@ -202,15 +219,19 @@ pub async fn post_project(
         project_members.push(member);
     }
 
-    let v =
-        match validation::project::ProjectValidation::validate_post_project(&input, &session, &db)
-            .await
-        {
-            Ok(v) => v,
-            Err(e) => {
-                return Err(AppError(e));
-            }
-        };
+    let v = match validation::project::ProjectValidation::validate_post(
+        &input,
+        &session,
+        action.clone(),
+        &db,
+    )
+    .await
+    {
+        Ok(v) => v,
+        Err(e) => {
+            return Err(AppError(e));
+        }
+    };
 
     if let Some(v) = v {
         let mut project = model::project::Project::new();
@@ -227,8 +248,8 @@ pub async fn post_project(
         return Ok(Html(page.write()));
     }
 
-    match input.action.as_ref() {
-        "post" => {
+    match action {
+        super::Action::Create => {
             // プロジェクト作成
             match model::project::Project::insert(&input, &session, &mut project_members, &db).await
             {
@@ -238,7 +259,7 @@ pub async fn post_project(
                 }
             };
         }
-        "put" => {
+        super::Action::Update => {
             // プロジェクト更新
             match model::project::Project::update(&input, &session, &mut project_members, &db).await
             {
@@ -248,7 +269,7 @@ pub async fn post_project(
                 }
             };
         }
-        "delete" => {
+        super::Action::Delete => {
             // プロジェクト削除
             match model::project::Project::delete(&input, &session, &db).await {
                 Ok(p) => p,
@@ -257,10 +278,9 @@ pub async fn post_project(
                 }
             };
         }
-        _ => {}
     }
 
-    let (project, member) = model::project::Project::last_project(&session, &db).await?;
+    let (project, member) = model::project::Project::current_project(&session, &db).await?;
     props.project = project;
     props.member = member;
     props.session = Some(session);

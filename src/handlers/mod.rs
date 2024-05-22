@@ -11,8 +11,16 @@ pub mod home;
 pub mod login;
 pub mod project;
 pub mod ticket;
+pub mod validation;
 
 const COOKIE_SESSION_ID: &str = "yuimarl_session-id";
+
+#[derive(Debug, Clone)]
+pub enum Action {
+    Create,
+    Update,
+    Delete,
+}
 
 fn get_session_id(cookies: Cookies, should_exist: bool) -> Result<String> {
     let mut session_id = match cookies.get(COOKIE_SESSION_ID) {

@@ -14,16 +14,17 @@ html(lang="ja")
       .py-3
         .container
           h3.mb-3 チケット
-          ul.nav.nav-tabs
-            li.nav-item
-              a.nav-link(href="#") 基本情報
-            li.nav-item
-              a.nav-link(href="#") ノート
-            li.nav-item
-              a.nav-link.active(href="#") コメント
-            li.nav-item
-              a.nav-link(href="#") 更新履歴
-          form.pt-2
+          .pb-2
+            ul.nav.nav-tabs
+              li.nav-item
+                a.nav-link(href="#") 基本情報
+              li.nav-item
+                a.nav-link(href="#") ノート
+              li.nav-item
+                a.nav-link.active(href="#") コメント
+              li.nav-item
+                a.nav-link(href="#") 更新履歴
+          form(action="/ticket_add" method="POST")
             .row.py-2.ticket-comment
               .col
                 .row

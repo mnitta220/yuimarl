@@ -1,14 +1,49 @@
 use crate::{
     model,
-    pages::{home_page::HomePage, login_page::LoginPage, page, ticket_page::TicketPage},
+    pages::{login_page::LoginPage, page, ticket_page::TicketPage},
     AppError,
 };
 use anyhow::Result;
-use axum::{extract::Form, response::Html};
+use axum::response::Html;
 use firestore::*;
-use serde::Deserialize;
 use tower_cookies::Cookies;
 
+pub async fn get_ticket_add(cookies: Cookies) -> Result<Html<String>, AppError> {
+    tracing::debug!("GET /ticket_add");
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
+    let session = match super::get_session_info(cookies, true, &db).await {
+        Ok(session_id) => session_id,
+        Err(_) => return Ok(Html(LoginPage::write())),
+    };
+
+    let mut props = page::Props::new(&session.id);
+    props.title = Some("チケットを作成".to_string());
+    props.is_create = true;
+
+    let (project, member) = match model::project::Project::current_project(&session, &db).await {
+        Ok((project, member)) => (project, member),
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
+    props.project = project;
+    props.member = member;
+    props.session = Some(session);
+
+    let mut page = TicketPage::new(props);
+
+    Ok(Html(page.write()))
+}
+
+/*
 #[derive(Deserialize, Debug)]
 pub struct TicketAddInput {
     pub project: String,
@@ -134,3 +169,4 @@ pub async fn post_create_ticket(
 
     Ok(Html(page.write()))
 }
+*/

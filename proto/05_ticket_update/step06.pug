@@ -19,17 +19,17 @@ html(lang="ja")
               | 他のユーザーがチケットを更新しため、更新できませんでした。
               br
               | 再読み込みを行ってください。
-          ul.nav.nav-tabs
-            li.nav-item
-              a.nav-link.active(href="#") 基本情報
-            li.nav-item
-              a.nav-link(href="#") ノート
-            li.nav-item
-              a.nav-link(href="#") コメント
-            li.nav-item
-              a.nav-link(href="#") 更新履歴
-
-          form.pt-2
+          .pb-2
+            ul.nav.nav-tabs
+              li.nav-item
+                a.nav-link.active(href="#") 基本情報
+              li.nav-item
+                a.nav-link(href="#") ノート
+              li.nav-item
+                a.nav-link(href="#") コメント
+              li.nav-item
+                a.nav-link(href="#") 更新履歴
+          form(action="/ticket_add" method="POST")
             // プロジェクト / チケットID
             .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="ticket-id") プロジェクト / チケットID
@@ -166,16 +166,10 @@ html(lang="ja")
                   a(href="#") BN13
                   | &nbsp;:&nbsp;
                   | 備品準備
-                  | &nbsp;
-                  a(href="#")
-                    img.icon(src="../../static/ionicons/remove-circle-outline.svg" title="削除")
                 p.mb-0
                   a(href="#") BN14
                   | &nbsp;:&nbsp;
                   | 食材購入
-                  | &nbsp;
-                  a(href="#")
-                    img.icon(src="../../static/ionicons/remove-circle-outline.svg" title="削除")
 
             // 成果物
             .row.pt-1.pb-2

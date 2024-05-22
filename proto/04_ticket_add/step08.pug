@@ -13,7 +13,7 @@ html(lang="ja")
     main
       .py-3
         .container
-          h3.mb-3 チケット
+          h3.mb-3 チケットを作成
           //- ul.nav.nav-tabs
             li.nav-item
               a.nav-link.active(href="#") 基本情報
@@ -215,11 +215,10 @@ html(lang="ja")
                 //- span.btn-help &nbsp;: 成果物を追加
 
             .row.py-3.mt-2.bg-light
-              .col-9
+              .col
                 button.btn.btn-primary(type="submit")
-                  img.icon(src="../../static/ionicons/save-outline.svg")
-                  | &nbsp;追加
-              .col-3.text-end
+                  img.icon(src="../../static/ionicons/create-outline.svg")
+                  | &nbsp;作成
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light

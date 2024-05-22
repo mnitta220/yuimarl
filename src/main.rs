@@ -8,8 +8,8 @@ use axum::{
 };
 use dotenv::dotenv;
 use once_cell::sync::OnceCell;
-use pages::page::ProjectTab;
 use pages::page::Props;
+use pages::page::Tab;
 use std::time::Duration;
 use tower::{BoxError, ServiceBuilder};
 use tower_cookies::CookieManagerLayer;
@@ -20,7 +20,6 @@ mod components;
 mod handlers;
 mod model;
 mod pages;
-mod validation;
 
 static GOOGLE_PROJECT_ID: OnceCell<String> = OnceCell::new();
 static API_KEY: OnceCell<String> = OnceCell::new();
@@ -66,8 +65,9 @@ async fn main() {
         .route("/project_add", get(handlers::project::get_project_add))
         .route("/project_list", get(handlers::project::get_project_list))
         .route("/project_note", post(handlers::project::post_note))
-        .route("/ticket/add", post(handlers::ticket::post_add_ticket))
-        .route("/ticket/create", post(handlers::ticket::post_create_ticket))
+        .route("/ticket_add", get(handlers::ticket::get_ticket_add))
+        //.route("/ticket/add", post(handlers::ticket::post_add_ticket))
+        //.route("/ticket/create", post(handlers::ticket::post_create_ticket))
         .route("/contact", get(handlers::contact::get_contact))
         .route("/api/firebaseConfig", get(handlers::api::firebase_config))
         .route("/api/userByEmail", post(handlers::api::user_by_email))

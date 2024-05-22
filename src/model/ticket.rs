@@ -46,6 +46,7 @@ impl Ticket {
         }
     }
 
+    /*
     pub async fn insert(
         input: &crate::handlers::ticket::TicketCreateInput,
         session: &Session,
@@ -128,4 +129,5 @@ impl Ticket {
 
         Ok(())
     }
+    */
 }

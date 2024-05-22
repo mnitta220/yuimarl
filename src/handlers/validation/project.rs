@@ -17,55 +17,20 @@ impl ProjectValidation {
         }
     }
 
-    pub async fn validate_post_project(
+    pub async fn validate_post(
         input: &handlers::project::ProjectInput,
         session: &model::session::Session,
+        action: super::super::Action,
         db: &FirestoreDb,
     ) -> Result<Option<Self>> {
-        match input.action.as_ref() {
-            "post" | "put" => {
-                let project_name = input.project_name.trim().to_string();
-                if project_name.len() == 0 {
-                    let mut validation = Self::new();
-                    validation.project_name = Some("入力してください".to_string());
-                    return Ok(Some(validation));
-                }
-
-                let projects = match model::project::Project::find_by_owner_and_name(
-                    &session.uid,
-                    &project_name,
-                    &db,
-                )
-                .await
-                {
-                    Ok(p) => p,
-                    Err(e) => {
-                        return Err(anyhow::anyhow!(e));
-                    }
-                };
-
-                for prj in projects {
-                    if prj.deleted || prj.id.unwrap() == input.project_id {
-                        continue;
-                    }
-
-                    let mut validation = Self::new();
-                    validation.project_name =
-                        Some("同じ名前のプロジェクトが存在します".to_string());
-                    return Ok(Some(validation));
-                }
-            }
-            _ => {}
-        }
-
-        match input.action.as_ref() {
-            "post" => {
-                // プロジェクト作成
+        match action {
+            // プロジェクト作成
+            super::super::Action::Create => {
                 // TODO プロジェクト作成件数の制限を超えていたら作成できない。
             }
-            "put" => {
-                // プロジェクト更新
 
+            // プロジェクト更新
+            super::super::Action::Update => {
                 // プロジェクトを更新できるのは、オーナーか管理者のみ
                 let member =
                     match model::project::ProjectMember::find(&input.project_id, &session.uid, &db)
@@ -119,9 +84,9 @@ impl ProjectValidation {
                     return Ok(Some(validation));
                 }
             }
-            "delete" => {
-                // プロジェクト削除
 
+            // プロジェクト削除
+            super::super::Action::Delete => {
                 // プロジェクトを削除できるのはオーナーのみ
                 let member =
                     match model::project::ProjectMember::find(&input.project_id, &session.uid, &db)
@@ -145,6 +110,41 @@ impl ProjectValidation {
                     let mut validation = Self::new();
                     validation.project_info =
                         Some("プロジェクトを削除する権限がありません".to_string());
+                    return Ok(Some(validation));
+                }
+            }
+        }
+
+        match action {
+            super::super::Action::Create | super::super::Action::Update => {
+                let project_name = input.project_name.trim().to_string();
+                if project_name.len() == 0 {
+                    let mut validation = Self::new();
+                    validation.project_name = Some("入力してください".to_string());
+                    return Ok(Some(validation));
+                }
+
+                let projects = match model::project::Project::find_by_owner_and_name(
+                    &session.uid,
+                    &project_name,
+                    &db,
+                )
+                .await
+                {
+                    Ok(p) => p,
+                    Err(e) => {
+                        return Err(anyhow::anyhow!(e));
+                    }
+                };
+
+                for prj in projects {
+                    if prj.deleted || prj.id.unwrap() == input.project_id {
+                        continue;
+                    }
+
+                    let mut validation = Self::new();
+                    validation.project_name =
+                        Some("同じ名前のプロジェクトが存在します".to_string());
                     return Ok(Some(validation));
                 }
             }

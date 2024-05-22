@@ -14,16 +14,17 @@ html(lang="ja")
       .py-3
         .container
           h3.mb-3 チケット
-          ul.nav.nav-tabs
-            li.nav-item
-              a.nav-link(href="#") 基本情報
-            li.nav-item
-              a.nav-link(href="#") ノート
-            li.nav-item
-              a.nav-link.active(href="#") コメント
-            li.nav-item
-              a.nav-link(href="#") 更新履歴
-          form.pt-2
+          .pb-2
+            ul.nav.nav-tabs
+              li.nav-item
+                a.nav-link(href="#") 基本情報
+              li.nav-item
+                a.nav-link(href="#") ノート
+              li.nav-item
+                a.nav-link.active(href="#") コメント
+              li.nav-item
+                a.nav-link(href="#") 更新履歴
+          form(action="/ticket_add" method="POST")
             .row.py-2.ticket-comment
               .col
                 .row
@@ -76,17 +77,18 @@ html(lang="ja")
           .modal-dialog.modal-md
             .modal-content
               .modal-header
-                h1.modal-title.fs-5#deleteCommentModalLabel コメントを削除
+                h1.modal-title.fs-5#deleteCommentModalLabel コメント削除
                 button.btn-close(type="button" data-bs-dismiss="modal" aria-label="キャンセル")
               .modal-body
-                .row
-                  .col
-                    | コメントを削除します。
-                    br
-                    | よろしいですか？
+                p
+                  | コメントを削除します。
+                  br
+                  | よろしいですか？
               .modal-footer
                 button.btn.btn-secondary(type="button" data-bs-dismiss="modal") キャンセル
-                button.btn.btn-primary(type="button") 削除
+                button.btn.btn-danger(type="button")
+                  img.icon(src="../../static/ionicons/trash-outline2.svg")
+                  | &nbsp;削除
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light

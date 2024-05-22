@@ -114,7 +114,7 @@ impl Project {
         Ok(obj_by_id)
     }
 
-    pub async fn last_project(
+    pub async fn current_project(
         session: &Session,
         db: &FirestoreDb,
     ) -> Result<(Option<Self>, Option<ProjectMember>)> {

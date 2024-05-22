@@ -3,8 +3,8 @@ use super::parts::{
     footer::Footer, nav::Nav, project_history::ProjectHistory, project_info::ProjectInfo,
     project_note::ProjectNote,
 };
-use crate::ProjectTab;
 use crate::Props;
+use crate::Tab;
 
 pub struct ProjectBody {
     pub nav: Box<dyn Component + Send>,
@@ -65,7 +65,7 @@ impl Component for ProjectBody {
                                         *buf += r#"<li class="nav-item">"#;
                                         {
                                             *buf += r#"<a class="nav-link"#;
-                                            if props.project_tab == ProjectTab::Info {
+                                            if props.tab == Tab::Info {
                                                 *buf += r#" active"#;
                                             }
                                             *buf += r#"" href="/project?id="#;
@@ -77,7 +77,7 @@ impl Component for ProjectBody {
                                         *buf += r#"<li class="nav-item">"#;
                                         {
                                             *buf += r#"<a class="nav-link"#;
-                                            if props.project_tab == ProjectTab::Note {
+                                            if props.tab == Tab::Note {
                                                 *buf += r#" active"#;
                                             }
                                             *buf += r#"" href="/project?id="#;
@@ -89,7 +89,7 @@ impl Component for ProjectBody {
                                         *buf += r#"<li class="nav-item">"#;
                                         {
                                             *buf += r#"<a class="nav-link"#;
-                                            if props.project_tab == ProjectTab::History {
+                                            if props.tab == Tab::History {
                                                 *buf += r#" active"#;
                                             }
                                             *buf += r#"" href="/project?id="#;
@@ -104,14 +104,14 @@ impl Component for ProjectBody {
                             }
                         }
 
-                        match &props.project_tab {
-                            ProjectTab::Info => {
+                        match &props.tab {
+                            Tab::Info => {
                                 self.project_info.write(props, buf);
                             }
-                            ProjectTab::Note => {
+                            Tab::Note => {
                                 self.project_note.write(props, buf);
                             }
-                            ProjectTab::History => {
+                            Tab::History => {
                                 self.project_history.write(props, buf);
                             }
                         }
@@ -124,11 +124,11 @@ impl Component for ProjectBody {
 
             self.footer.write(props, buf);
             *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
-            match &props.project_tab {
-                ProjectTab::Info => {
+            match &props.tab {
+                Tab::Info => {
                     *buf += r#"<script src="/static/js/project0012b.js"></script>"#;
                 }
-                ProjectTab::Note => {
+                Tab::Note => {
                     *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;
                     *buf += r#"<script src="/static/js/markdown0012.js"></script>"#;
                 }

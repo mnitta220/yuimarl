@@ -23,7 +23,7 @@ impl LoginPage {
 
             buf += r#"<body>"#;
             {
-                buf += r#"<h1 style="text-align: center">Yuimarl ログイン</h1>"#;
+                buf += r#"<h1 style="text-align: center">ログイン - Yuimarl</h1>"#;
                 buf += r#"<div id="firebaseui-auth-container"></div>"#;
                 buf += r#"<div id="loader">Loading...</div>"#;
 

@@ -32,12 +32,12 @@ impl Component for TicketBody {
                     *buf += r#"<div class="container">"#;
                     {
                         *buf += r#"<h3 class="mb-3">チケット"#;
-                        if props.is_create {
+                        if props.action == crate::Action::Create {
                             *buf += r#"を作成"#;
                         }
                         *buf += r#"</h3>"#;
 
-                        if props.is_create == false {
+                        if props.action != crate::Action::Create {
                             *buf += r#"<div class="pb-2">"#;
                             {
                                 *buf += r#"<ul class="nav nav-tabs">"#;

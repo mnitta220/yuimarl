@@ -20,7 +20,7 @@ pub struct Params {
     tab: Option<String>,
 }
 
-pub async fn get_project_add(cookies: Cookies) -> Result<Html<String>, AppError> {
+pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
     tracing::debug!("GET /project_add");
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
@@ -36,7 +36,7 @@ pub async fn get_project_add(cookies: Cookies) -> Result<Html<String>, AppError>
     };
     let mut props = page::Props::new(&session.id);
     props.title = Some("プロジェクトを作成".to_string());
-    props.is_create = true;
+    props.action = crate::Action::Create;
     props.project = None;
 
     let mut member = model::project::ProjectMember::new(session.uid.clone());
@@ -52,7 +52,7 @@ pub async fn get_project_add(cookies: Cookies) -> Result<Html<String>, AppError>
     Ok(Html(page.write()))
 }
 
-pub async fn get_project_list(cookies: Cookies) -> Result<Html<String>, AppError> {
+pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
     tracing::debug!("GET /project_list");
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
@@ -83,10 +83,7 @@ pub async fn get_project_list(cookies: Cookies) -> Result<Html<String>, AppError
     Ok(Html(page.write()))
 }
 
-pub async fn get_project(
-    cookies: Cookies,
-    Query(params): Query<Params>,
-) -> Result<Html<String>, AppError> {
+pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<String>, AppError> {
     let id = params.id.unwrap_or_default();
     let tab = params.tab.unwrap_or_default();
     tracing::debug!("GET /project id={} tab={}", id, tab);
@@ -103,6 +100,7 @@ pub async fn get_project(
         Err(_) => return Ok(Html(LoginPage::write())),
     };
     let mut props = page::Props::new(&session.id);
+    props.action = crate::Action::Update;
     props.title = Some("プロジェクト".to_string());
 
     match tab.as_ref() {
@@ -156,7 +154,7 @@ pub struct ProjectInput {
     pub timestamp: String,
 }
 
-pub async fn post_project(
+pub async fn post(
     cookies: Cookies,
     Form(input): Form<ProjectInput>,
 ) -> Result<Html<String>, AppError> {
@@ -190,14 +188,11 @@ pub async fn post_project(
     };
 
     let mut props = page::Props::new(&session.id);
-    if input.action == "post" {
-        props.is_create = true;
-    }
 
     let action = match input.action.as_ref() {
-        "post" => super::Action::Create,
-        "put" => super::Action::Update,
-        "delete" => super::Action::Delete,
+        "Create" => crate::Action::Create,
+        "Update" => crate::Action::Update,
+        "Delete" => crate::Action::Delete,
         _ => {
             return Err(AppError(anyhow::anyhow!(format!(
                 "invalid action: {}",
@@ -249,7 +244,7 @@ pub async fn post_project(
     }
 
     match action {
-        super::Action::Create => {
+        crate::Action::Create => {
             // プロジェクト作成
             match model::project::Project::insert(&input, &session, &mut project_members, &db).await
             {
@@ -259,7 +254,7 @@ pub async fn post_project(
                 }
             };
         }
-        super::Action::Update => {
+        crate::Action::Update => {
             // プロジェクト更新
             match model::project::Project::update(&input, &session, &mut project_members, &db).await
             {
@@ -269,7 +264,7 @@ pub async fn post_project(
                 }
             };
         }
-        super::Action::Delete => {
+        crate::Action::Delete => {
             // プロジェクト削除
             match model::project::Project::delete(&input, &session, &db).await {
                 Ok(p) => p,
@@ -278,9 +273,11 @@ pub async fn post_project(
                 }
             };
         }
+        _ => {}
     }
 
     let (project, member) = model::project::Project::current_project(&session, &db).await?;
+    props.action = action;
     props.project = project;
     props.member = member;
     props.session = Some(session);

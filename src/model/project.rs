@@ -20,7 +20,6 @@ pub struct Project {
     pub project_name: Option<String>,      // プロジェクト名
     pub owner: Option<String>,             // プロジェクトオーナー
     pub prefix: Option<String>,            // チケット接頭辞
-    pub language: Option<String>,          // 言語
     pub member_limit: Option<i32>,         // 最大メンバー数
     pub ticket_limit: Option<i32>,         // 最大チケット番号
     pub ticket_number: Option<i32>,        // チケット番号
@@ -30,14 +29,6 @@ pub struct Project {
     pub history: Option<String>,           // 更新履歴 (JSON)
     pub deleted: bool,                     // 削除フラグ
 }
-
-/*
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct ProjectValidation {
-    pub project_info: Option<String>,
-    pub project_name: Option<String>,
-}
-*/
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct ProjectMember {
@@ -81,7 +72,6 @@ impl Project {
             project_name: None,
             owner: None,
             prefix: None,
-            language: None,
             member_limit: None,
             ticket_limit: None,
             ticket_number: None,

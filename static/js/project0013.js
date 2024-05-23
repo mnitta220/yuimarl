@@ -187,7 +187,6 @@ function setMemberList() {
 }
 
 $('#btnProjectDel').on('click', function () {
-    console.log('delete');
-    $("#action").val('delete');
+    $("#action").val('Delete');
     $('#post_project').submit();
 });

@@ -8,7 +8,7 @@ use axum::response::Html;
 use firestore::*;
 use tower_cookies::Cookies;
 
-pub async fn get_ticket_add(cookies: Cookies) -> Result<Html<String>, AppError> {
+pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
     tracing::debug!("GET /ticket_add");
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
@@ -25,7 +25,7 @@ pub async fn get_ticket_add(cookies: Cookies) -> Result<Html<String>, AppError> 
 
     let mut props = page::Props::new(&session.id);
     props.title = Some("チケットを作成".to_string());
-    props.is_create = true;
+    props.action = crate::Action::Create;
 
     let (project, member) = match model::project::Project::current_project(&session, &db).await {
         Ok((project, member)) => (project, member),

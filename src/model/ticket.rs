@@ -9,18 +9,22 @@ const COLLECTION_NAME: &'static str = "ticket";
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Ticket {
-    pub id: Option<String>,
-    pub project_id: Option<String>,
-    pub id_disp: Option<String>,
-    pub name: Option<String>,
-    pub note: Option<String>,
-    pub start_date: Option<String>,
-    pub end_date: Option<String>,
-    pub progress: i32,
-    pub priority: Option<String>,
-    pub parent: Option<String>,
-    pub owner: Option<String>,
-    pub created_at: Option<DateTime<Utc>>,
+    pub id: Option<String>,                // ID(uuid)
+    pub project_id: Option<String>,        // プロジェクトID
+    pub id_disp: Option<String>,           // 表示用チケットID（接頭辞＋連番）
+    pub name: Option<String>,              // チケット名
+    pub description: Option<String>,       // 内容
+    pub start_date: Option<String>,        // 開始日
+    pub end_date: Option<String>,          // 終了日
+    pub progress: i32,                     // 進捗率
+    pub priority: Option<String>,          // 優先度
+    pub parent: Option<String>,            // 親チケット
+    pub deliverables: Option<String>,      // 成果物(JSON)
+    pub owner: Option<String>,             // 登録ユーザー
+    pub note: Option<String>,              // ノート（マークダウン）
+    pub history: Option<String>,           // 更新履歴 (JSON)
+    pub created_at: Option<DateTime<Utc>>, // 作成日時
+    pub deleted: bool,                     // 削除フラグ
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -35,14 +39,18 @@ impl Ticket {
             project_id: None,
             id_disp: None,
             name: None,
-            note: None,
+            description: None,
             start_date: None,
             end_date: None,
             progress: 0,
             priority: None,
             parent: None,
+            deliverables: None,
             owner: None,
+            note: None,
+            history: None,
             created_at: None,
+            deleted: false,
         }
     }
 

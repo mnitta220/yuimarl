@@ -20,17 +20,17 @@ impl ProjectValidation {
     pub async fn validate_post(
         input: &handlers::project::ProjectInput,
         session: &model::session::Session,
-        action: super::super::Action,
+        action: crate::Action,
         db: &FirestoreDb,
     ) -> Result<Option<Self>> {
         match action {
             // プロジェクト作成
-            super::super::Action::Create => {
+            crate::Action::Create => {
                 // TODO プロジェクト作成件数の制限を超えていたら作成できない。
             }
 
             // プロジェクト更新
-            super::super::Action::Update => {
+            crate::Action::Update => {
                 // プロジェクトを更新できるのは、オーナーか管理者のみ
                 let member =
                     match model::project::ProjectMember::find(&input.project_id, &session.uid, &db)
@@ -86,7 +86,7 @@ impl ProjectValidation {
             }
 
             // プロジェクト削除
-            super::super::Action::Delete => {
+            crate::Action::Delete => {
                 // プロジェクトを削除できるのはオーナーのみ
                 let member =
                     match model::project::ProjectMember::find(&input.project_id, &session.uid, &db)
@@ -113,10 +113,12 @@ impl ProjectValidation {
                     return Ok(Some(validation));
                 }
             }
+
+            _ => {}
         }
 
         match action {
-            super::super::Action::Create | super::super::Action::Update => {
+            crate::Action::Create | crate::Action::Update => {
                 let project_name = input.project_name.trim().to_string();
                 if project_name.len() == 0 {
                     let mut validation = Self::new();

@@ -10,7 +10,7 @@ impl Component for TicketInfo {
             *buf += r#"<div class="row py-2">"#;
             {
                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="ticket-id">プロジェクト"#;
-                if props.is_create == false {
+                if props.action != crate::Action::Create {
                     *buf += r#" / チケットID"#;
                 }
                 *buf += r#"</label>"#;
@@ -36,7 +36,13 @@ impl Component for TicketInfo {
                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="name">チケット名</label>"#;
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 {
-                    *buf += r#"<input class="form-control" id="name" type="text" maxlength="40" value="たこやき模擬店" required>"#;
+                    *buf += r#"<input class="form-control" id="name" type="text" maxlength="40" value=""#;
+                    if let Some(t) = &props.ticket {
+                        if let Some(n) = &t.name {
+                            *buf += n;
+                        }
+                    }
+                    *buf += r#"" required>"#;
                 }
                 *buf += r#"</div>"#;
             }
@@ -51,6 +57,11 @@ impl Component for TicketInfo {
                     *buf +=
                         r#"<textarea class="form-control" id="message" rows="3" name="message">"#;
                     *buf += r#"たこやき模擬店を出店するために、やるべきことを検討する。"#;
+                    if let Some(t) = &props.ticket {
+                        if let Some(n) = &t.note {
+                            *buf += n;
+                        }
+                    }
                     *buf += r#"</textarea>"#;
                 }
                 *buf += r#"</div>"#;
@@ -255,7 +266,7 @@ impl Component for TicketInfo {
 
             *buf += r#"<div class="row py-3 mt-2 bg-light">"#;
             {
-                if props.is_create {
+                if props.action == crate::Action::Create {
                     *buf += r#"<div class="col">"#;
                     {
                         *buf += r#"<button class="btn btn-primary" type="submit">"#;

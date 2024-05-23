@@ -24,7 +24,7 @@ pub async fn get_home(cookies: Cookies) -> Result<Html<String>, AppError> {
     };
 
     let mut props = page::Props::new(&session.id);
-    props.title = Some("ホーム".to_string());
+    //props.title = Some("ホーム".to_string());
 
     let (project, member) = match model::project::Project::current_project(&session, &db).await {
         Ok((project, member)) => (project, member),

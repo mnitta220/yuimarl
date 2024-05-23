@@ -39,7 +39,7 @@ impl Component for ProjectBody {
                     *buf += r#"<div class="container">"#;
                     {
                         *buf += r#"<h3 class="mb-3">プロジェクト"#;
-                        if props.is_create {
+                        if props.action == crate::Action::Create {
                             *buf += r#"を作成"#;
                         }
                         *buf += r#"</h3>"#;
@@ -56,7 +56,7 @@ impl Component for ProjectBody {
                             }
                         }
 
-                        if props.is_create == false {
+                        if props.action != crate::Action::Create {
                             if let Some(p) = &props.project {
                                 *buf += r#"<div class="pb-2">"#;
                                 {
@@ -126,7 +126,7 @@ impl Component for ProjectBody {
             *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
             match &props.tab {
                 Tab::Info => {
-                    *buf += r#"<script src="/static/js/project0012b.js"></script>"#;
+                    *buf += r#"<script src="/static/js/project0013.js"></script>"#;
                 }
                 Tab::Note => {
                     *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;

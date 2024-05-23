@@ -144,7 +144,7 @@ impl Component for ProjectInfo {
 
             *buf += r#"<div class="row py-3 mt-2 bg-light">"#;
             {
-                if props.is_create {
+                if props.action == crate::Action::Create {
                     *buf += r#"<div class="col">"#;
                     {
                         *buf += r#"<button class="btn btn-primary" type="submit">"#;
@@ -210,11 +210,7 @@ impl Component for ProjectInfo {
             *buf += r#"</div>"#;
 
             *buf += r#"<input type="hidden" name="action" id="action" value=""#;
-            if props.is_create {
-                *buf += r#"post"#;
-            } else {
-                *buf += r#"put"#;
-            }
+            *buf += &props.action.to_string();
             *buf += r#"">"#;
         }
         *buf += r#"</form>"#;

@@ -16,12 +16,11 @@ pub struct Props {
     pub member: Option<model::project::ProjectMember>,
     pub members: Vec<model::project::ProjectMember>,
     pub project_validation: Option<validation::project::ProjectValidation>,
-    //pub projects: Vec<model::project::Project>,
     pub ticket: Option<model::ticket::Ticket>,
     pub ticket_validation: Option<model::ticket::TicketValidation>,
     pub tickets: Vec<model::ticket::Ticket>,
     pub tab: Tab,
-    pub is_create: bool,
+    pub action: crate::Action,
 }
 
 impl Props {
@@ -34,12 +33,11 @@ impl Props {
             member: None,
             members: Vec::new(),
             project_validation: None,
-            //projects: Vec::new(),
             ticket: None,
             ticket_validation: None,
             tickets: Vec::new(),
             tab: Tab::Info,
-            is_create: false,
+            action: crate::Action::Read,
         }
     }
 }

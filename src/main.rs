@@ -60,12 +60,12 @@ async fn main() {
         .route("/agree/no", get(handlers::agreement::get_disagree))
         .route(
             "/project",
-            get(handlers::project::get_project).post(handlers::project::post_project),
+            get(handlers::project::get).post(handlers::project::post),
         )
-        .route("/project_add", get(handlers::project::get_project_add))
-        .route("/project_list", get(handlers::project::get_project_list))
+        .route("/project_add", get(handlers::project::get_add))
+        .route("/project_list", get(handlers::project::get_list))
         .route("/project_note", post(handlers::project::post_note))
-        .route("/ticket_add", get(handlers::ticket::get_ticket_add))
+        .route("/ticket_add", get(handlers::ticket::get_add))
         //.route("/ticket/add", post(handlers::ticket::post_add_ticket))
         //.route("/ticket/create", post(handlers::ticket::post_create_ticket))
         .route("/contact", get(handlers::contact::get_contact))
@@ -182,6 +182,25 @@ fn get_environment_values() -> Result<()> {
     }
 
     Ok(())
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Action {
+    Read,
+    Create,
+    Update,
+    Delete,
+}
+
+impl Action {
+    pub fn to_string(&self) -> String {
+        match self {
+            Action::Read => "Read".to_string(),
+            Action::Create => "Create".to_string(),
+            Action::Update => "Update".to_string(),
+            Action::Delete => "Delete".to_string(),
+        }
+    }
 }
 
 // Make our own error that wraps `anyhow::Error`.

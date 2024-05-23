@@ -170,11 +170,6 @@
                             <td>チケット接頭辞</td>
                           </tr>
                           <tr>
-                            <td>language</td>
-                            <td>string</td>
-                            <td>言語（"ja"固定）</td>
-                          </tr>
-                          <tr>
                             <td>member_limit</td>
                             <td>number</td>
                             <td>最大メンバー数（20固定）</td>
@@ -197,6 +192,16 @@
                           <tr>
                             <td>created_at</td>
                             <td>timestamp</td>
+                            <td>作成日時</td>
+                          </tr>
+                          <tr>
+                            <td>updated_at</td>
+                            <td>timestamp</td>
+                            <td>更新日時</td>
+                          </tr>
+                          <tr>
+                            <td>history</td>
+                            <td>string</td>
                             <td>作成日時</td>
                           </tr>
                           <tr>
@@ -232,7 +237,7 @@
                             <td>プロジェクトID</td>
                           </tr>
                           <tr>
-                            <td>member</td>
+                            <td>uid</td>
                             <td>string</td>
                             <td>メンバーのユーザーID</td>
                           </tr>
@@ -269,14 +274,14 @@
                             <td>(uuid)</td>
                           </tr>
                           <tr>
-                            <td>id_disp</td>
-                            <td>string</td>
-                            <td>表示用チケットID（接頭辞＋連番）</td>
-                          </tr>
-                          <tr>
                             <td>project_id</td>
                             <td>string</td>
                             <td>プロジェクトID</td>
+                          </tr>
+                          <tr>
+                            <td>id_disp</td>
+                            <td>string</td>
+                            <td>表示用チケットID（接頭辞＋連番）</td>
                           </tr>
                           <tr>
                             <td>name</td>
@@ -324,6 +329,11 @@
                             <td>登録ユーザー</td>
                           </tr>
                           <tr>
+                            <td>note</td>
+                            <td>string</td>
+                            <td>ノート（マークダウン）</td>
+                          </tr>
+                          <tr>
                             <td>history</td>
                             <td>string</td>
                             <td>更新履歴(JSON)</td>
@@ -331,7 +341,7 @@
                           <tr>
                             <td>created_at</td>
                             <td>timestamp</td>
-                            <td> </td>
+                            <td>作成日時</td>
                           </tr>
                           <tr>
                             <td>deleted</td>

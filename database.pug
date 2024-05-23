@@ -129,10 +129,6 @@ html(lang="ja")
                             td string
                             td チケット接頭辞
                           tr
-                            td language
-                            td string
-                            td 言語（"ja"固定）
-                          tr
                             td member_limit
                             td number
                             td 最大メンバー数（20固定）
@@ -151,6 +147,14 @@ html(lang="ja")
                           tr
                             td created_at
                             td timestamp
+                            td 作成日時
+                          tr
+                            td updated_at
+                            td timestamp
+                            td 更新日時
+                          tr
+                            td history
+                            td string
                             td 作成日時
                           tr
                             td deleted
@@ -177,7 +181,7 @@ html(lang="ja")
                             td string
                             td プロジェクトID
                           tr
-                            td member
+                            td uid
                             td string
                             td メンバーのユーザーID
                           tr
@@ -205,13 +209,13 @@ html(lang="ja")
                             td string
                             td (uuid)
                           tr
-                            td id_disp
-                            td string
-                            td 表示用チケットID（接頭辞＋連番）
-                          tr
                             td project_id
                             td string
                             td プロジェクトID
+                          tr
+                            td id_disp
+                            td string
+                            td 表示用チケットID（接頭辞＋連番）
                           tr
                             td name
                             td string
@@ -249,13 +253,17 @@ html(lang="ja")
                             td string
                             td 登録ユーザー
                           tr
+                            td note
+                            td string
+                            td ノート（マークダウン）
+                          tr
                             td history
                             td string
                             td 更新履歴(JSON)
                           tr
                             td created_at
                             td timestamp
-                            td 
+                            td 作成日時
                           tr
                             td deleted
                             td boolean

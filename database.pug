@@ -269,30 +269,6 @@ html(lang="ja")
                             td boolean
                             td false:有効, true:削除済
                     hr
-                    // ticket_note
-                    section.py-2
-                      h3 ticket_note
-                      p チケットのノートの情報を保持する。
-                      table.table.table-sm.table-bordered
-                        thead
-                          tr
-                            th(scope="col") 項目名
-                            th(scope="col") 型
-                            th(scope="col") 説明
-                        tbody
-                          tr
-                            td id
-                            td string
-                            td チケットID
-                          tr
-                            td note
-                            td string
-                            td ノート（マークダウン）
-                          tr
-                            td history
-                            td string
-                            td 更新履歴(JSON)
-                    hr
                     // ticket_member
                     section.py-2
                       h3 ticket_member
@@ -306,6 +282,10 @@ html(lang="ja")
                         tbody
                           tr
                             td id
+                            td string
+                            td (uuid)
+                          tr
+                            td ticket_id
                             td string
                             td チケットID
                           tr

@@ -352,38 +352,6 @@
                       </table>
                     </section>
                     <hr>
-                    <!-- ticket_note-->
-                    <section class="py-2">
-                      <h3>ticket_note</h3>
-                      <p>チケットのノートの情報を保持する。</p>
-                      <table class="table table-sm table-bordered">
-                        <thead>
-                          <tr>
-                            <th scope="col">項目名</th>
-                            <th scope="col">型</th>
-                            <th scope="col">説明</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>id</td>
-                            <td>string</td>
-                            <td>チケットID</td>
-                          </tr>
-                          <tr>
-                            <td>note</td>
-                            <td>string</td>
-                            <td>ノート（マークダウン）</td>
-                          </tr>
-                          <tr>
-                            <td>history</td>
-                            <td>string</td>
-                            <td>更新履歴(JSON)</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </section>
-                    <hr>
                     <!-- ticket_member-->
                     <section class="py-2">
                       <h3>ticket_member</h3>
@@ -399,6 +367,11 @@
                         <tbody>
                           <tr>
                             <td>id</td>
+                            <td>string</td>
+                            <td>(uuid)</td>
+                          </tr>
+                          <tr>
+                            <td>ticket_id</td>
                             <td>string</td>
                             <td>チケットID</td>
                           </tr>

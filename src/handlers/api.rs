@@ -28,8 +28,15 @@ pub struct UserResult {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct MemberAddInput {
-    pub members: String,
+pub struct ProjectMemberInput {
+    pub project_id: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct MemberResult {
+    pub result: String,
+    pub members: Vec<model::project::ProjectMember>,
+    pub message: String,
 }
 
 pub async fn firebase_config() -> String {
@@ -101,6 +108,66 @@ pub async fn user_by_email(Form(input): Form<UserByEmainInput>) -> String {
     let buf = match serde_json::to_string(&result) {
         Ok(r) => r,
         Err(e) => format!("ユーザーの検索に失敗しました。 [{}]", e.to_string()),
+    };
+
+    buf
+}
+
+/// プロジェクトのメンバーを取得する。
+pub async fn project_member(Form(input): Form<ProjectMemberInput>) -> String {
+    tracing::info!("GET /project_member: {}", input.project_id);
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            let result = MemberResult {
+                result: "NG".to_string(),
+                members: Vec::new(),
+                message: format!("メンバーの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            let buf = match serde_json::to_string(&result) {
+                Ok(r) => r,
+                Err(_) => format!("メンバーの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            return buf;
+        }
+    };
+
+    let members = match model::project::ProjectMember::members_of_project(
+        &input.project_id,
+        false,
+        &db,
+    )
+    .await
+    {
+        Ok(u) => u,
+        Err(e) => {
+            let result = MemberResult {
+                result: "NG".to_string(),
+                members: Vec::new(),
+                message: format!("メンバーの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            let buf = match serde_json::to_string(&result) {
+                Ok(r) => r,
+                Err(e) => format!("メンバーの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            return buf;
+        }
+    };
+
+    let result = MemberResult {
+        result: "OK".to_string(),
+        members: members,
+        message: "".to_string(),
+    };
+
+    let buf = match serde_json::to_string(&result) {
+        Ok(r) => r,
+        Err(e) => format!("メンバーの検索に失敗しました。 [{}]", e.to_string()),
     };
 
     buf

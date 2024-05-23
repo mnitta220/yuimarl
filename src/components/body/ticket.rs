@@ -64,6 +64,13 @@ impl Component for TicketBody {
                 *buf += r#"</div>"#;
             }
             *buf += r#"</main>"#;
+            *buf += r#"<input type="hidden" id="project_id" name="project_id" value=""#;
+            if let Some(p) = &props.project {
+                if let Some(id) = &p.id {
+                    *buf += id;
+                }
+            }
+            *buf += r#"">"#;
 
             self.footer.write(props, buf);
             *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;

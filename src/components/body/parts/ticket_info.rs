@@ -4,7 +4,7 @@ pub struct TicketInfo {}
 
 impl Component for TicketInfo {
     fn write(&self, props: &Props, buf: &mut String) {
-        *buf += r#"<form action="/ticket_add" method="POST">"#;
+        *buf += r#"<form action="/ticket" method="POST">"#;
         {
             // プロジェクト / チケットID
             *buf += r#"<div class="row py-2">"#;
@@ -130,6 +130,12 @@ impl Component for TicketInfo {
                     *buf += r#"</div>"#;
                 }
                 *buf += r#"</div>"#;
+
+                *buf += r#"<input type="hidden" id="members" name="members" value=""#;
+                if let Ok(r) = serde_json::to_string(&props.ticket_members) {
+                    super::super::super::escape_html(&r, buf);
+                }
+                *buf += r#"">"#;
             }
             *buf += r#"</div>"#;
 
@@ -378,6 +384,8 @@ impl Component for TicketInfo {
                         {
                             *buf += r#"<div class="col">"#;
                             {
+                                *buf += r#"<div id="searched"></div>"#;
+                                /*
                                 *buf += r#"<table class="table table-hover">"#;
                                 {
                                     *buf += r#"<thead>"#;
@@ -422,6 +430,7 @@ impl Component for TicketInfo {
                                     *buf += r#"</tbody>"#;
                                 }
                                 *buf += r#"</table>"#;
+                                */
                             }
                             *buf += r#"</div>"#;
                         }

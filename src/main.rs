@@ -71,6 +71,7 @@ async fn main() {
         .route("/contact", get(handlers::contact::get_contact))
         .route("/api/firebaseConfig", get(handlers::api::firebase_config))
         .route("/api/userByEmail", post(handlers::api::user_by_email))
+        .route("/api/projectMember", post(handlers::api::project_member))
         //.route("/_healthz", get(handlers_bk::health))
         .nest_service("/static", ServeDir::new("static"))
         .layer(

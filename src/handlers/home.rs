@@ -34,7 +34,7 @@ pub async fn get_home(cookies: Cookies) -> Result<Html<String>, AppError> {
     };
 
     props.project = project;
-    props.member = member;
+    props.project_member = member;
     props.session = Some(session);
     let mut page = HomePage::new(props);
 

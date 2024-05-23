@@ -43,8 +43,8 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
     member.name = Some(session.name.clone());
     member.email = Some(session.email.clone());
     member.role = Some(model::project::ProjectRole::Owner as i32);
-    props.members.clear();
-    props.members.push(member);
+    props.project_members.clear();
+    props.project_members.push(member);
 
     props.session = Some(session);
     let mut page = ProjectPage::new(props);
@@ -77,7 +77,7 @@ pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
     };
 
     props.session = Some(session);
-    props.members = projects;
+    props.project_members = projects;
     let mut page = ProjectListPage::new(props);
 
     Ok(Html(page.write()))
@@ -132,11 +132,11 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
 
     for member in &members {
         if member.uid == session.uid {
-            props.member = Some(member.clone());
+            props.project_member = Some(member.clone());
         }
     }
 
-    props.members = members;
+    props.project_members = members;
 
     props.session = Some(session);
     let mut page = ProjectPage::new(props);
@@ -238,7 +238,7 @@ pub async fn post(
         props.session = Some(session);
         props.project = Some(project);
         props.project_validation = Some(v);
-        props.members = project_members;
+        props.project_members = project_members;
         let mut page = ProjectPage::new(props);
         return Ok(Html(page.write()));
     }
@@ -279,7 +279,7 @@ pub async fn post(
     let (project, member) = model::project::Project::current_project(&session, &db).await?;
     props.action = action;
     props.project = project;
-    props.member = member;
+    props.project_member = member;
     props.session = Some(session);
     let mut page = HomePage::new(props);
 

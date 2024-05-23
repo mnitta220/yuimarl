@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 const COLLECTION_NAME: &'static str = "ticket";
+const COLLECTION_MEMBER: &'static str = "ticket_member";
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Ticket {
@@ -25,6 +26,16 @@ pub struct Ticket {
     pub history: Option<String>,           // 更新履歴 (JSON)
     pub created_at: Option<DateTime<Utc>>, // 作成日時
     pub deleted: bool,                     // 削除フラグ
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct TicketMember {
+    pub id: Option<String>,        // ID(uuid)
+    pub ticket_id: Option<String>, // チケットID
+    pub uid: String,               // メンバーのユーザーID
+    pub seq: Option<i32>,          // 表示順
+    pub name: Option<String>,      // メンバーの名前
+    pub email: Option<String>,     // メンバーのメールアドレス
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]

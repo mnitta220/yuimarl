@@ -170,7 +170,7 @@ impl Component for HomeBody {
                                                         }
                                                         *buf += r#"</a>"#;
 
-                                                        if let Some(m) = &props.member {
+                                                        if let Some(m) = &props.project_member {
                                                             *buf += r#"&nbsp;&nbsp;<small>"#;
                                                             {
                                                                 *buf += r#"<span class="badge bg-secondary text-light">"#;

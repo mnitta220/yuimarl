@@ -88,7 +88,7 @@ impl Component for ProjectInfo {
                             *buf += r#"<tbody id="members-tbody">"#;
                             {
                                 let mut i = 0;
-                                for member in &props.members {
+                                for member in &props.project_members {
                                     *buf += r#"<tr>"#;
                                     {
                                         *buf += r#"<td>"#;
@@ -135,7 +135,7 @@ impl Component for ProjectInfo {
                 *buf += r#"</div>"#;
 
                 *buf += r#"<input type="hidden" id="members" name="members" value=""#;
-                if let Ok(r) = serde_json::to_string(&props.members) {
+                if let Ok(r) = serde_json::to_string(&props.project_members) {
                     super::super::super::escape_html(&r, buf);
                 }
                 *buf += r#"">"#;
@@ -180,7 +180,7 @@ impl Component for ProjectInfo {
 
                         *buf += r#"<div class="col-3 text-end">"#;
                         {
-                            if let Some(m) = &props.member {
+                            if let Some(m) = &props.project_member {
                                 if let Some(r) = m.role {
                                     if r == model::project::ProjectRole::Owner as i32 {
                                         *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#projectDelModal">"##;

@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
 use uuid::Uuid;
 
-pub const COLLECTION_NAME: &'static str = "project";
+const COLLECTION_NAME: &'static str = "project";
 const COLLECTION_MEMBER: &'static str = "project_member";
 pub const MEMBER_LIMIT_DEFAULT: i32 = 20;
 pub const TICKET_LIMIT_DEFAULT: i32 = 1000;

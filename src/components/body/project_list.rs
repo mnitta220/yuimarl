@@ -61,7 +61,7 @@ impl Component for ProjectListBody {
                                     *buf += r#"<tbody>"#;
                                     {
                                         let mut i = 0;
-                                        for prj in &props.members {
+                                        for prj in &props.project_members {
                                             if let None = prj.project_name {
                                                 continue;
                                             }

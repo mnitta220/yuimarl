@@ -42,10 +42,44 @@
                       <li><a href="https://git-scm.com/" target="_blank">Git</a></li>
                       <li><a href="https://www.rust-lang.org/tools/install" target="_blank">Rust</a></li>
                       <li><a href="https://cloud.google.com/sdk/docs/install?hl=ja" target="_blank">gcloud CLI</a></li>
-                      <li>VSCode</li>
-                      <li>pug-cli</li>
+                      <li><a href="https://code.visualstudio.com/" target="_blank">VSCode</a></li>
+                      <li><a href="https://github.com/pugjs/pug-cli" target="_blank">pug-cli</a></li>
                     </ul>
                   </section>
+                  <hr>
+                  <section class="pb-3">
+                    <h3>Google Cloud プロジェクトの作成</h3>
+                    <p>次のコマンドで、Yuimarl 用の Google Cloud プロジェクトを作成してください。（&lt;project-id&gt;の箇所は、作成するプロジェクトのID）</p><code>gcloud projects create &lt;project-id&gt;</code><br><br>
+                    <p>プロジェクトを作成したら、次のコマンドを実行してください。</p><code>gcloud config set project &lt;project-id&gt;</code><br><br><code>gcloud auth application-default login</code><br><br><a href="images/screen41.png"><img class="border border-info border-1 img-fluid" src="images/screen41.png"></a>
+                  </section>
+                  <hr>
+                  <section class="pb-3">
+                    <h3>運用環境の構築</h3>
+                    <p>開発を行う前に、<a href="deploy.html">運用環境構築</a>を実行して、開発用の Firebase と Cloud Run の環境を構築してください。</p>
+                  </section>
+                  <hr>
+                  <section class="pb-3">
+                    <h3>リポジトリのクローン</h3>
+                    <p>次のコマンドで、Yuimarl の Github リポジトリをクローンしてください。</p><code>git clone https://github.com/mnitta220/yuimarl.git</code>
+                  </section>
+                  <hr>
+                  <section class="pb-3">
+                    <h3>VSCode の起動</h3>
+                    <p>次のコマンドで、Yuimarl の VSCode のワークスペースを起動してください。</p><code>code workspace.code-workspace</code>
+                  </section>
+                  <hr>
+                  <section class="pb-3">
+                    <h3>.env の作成</h3>
+                    <p>プロジェクトのルートフォルダに、「.env.template」というファイルがあるので、それをコピーして、「.env」というファイルを作成してください。</p>
+                    <p>「.env」に、運用環境構築の「Firebase SDK の追加」で表示された「firebaseConfig」の内容を設定してください。</p><a href="images/screen39.png"><img class="border border-info border-1 img-fluid" src="images/screen39.png"></a>
+                  </section>
+                  <hr>
+                  <section class="pb-3">
+                    <h3>Yuimarl の起動</h3>
+                    <p>次のコマンドで、Yuimarl を起動してください。</p><code>cargo run</code><br><br><a href="images/screen40.png"><img class="border border-info border-1 img-fluid" src="images/screen40.png"></a><br><br>
+                    <p>この画像のように表示されたら、Web ブラウザで、<a href="http://localhost:8080" target="_blank">http://localhost:8080</a>にアクセスすると、Yuimarl のログイン画面が表示されます。</p>
+                    <p>停止するには、Ctrl + C キーを押します。</p>
+                  </section><br><br>
                 </section>
               </div>
               <div class="col-md-3">

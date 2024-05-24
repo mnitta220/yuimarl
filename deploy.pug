@@ -21,7 +21,198 @@ html(lang="ja")
               .col-md-9
                 section.pt-3
                   h2.pb-1 運用環境構築
-                  p 工事中
+                  section
+                    p Yuimarlの運用環境は、以下の手順でセットアップを行います。
+                    ol.pb-2
+                      li
+                        a(href="#step01") Firebase プロジェクトを作成する
+                      li
+                        a(href="#step02") Cloud Run を設定する
+                    hr
+                    section.pb-2
+                      h3#step01 Firebase プロジェクトを作成する
+                      p
+                        | Firebase コンソールで「プロジェクトを作成」をクリックします。
+                        a(href="images/screen04.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen04.png")
+                      p
+                        | プロジェクトの名前を入力して「続行」をクリックします。
+                        a(href="images/screen05.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen05.png")
+                      p
+                        | 「続行」をクリックします。
+                        a(href="images/screen06.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen06.png")
+                      p
+                        | 「Firebaseを追加」をクリックします。
+                        a(href="images/screen07.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen07.png")
+                      p
+                        | 「続行」をクリックします。
+                        a(href="images/screen08.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen08.png")
+                      p
+                        | Firebase プロジェクト画面の左側のメニューで「構築」をクリックして展開します。
+                        a(href="images/screen09.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen09.png")
+                      p
+                        | 「構築」の中の「Authentication」をクリックします。
+                        a(href="images/screen10.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen10.png")
+                      p
+                        | 「Authentication」の「始める」をクリックします。
+                        a(href="images/screen11.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen11.png")
+                      p
+                        | 「ログイン方法」の「メール / パスワード」をクリックします。
+                        a(href="images/screen12.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen12.png")
+                      p
+                        | 「メール / パスワード」を「有効にする」にして「保存」をクリックします。
+                        a(href="images/screen13.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen13.png")
+                      p
+                        | 「新しいプロバイダを追加」をクリックします。
+                        a(href="images/screen14.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen14.png")
+                      p
+                        | 「Google」をクリックします。
+                        a(href="images/screen15.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen15.png")
+                      p
+                        | 「Google」を「有効にする」にし、サポートメールを選択して「保存」をクリックします。
+                        a(href="images/screen16.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen16.png")
+                        br
+                        | 必要に応じて、他のプロバイダも追加してください。
+                      p
+                        | 本番環境として使う場合は、Authentication の「設定」の「承認済みドメイン」から、「localhost」を削除してください。
+                        br
+                        | 開発環境、テスト環境として使う場合は、「localhost」を残したままで大丈夫です。
+                        a(href="images/screen38.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen38.png")
+                      p
+                        | 「構築」の中の「Firestore Database」をクリックします。
+                        a(href="images/screen17.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen17.png")
+                      p
+                        | 「Cloud Firestore」の「データベースの作成」をクリックします。
+                        a(href="images/screen18.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen18.png")
+                      p
+                        | ロケーションを選択して「次へ」をクリックします。
+                        a(href="images/screen19.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen19.png")
+                      p
+                        | 「テストモードで開始する」を選択して「作成」をクリックします。
+                        a(href="images/screen20.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen20.png")
+                      p
+                        | 「ルール」を画像のように編集して「公開」をクリックします。
+                        a(href="images/screen21.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen21.png")
+                      p
+                        | 「プロジェクトの設定」をクリックします。
+                        a(href="images/screen22.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen22.png")
+                      p
+                        | 「マイアプリ」にある「&lt;/&gt;」アイコンをクリックします。
+                        a(href="images/screen23.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen23.png")
+                      p
+                        | 「アプリのニックネーム」を入力して「アプリを登録」をクリックします。
+                        a(href="images/screen24.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen24.png")
+                      p
+                        | 「Firebase SDK の追加」で「&lt;script&gt;タグを使用する」を選択して「コンソールに進む」をクリックします。
+                        br
+                        | （表示されたスクリプトの中の「firebaseConfig」の内容を保存しておいてください。）
+                        a(href="images/screen25.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen25.png")
+                    hr
+                    section.pb-2
+                      h3#step02 Cloud Run を設定する
+                      p
+                        | Google Cloud コンソールにログインして「プロジェクトの選択」をクリックします。
+                        a(href="images/screen26.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen26.png")
+                      p
+                        | 作成済みのプロジェクトを選択します。
+                        a(href="images/screen27.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen27.png")
+                      p
+                        | 「コンテナ化されたアプリの実行 Cloud Run」をクリックします。
+                        a(href="images/screen28.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen28.png")
+                      p
+                        | 「サービスを作成」をクリックします。
+                        a(href="images/screen29.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen29.png")
+                      p
+                        | 「課金を有効にして Cloud Run の使用を継続します」画面が表示された場合は、「[お支払い]に移動」をクリックして支払いの設定を行います。
+                        a(href="images/screen30.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen30.png")
+                      p
+                        | 「サービスを作成」で次の画像のように設定します。
+                        br
+                        | （&nbsp;「コンテナイメージのURL」は、Docker Hub に登録されている最新のイメージを設定します）
+                        a(href="images/screen31.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen31.png")
+                      p
+                        | 「コンテナ、ボリューム、ネットワーキング、セキュリティ」の「コンテナ」の「変数とシークレット」に、「Firebase SDK の追加」で表示された firebaseConfig の値を追加して「作成」をクリックします。
+                        a(href="images/screen32.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen32.png")
+                      p
+                        table.table.table-bordered
+                          tr
+                            th 環境変数
+                            th 設定する値
+                          tr
+                            td GOOGLE_PROJECT_ID
+                            td firebaseConfig の projectId
+                          tr
+                            td API_KEY
+                            td firebaseConfig の apiKey
+                          tr
+                            td AUTH_DOMAIN
+                            td firebaseConfig の authDomain
+                          tr
+                            td STORAGE_BUCKET
+                            td firebaseConfig の storageBucket
+                          tr
+                            td MESSAGING_SENDER_ID
+                            td firebaseConfig の messagingSenderId
+                          tr
+                            td APP_ID
+                            td firebaseConfig の appId
+                          tr
+                            td MEASUREMENT_ID
+                            td firebaseConfig の measurementId (これが無い場合は空欄)
+                          tr
+                            td RUST_LOG
+                            td 「debug」または「info」。出力されるログをdebugレベルとするかinfoレベルとするかの設定。
+                      p
+                        | サービスがデプロイされたら、URL にアクセスします。
+                        a(href="images/screen33.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen33.png")
+                      p
+                        | Yuimarl ログイン画面でログインします。
+                        a(href="images/screen34.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen34.png")
+                      p
+                        | Yuimarl の操作中に、次のようなエラー画面が表示されることがあります。これは、データベースのインデックスが作成されていない場合のエラーです。
+                        br
+                        | 「You can create it here: 」の次に表示されている URL（画像で選択してある部分）にアクセスすると、インデックスの作成画面になるので、そこでインデックスを作成することができます。
+                        a(href="images/screen35.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen35.png")
+                      p
+                        | 次のような「インデックスの作成または更新」画面で「保存」をクリックするとインデックスが作成されます。
+                        a(href="images/screen36.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen36.png")
+                      p
+                        | ステータスが「ビルド中...」から「有効」に変わったらインデックスが作成されました。
+                        a(href="images/screen37.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen37.png")
 
               .col-md-3
                 .submenu.mt-3

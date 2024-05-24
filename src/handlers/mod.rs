@@ -82,3 +82,7 @@ fn session_delete(cookies: Cookies) {
         cookies.add(Cookie::new(COOKIE_SESSION_ID, ""));
     }
 }
+
+pub async fn health() -> &'static str {
+    "OK"
+}

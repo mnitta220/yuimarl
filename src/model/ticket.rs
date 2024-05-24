@@ -1,12 +1,12 @@
-use super::session::Session;
-use anyhow::Result;
+//use super::session::Session;
+//use anyhow::Result;
 use chrono::{DateTime, Utc};
-use firestore::*;
+//use firestore::*;
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
+//use uuid::Uuid;
 
-const COLLECTION_NAME: &'static str = "ticket";
-const COLLECTION_MEMBER: &'static str = "ticket_member";
+//const COLLECTION_NAME: &'static str = "ticket";
+//const COLLECTION_MEMBER: &'static str = "ticket_member";
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Ticket {
@@ -44,6 +44,7 @@ pub struct TicketValidation {
 }
 
 impl Ticket {
+    /*
     pub fn new() -> Self {
         Self {
             id: None,
@@ -64,6 +65,7 @@ impl Ticket {
             deleted: false,
         }
     }
+    */
 
     /*
     pub async fn insert(

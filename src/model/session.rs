@@ -59,6 +59,7 @@ impl Session {
         Ok(())
     }
 
+    /*
     pub async fn update_project(session: &Session, db: &FirestoreDb) -> Result<()> {
         let obj: Option<Session> = match db
             .fluent()
@@ -80,4 +81,5 @@ impl Session {
 
         Ok(())
     }
+    */
 }

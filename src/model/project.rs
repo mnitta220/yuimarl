@@ -755,6 +755,7 @@ impl ProjectMember {
         }
     }
 
+    /*
     pub async fn update_last_used(project_id: &str, member: &str, db: &FirestoreDb) -> Result<()> {
         tracing::debug!(
             "update_last_used project={:?}, member={}",
@@ -814,6 +815,7 @@ impl ProjectMember {
 
         Ok(())
     }
+    */
 
     /*
     pub async fn add_project_member(

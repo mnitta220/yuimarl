@@ -72,7 +72,7 @@ async fn main() {
         .route("/api/firebaseConfig", get(handlers::api::firebase_config))
         .route("/api/userByEmail", post(handlers::api::user_by_email))
         .route("/api/projectMember", post(handlers::api::project_member))
-        //.route("/_healthz", get(handlers_bk::health))
+        .route("/health", get(handlers::health))
         .nest_service("/static", ServeDir::new("static"))
         .layer(
             ServiceBuilder::new()
@@ -173,9 +173,7 @@ fn get_environment_values() -> Result<()> {
     // get MEASUREMENT_ID env
     let measurement_id = match std::env::var("MEASUREMENT_ID") {
         Ok(measurement_id) => measurement_id,
-        Err(_) => {
-            return Err(anyhow::anyhow!("Failed to get MEASUREMENT_ID"));
-        }
+        Err(_) => "".to_string(),
     };
     // set MEASUREMENT_ID static
     if let Err(_) = MEASUREMENT_ID.set(measurement_id) {

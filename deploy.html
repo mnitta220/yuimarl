@@ -34,6 +34,15 @@
               <div class="col-md-9">
                 <section class="pt-3">
                   <h2 class="pb-1">運用環境構築</h2>
+                  <section class="py-3">
+                    <div class="alert alert-danger" role="alert">以下の運用環境構築では、無料枠を超えると、Google への課金が発生しますので、ご注意ください。
+                      <ul>
+                        <li><a href="https://firebase.google.com/pricing?hl=ja" target="_blank">Firebase 料金プラン</a></li>
+                        <li><a href="https://firebase.google.com/docs/firestore/pricing?hl=ja" target="_blank">Cloud Firestore の課金について</a></li>
+                        <li><a href="https://cloud.google.com/run/pricing?hl=ja" target="_blank">Cloud Run の料金</a></li>
+                      </ul>
+                    </div>
+                  </section>
                   <section>
                     <p>Yuimarlの運用環境は、以下の手順でセットアップを行います。</p>
                     <ol class="pb-2">
@@ -76,6 +85,7 @@
                       <p>「サービスを作成」をクリックします。<a href="images/screen29.png"><img class="border border-info border-1 img-fluid" src="images/screen29.png"></a></p>
                       <p>「課金を有効にして Cloud Run の使用を継続します」画面が表示された場合は、「[お支払い]に移動」をクリックして支払いの設定を行います。<a href="images/screen30.png"><img class="border border-info border-1 img-fluid" src="images/screen30.png"></a></p>
                       <p>「サービスを作成」で次の画像のように設定します。<br>（&nbsp;「コンテナイメージのURL」は、Docker Hub に登録されている最新のイメージを設定します）<a href="images/screen31.png"><img class="border border-info border-1 img-fluid" src="images/screen31.png"></a></p>
+                      <p>「ヘルスチェックを追加します」をクリックして、「ライブネスチェック」と「HTTP」を選択し、パスに「/health」と入力し、「追加」をクリックします。<a href="images/screen43.png"><img class="border border-info border-1 img-fluid" src="images/screen43.png"></a></p>
                       <p>「コンテナ、ボリューム、ネットワーキング、セキュリティ」の「コンテナ」の「変数とシークレット」に、「Firebase SDK の追加」で表示された firebaseConfig の値を追加して「作成」をクリックします。<a href="images/screen32.png"><img class="border border-info border-1 img-fluid" src="images/screen32.png"></a></p>
                       <p>
                         <table class="table table-bordered">

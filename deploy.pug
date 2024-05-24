@@ -21,6 +21,16 @@ html(lang="ja")
               .col-md-9
                 section.pt-3
                   h2.pb-1 運用環境構築
+                  section.py-3
+                    .alert.alert-danger(role="alert")
+                      | 以下の運用環境構築では、無料枠を超えると、Google への課金が発生しますので、ご注意ください。
+                      ul
+                        li
+                          a(href="https://firebase.google.com/pricing?hl=ja" target="_blank") Firebase 料金プラン
+                        li
+                          a(href="https://firebase.google.com/docs/firestore/pricing?hl=ja" target="_blank") Cloud Firestore の課金について
+                        li
+                          a(href="https://cloud.google.com/run/pricing?hl=ja" target="_blank") Cloud Run の料金
                   section
                     p Yuimarlの運用環境は、以下の手順でセットアップを行います。
                     ol.pb-2
@@ -158,6 +168,10 @@ html(lang="ja")
                         | （&nbsp;「コンテナイメージのURL」は、Docker Hub に登録されている最新のイメージを設定します）
                         a(href="images/screen31.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen31.png")
+                      p
+                        | 「ヘルスチェックを追加します」をクリックして、「ライブネスチェック」と「HTTP」を選択し、パスに「/health」と入力し、「追加」をクリックします。
+                        a(href="images/screen43.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen43.png")
                       p
                         | 「コンテナ、ボリューム、ネットワーキング、セキュリティ」の「コンテナ」の「変数とシークレット」に、「Firebase SDK の追加」で表示された firebaseConfig の値を追加して「作成」をクリックします。
                         a(href="images/screen32.png")

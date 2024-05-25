@@ -1,12 +1,12 @@
-//use super::session::Session;
-//use anyhow::Result;
+use super::session::Session;
+use anyhow::Result;
 use chrono::{DateTime, Utc};
-//use firestore::*;
+use firestore::*;
 use serde::{Deserialize, Serialize};
-//use uuid::Uuid;
+use uuid::Uuid;
 
-//const COLLECTION_NAME: &'static str = "ticket";
-//const COLLECTION_MEMBER: &'static str = "ticket_member";
+const COLLECTION_NAME: &'static str = "ticket";
+const COLLECTION_MEMBER: &'static str = "ticket_member";
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Ticket {
@@ -25,6 +25,7 @@ pub struct Ticket {
     pub note: Option<String>,              // ノート（マークダウン）
     pub history: Option<String>,           // 更新履歴 (JSON)
     pub created_at: Option<DateTime<Utc>>, // 作成日時
+    pub updated_at: Option<DateTime<Utc>>, // 更新日時
     pub deleted: bool,                     // 削除フラグ
 }
 
@@ -38,13 +39,7 @@ pub struct TicketMember {
     pub email: Option<String>,     // メンバーのメールアドレス
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct TicketValidation {
-    pub name: Option<String>,
-}
-
 impl Ticket {
-    /*
     pub fn new() -> Self {
         Self {
             id: None,
@@ -62,16 +57,16 @@ impl Ticket {
             note: None,
             history: None,
             created_at: None,
+            updated_at: None,
             deleted: false,
         }
     }
-    */
 
-    /*
     pub async fn insert(
-        input: &crate::handlers::ticket::TicketCreateInput,
+        input: &crate::handlers::ticket::TicketInput,
         session: &Session,
         project: &super::project::Project,
+        members: &Vec<TicketMember>,
         db: &FirestoreDb,
     ) -> Result<()> {
         let ticket_number = project.ticket_number.unwrap_or_default() + 1;
@@ -86,6 +81,7 @@ impl Ticket {
         };
 
         let mut ticket = Ticket::new();
+        let now = Utc::now();
         ticket.project_id = project.id.clone();
         ticket.id_disp = Some(id_disp);
         ticket.name = Some(input.name.clone());
@@ -94,7 +90,8 @@ impl Ticket {
         ticket.progress = progress;
         ticket.priority = Some(input.priority.clone());
         ticket.owner = Some(session.uid.clone());
-        ticket.created_at = Some(Utc::now());
+        ticket.created_at = Some(now);
+        ticket.updated_at = Some(now);
         let mut count = 0u32;
         let mut id = Uuid::now_v7().to_string();
 
@@ -130,6 +127,27 @@ impl Ticket {
             };
         }
 
+        for member in members {
+            let mut member_new = TicketMember::new(member.uid.clone());
+            member_new.ticket_id = Some(id.clone());
+            member_new.seq = Some(member.seq.unwrap_or_default());
+            //member_new.name = Some(member.name.clone());
+            //member_new.email = Some(member.email.clone());
+
+            match db
+                .fluent()
+                .insert()
+                .into(&COLLECTION_MEMBER)
+                .document_id(id.clone())
+                .object(&member_new)
+                .execute::<TicketMember>()
+                .await
+            {
+                Ok(_) => {}
+                Err(e) => return Err(anyhow::anyhow!(e.to_string())),
+            };
+        }
+
         let project_new = super::project::Project {
             ticket_number: Some(ticket_number),
             ..project.clone()
@@ -150,5 +168,17 @@ impl Ticket {
 
         Ok(())
     }
-    */
+}
+
+impl TicketMember {
+    pub fn new(uid: String) -> Self {
+        Self {
+            id: None,
+            ticket_id: None,
+            uid,
+            seq: None,
+            name: None,
+            email: None,
+        }
+    }
 }

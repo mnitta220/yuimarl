@@ -18,7 +18,7 @@ pub struct Props {
     pub project_validation: Option<validation::project::ProjectValidation>,
     pub ticket: Option<model::ticket::Ticket>,
     pub ticket_members: Vec<model::ticket::TicketMember>,
-    pub ticket_validation: Option<model::ticket::TicketValidation>,
+    pub ticket_validation: Option<validation::ticket::TicketValidation>,
     pub tickets: Vec<model::ticket::Ticket>,
     pub tab: Tab,
     pub action: crate::Action,

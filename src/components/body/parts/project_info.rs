@@ -312,7 +312,7 @@ impl Component for ProjectInfo {
                         {
                             *buf += r#"<div class="col">"#;
                             {
-                                *buf += r#"<div id="updateMember"></div>"#;
+                                *buf += r#"<div id="memberTbl"></div>"#;
                             }
                             *buf += r#"</div>"#;
                         }

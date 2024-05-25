@@ -104,21 +104,26 @@ $('#btnMemberAdd').on('click', function () {
     inChargeModal.hide();
 });
 
+$('#btnSave').on('click', function () {
+    $("#members").val(JSON.stringify(members));
+    $('#post_ticket').submit();
+});
+
 function removeCharge(idx) {
     members.splice(idx, 1);
     setChargeTable();
 }
 
 function chargeSeqUp(idx) {
-    var i = Number(idx) - 1;
     var j = Number(idx);
+    var i = j - 1;
     [members[i], members[j]] = [members[j], members[i]];
     setChargeTable();
 }
 
 function chargeSeqDown(idx) {
     var i = Number(idx);
-    var j = Number(idx) + 1;
+    var j = i + 1;
     [members[i], members[j]] = [members[j], members[i]];
     setChargeTable();
 }
@@ -131,8 +136,7 @@ function setChargeTable() {
         buf += '<th scope="col">メールアドレス</th>';
         buf += '<th scope="col">名前</th>';
         buf += '<th scope="col"></th>';
-        buf += '</tr>';
-        buf += '</thead>';
+        buf += '</tr></thead>';
         buf += '<tbody>';
         for (var i in members) {
             buf += '<tr><td>';
@@ -141,20 +145,20 @@ function setChargeTable() {
             buf += members[i].name;
             buf += '</td><td>';
             buf += '<a href="javascript:removeCharge(' + i + ')">';
-            buf += '<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除"></a>&nbsp;';
+            buf += '<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除"></a>';
             if (i != 0) {
-                buf += '<a href="javascript:chargeSeqUp(' + i + ')">';
-                buf += '<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動"></a>&nbsp;';
+                buf += '&nbsp;<a href="javascript:chargeSeqUp(' + i + ')">';
+                buf += '<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動"></a>';
             }
             if ((Number(i) + 1) != members.length) {
-                buf += '<a href="javascript:chargeSeqDown(' + i + ')">';
+                buf += '&nbsp;<a href="javascript:chargeSeqDown(' + i + ')">';
                 buf += '<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動"></a>';
             }
             buf += '</td></tr>';
         }
         buf += '</tbody></table>';
     }
-    $("div#updateCharge").html(buf);
+    $("div#chargeTbl").html(buf);
 }
 
 function clickDeliverables() {

@@ -64,7 +64,7 @@ function updateMember(i) {
     buf += '</tbody>';
     buf += '</table>';
     buf += '<input type="hidden" id="updateMemberIdx" value="' + i + '">';
-    $("div#updateMember").html(buf);
+    $("div#memberTbl").html(buf);
 
     updateMemberModal.show();
 }
@@ -157,7 +157,7 @@ $('#btnAddMember').on('click', function () {
 $('#btnUpdateMember').on('click', function () {
     var idx = $("#updateMemberIdx").val();
     members[idx].role = Number($("#updateMemberRole").val());
-    $("div#updateMember").html("");
+    $("div#memberTbl").html("");
     updateMemberModal.hide();
     setMemberList();
 });

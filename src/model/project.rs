@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
 use uuid::Uuid;
 
-const COLLECTION_NAME: &'static str = "project";
+pub const COLLECTION_NAME: &'static str = "project";
 const COLLECTION_MEMBER: &'static str = "project_member";
 pub const MEMBER_LIMIT_DEFAULT: i32 = 20;
 pub const TICKET_LIMIT_DEFAULT: i32 = 1000;
@@ -659,7 +659,7 @@ impl ProjectMember {
         Self {
             id: None,
             project_id: None,
-            uid: uid,
+            uid,
             role: None,
             last_used: None,
             name: None,

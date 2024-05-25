@@ -4,7 +4,7 @@ pub struct TicketInfo {}
 
 impl Component for TicketInfo {
     fn write(&self, props: &Props, buf: &mut String) {
-        *buf += r#"<form action="/ticket" method="POST">"#;
+        *buf += r#"<form name="post_ticket" id="post_ticket" action="/ticket" method="POST">"#;
         {
             // プロジェクト / チケットID
             *buf += r#"<div class="row py-2">"#;
@@ -36,7 +36,7 @@ impl Component for TicketInfo {
                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="name">チケット名</label>"#;
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 {
-                    *buf += r#"<input class="form-control" id="name" type="text" maxlength="40" value=""#;
+                    *buf += r#"<input class="form-control" id="name" name="name" type="text" maxlength="40" value=""#;
                     if let Some(t) = &props.ticket {
                         if let Some(n) = &t.name {
                             *buf += n;
@@ -51,11 +51,10 @@ impl Component for TicketInfo {
             // 内容
             *buf += r#"<div class="row pt-1 pb-2">"#;
             {
-                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="message">内容</label>"#;
+                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="description">内容</label>"#;
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 {
-                    *buf +=
-                        r#"<textarea class="form-control" id="message" rows="3" name="message">"#;
+                    *buf += r#"<textarea class="form-control" id="description" name="description" rows="3">"#;
                     if let Some(t) = &props.ticket {
                         if let Some(d) = &t.description {
                             *buf += d;
@@ -75,8 +74,9 @@ impl Component for TicketInfo {
                 {
                     *buf += r#"<div class="form-floating">"#;
                     {
-                        *buf += r#"<div id="updateCharge">"#;
+                        *buf += r#"<div id="chargeTbl">"#;
                         {
+                            /*
                             *buf += r#"<table class="table table-hover">"#;
                             {
                                 *buf += r#"<thead>"#;
@@ -122,6 +122,7 @@ impl Component for TicketInfo {
                                 *buf += r#"</tbody>"#;
                             }
                             *buf += r#"</table>"#;
+                            */
                         }
                         *buf += r#"</div>"#;
 
@@ -154,13 +155,25 @@ impl Component for TicketInfo {
                         *buf += r#"<div class="col-sm-6 mb-2">"#;
                         {
                             *buf += r#"<label class="form-label" for="startdate">開始日</label>"#;
-                            *buf += r#"<input class="form-control" id="startdate" type="date" value="2024-09-10">"#;
+                            *buf += r#"<input class="form-control" id="start_date" name="start_date" type="date" value=""#;
+                            if let Some(t) = &props.ticket {
+                                if let Some(s) = &t.start_date {
+                                    *buf += s;
+                                }
+                            }
+                            *buf += r#"">"#;
                         }
                         *buf += r#"</div>"#;
                         *buf += r#"<div class="col-sm-6 mb-1">"#;
                         {
                             *buf += r#"<label class="form-label" for="enddate">終了日</label>"#;
-                            *buf += r#"<input class="form-control" id="enddate" type="date">"#;
+                            *buf += r#"<input class="form-control" id="end_date" name="end_date" type="date" value=""#;
+                            if let Some(t) = &props.ticket {
+                                if let Some(e) = &t.end_date {
+                                    *buf += e;
+                                }
+                            }
+                            *buf += r#"">"#;
                         }
                         *buf += r#"</div>"#;
                     }
@@ -186,7 +199,11 @@ impl Component for TicketInfo {
                                 {
                                     *buf += r#"<td>"#;
                                     {
-                                        *buf += r#"<input class="form-control" id="progress" type="number" min="0" max="100" value="25">"#;
+                                        *buf += r#"<input class="form-control" id="progress" name="progress" type="number" min="0" max="100" value=""#;
+                                        if let Some(t) = &props.ticket {
+                                            *buf += t.progress.to_string().as_ref();
+                                        }
+                                        *buf += r#"">"#;
                                     }
                                     *buf += r#"</td>"#;
                                     *buf += r#"<td>&nbsp;%</td>"#;
@@ -222,31 +239,75 @@ impl Component for TicketInfo {
                 {
                     *buf += r#"<div class="form-check form-check-inline">"#;
                     {
-                        *buf += r#"<input class="form-check-input" id="priority1" name="priority" type="radio" value="priority1">"#;
+                        *buf += r#"<input class="form-check-input" id="priority1" name="priority" type="radio" value="1""#;
+                        if let Some(t) = &props.ticket {
+                            if let Some(p) = &t.priority {
+                                if p == "1" {
+                                    *buf += r#" checked="checked""#;
+                                }
+                            }
+                        }
+                        *buf += r#">"#;
                         *buf += r#"<label class="form-check-label" for="priority1">最優先</label>"#;
                     }
                     *buf += r#"</div>"#;
                     *buf += r#"<div class="form-check form-check-inline">"#;
                     {
-                        *buf += r#"<input class="form-check-input" id="priority2" name="priority" type="radio" value="priority2" checked="checked">"#;
+                        *buf += r#"<input class="form-check-input" id="priority2" name="priority" type="radio" value="2""#;
+                        if let Some(t) = &props.ticket {
+                            if let Some(p) = &t.priority {
+                                if p == "2" {
+                                    *buf += r#" checked="checked""#;
+                                }
+                            }
+                        }
+                        *buf += r#">"#;
                         *buf += r#"<label class="form-check-label" for="priority2">高</label>"#;
                     }
                     *buf += r#"</div>"#;
                     *buf += r#"<div class="form-check form-check-inline">"#;
                     {
-                        *buf += r#"<input class="form-check-input" id="priority3" name="priority" type="radio" value="priority3">"#;
+                        *buf += r#"<input class="form-check-input" id="priority3" name="priority" type="radio" value="3""#;
+                        if let Some(t) = &props.ticket {
+                            if let Some(p) = &t.priority {
+                                if p == "3" {
+                                    *buf += r#" checked="checked""#;
+                                }
+                            }
+                        }
+                        *buf += r#">"#;
                         *buf += r#"<label class="form-check-label" for="priority3">中</label>"#;
                     }
                     *buf += r#"</div>"#;
                     *buf += r#"<div class="form-check form-check-inline">"#;
                     {
-                        *buf += r#"<input class="form-check-input" id="priority4" name="priority" type="radio" value="priority4">"#;
+                        *buf += r#"<input class="form-check-input" id="priority4" name="priority" type="radio" value="4""#;
+                        if let Some(t) = &props.ticket {
+                            if let Some(p) = &t.priority {
+                                if p == "4" {
+                                    *buf += r#" checked="checked""#;
+                                }
+                            }
+                        }
+                        *buf += r#">"#;
                         *buf += r#"<label class="form-check-label" for="priority4">低</label>"#;
                     }
                     *buf += r#"</div>"#;
                     *buf += r#"<div class="form-check form-check-inline">"#;
                     {
-                        *buf += r#"<input class="form-check-input" id="priority0" name="priority" type="radio" value="priority0">"#;
+                        *buf += r#"<input class="form-check-input" id="priority0" name="priority" type="radio" value="0""#;
+                        let mut checked = true;
+                        if let Some(t) = &props.ticket {
+                            if let Some(p) = &t.priority {
+                                if p != "0" {
+                                    checked = false;
+                                }
+                            }
+                        }
+                        if checked {
+                            *buf += r#" checked="checked""#;
+                        }
+                        *buf += r#">"#;
                         *buf += r#"<label class="form-check-label" for="priority0">未設定</label>"#;
                     }
                     *buf += r#"</div>"#;
@@ -324,7 +385,7 @@ impl Component for TicketInfo {
                 if props.action == crate::Action::Create {
                     *buf += r#"<div class="col">"#;
                     {
-                        *buf += r#"<button class="btn btn-primary" type="submit">"#;
+                        *buf += r#"<button id="btnSave" class="btn btn-primary" type="button">"#;
                         {
                             *buf += r#"<img class="icon" src="/static/ionicons/create-outline.svg">&nbsp;作成"#;
                         }
@@ -336,7 +397,7 @@ impl Component for TicketInfo {
                 } else {
                     *buf += r#"<div class="col-9">"#;
                     {
-                        *buf += r#"<button class="btn btn-primary" type="submit">"#;
+                        *buf += r#"<button id="btnSave" class="btn btn-primary" type="button">"#;
                         {
                             *buf += r#"<img class="icon" src="/static/ionicons/save-outline.svg">"#;
                             *buf += r#"&nbsp;更新"#;
@@ -366,6 +427,10 @@ impl Component for TicketInfo {
                 }
             }
             *buf += r#"</div>"#;
+
+            *buf += r#"<input type="hidden" name="action" id="action" value=""#;
+            *buf += &props.action.to_string();
+            *buf += r#"">"#;
         }
         *buf += r#"</form>"#;
 

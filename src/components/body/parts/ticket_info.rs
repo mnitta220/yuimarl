@@ -75,51 +75,55 @@ impl Component for TicketInfo {
                 {
                     *buf += r#"<div class="form-floating">"#;
                     {
-                        *buf += r#"<table class="table table-hover">"#;
+                        *buf += r#"<div id="updateCharge">"#;
                         {
-                            *buf += r#"<thead>"#;
+                            *buf += r#"<table class="table table-hover">"#;
                             {
-                                *buf += r#"<tr>"#;
+                                *buf += r#"<thead>"#;
                                 {
-                                    *buf += r#"<th scope="col">メールアドレス</th>"#;
-                                    *buf += r#"<th scope="col">名前</th>"#;
-                                    *buf += r#"<th scope="col"></th>"#;
-                                }
-                                *buf += r#"</tr>"#;
-                            }
-                            *buf += r#"</thead>"#;
-                            *buf += r#"<tbody>"#;
-                            {
-                                *buf += r#"<tr>"#;
-                                {
-                                    *buf += r#"<td>taro.yamada@mail.com</td>"#;
-                                    *buf += r#"<td>山田太郎</td>"#;
-                                    *buf += r#"<td>"#;
+                                    *buf += r#"<tr>"#;
                                     {
-                                        *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">&nbsp;"#;
-                                        *buf += r#"<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">&nbsp;"#;
-                                        *buf += r#"<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
+                                        *buf += r#"<th scope="col">メールアドレス</th>"#;
+                                        *buf += r#"<th scope="col">名前</th>"#;
+                                        *buf += r#"<th scope="col"></th>"#;
                                     }
-                                    *buf += r#"</td>"#;
+                                    *buf += r#"</tr>"#;
                                 }
-                                *buf += r#"</tr>"#;
-                                *buf += r#"<tr>"#;
+                                *buf += r#"</thead>"#;
+                                *buf += r#"<tbody>"#;
                                 {
-                                    *buf += r#"<td>taro.yamada@mail.com</td>"#;
-                                    *buf += r#"<td>岩鬼正美</td>"#;
-                                    *buf += r#"<td>"#;
+                                    *buf += r#"<tr>"#;
                                     {
-                                        *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">&nbsp;"#;
-                                        *buf += r#"<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">&nbsp;"#;
-                                        *buf += r#"<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
+                                        *buf += r#"<td>taro.yamada@mail.com</td>"#;
+                                        *buf += r#"<td>山田太郎</td>"#;
+                                        *buf += r#"<td>"#;
+                                        {
+                                            *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">&nbsp;"#;
+                                            *buf += r#"<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">&nbsp;"#;
+                                            *buf += r#"<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
+                                        }
+                                        *buf += r#"</td>"#;
                                     }
-                                    *buf += r#"</td>"#;
+                                    *buf += r#"</tr>"#;
+                                    *buf += r#"<tr>"#;
+                                    {
+                                        *buf += r#"<td>taro.yamada@mail.com</td>"#;
+                                        *buf += r#"<td>岩鬼正美</td>"#;
+                                        *buf += r#"<td>"#;
+                                        {
+                                            *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">&nbsp;"#;
+                                            *buf += r#"<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">&nbsp;"#;
+                                            *buf += r#"<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
+                                        }
+                                        *buf += r#"</td>"#;
+                                    }
+                                    *buf += r#"</tr>"#;
                                 }
-                                *buf += r#"</tr>"#;
+                                *buf += r#"</tbody>"#;
                             }
-                            *buf += r#"</tbody>"#;
+                            *buf += r#"</table>"#;
                         }
-                        *buf += r#"</table>"#;
+                        *buf += r#"</div>"#;
 
                         *buf += r#"<a href="javascript:clickAddCharge();">"#;
                         {
@@ -440,7 +444,7 @@ impl Component for TicketInfo {
                     *buf += r#"<div class="modal-footer">"#;
                     {
                         *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
-                        *buf += r#"<button class="btn btn-primary" type="button">担当者に追加</button>"#;
+                        *buf += r#"<button class="btn btn-primary" id="btnMemberAdd" type="button">担当者に追加</button>"#;
                     }
                     *buf += r#"</div>"#;
                 }

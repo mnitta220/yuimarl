@@ -35,12 +35,33 @@ html(lang="ja")
                     p Yuimarlの運用環境は、以下の手順でセットアップを行います。
                     ol.pb-2
                       li
-                        a(href="#step01") Firebase プロジェクトを作成する
+                        a(href="#step01") Google Cloud プロジェクトを作成する
                       li
-                        a(href="#step02") Cloud Run を設定する
+                        a(href="#step02") Firebase プロジェクトを作成する
+                      li
+                        a(href="#step03") Cloud Run を設定する
                     hr
                     section.pb-2
-                      h3#step01 Firebase プロジェクトを作成する
+                      h3#step01 Google Cloud プロジェクトを作成する
+                      p 次のコマンドで、Yuimarl 用の Google Cloud プロジェクトを作成してください。（&lt;project-id&gt;の箇所は、作成するプロジェクトのID）
+                      code
+                        | gcloud projects create &lt;project-id&gt;
+                      br
+                      br
+                      p プロジェクトを作成したら、次のコマンドを実行してください。
+                      code
+                        | gcloud config set project &lt;project-id&gt;
+                      br
+                      br
+                      code
+                        | gcloud auth application-default login
+                      br
+                      br
+                      a(href="images/screen41.png")
+                        img.border.border-info.border-1.img-fluid(src="images/screen41.png")
+                    hr
+                    section.pb-2
+                      h3#step02 Firebase プロジェクトを作成する
                       p
                         a(href="https://console.firebase.google.com/" target="_blank") Firebase コンソール
                         | で「プロジェクトを作成」をクリックします。
@@ -142,7 +163,7 @@ html(lang="ja")
                           img.border.border-info.border-1.img-fluid(src="images/screen25.png")
                     hr
                     section.pb-2
-                      h3#step02 Cloud Run を設定する
+                      h3#step03 Cloud Run を設定する
                       p
                         | Google Cloud コンソールにログインして「プロジェクトの選択」をクリックします。
                         a(href="images/screen26.png")

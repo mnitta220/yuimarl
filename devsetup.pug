@@ -40,26 +40,6 @@ html(lang="ja")
                         a(href="https://github.com/pugjs/pug-cli" target="_blank") pug-cli
                   hr
                   section.pb-3
-                    h3 Google Cloud プロジェクトの作成
-                    p 次のコマンドで、Yuimarl 用の Google Cloud プロジェクトを作成してください。（&lt;project-id&gt;の箇所は、作成するプロジェクトのID）
-                    code
-                      | gcloud projects create &lt;project-id&gt;
-                    br
-                    br
-                    p プロジェクトを作成したら、次のコマンドを実行してください。
-                    code
-                      | gcloud config set project &lt;project-id&gt;
-                    br
-                    br
-                    code
-                      | gcloud auth application-default login
-                    br
-                    br
-                    a(href="images/screen41.png")
-                      img.border.border-info.border-1.img-fluid(src="images/screen41.png")
-                    
-                  hr
-                  section.pb-3
                     h3 運用環境の構築
                     p
                       | 開発を行う前に、

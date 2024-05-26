@@ -25,6 +25,11 @@ impl Component for TicketInfo {
                             *buf += &id;
                         }
                     }
+                    *buf += r#"<input type="hidden" id="project_id" name="project_id" value=""#;
+                    if let Some(id) = &p.id {
+                        *buf += &id;
+                    }
+                    *buf += r#"">"#;
                 }
                 *buf += r#"</div>"#;
             }
@@ -241,10 +246,8 @@ impl Component for TicketInfo {
                     {
                         *buf += r#"<input class="form-check-input" id="priority1" name="priority" type="radio" value="1""#;
                         if let Some(t) = &props.ticket {
-                            if let Some(p) = &t.priority {
-                                if p == "1" {
-                                    *buf += r#" checked="checked""#;
-                                }
+                            if t.priority == 1 {
+                                *buf += r#" checked="checked""#;
                             }
                         }
                         *buf += r#">"#;
@@ -255,10 +258,8 @@ impl Component for TicketInfo {
                     {
                         *buf += r#"<input class="form-check-input" id="priority2" name="priority" type="radio" value="2""#;
                         if let Some(t) = &props.ticket {
-                            if let Some(p) = &t.priority {
-                                if p == "2" {
-                                    *buf += r#" checked="checked""#;
-                                }
+                            if t.priority == 2 {
+                                *buf += r#" checked="checked""#;
                             }
                         }
                         *buf += r#">"#;
@@ -269,10 +270,8 @@ impl Component for TicketInfo {
                     {
                         *buf += r#"<input class="form-check-input" id="priority3" name="priority" type="radio" value="3""#;
                         if let Some(t) = &props.ticket {
-                            if let Some(p) = &t.priority {
-                                if p == "3" {
-                                    *buf += r#" checked="checked""#;
-                                }
+                            if t.priority == 3 {
+                                *buf += r#" checked="checked""#;
                             }
                         }
                         *buf += r#">"#;
@@ -283,10 +282,8 @@ impl Component for TicketInfo {
                     {
                         *buf += r#"<input class="form-check-input" id="priority4" name="priority" type="radio" value="4""#;
                         if let Some(t) = &props.ticket {
-                            if let Some(p) = &t.priority {
-                                if p == "4" {
-                                    *buf += r#" checked="checked""#;
-                                }
+                            if t.priority == 4 {
+                                *buf += r#" checked="checked""#;
                             }
                         }
                         *buf += r#">"#;
@@ -296,15 +293,11 @@ impl Component for TicketInfo {
                     *buf += r#"<div class="form-check form-check-inline">"#;
                     {
                         *buf += r#"<input class="form-check-input" id="priority0" name="priority" type="radio" value="0""#;
-                        let mut checked = true;
                         if let Some(t) = &props.ticket {
-                            if let Some(p) = &t.priority {
-                                if p != "0" {
-                                    checked = false;
-                                }
+                            if t.priority == 0 {
+                                *buf += r#" checked="checked""#;
                             }
-                        }
-                        if checked {
+                        } else {
                             *buf += r#" checked="checked""#;
                         }
                         *buf += r#">"#;
@@ -392,7 +385,6 @@ impl Component for TicketInfo {
                         *buf += r#"</button>"#;
                     }
                     *buf += r#"</div>"#;
-                    *buf += r#"<input type="hidden" name="project_id" value="">"#;
                     *buf += r#"<input type="hidden" name="timestamp" value="">"#;
                 } else {
                     *buf += r#"<div class="col-9">"#;

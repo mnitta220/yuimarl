@@ -158,7 +158,7 @@ pub async fn post(
     cookies: Cookies,
     Form(input): Form<ProjectInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::info!(
+    tracing::debug!(
         "POST /project {}, {}, {}, {}",
         input.action,
         input.project_id,

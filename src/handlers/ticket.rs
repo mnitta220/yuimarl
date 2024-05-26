@@ -55,7 +55,7 @@ pub struct TicketInput {
     pub end_date: String,
     pub progress: String,
     pub priority: String,
-    //pub project_id: String,
+    pub project_id: String,
     //pub timestamp: String,
 }
 
@@ -109,11 +109,11 @@ pub async fn post(
         }
     };
 
-    let project_id = match &session.project_id {
-        Some(p) => p,
-        None => return Ok(Html(LoginPage::write())),
-    };
-    let project = model::project::Project::find(&project_id, &db).await?;
+    //let project_id = match &session.project_id {
+    //    Some(p) => p,
+    //    None => return Ok(Html(LoginPage::write())),
+    //};
+    let project = model::project::Project::find(&input.project_id, &db).await?;
     if project.is_none() {
         return Ok(Html(LoginPage::write()));
     }
@@ -154,7 +154,7 @@ pub async fn post(
         ticket.start_date = Some(input.start_date);
         ticket.end_date = Some(input.end_date);
         ticket.progress = input.progress.parse::<i32>().unwrap_or_default();
-        ticket.priority = Some(input.priority);
+        ticket.priority = input.priority.parse::<i32>().unwrap_or_default();
 
         //project.id = Some(input.project_id.clone());
         //project.project_name = Some(project_name);

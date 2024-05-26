@@ -45,7 +45,7 @@ pub async fn post_login(
         name: input.display_name,
         email: input.email,
         photo_url: input.photo_url,
-        project_id: None,
+        //project_id: None,
         created_at: Utc::now(),
     };
     if let Err(e) = model::session::Session::upsert(&session, &db).await {

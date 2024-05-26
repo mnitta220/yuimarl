@@ -1,3 +1,5 @@
+use crate::components::body::project;
+
 use super::session::Session;
 use anyhow::Result;
 use chrono::{DateTime, Utc};
@@ -18,7 +20,7 @@ pub struct Ticket {
     pub start_date: Option<String>,        // 開始日
     pub end_date: Option<String>,          // 終了日
     pub progress: i32,                     // 進捗率
-    pub priority: Option<String>,          // 優先度
+    pub priority: i32,                     // 優先度
     pub parent: Option<String>,            // 親チケット
     pub deliverables: Option<String>,      // 成果物(JSON)
     pub owner: Option<String>,             // 登録ユーザー
@@ -31,12 +33,13 @@ pub struct Ticket {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct TicketMember {
-    pub id: Option<String>,        // ID(uuid)
-    pub ticket_id: Option<String>, // チケットID
-    pub uid: String,               // メンバーのユーザーID
-    pub seq: Option<i32>,          // 表示順
-    pub name: Option<String>,      // メンバーの名前
-    pub email: Option<String>,     // メンバーのメールアドレス
+    pub id: Option<String>,         // ID(uuid)
+    pub ticket_id: Option<String>,  // チケットID
+    pub project_id: Option<String>, // プロジェクトID
+    pub uid: String,                // メンバーのユーザーID
+    pub seq: Option<i32>,           // 表示順
+    pub name: Option<String>,       // メンバーの名前
+    pub email: Option<String>,      // メンバーのメールアドレス
 }
 
 impl Ticket {
@@ -50,7 +53,7 @@ impl Ticket {
             start_date: None,
             end_date: None,
             progress: 0,
-            priority: None,
+            priority: 0,
             parent: None,
             deliverables: None,
             owner: None,
@@ -79,16 +82,21 @@ impl Ticket {
             Ok(p) => p,
             Err(_) => 0,
         };
+        let priority = match input.priority.parse::<i32>() {
+            Ok(p) => p,
+            Err(_) => 0,
+        };
 
         let mut ticket = Ticket::new();
         let now = Utc::now();
         ticket.project_id = project.id.clone();
         ticket.id_disp = Some(id_disp);
         ticket.name = Some(input.name.clone());
+        ticket.description = Some(input.description.clone());
         ticket.start_date = Some(input.start_date.clone());
         ticket.end_date = Some(input.end_date.clone());
         ticket.progress = progress;
-        ticket.priority = Some(input.priority.clone());
+        ticket.priority = priority;
         ticket.owner = Some(session.uid.clone());
         ticket.created_at = Some(now);
         ticket.updated_at = Some(now);
@@ -128,17 +136,18 @@ impl Ticket {
         }
 
         for member in members {
+            let mid = Uuid::now_v7().to_string();
             let mut member_new = TicketMember::new(member.uid.clone());
+            member_new.id = Some(mid.clone());
             member_new.ticket_id = Some(id.clone());
+            member_new.project_id = Some(project.id.clone().unwrap());
             member_new.seq = Some(member.seq.unwrap_or_default());
-            //member_new.name = Some(member.name.clone());
-            //member_new.email = Some(member.email.clone());
 
             match db
                 .fluent()
                 .insert()
                 .into(&COLLECTION_MEMBER)
-                .document_id(id.clone())
+                .document_id(mid)
                 .object(&member_new)
                 .execute::<TicketMember>()
                 .await
@@ -148,22 +157,22 @@ impl Ticket {
             };
         }
 
-        let project_new = super::project::Project {
-            ticket_number: Some(ticket_number),
-            ..project.clone()
-        };
+        let mut project = project.clone();
+        project.ticket_number = Some(ticket_number);
+
         if let Err(e) = db
             .fluent()
             .update()
             .fields(paths!(super::project::Project::ticket_number))
             .in_col(&super::project::COLLECTION_NAME)
-            .document_id(id)
-            .object(&project_new)
+            .document_id(&project.id.clone().unwrap())
+            .object(&project)
             .execute::<super::project::Project>()
             .await
         {
             return Err(anyhow::anyhow!(e.to_string()));
         }
+
         tracing::debug!("Ticket inserted {:?}", ticket);
 
         Ok(())
@@ -175,6 +184,7 @@ impl TicketMember {
         Self {
             id: None,
             ticket_id: None,
+            project_id: None,
             uid,
             seq: None,
             name: None,

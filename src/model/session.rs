@@ -12,7 +12,7 @@ pub struct Session {
     pub name: String,
     pub email: String,
     pub photo_url: String,
-    pub project_id: Option<String>,
+    //pub project_id: Option<String>,
     pub created_at: DateTime<Utc>,
 }
 

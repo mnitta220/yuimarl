@@ -37,6 +37,14 @@ impl Component for TicketBody {
                         }
                         *buf += r#"</h3>"#;
 
+                        *buf += r#"<div class="row p-2">"#;
+                        {
+                            *buf += r#"<div class="alert alert-danger text-start" role="alert">"#;
+                            *buf += r#"他のユーザーがチケットを更新しため、更新できませんでした。<br>再読み込みを行ってください。"#;
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</div>"#;
+
                         if props.action != crate::Action::Create {
                             *buf += r#"<div class="pb-2">"#;
                             {

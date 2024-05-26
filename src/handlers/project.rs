@@ -276,10 +276,12 @@ pub async fn post(
         _ => {}
     }
 
-    let (project, member) = model::project::Project::current_project(&session, &db).await?;
+    let (project, member, tickets) =
+        model::project::Project::current_project(&session, &db).await?;
     props.action = action;
     props.project = project;
     props.project_member = member;
+    props.tickets = tickets;
     props.session = Some(session);
     let mut page = HomePage::new(props);
 

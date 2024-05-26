@@ -66,7 +66,10 @@ async fn main() {
         .route("/project_list", get(handlers::project::get_list))
         .route("/project_note", post(handlers::project::post_note))
         .route("/ticket_add", get(handlers::ticket::get_add))
-        .route("/ticket", post(handlers::ticket::post))
+        .route(
+            "/ticket",
+            get(handlers::ticket::get).post(handlers::ticket::post),
+        )
         //.route("/ticket/create", post(handlers::ticket::post_create_ticket))
         .route("/contact", get(handlers::contact::get_contact))
         .route("/api/firebaseConfig", get(handlers::api::firebase_config))

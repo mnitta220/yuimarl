@@ -1,9 +1,12 @@
-use crate::components::body::project;
+use std::f32::consts::E;
 
+use super::project::Project;
 use super::session::Session;
 use anyhow::Result;
 use chrono::{DateTime, Utc};
 use firestore::*;
+use futures::stream::BoxStream;
+use futures::TryStreamExt;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -21,7 +24,7 @@ pub struct Ticket {
     pub end_date: Option<String>,          // 終了日
     pub progress: i32,                     // 進捗率
     pub priority: i32,                     // 優先度
-    pub parent: Option<String>,            // 親チケット
+    pub parent_id: Option<String>,         // 親チケットID
     pub deliverables: Option<String>,      // 成果物(JSON)
     pub owner: Option<String>,             // 登録ユーザー
     pub note: Option<String>,              // ノート（マークダウン）
@@ -54,7 +57,7 @@ impl Ticket {
             end_date: None,
             progress: 0,
             priority: 0,
-            parent: None,
+            parent_id: None,
             deliverables: None,
             owner: None,
             note: None,
@@ -176,6 +179,136 @@ impl Ticket {
         tracing::debug!("Ticket inserted {:?}", ticket);
 
         Ok(())
+    }
+
+    pub async fn find_current_tickets(
+        project_id: &str,
+        uid: &str,
+        db: &FirestoreDb,
+    ) -> Result<Vec<Ticket>> {
+        let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(TicketMember::{id, project_id, uid, ticket_id}))
+            .from(COLLECTION_MEMBER)
+            .filter(|q| {
+                q.for_all([
+                    q.field(path!(TicketMember::project_id)).eq(&project_id),
+                    q.field(path!(TicketMember::uid)).eq(&uid),
+                ])
+            })
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let ticket_members: Vec<TicketMember> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+        let mut tickets = vec![];
+
+        for member in ticket_members {
+            match db
+                .fluent()
+                .select()
+                .by_id_in(&COLLECTION_NAME)
+                .obj::<Ticket>()
+                .one(&member.ticket_id.clone().unwrap_or_default())
+                .await
+            {
+                Ok(t) => match t {
+                    Some(t) => {
+                        tickets.push(t);
+                    }
+                    None => {
+                        continue;
+                    }
+                },
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+        }
+
+        Ok(tickets)
+    }
+
+    pub async fn find_ticket_and_project(
+        id: &str,
+        db: &FirestoreDb,
+    ) -> Result<(Option<Ticket>, Option<Project>, Vec<TicketMember>)> {
+        let ticket: Option<Ticket> = match db
+            .fluent()
+            .select()
+            .by_id_in(COLLECTION_NAME)
+            .obj()
+            .one(id)
+            .await
+        {
+            Ok(ret) => ret,
+            Err(e) => {
+                tracing::error!("failed to connect firestore: {:?}", e);
+                std::process::exit(0x0100);
+            }
+        };
+
+        let mut project: Option<Project> = None;
+        if let Some(t) = &ticket {
+            if let Some(project_id) = &t.project_id {
+                project = super::project::Project::find(&project_id, db).await?;
+            }
+        }
+
+        let mut ticket_members: Vec<TicketMember> = Vec::new();
+        if let Some(t) = &ticket {
+            let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
+                .fluent()
+                .select()
+                .fields(paths!(TicketMember::{id, project_id, uid, ticket_id}))
+                .from(COLLECTION_MEMBER)
+                .filter(|q| q.for_all([q.field(path!(TicketMember::ticket_id)).eq(&t.id)]))
+                .order_by([(path!(TicketMember::seq), FirestoreQueryDirection::Ascending)])
+                .obj()
+                .stream_query_with_errors()
+                .await
+            {
+                Ok(s) => s,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+
+            ticket_members = match object_stream.try_collect().await {
+                Ok(s) => s,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+        }
+        for member in ticket_members.iter_mut() {
+            let user = match super::user::User::find(&member.uid, db).await {
+                Ok(u) => u,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+            if let Some(u) = user {
+                member.name = Some(u.name);
+                member.email = Some(u.email);
+            }
+        }
+
+        tracing::debug!("Get by id {:?}", ticket);
+
+        Ok((ticket, project, ticket_members))
     }
 }
 

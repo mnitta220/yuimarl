@@ -20,9 +20,12 @@ impl TicketValidation {
         db: &FirestoreDb,
     ) -> Result<Option<Self>> {
         match action {
-            // プロジェクト作成
+            // チケット作成
             crate::Action::Create => {
-                // TODO プロジェクト作成件数の制限を超えていたら作成できない。
+                // TODO チケット作成権限がなければ作成できない。
+                // TODO チケット作成件数の制限を超えていたら作成できない。
+                // TODO チケット名が入力されていれば作成できない。
+                // TODO チケット名が重複していたら作成できない。
             }
             _ => {}
         }

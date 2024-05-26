@@ -81,53 +81,79 @@ impl Component for TicketInfo {
                     {
                         *buf += r#"<div id="chargeTbl">"#;
                         {
-                            /*
-                            *buf += r#"<table class="table table-hover">"#;
-                            {
-                                *buf += r#"<thead>"#;
+                            if props.ticket_members.len() > 0 {
+                                *buf += r#"<table class="table table-hover">"#;
                                 {
-                                    *buf += r#"<tr>"#;
+                                    *buf += r#"<thead>"#;
                                     {
-                                        *buf += r#"<th scope="col">メールアドレス</th>"#;
-                                        *buf += r#"<th scope="col">名前</th>"#;
-                                        *buf += r#"<th scope="col"></th>"#;
-                                    }
-                                    *buf += r#"</tr>"#;
-                                }
-                                *buf += r#"</thead>"#;
-                                *buf += r#"<tbody>"#;
-                                {
-                                    *buf += r#"<tr>"#;
-                                    {
-                                        *buf += r#"<td>taro.yamada@mail.com</td>"#;
-                                        *buf += r#"<td>山田太郎</td>"#;
-                                        *buf += r#"<td>"#;
+                                        *buf += r#"<tr>"#;
                                         {
-                                            *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">&nbsp;"#;
-                                            *buf += r#"<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">&nbsp;"#;
-                                            *buf += r#"<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
+                                            *buf += r#"<th scope="col">メールアドレス</th>"#;
+                                            *buf += r#"<th scope="col">名前</th>"#;
+                                            *buf += r#"<th scope="col"></th>"#;
                                         }
-                                        *buf += r#"</td>"#;
+                                        *buf += r#"</tr>"#;
                                     }
-                                    *buf += r#"</tr>"#;
-                                    *buf += r#"<tr>"#;
+                                    *buf += r#"</thead>"#;
+
+                                    *buf += r#"<tbody>"#;
                                     {
-                                        *buf += r#"<td>taro.yamada@mail.com</td>"#;
-                                        *buf += r#"<td>岩鬼正美</td>"#;
-                                        *buf += r#"<td>"#;
-                                        {
-                                            *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">&nbsp;"#;
-                                            *buf += r#"<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">&nbsp;"#;
-                                            *buf += r#"<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
+                                        let mut i = 0;
+                                        for m in &props.ticket_members {
+                                            *buf += r#"<tr>"#;
+                                            {
+                                                *buf += r#"<td>"#;
+                                                if let Some(e) = &m.email {
+                                                    *buf += e;
+                                                }
+                                                *buf += r#"</td>"#;
+
+                                                *buf += r#"<td>"#;
+                                                if let Some(n) = &m.name {
+                                                    *buf += n;
+                                                }
+                                                *buf += r#"</td>"#;
+
+                                                *buf += r#"<td>"#;
+                                                {
+                                                    *buf += r#"<a href="javascript:removeCharge("#;
+                                                    *buf += &i.to_string();
+                                                    *buf += r#")">"#;
+                                                    {
+                                                        *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                                                    }
+                                                    *buf += r#"</a>"#;
+
+                                                    if i != 0 {
+                                                        *buf += r#"&nbsp;<a href="javascript:chargeSeqUp("#;
+                                                        *buf += &i.to_string();
+                                                        *buf += r#")">"#;
+                                                        {
+                                                            *buf += r#"<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">"#;
+                                                        }
+                                                        *buf += r#"</a>"#;
+                                                    }
+
+                                                    if (i + 1) != props.ticket_members.len() {
+                                                        *buf += r#"&nbsp;<a href="javascript:chargeSeqDown("#;
+                                                        *buf += &i.to_string();
+                                                        *buf += r#")">"#;
+                                                        {
+                                                            *buf += r#"<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
+                                                        }
+                                                        *buf += r#"</a>"#;
+                                                    }
+                                                }
+                                                *buf += r#"</td>"#;
+                                            }
+                                            *buf += r#"</tr>"#;
+                                            i += 1;
                                         }
-                                        *buf += r#"</td>"#;
                                     }
-                                    *buf += r#"</tr>"#;
+                                    *buf += r#"</tbody>"#;
                                 }
-                                *buf += r#"</tbody>"#;
+                                *buf += r#"</table>"#;
                             }
-                            *buf += r#"</table>"#;
-                            */
                         }
                         *buf += r#"</div>"#;
 
@@ -315,6 +341,29 @@ impl Component for TicketInfo {
                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="category">親チケット</label>"#;
                 *buf += r#"<div class="col-md-9">"#;
                 {
+                    if let Some(t) = &props.ticket_parent {
+                        *buf += r#"<a href="">"#;
+                        *buf += &t.id_disp.clone().unwrap();
+                        *buf += r#"</a>&nbsp;:&nbsp;"#;
+                        *buf += &t.name.clone().unwrap();
+                        *buf += r#"&nbsp;"#;
+                        *buf += r#"<a href="">"#;
+                        {
+                            *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                        }
+                        *buf += r#"</a>"#;
+                    } else {
+                        *buf += r#"<p class="my-1">"#;
+                        {
+                            *buf += r#"<a href="step01.html">"#;
+                            {
+                                *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">"#;
+                            }
+                            *buf += r#"</a>"#;
+                        }
+                        *buf += r#"</p>"#;
+                    }
+                    /*
                     *buf += r#"<a href="">"#;
                     *buf += r#"BN5"#;
                     *buf += r#"</a>&nbsp;:&nbsp;"#;
@@ -325,6 +374,7 @@ impl Component for TicketInfo {
                         *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
                     }
                     *buf += r#"</a>"#;
+                    */
                 }
                 *buf += r#"</div>"#;
             }

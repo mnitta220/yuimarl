@@ -107,7 +107,11 @@ impl Project {
     pub async fn current_project(
         session: &Session,
         db: &FirestoreDb,
-    ) -> Result<(Option<Self>, Option<ProjectMember>)> {
+    ) -> Result<(
+        Option<Self>,
+        Option<ProjectMember>,
+        Vec<super::ticket::Ticket>,
+    )> {
         let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
@@ -135,6 +139,9 @@ impl Project {
             }
         };
 
+        let mut prj: Option<Project> = None;
+        let mut project_member: Option<ProjectMember> = None;
+
         for member in project_members {
             match db
                 .fluent()
@@ -149,7 +156,10 @@ impl Project {
                         if p.deleted {
                             continue;
                         }
-                        return Ok((Some(p), Some(member)));
+                        //return Ok((Some(p), Some(member)));
+                        prj = Some(p);
+                        project_member = Some(member);
+                        break;
                     }
                     None => {
                         continue;
@@ -161,7 +171,21 @@ impl Project {
             };
         }
 
-        Ok((None, None))
+        let mut tickets: Vec<super::ticket::Ticket> = Vec::new();
+
+        if let Some(p) = &prj {
+            if let Ok(t) = super::ticket::Ticket::find_current_tickets(
+                &p.id.clone().unwrap(),
+                &session.uid,
+                db,
+            )
+            .await
+            {
+                tickets = t;
+            }
+        }
+
+        Ok((prj, project_member, tickets))
     }
 
     pub async fn find_by_owner_and_name(

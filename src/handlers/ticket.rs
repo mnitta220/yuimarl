@@ -5,10 +5,16 @@ use crate::{
     AppError,
 };
 use anyhow::Result;
-use axum::{extract::Form, response::Html};
+use axum::{extract::Form, extract::Query, response::Html};
 use firestore::*;
 use serde::Deserialize;
 use tower_cookies::Cookies;
+
+#[derive(Debug, Deserialize)]
+pub struct Params {
+    id: Option<String>,
+    tab: Option<String>,
+}
 
 pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
     tracing::debug!("GET /ticket_add");
@@ -29,17 +35,69 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
     props.title = Some("チケットを作成".to_string());
     props.action = crate::Action::Create;
 
-    let (project, member) = match model::project::Project::current_project(&session, &db).await {
-        Ok((project, member)) => (project, member),
+    let (project, member, tickets) =
+        match model::project::Project::current_project(&session, &db).await {
+            Ok((project, member, tickets)) => (project, member, tickets),
+            Err(e) => {
+                return Err(AppError(anyhow::anyhow!(e)));
+            }
+        };
+
+    props.project = project;
+    props.project_member = member;
+    props.tickets = tickets;
+    props.session = Some(session);
+
+    let mut page = TicketPage::new(props);
+
+    Ok(Html(page.write()))
+}
+
+pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<String>, AppError> {
+    let id = params.id.unwrap_or_default();
+    let tab = params.tab.unwrap_or_default();
+    tracing::debug!("GET /ticket id={} tab={}", id, tab);
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
         Err(e) => {
             return Err(AppError(anyhow::anyhow!(e)));
         }
     };
 
-    props.project = project;
-    props.project_member = member;
-    props.session = Some(session);
+    let session = match super::get_session_info(cookies, true, &db).await {
+        Ok(session_id) => session_id,
+        Err(_) => return Ok(Html(LoginPage::write())),
+    };
+    let mut props = page::Props::new(&session.id);
+    props.action = crate::Action::Update;
+    props.title = Some("チケット".to_string());
 
+    match tab.as_ref() {
+        "note" => {
+            props.tab = crate::Tab::Note;
+        }
+        "history" => {
+            props.tab = crate::Tab::History;
+        }
+        _ => {
+            props.tab = crate::Tab::Info;
+        }
+    }
+
+    let (ticket, project, members) =
+        match model::ticket::Ticket::find_ticket_and_project(&id, &db).await {
+            Ok(ticket) => ticket,
+            Err(e) => {
+                return Err(AppError(anyhow::anyhow!(e)));
+            }
+        };
+
+    props.ticket = ticket;
+    props.project = project;
+    props.ticket_members = members;
+
+    props.session = Some(session);
     let mut page = TicketPage::new(props);
 
     Ok(Html(page.write()))
@@ -109,10 +167,6 @@ pub async fn post(
         }
     };
 
-    //let project_id = match &session.project_id {
-    //    Some(p) => p,
-    //    None => return Ok(Html(LoginPage::write())),
-    //};
     let project = model::project::Project::find(&input.project_id, &db).await?;
     if project.is_none() {
         return Ok(Html(LoginPage::write()));
@@ -125,9 +179,6 @@ pub async fn post(
     let mut i = 0;
     for m in mem {
         let mut member = model::ticket::TicketMember::new(String::from(m["uid"].as_str().unwrap()));
-        //member.email = Some(String::from(m["email"].as_str().unwrap()));
-        //member.name = Some(String::from(m["name"].as_str().unwrap()));
-        //member.role = Some(m["role"].as_i64().unwrap() as i32);
         member.seq = Some(i);
         ticket_members.push(member);
         i += 1;
@@ -156,11 +207,6 @@ pub async fn post(
         ticket.progress = input.progress.parse::<i32>().unwrap_or_default();
         ticket.priority = input.priority.parse::<i32>().unwrap_or_default();
 
-        //project.id = Some(input.project_id.clone());
-        //project.project_name = Some(project_name);
-        //project.prefix = Some(input.prefix);
-        //let t = input.timestamp.parse::<i64>().unwrap_or_default();
-        //project.updated_at = DateTime::from_timestamp_micros(t);
         props.session = Some(session);
         props.ticket = Some(ticket);
         props.ticket_validation = Some(v);
@@ -186,140 +232,14 @@ pub async fn post(
         _ => {}
     }
 
-    let (project, member) = model::project::Project::current_project(&session, &db).await?;
+    let (project, member, tickets) =
+        model::project::Project::current_project(&session, &db).await?;
     props.action = action;
     props.project = project;
     props.project_member = member;
+    props.tickets = tickets;
     props.session = Some(session);
     let mut page = HomePage::new(props);
 
     Ok(Html(page.write()))
 }
-
-/*
-#[derive(Deserialize, Debug)]
-pub struct TicketAddInput {
-    pub project: String,
-}
-
-pub async fn post_add_ticket(
-    cookies: Cookies,
-    Form(input): Form<TicketAddInput>,
-) -> Result<Html<String>, AppError> {
-    tracing::debug!("POST /ticket/add {}", input.project);
-
-    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
-        Ok(db) => db,
-        Err(e) => {
-            return Err(AppError(anyhow::anyhow!(e)));
-        }
-    };
-
-    let mut session = match super::get_session_info(cookies, true, &db).await {
-        Ok(session_id) => session_id,
-        Err(_) => return Ok(Html(LoginPage::write())),
-    };
-    let mut props = page::Props::new(&session.id);
-    let project = model::project::Project::find(&input.project, &db).await?;
-
-    if let Err(e) =
-        model::project::ProjectMember::update_last_used(&input.project, &session.uid, &db).await
-    {
-        return Err(AppError(anyhow::anyhow!(e)));
-    }
-
-    session.project_id = Some(input.project);
-    if let Err(e) = model::session::Session::update_project(&session, &db).await {
-        return Err(AppError(anyhow::anyhow!(e)));
-    }
-    props.session = Some(session);
-    props.project = project;
-    let mut page = TicketPage::new(props);
-
-    Ok(Html(page.write()))
-}
-
-#[derive(Deserialize, Debug)]
-pub struct TicketCreateInput {
-    pub name: String,
-    pub note: String,
-    pub start_date: String,
-    pub end_date: String,
-    pub progress: String,
-    pub priority: String,
-}
-
-pub async fn post_create_ticket(
-    cookies: Cookies,
-    Form(input): Form<TicketCreateInput>,
-) -> Result<Html<String>, AppError> {
-    tracing::info!(
-        "POST /ticket/create name={} note={} start_date={} end_date={} progress={} priority={}",
-        input.name,
-        input.note,
-        input.start_date,
-        input.end_date,
-        input.progress,
-        input.priority
-    );
-
-    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
-        Ok(db) => db,
-        Err(e) => {
-            return Err(AppError(anyhow::anyhow!(e)));
-        }
-    };
-
-    let session = match super::get_session_info(cookies, true, &db).await {
-        Ok(session_id) => session_id,
-        Err(_) => return Ok(Html(LoginPage::write())),
-    };
-    let mut props = page::Props::new(&session.id);
-
-    let project_id = match &session.project_id {
-        Some(p) => p,
-        None => return Ok(Html(LoginPage::write())),
-    };
-    let project = model::project::Project::find(&project_id, &db).await?;
-    if project.is_none() {
-        return Ok(Html(LoginPage::write()));
-    }
-
-    let name = input.name.trim().to_string();
-    let progress = match input.progress.parse::<i32>() {
-        Ok(p) => p,
-        Err(_) => 0,
-    };
-
-    if name.len() == 0 {
-        let mut ticket = model::ticket::Ticket::new();
-        ticket.project_id = Some(project_id.clone());
-        ticket.name = Some(input.name);
-        ticket.note = Some(input.note);
-        ticket.start_date = Some(input.start_date);
-        ticket.end_date = Some(input.end_date);
-        ticket.progress = progress;
-        let validation = model::ticket::TicketValidation {
-            name: Some("入力してください".to_string()),
-        };
-        props.session = Some(session);
-        props.project = project;
-        props.ticket = Some(ticket);
-        props.ticket_validation = Some(validation);
-        let mut page = TicketPage::new(props);
-        return Ok(Html(page.write()));
-    }
-
-    if let Err(e) =
-        model::ticket::Ticket::insert(&input, &session, project.as_ref().unwrap(), &db).await
-    {
-        return Err(AppError(anyhow::anyhow!(e)));
-    }
-
-    props.project = project;
-    props.session = Some(session);
-    let mut page = HomePage::new(props);
-
-    Ok(Html(page.write()))
-}
-*/

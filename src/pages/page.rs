@@ -20,6 +20,8 @@ pub struct Props {
     pub ticket_members: Vec<model::ticket::TicketMember>,
     pub ticket_validation: Option<validation::ticket::TicketValidation>,
     pub tickets: Vec<model::ticket::Ticket>,
+    pub ticket_parent: Option<model::ticket::Ticket>,
+    pub ticket_children: Vec<model::ticket::Ticket>,
     pub tab: Tab,
     pub action: crate::Action,
 }
@@ -38,6 +40,8 @@ impl Props {
             ticket_members: Vec::new(),
             ticket_validation: None,
             tickets: Vec::new(),
+            ticket_parent: None,
+            ticket_children: Vec::new(),
             tab: Tab::Info,
             action: crate::Action::Read,
         }

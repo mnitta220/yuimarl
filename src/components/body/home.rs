@@ -242,18 +242,21 @@ impl Component for HomeBody {
                                     *buf += r#"<div class="col-md-9">"#;
                                     {
                                         if props.project.is_some() {
-                                            *buf += r#"<p class="mb-0">"#;
-                                            {
-                                                *buf += r#"<a href="">BN10</a>&nbsp;:&nbsp;"#;
-                                                *buf += r#"たこやき模擬店"#;
+                                            for ticket in props.tickets.iter() {
+                                                *buf += r#"<p class="mb-0">"#;
+                                                {
+                                                    *buf += r#"<a href="/ticket?id="#;
+                                                    *buf += &ticket.id.clone().unwrap();
+                                                    *buf += r#"">"#;
+                                                    {
+                                                        *buf += &ticket.id_disp.clone().unwrap();
+                                                    }
+                                                    *buf += r#"</a>&nbsp;:&nbsp;"#;
+                                                    *buf += &ticket.name.clone().unwrap();
+                                                }
+                                                *buf += r#"</p>"#;
                                             }
-                                            *buf += r#"</p>"#;
-                                            *buf += r#"<p class="mb-0">"#;
-                                            {
-                                                *buf += r#"<a href="">BN5</a>&nbsp;:&nbsp;"#;
-                                                *buf += r#"文化祭出し物"#;
-                                            }
-                                            *buf += r#"</p>"#;
+
                                             *buf += r#"<p class="my-1">"#;
                                             {
                                                 *buf += r#"<a href="/ticket_add">"#;

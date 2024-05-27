@@ -233,6 +233,8 @@ impl Component for TicketInfo {
                                         *buf += r#"<input class="form-control" id="progress" name="progress" type="number" min="0" max="100" value=""#;
                                         if let Some(t) = &props.ticket {
                                             *buf += t.progress.to_string().as_ref();
+                                        } else {
+                                            *buf += "0";
                                         }
                                         *buf += r#"">"#;
                                     }
@@ -280,6 +282,7 @@ impl Component for TicketInfo {
                         *buf += r#"<label class="form-check-label" for="priority1">最優先</label>"#;
                     }
                     *buf += r#"</div>"#;
+
                     *buf += r#"<div class="form-check form-check-inline">"#;
                     {
                         *buf += r#"<input class="form-check-input" id="priority2" name="priority" type="radio" value="2""#;
@@ -292,6 +295,7 @@ impl Component for TicketInfo {
                         *buf += r#"<label class="form-check-label" for="priority2">高</label>"#;
                     }
                     *buf += r#"</div>"#;
+
                     *buf += r#"<div class="form-check form-check-inline">"#;
                     {
                         *buf += r#"<input class="form-check-input" id="priority3" name="priority" type="radio" value="3""#;
@@ -304,6 +308,7 @@ impl Component for TicketInfo {
                         *buf += r#"<label class="form-check-label" for="priority3">中</label>"#;
                     }
                     *buf += r#"</div>"#;
+
                     *buf += r#"<div class="form-check form-check-inline">"#;
                     {
                         *buf += r#"<input class="form-check-input" id="priority4" name="priority" type="radio" value="4""#;
@@ -316,6 +321,7 @@ impl Component for TicketInfo {
                         *buf += r#"<label class="form-check-label" for="priority4">低</label>"#;
                     }
                     *buf += r#"</div>"#;
+
                     *buf += r#"<div class="form-check form-check-inline">"#;
                     {
                         *buf += r#"<input class="form-check-input" id="priority0" name="priority" type="radio" value="0""#;
@@ -435,37 +441,51 @@ impl Component for TicketInfo {
                         *buf += r#"</button>"#;
                     }
                     *buf += r#"</div>"#;
+                    *buf += r#"<input type="hidden" name="ticket_id" value="">"#;
                     *buf += r#"<input type="hidden" name="timestamp" value="">"#;
                 } else {
-                    *buf += r#"<div class="col-9">"#;
-                    {
-                        *buf += r#"<button id="btnSave" class="btn btn-primary" type="button">"#;
-                        {
-                            *buf += r#"<img class="icon" src="/static/ionicons/save-outline.svg">"#;
-                            *buf += r#"&nbsp;更新"#;
-                        }
-                        *buf += r#"</button>&nbsp;&nbsp;"#;
-                        *buf += r#"<button class="btn btn-primary" type="submit">"#;
+                    if let Some(t) = &props.ticket {
+                        *buf += r#"<div class="col-9">"#;
                         {
                             *buf +=
-                                r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">"#;
-                            *buf += r#"&nbsp;再読み込み"#;
+                                r#"<button id="btnSave" class="btn btn-primary" type="button">"#;
+                            {
+                                *buf +=
+                                    r#"<img class="icon" src="/static/ionicons/save-outline.svg">"#;
+                                *buf += r#"&nbsp;更新"#;
+                            }
+                            *buf += r#"</button>&nbsp;&nbsp;"#;
+                            *buf += r#"<button class="btn btn-primary" type="submit">"#;
+                            {
+                                *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">"#;
+                                *buf += r#"&nbsp;再読み込み"#;
+                            }
+                            *buf += r#"</button>"#;
                         }
-                        *buf += r#"</button>"#;
-                    }
-                    *buf += r#"</div>"#;
+                        *buf += r#"</div>"#;
 
-                    *buf += r#"<div class="col-3 text-end">"#;
-                    {
-                        *buf += r#"<button class="btn btn-secondary" type="submit">"#;
+                        *buf += r#"<div class="col-3 text-end">"#;
                         {
-                            *buf +=
-                                r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">"#;
-                            *buf += r#"&nbsp;削除"#;
+                            *buf += r#"<button class="btn btn-secondary" type="submit">"#;
+                            {
+                                *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">"#;
+                                *buf += r#"&nbsp;削除"#;
+                            }
+                            *buf += r#"</button>"#;
                         }
-                        *buf += r#"</button>"#;
+                        *buf += r#"</div>"#;
+
+                        *buf += r#"<input type="hidden" name="ticket_id" value=""#;
+                        if let Some(id) = &t.id {
+                            *buf += id;
+                        }
+                        *buf += r#"">"#;
+                        *buf += r#"<input type="hidden" name="timestamp" value=""#;
+                        if let Some(up) = &t.updated_at {
+                            *buf += &up.timestamp_micros().to_string();
+                        }
+                        *buf += r#"">"#;
                     }
-                    *buf += r#"</div>"#;
                 }
             }
             *buf += r#"</div>"#;
@@ -489,6 +509,7 @@ impl Component for TicketInfo {
                         *buf += r#"<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="キャンセル"></button>"#;
                     }
                     *buf += r#"</div>"#;
+
                     *buf += r#"<div class="modal-body">"#;
                     {
                         *buf += r#"<div class="row py-3">"#;
@@ -496,58 +517,13 @@ impl Component for TicketInfo {
                             *buf += r#"<div class="col">"#;
                             {
                                 *buf += r#"<div id="searched"></div>"#;
-                                /*
-                                *buf += r#"<table class="table table-hover">"#;
-                                {
-                                    *buf += r#"<thead>"#;
-                                    {
-                                        *buf += r#"<tr>"#;
-                                        {
-                                            *buf += r#"<th scope="col">選択</th>"#;
-                                            *buf += r#"<th scope="col">ロール</th>"#;
-                                            *buf += r#"<th scope="col">メールアドレス</th>"#;
-                                            *buf += r#"<th scope="col">名前</th>"#;
-                                        }
-                                        *buf += r#"</tr>"#;
-                                    }
-                                    *buf += r#"</thead>"#;
-                                    *buf += r#"<tbody>"#;
-                                    {
-                                        *buf += r#"<tr>"#;
-                                        {
-                                            *buf += r#"<td>"#;
-                                            {
-                                                *buf += r#"<input class="form-check-input" id="flexCheckDefault" type="checkbox" value="" checked>"#;
-                                            }
-                                            *buf += r#"</td>"#;
-                                            *buf += r#"<td>オーナー</td>"#;
-                                            *buf += r#"<td>taro.yamada@mail.com</td>"#;
-                                            *buf += r#"<td>山田太郎</td>"#;
-                                        }
-                                        *buf += r#"</tr>"#;
-                                        *buf += r#"<tr>"#;
-                                        {
-                                            *buf += r#"<td>"#;
-                                            {
-                                                *buf += r#"<input class="form-check-input" id="flexCheckDefault" type="checkbox" value="">"#;
-                                            }
-                                            *buf += r#"</td>"#;
-                                            *buf += r#"<td>管理者</td>"#;
-                                            *buf += r#"<td>kazuto.tonoma@mail.com</td>"#;
-                                            *buf += r#"<td>殿馬一人</td>"#;
-                                        }
-                                        *buf += r#"</tr>"#;
-                                    }
-                                    *buf += r#"</tbody>"#;
-                                }
-                                *buf += r#"</table>"#;
-                                */
                             }
                             *buf += r#"</div>"#;
                         }
                         *buf += r#"</div>"#;
                     }
                     *buf += r#"</div>"#;
+
                     *buf += r#"<div class="modal-footer">"#;
                     {
                         *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;

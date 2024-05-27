@@ -115,7 +115,7 @@ pub async fn user_by_email(Form(input): Form<UserByEmainInput>) -> String {
 
 /// プロジェクトのメンバーを取得する。
 pub async fn project_member(Form(input): Form<ProjectMemberInput>) -> String {
-    tracing::info!("GET /project_member: {}", input.project_id);
+    //tracing::info!("GET /project_member: {}", input.project_id);
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,

@@ -1,5 +1,4 @@
-use std::f32::consts::E;
-
+use super::history::{History, HistoryEvent, MAX_HISTORY};
 use super::project::Project;
 use super::session::Session;
 use anyhow::Result;
@@ -8,6 +7,7 @@ use firestore::*;
 use futures::stream::BoxStream;
 use futures::TryStreamExt;
 use serde::{Deserialize, Serialize};
+use std::cmp::Ordering;
 use uuid::Uuid;
 
 const COLLECTION_NAME: &'static str = "ticket";
@@ -40,7 +40,7 @@ pub struct TicketMember {
     pub ticket_id: Option<String>,  // チケットID
     pub project_id: Option<String>, // プロジェクトID
     pub uid: String,                // メンバーのユーザーID
-    pub seq: Option<i32>,           // 表示順
+    pub seq: i32,                   // 表示順
     pub name: Option<String>,       // メンバーの名前
     pub email: Option<String>,      // メンバーのメールアドレス
 }
@@ -103,6 +103,18 @@ impl Ticket {
         ticket.owner = Some(session.uid.clone());
         ticket.created_at = Some(now);
         ticket.updated_at = Some(now);
+
+        let history = History {
+            timestamp: now,
+            uid: session.uid.clone(),
+            user_name: session.name.clone(),
+            event: HistoryEvent::TicketCreate as i32,
+        };
+        let history = vec![history];
+        if let Ok(h) = serde_json::to_string(&history) {
+            ticket.history = Some(h);
+        }
+
         let mut count = 0u32;
         let mut id = Uuid::now_v7().to_string();
 
@@ -138,13 +150,14 @@ impl Ticket {
             };
         }
 
+        let mut seq = 0;
         for member in members {
             let mid = Uuid::now_v7().to_string();
             let mut member_new = TicketMember::new(member.uid.clone());
             member_new.id = Some(mid.clone());
             member_new.ticket_id = Some(id.clone());
             member_new.project_id = Some(project.id.clone().unwrap());
-            member_new.seq = Some(member.seq.unwrap_or_default());
+            member_new.seq = seq;
 
             match db
                 .fluent()
@@ -158,6 +171,7 @@ impl Ticket {
                 Ok(_) => {}
                 Err(e) => return Err(anyhow::anyhow!(e.to_string())),
             };
+            seq += 1;
         }
 
         let mut project = project.clone();
@@ -181,6 +195,212 @@ impl Ticket {
         Ok(())
     }
 
+    pub async fn update(
+        input: &crate::handlers::ticket::TicketInput,
+        session: &Session,
+        members: &Vec<TicketMember>,
+        db: &FirestoreDb,
+    ) -> Result<()> {
+        let progress = match input.progress.parse::<i32>() {
+            Ok(p) => p,
+            Err(_) => 0,
+        };
+        let priority = match input.priority.parse::<i32>() {
+            Ok(p) => p,
+            Err(_) => 0,
+        };
+
+        let mut ticket = Ticket::new();
+        let now = Utc::now();
+        ticket.name = Some(input.name.clone());
+        if input.description.len() > 0 {
+            ticket.description = Some(input.description.clone());
+        }
+        if input.start_date.len() > 0 {
+            ticket.start_date = Some(input.start_date.clone());
+        }
+        if input.end_date.len() > 0 {
+            ticket.end_date = Some(input.end_date.clone());
+        }
+        ticket.progress = progress;
+        ticket.priority = priority;
+        ticket.updated_at = Some(now);
+
+        let history = History {
+            timestamp: now,
+            uid: session.uid.clone(),
+            user_name: session.name.clone(),
+            event: HistoryEvent::UpdateInfo as i32,
+        };
+
+        let mut histories = Vec::new();
+        if let Some(h) = &ticket.history {
+            let h: Vec<History> = match serde_json::from_str(&h) {
+                Ok(h) => h,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+            histories = h;
+        }
+        histories.push(history);
+
+        loop {
+            if histories.len() <= MAX_HISTORY {
+                break;
+            }
+            histories.remove(0);
+        }
+
+        if let Ok(h) = serde_json::to_string(&histories) {
+            ticket.history = Some(h);
+        }
+
+        if let Err(e) = db
+            .fluent()
+            .update()
+            .fields(paths!(Ticket::{name, description, start_date, end_date, progress, priority, updated_at, history}))
+            .in_col(&COLLECTION_NAME)
+            .document_id(&input.ticket_id)
+            .object(&ticket)
+            .execute::<Ticket>()
+            .await
+        {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+
+        let current_members = match TicketMember::members_of_ticket(&input.ticket_id, db).await {
+            Ok(m) => m,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        /*
+         * チケットメンバーの更新処理
+         * 現在のメンバーと更新後のメンバーをマッチングして、更新処理を行う。
+         */
+        let mut c = 0;
+        let mut current = current_members.get(c);
+        let mut u = 0;
+        let mut upd = members.get(u);
+
+        loop {
+            if let Some(up) = upd {
+                if let Some(cur) = current {
+                    match up.seq.cmp(&cur.seq) {
+                        Ordering::Less => {
+                            if let Some(up) = upd {
+                                let mut up = up.clone();
+                                let id = Uuid::now_v7().to_string();
+                                up.id = Some(id.clone());
+                                up.project_id = Some(input.project_id.clone());
+                                up.ticket_id = Some(input.ticket_id.clone());
+
+                                if let Err(e) = db
+                                    .fluent()
+                                    .insert()
+                                    .into(&COLLECTION_MEMBER)
+                                    .document_id(id)
+                                    .object(&up)
+                                    .execute::<TicketMember>()
+                                    .await
+                                {
+                                    return Err(anyhow::anyhow!(e.to_string()));
+                                }
+                            }
+                            u += 1;
+                            upd = members.get(u);
+                        }
+                        Ordering::Greater => {
+                            if let Some(id) = &cur.id {
+                                if let Err(e) = db
+                                    .fluent()
+                                    .delete()
+                                    .from(&COLLECTION_MEMBER)
+                                    .document_id(id)
+                                    .execute()
+                                    .await
+                                {
+                                    return Err(anyhow::anyhow!(e.to_string()));
+                                }
+                            }
+                            c += 1;
+                            current = current_members.get(c);
+                        }
+                        Ordering::Equal => {
+                            if cur.uid != up.uid {
+                                let mut cur = cur.clone();
+                                cur.uid = up.uid.clone();
+                                if let Err(e) = db
+                                    .fluent()
+                                    .update()
+                                    .fields(paths!(TicketMember::uid))
+                                    .in_col(&COLLECTION_MEMBER)
+                                    .document_id(&cur.id.as_ref().unwrap())
+                                    .object(&cur)
+                                    .execute::<TicketMember>()
+                                    .await
+                                {
+                                    return Err(anyhow::anyhow!(e.to_string()));
+                                }
+                            }
+
+                            c += 1;
+                            current = current_members.get(c);
+                            u += 1;
+                            upd = members.get(u);
+                        }
+                    }
+                } else {
+                    let mut up = up.clone();
+                    let id = Uuid::now_v7().to_string();
+                    up.id = Some(id.clone());
+                    up.project_id = Some(input.project_id.clone());
+                    up.ticket_id = Some(input.ticket_id.clone());
+
+                    if let Err(e) = db
+                        .fluent()
+                        .insert()
+                        .into(&COLLECTION_MEMBER)
+                        .document_id(id)
+                        .object(&up)
+                        .execute::<TicketMember>()
+                        .await
+                    {
+                        return Err(anyhow::anyhow!(e.to_string()));
+                    }
+
+                    u += 1;
+                    upd = members.get(u);
+                }
+            } else {
+                if let Some(cur) = current {
+                    if let Some(id) = &cur.id {
+                        if let Err(e) = db
+                            .fluent()
+                            .delete()
+                            .from(&COLLECTION_MEMBER)
+                            .document_id(id)
+                            .execute()
+                            .await
+                        {
+                            return Err(anyhow::anyhow!(e.to_string()));
+                        }
+                    }
+                } else {
+                    break;
+                }
+                c += 1;
+                current = current_members.get(c);
+            }
+        }
+
+        tracing::debug!("Ticket updated {:?}", ticket);
+
+        Ok(())
+    }
+
     pub async fn find_current_tickets(
         project_id: &str,
         uid: &str,
@@ -189,7 +409,7 @@ impl Ticket {
         let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
             .fluent()
             .select()
-            .fields(paths!(TicketMember::{id, project_id, uid, ticket_id}))
+            .fields(paths!(TicketMember::{id, project_id, uid, ticket_id, seq}))
             .from(COLLECTION_MEMBER)
             .filter(|q| {
                 q.for_all([
@@ -213,6 +433,7 @@ impl Ticket {
                 return Err(anyhow::anyhow!(e.to_string()));
             }
         };
+
         let mut tickets = vec![];
 
         for member in ticket_members {
@@ -272,7 +493,7 @@ impl Ticket {
             let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
                 .fluent()
                 .select()
-                .fields(paths!(TicketMember::{id, project_id, uid, ticket_id}))
+                .fields(paths!(TicketMember::{id, project_id, uid, ticket_id, seq}))
                 .from(COLLECTION_MEMBER)
                 .filter(|q| q.for_all([q.field(path!(TicketMember::ticket_id)).eq(&t.id)]))
                 .order_by([(path!(TicketMember::seq), FirestoreQueryDirection::Ascending)])
@@ -319,9 +540,37 @@ impl TicketMember {
             ticket_id: None,
             project_id: None,
             uid,
-            seq: None,
+            seq: 0,
             name: None,
             email: None,
         }
+    }
+
+    pub async fn members_of_ticket(ticket_id: &str, db: &FirestoreDb) -> Result<Vec<TicketMember>> {
+        let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(TicketMember::{id, project_id, uid, ticket_id, seq}))
+            .from(COLLECTION_MEMBER)
+            .filter(|q| q.for_all([q.field(path!(TicketMember::ticket_id)).eq(&ticket_id)]))
+            .order_by([(path!(TicketMember::seq), FirestoreQueryDirection::Ascending)])
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let ticket_members: Vec<TicketMember> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        Ok(ticket_members)
     }
 }

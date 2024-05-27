@@ -1,3 +1,4 @@
+use super::history::{History, HistoryEvent, MAX_HISTORY};
 use super::session::Session;
 use anyhow::Result;
 use chrono::{DateTime, Utc};
@@ -12,7 +13,7 @@ pub const COLLECTION_NAME: &'static str = "project";
 const COLLECTION_MEMBER: &'static str = "project_member";
 pub const MEMBER_LIMIT_DEFAULT: i32 = 20;
 pub const TICKET_LIMIT_DEFAULT: i32 = 1000;
-pub const MAX_HISTORY: usize = 50;
+//pub const MAX_HISTORY: usize = 50;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Project {
@@ -50,6 +51,7 @@ pub enum ProjectRole {
     Viewer = 4,
 }
 
+/*
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct History {
     pub timestamp: DateTime<Utc>,
@@ -64,6 +66,7 @@ pub enum HistoryEvent {
     ProjectUpdate = 2,
     UpdateNote = 3,
 }
+*/
 
 impl Project {
     pub fn new() -> Self {
@@ -156,7 +159,6 @@ impl Project {
                         if p.deleted {
                             continue;
                         }
-                        //return Ok((Some(p), Some(member)));
                         prj = Some(p);
                         project_member = Some(member);
                         break;
@@ -174,14 +176,17 @@ impl Project {
         let mut tickets: Vec<super::ticket::Ticket> = Vec::new();
 
         if let Some(p) = &prj {
-            if let Ok(t) = super::ticket::Ticket::find_current_tickets(
+            match super::ticket::Ticket::find_current_tickets(
                 &p.id.clone().unwrap(),
                 &session.uid,
                 db,
             )
             .await
             {
-                tickets = t;
+                Ok(t) => tickets = t,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
             }
         }
 
@@ -345,12 +350,14 @@ impl Project {
                 return Err(anyhow::anyhow!(e.to_string()));
             }
         };
+
         let mut prj = match prj {
             Some(p) => p,
             None => {
                 return Err(anyhow::anyhow!("Project not found".to_string()));
             }
         };
+
         let now = Utc::now();
         prj.project_name = Some(input.project_name.trim().to_string());
         prj.prefix = Some(input.prefix.trim().to_string());
@@ -360,7 +367,7 @@ impl Project {
             timestamp: now,
             uid: session.uid.clone(),
             user_name: session.name.clone(),
-            event: HistoryEvent::ProjectUpdate as i32,
+            event: HistoryEvent::UpdateInfo as i32,
         };
 
         let mut histories = Vec::new();
@@ -633,7 +640,7 @@ impl Project {
             timestamp: now,
             uid: session.uid.clone(),
             user_name: session.name.clone(),
-            event: HistoryEvent::ProjectUpdate as i32,
+            event: HistoryEvent::UpdateInfo as i32,
         };
 
         let mut histories = Vec::new();
@@ -1018,6 +1025,7 @@ impl ProjectMember {
     }
 }
 
+/*
 impl History {
     pub fn history_to_string(&self) -> String {
         match self.event {
@@ -1028,3 +1036,4 @@ impl History {
         }
     }
 }
+*/

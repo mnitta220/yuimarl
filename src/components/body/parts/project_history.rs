@@ -29,7 +29,7 @@ impl Component for ProjectHistory {
 
                             if let Some(p) = &props.project {
                                 if let Some(h) = &p.history {
-                                    let histories: Vec<model::project::History> =
+                                    let histories: Vec<model::history::History> =
                                         match serde_json::from_str(&h) {
                                             Ok(h) => h,
                                             Err(_) => Vec::new(),

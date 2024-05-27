@@ -114,7 +114,8 @@ pub struct TicketInput {
     pub progress: String,
     pub priority: String,
     pub project_id: String,
-    //pub timestamp: String,
+    pub ticket_id: String,
+    pub timestamp: String,
 }
 
 pub async fn post(
@@ -122,7 +123,7 @@ pub async fn post(
     Form(input): Form<TicketInput>,
 ) -> Result<Html<String>, AppError> {
     tracing::info!(
-        "POST /ticket {}, {}, {}, {}, {}, {}, {}, {}",
+        "POST /ticket {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
         input.action,
         input.name,
         input.description,
@@ -130,7 +131,10 @@ pub async fn post(
         input.start_date,
         input.end_date,
         input.progress,
-        input.priority
+        input.priority,
+        input.project_id,
+        input.ticket_id,
+        input.timestamp
     );
 
     let members = format!(r#"{{"members":{}}}"#, input.members);
@@ -179,7 +183,7 @@ pub async fn post(
     let mut i = 0;
     for m in mem {
         let mut member = model::ticket::TicketMember::new(String::from(m["uid"].as_str().unwrap()));
-        member.seq = Some(i);
+        member.seq = i;
         ticket_members.push(member);
         i += 1;
     }
@@ -217,6 +221,7 @@ pub async fn post(
 
     match action {
         crate::Action::Create => {
+            // チケット作成
             if let Err(e) = model::ticket::Ticket::insert(
                 &input,
                 &session,
@@ -225,6 +230,14 @@ pub async fn post(
                 &db,
             )
             .await
+            {
+                return Err(AppError(anyhow::anyhow!(e)));
+            }
+        }
+        crate::Action::Update => {
+            // チケット更新
+            if let Err(e) =
+                model::ticket::Ticket::update(&input, &session, &ticket_members, &db).await
             {
                 return Err(AppError(anyhow::anyhow!(e)));
             }

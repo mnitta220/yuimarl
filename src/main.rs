@@ -28,6 +28,7 @@ static STORAGE_BUCKET: OnceCell<String> = OnceCell::new();
 static MESSAGING_SENDER_ID: OnceCell<String> = OnceCell::new();
 static APP_ID: OnceCell<String> = OnceCell::new();
 static MEASUREMENT_ID: OnceCell<String> = OnceCell::new();
+static DB_CHECK_PASSWORD: OnceCell<String> = OnceCell::new();
 
 #[tokio::main]
 async fn main() {
@@ -55,7 +56,7 @@ async fn main() {
         .route("/logout", get(handlers::login::get_logout))
         .route(
             "/agree",
-            get(handlers::agreement::get_agree).post(handlers::agreement::post_agree),
+            get(handlers::agreement::get).post(handlers::agreement::post),
         )
         .route("/agree/no", get(handlers::agreement::get_disagree))
         .route(
@@ -70,11 +71,14 @@ async fn main() {
             "/ticket",
             get(handlers::ticket::get).post(handlers::ticket::post),
         )
-        //.route("/ticket/create", post(handlers::ticket::post_create_ticket))
         .route("/contact", get(handlers::contact::get_contact))
         .route("/api/firebaseConfig", get(handlers::api::firebase_config))
         .route("/api/userByEmail", post(handlers::api::user_by_email))
         .route("/api/projectMember", post(handlers::api::project_member))
+        .route(
+            "/db_check",
+            get(handlers::db_check::get).post(handlers::db_check::post),
+        )
         .route("/health", get(handlers::health))
         .nest_service("/static", ServeDir::new("static"))
         .layer(
@@ -181,6 +185,16 @@ fn get_environment_values() -> Result<()> {
     // set MEASUREMENT_ID static
     if let Err(_) = MEASUREMENT_ID.set(measurement_id) {
         return Err(anyhow::anyhow!("Failed to set MEASUREMENT_ID"));
+    }
+
+    // get DB_CHECK_PASSWORD env
+    let db_check_password = match std::env::var("DB_CHECK_PASSWORD") {
+        Ok(db_check_password) => db_check_password,
+        Err(_) => "".to_string(),
+    };
+    // set DB_CHECK_PASSWORD static
+    if let Err(_) = DB_CHECK_PASSWORD.set(db_check_password) {
+        return Err(anyhow::anyhow!("Failed to set DB_CHECK_PASSWORD"));
     }
 
     Ok(())

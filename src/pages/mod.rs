@@ -1,5 +1,6 @@
 pub mod agreement_page;
 pub mod contact_page;
+pub mod db_check;
 pub mod home_page;
 pub mod login_page;
 pub mod page;

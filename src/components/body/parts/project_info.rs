@@ -16,7 +16,7 @@ impl Component for ProjectInfo {
                 {
                     *buf += r#"<input class="form-control"#;
                     if let Some(v) = &props.project_validation {
-                        if let Some(_) = &v.project_name {
+                        if v.project_name.is_some() {
                             *buf += r#" is-invalid"#;
                         }
                     }

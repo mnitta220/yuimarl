@@ -22,6 +22,8 @@ pub struct Props {
     pub tickets: Vec<model::ticket::Ticket>,
     pub ticket_parent: Option<model::ticket::Ticket>,
     pub ticket_children: Vec<model::ticket::Ticket>,
+    pub db_check_password: Option<String>,
+    pub db_check_validation: Option<validation::db_check::DbCheckValidation>,
     pub tab: Tab,
     pub action: crate::Action,
 }
@@ -42,6 +44,8 @@ impl Props {
             tickets: Vec::new(),
             ticket_parent: None,
             ticket_children: Vec::new(),
+            db_check_password: None,
+            db_check_validation: None,
             tab: Tab::Info,
             action: crate::Action::Read,
         }

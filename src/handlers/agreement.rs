@@ -8,7 +8,7 @@ use axum::response::Html;
 use firestore::*;
 use tower_cookies::Cookies;
 
-pub async fn get_agree(cookies: Cookies) -> Result<Html<String>, AppError> {
+pub async fn get(cookies: Cookies) -> Result<Html<String>, AppError> {
     tracing::debug!("GET /agree");
 
     let session_id = match super::get_session_id(cookies, false) {
@@ -34,7 +34,7 @@ pub async fn get_disagree(cookies: Cookies) -> Result<Html<String>, AppError> {
     Ok(Html(page.write()))
 }
 
-pub async fn post_agree(cookies: Cookies) -> Result<Html<String>, AppError> {
+pub async fn post(cookies: Cookies) -> Result<Html<String>, AppError> {
     tracing::debug!("POST /agree");
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {

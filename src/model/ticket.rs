@@ -74,7 +74,7 @@ impl Ticket {
         project: &super::project::Project,
         members: &Vec<TicketMember>,
         db: &FirestoreDb,
-    ) -> Result<()> {
+    ) -> Result<Self> {
         let ticket_number = project.ticket_number.unwrap_or_default() + 1;
         let id_disp = format!(
             "{}{}",
@@ -192,7 +192,7 @@ impl Ticket {
 
         tracing::debug!("Ticket inserted {:?}", ticket);
 
-        Ok(())
+        Ok(ticket)
     }
 
     pub async fn update(

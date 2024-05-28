@@ -28,29 +28,33 @@ impl DbCheckValidation {
             Some(password) => password.to_string(),
             None => "".to_string(),
         };
+
         if db_check_password.len() == 0 {
             let mut validation = Self::new();
             validation.info = Some("DB_CHECK_PASSWORD 環境変数が設定されていません".to_string());
             return Ok(Some(validation));
         }
+
         if input.db_check_password != db_check_password {
             let mut validation = Self::new();
             validation.db_check_password =
                 Some("DB_CHECK_PASSWORD が正しくありません。".to_string());
             return Ok(Some(validation));
         }
+
         let project_input = super::super::project::ProjectInput {
             action: String::from("Create"),
-            project_name: String::from("db_check"),
+            project_name: String::from("データベースチェック"),
             prefix: String::from("ch"),
             members: String::from(""),
             project_id: String::from(""),
             timestamp: String::from(""),
         };
+
         let mut project_members = Vec::new();
         let mut member = model::project::ProjectMember::new(session.uid.clone());
         member.email = Some(String::from("db_check@mail.com"));
-        member.name = Some(String::from("check name"));
+        member.name = Some(String::from("データベースチェック"));
         member.role = Some(1);
         project_members.push(member);
 
@@ -71,8 +75,10 @@ impl DbCheckValidation {
 
         let ticket_input = super::super::ticket::TicketInput {
             action: String::from("Create"),
-            name: String::from("db_check"),
-            description: String::from("db_check"),
+            name: String::from("データベースチェック"),
+            description: String::from(
+                "データベースチェックで作成されたチケットです。削除してください。",
+            ),
             members: String::from(""),
             start_date: String::from(""),
             end_date: String::from(""),
@@ -82,19 +88,26 @@ impl DbCheckValidation {
             ticket_id: String::from(""),
             timestamp: String::from(""),
         };
+
         let mut ticket_members = Vec::new();
         let mut member = model::ticket::TicketMember::new(session.uid.clone());
         member.seq = 0;
         ticket_members.push(member);
 
-        match model::ticket::Ticket::insert(&ticket_input, &session, &prj, &ticket_members, &db)
-            .await
+        let ticket = match model::ticket::Ticket::insert(
+            &ticket_input,
+            &session,
+            &prj,
+            &ticket_members,
+            &db,
+        )
+        .await
         {
             Ok(t) => t,
             Err(e) => {
                 return Err(anyhow::anyhow!(e));
             }
-        }
+        };
 
         match model::project::ProjectMember::members_of_project(&prj.id.unwrap(), false, &db).await
         {
@@ -117,6 +130,16 @@ impl DbCheckValidation {
                 return Err(anyhow::anyhow!(e));
             }
         };
+
+        match model::ticket::Ticket::find_ticket_and_project(&ticket.id.unwrap(), &db).await {
+            Ok(ticket) => ticket,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e));
+            }
+        };
+
+        // TODO チケット削除
+        // TODO プロジェクト削除
 
         let mut validation = Self::new();
         validation.result = true;

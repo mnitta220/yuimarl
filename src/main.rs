@@ -225,11 +225,19 @@ pub struct AppError(anyhow::Error);
 // Tell axum how to convert `AppError` into a response.
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
-        (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Something went wrong: {}", self.0),
-        )
-            .into_response()
+        const INDEX_ERROR_MSG: &str = "The query requires an index. You can create it here: ";
+
+        let mut msg = format!("Something went wrong: {}", self.0);
+        let f = msg.find(INDEX_ERROR_MSG);
+        if let Some(f) = f {
+            let msg2 = &msg[f + INDEX_ERROR_MSG.len()..];
+            let f = msg2.find(r#"""#);
+            if let Some(f) = f {
+                msg = format!("データベースのインデックスを作成する必要があります。次の URL にアクセスして、インデックスを作成してください。\r\n{}", &msg2[..f]);
+            }
+        }
+
+        (StatusCode::INTERNAL_SERVER_ERROR, msg).into_response()
     }
 }
 

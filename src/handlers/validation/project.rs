@@ -27,6 +27,7 @@ impl ProjectValidation {
             // プロジェクト作成
             crate::Action::Create => {
                 // TODO プロジェクト作成件数の制限を超えていたら作成できない。
+                // TODO メンバーの数が制限を超えていたら作成できない。
             }
 
             // プロジェクト更新
@@ -58,6 +59,8 @@ impl ProjectValidation {
                         Some("プロジェクト情報を更新する権限がありません".to_string());
                     return Ok(Some(validation));
                 }
+
+                // TODO メンバーの数が制限を超えていたら作成できない。
 
                 // 読み込み時のタイムスタンプと現在のタイムスタンプを比較し、他のユーザーが更新していたら更新できない。
                 let p = match model::project::Project::find(&input.project_id, &db).await {

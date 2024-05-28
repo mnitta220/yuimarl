@@ -5,12 +5,16 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct TicketValidation {
+    pub info: Option<String>,
     pub name: Option<String>,
 }
 
 impl TicketValidation {
     pub fn new() -> Self {
-        Self { name: None }
+        Self {
+            info: None,
+            name: None,
+        }
     }
 
     pub async fn validate_post(

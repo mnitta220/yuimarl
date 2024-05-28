@@ -13,7 +13,6 @@ pub const COLLECTION_NAME: &'static str = "project";
 const COLLECTION_MEMBER: &'static str = "project_member";
 pub const MEMBER_LIMIT_DEFAULT: i32 = 20;
 pub const TICKET_LIMIT_DEFAULT: i32 = 1000;
-//pub const MAX_HISTORY: usize = 50;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Project {
@@ -50,23 +49,6 @@ pub enum ProjectRole {
     Member = 3,
     Viewer = 4,
 }
-
-/*
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct History {
-    pub timestamp: DateTime<Utc>,
-    pub uid: String,
-    pub user_name: String,
-    pub event: i32,
-}
-
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub enum HistoryEvent {
-    ProjectCreate = 1,
-    ProjectUpdate = 2,
-    UpdateNote = 3,
-}
-*/
 
 impl Project {
     pub fn new() -> Self {
@@ -613,7 +595,6 @@ impl Project {
     pub async fn delete(
         input: &crate::handlers::project::ProjectInput,
         session: &Session,
-        //project_members: &mut Vec<ProjectMember>,
         db: &FirestoreDb,
     ) -> Result<()> {
         let prj = match Project::find(&input.project_id, db).await {
@@ -848,108 +829,6 @@ impl ProjectMember {
     }
     */
 
-    /*
-    pub async fn add_project_member(
-        project_id: &str,
-        add_members: &String,
-        db: &FirestoreDb,
-    ) -> Result<String> {
-        let v: Vec<&str> = add_members.split(',').collect();
-        let mut i = 0;
-        let mut uid: &str;
-        let mut role: &str;
-
-        loop {
-            if i >= v.len() {
-                break;
-            }
-            uid = v[i];
-            i += 1;
-            if i >= v.len() {
-                break;
-            }
-            role = v[i];
-            i += 1;
-            //tracing::info!("uid={} role={}", uid, role);
-            let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
-                .fluent()
-                .select()
-                .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used}))
-                .from(COLLECTION_MEMBER)
-                .filter(|q| {
-                    q.for_all([
-                        q.field(path!(ProjectMember::project_id)).eq(&project_id),
-                        q.field(path!(ProjectMember::uid)).eq(&uid),
-                    ])
-                })
-                .order_by([(
-                    path!(ProjectMember::last_used),
-                    FirestoreQueryDirection::Descending,
-                )])
-                .obj()
-                .stream_query_with_errors()
-                .await
-            {
-                Ok(s) => s,
-                Err(e) => {
-                    return Err(anyhow::anyhow!(e.to_string()));
-                }
-            };
-
-            let project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
-                Ok(s) => s,
-                Err(e) => {
-                    return Err(anyhow::anyhow!(e.to_string()));
-                }
-            };
-            if project_members.len() > 0 {
-                return Ok(format!("{}はすでに存在します。", uid));
-            }
-
-            let mut member = ProjectMember::new(uid.to_string());
-            member.project_id = Some(project_id.to_string());
-            //member.uid = Some(uid.to_string());
-            member.role = Some(role.parse::<i32>().unwrap());
-            let mut count = 0u32;
-
-            loop {
-                count += 1;
-                if count > 9 {
-                    return Err(anyhow::anyhow!("Failed to create project".to_string()));
-                }
-                let id = Uuid::now_v7().to_string();
-                member.id = Some(id.clone());
-                member.last_used = Some(Utc::now());
-
-                match db
-                    .fluent()
-                    .insert()
-                    .into(&COLLECTION_MEMBER)
-                    .document_id(id)
-                    .object(&member)
-                    .execute::<ProjectMember>()
-                    .await
-                {
-                    Ok(_) => {
-                        break;
-                    }
-                    Err(e) => match &e {
-                        firestore::errors::FirestoreError::DataConflictError(e) => {
-                            tracing::error!("DataConflictError: {:?}", e);
-                            continue;
-                        }
-                        _ => {
-                            return Err(anyhow::anyhow!(e.to_string()));
-                        }
-                    },
-                };
-            }
-        }
-
-        Ok("".to_string())
-    }
-    */
-
     /// 自分のプロジェクトを検索する
     pub async fn my_projects(session: &Session, db: &FirestoreDb) -> Result<Vec<Self>> {
         let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
@@ -1024,16 +903,3 @@ impl ProjectMember {
         }
     }
 }
-
-/*
-impl History {
-    pub fn history_to_string(&self) -> String {
-        match self.event {
-            1 => "プロジェクト作成".to_string(),
-            2 => "基本情報".to_string(),
-            3 => "ノート".to_string(),
-            _ => "Unknown".to_string(),
-        }
-    }
-}
-*/

@@ -41,13 +41,27 @@ impl Component for TicketInfo {
                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="name">チケット名</label>"#;
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 {
-                    *buf += r#"<input class="form-control" id="name" name="name" type="text" maxlength="40" value=""#;
+                    *buf += r#"<input class="form-control"#;
+                    if let Some(v) = &props.ticket_validation {
+                        if v.name.is_some() {
+                            *buf += r#" is-invalid"#;
+                        }
+                    }
+                    *buf += r#"" id="name" name="name" type="text" maxlength="40" value=""#;
                     if let Some(t) = &props.ticket {
                         if let Some(n) = &t.name {
                             *buf += n;
                         }
                     }
                     *buf += r#"" required>"#;
+
+                    if let Some(v) = &props.ticket_validation {
+                        if let Some(e) = &v.name {
+                            *buf += r#"<div class="invalid-feedback">"#;
+                            *buf += e;
+                            *buf += r#"</div>"#;
+                        }
+                    }
                 }
                 *buf += r#"</div>"#;
             }
@@ -195,6 +209,7 @@ impl Component for TicketInfo {
                             *buf += r#"">"#;
                         }
                         *buf += r#"</div>"#;
+
                         *buf += r#"<div class="col-sm-6 mb-1">"#;
                         {
                             *buf += r#"<label class="form-label" for="enddate">終了日</label>"#;
@@ -369,18 +384,6 @@ impl Component for TicketInfo {
                         }
                         *buf += r#"</p>"#;
                     }
-                    /*
-                    *buf += r#"<a href="">"#;
-                    *buf += r#"BN5"#;
-                    *buf += r#"</a>&nbsp;:&nbsp;"#;
-                    *buf += r#"文化祭出し物"#;
-                    *buf += r#"&nbsp;"#;
-                    *buf += r#"<a href="">"#;
-                    {
-                        *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
-                    }
-                    *buf += r#"</a>"#;
-                    */
                 }
                 *buf += r#"</div>"#;
             }
@@ -441,6 +444,7 @@ impl Component for TicketInfo {
                         *buf += r#"</button>"#;
                     }
                     *buf += r#"</div>"#;
+
                     *buf += r#"<input type="hidden" name="ticket_id" value="">"#;
                     *buf += r#"<input type="hidden" name="timestamp" value="">"#;
                 } else {

@@ -45,7 +45,6 @@ pub async fn post_login(
         name: input.display_name,
         email: input.email,
         photo_url: input.photo_url,
-        //project_id: None,
         created_at: Utc::now(),
     };
     if let Err(e) = model::session::Session::upsert(&session, &db).await {
@@ -65,8 +64,6 @@ pub async fn post_login(
 }
 
 pub async fn get_logout(cookies: Cookies) -> Result<Redirect, AppError> {
-    //tracing::info!("GET /logout");
-
     super::session_delete(cookies);
 
     Ok(Redirect::to("/login"))

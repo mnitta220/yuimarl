@@ -2,7 +2,6 @@ use crate::model;
 use axum::extract::Form;
 use firestore::*;
 use serde::{Deserialize, Serialize};
-//use tower_cookies::Cookies;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FirebaseConfig {
@@ -115,8 +114,6 @@ pub async fn user_by_email(Form(input): Form<UserByEmainInput>) -> String {
 
 /// プロジェクトのメンバーを取得する。
 pub async fn project_member(Form(input): Form<ProjectMemberInput>) -> String {
-    //tracing::info!("GET /project_member: {}", input.project_id);
-
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
         Err(e) => {
@@ -172,59 +169,3 @@ pub async fn project_member(Form(input): Form<ProjectMemberInput>) -> String {
 
     buf
 }
-
-/*
-pub async fn member_add(cookies: Cookies, Form(input): Form<MemberAddInput>) -> String {
-    tracing::debug!("GET /member_add");
-
-    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
-        Ok(db) => db,
-        Err(e) => {
-            return format!("メンバーの追加に失敗しました。 [{}]", e.to_string());
-        }
-    };
-
-    let session_id = match super::get_session_id(cookies, true) {
-        Ok(session_id) => session_id,
-        Err(e) => {
-            return format!("メンバーの追加に失敗しました。 [{}]", e.to_string());
-        }
-    };
-
-    let session = match model::session::Session::find(&session_id, &db).await {
-        Ok(s) => s,
-        Err(e) => {
-            return format!("メンバーの追加に失敗しました。 [{}]", e.to_string());
-        }
-    };
-
-    let session = match session {
-        Some(s) => s,
-        None => {
-            return format!("メンバーの追加に失敗しました。");
-        }
-    };
-
-    let project_id = match &session.project_id {
-        Some(p) => p,
-        None => {
-            return format!("メンバーの追加に失敗しました。");
-        }
-    };
-
-    let r = match model::project::ProjectMember::add_project_member(project_id, &input.members, &db)
-        .await
-    {
-        Ok(r) => r,
-        Err(e) => {
-            return format!("メンバーの追加に失敗しました。 [{}]", e.to_string());
-        }
-    };
-
-    if r.len() == 0 {
-        "OK".to_string()
-    } else {
-        r
-    }
-}
-*/

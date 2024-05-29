@@ -376,7 +376,7 @@ impl Component for TicketInfo {
                     } else {
                         *buf += r#"<p class="my-1">"#;
                         {
-                            *buf += r#"<a href="step01.html">"#;
+                            *buf += r#"<a href="javascript:clickAddParent();">"#;
                             {
                                 *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">"#;
                             }
@@ -532,6 +532,67 @@ impl Component for TicketInfo {
                     {
                         *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
                         *buf += r#"<button class="btn btn-primary" id="btnMemberAdd" type="button">担当者に追加</button>"#;
+                    }
+                    *buf += r#"</div>"#;
+                }
+                *buf += r#"</div>"#;
+            }
+            *buf += r#"</div>"#;
+        }
+        *buf += r#"</div>"#;
+
+        // 親チケット追加ダイアログ
+        *buf += r#"<div class="modal fade" id="addParentModal" tabindex="-1" aria-labelledby="addParentModalLabel" aria-hidden="true">"#;
+        {
+            *buf += r#"<div class="modal-dialog modal-md">"#;
+            {
+                *buf += r#"<div class="modal-content">"#;
+                {
+                    *buf += r#"<div class="modal-header">"#;
+                    {
+                        *buf += r#"<h1 class="modal-title fs-5" id="addMemberModalLabel">親チケットを追加</h1>"#;
+                        *buf += r#"<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="キャンセル"></button>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="modal-body">"#;
+                    {
+                        *buf += r#"<div class="row">"#;
+                        {
+                            *buf += r#"<label class="col-md-3 col-form-label mb-1" for="email">チケットID</label>"#;
+                            *buf += r#"<div class="col-md-6 mb-1">"#;
+                            {
+                                *buf += r#"<input class="form-control" id="email" type="text" maxlength="20" value="BN5">"#;
+                            }
+                            *buf += r#"</div>"#;
+
+                            *buf += r#"<div class="col-md-3 mb-1">"#;
+                            {
+                                *buf +=
+                                    r#"<button class="btn btn-info" type="button">検索</button>"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</div>"#;
+
+                        *buf += r#"<div class="row py-3">"#;
+                        {
+                            *buf += r#"<div class="col">"#;
+                            {
+                                *buf +=
+                                    r#"<p class="text-danger">該当のチケットは存在しません。</p>"#;
+                                //*buf += r#"<p>BN5 文化祭出し物</p>"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="modal-footer">"#;
+                    {
+                        *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
+                        *buf += r#"<button class="btn btn-primary" type="button" disabled>親チケットを追加</button>"#;
                     }
                     *buf += r#"</div>"#;
                 }

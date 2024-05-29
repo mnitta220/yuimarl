@@ -1,5 +1,6 @@
 var members = [];
 var inChargeModal = new bootstrap.Modal("#inChargeModal");
+var addParentModal = new bootstrap.Modal("#addParentModal");
 
 $(document).ready(function () {
     members = JSON.parse($("#members").val());
@@ -159,6 +160,10 @@ function setChargeTable() {
         buf += '</tbody></table>';
     }
     $("div#chargeTbl").html(buf);
+}
+
+function clickAddParent() {
+    addParentModal.show();
 }
 
 function clickDeliverables() {

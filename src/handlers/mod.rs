@@ -29,7 +29,11 @@ fn get_session_id(cookies: Cookies, should_exist: bool) -> Result<String> {
 
     if session_id.len() == 0 {
         let id = Uuid::now_v7().to_string();
-        cookies.add(Cookie::new(COOKIE_SESSION_ID, id.clone()));
+        let mut c = Cookie::new(COOKIE_SESSION_ID, id.clone());
+        let mut expire = time::OffsetDateTime::now_utc();
+        expire += time::Duration::weeks(52);
+        c.set_expires(expire);
+        cookies.add(c);
         session_id = id;
     }
 

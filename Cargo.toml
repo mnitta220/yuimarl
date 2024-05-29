@@ -15,6 +15,7 @@ futures = "0.3.30"
 once_cell = "1.19.0"
 serde = { version = "1.0.199", features = ["derive"] }
 serde_json = "1.0.116"
+time = "0.3.36"
 tokio = { version = "1.37.0", features = ["full"] }
 tower = { version = "0.4.13", features = ["util", "timeout"] }
 tower-cookies = "0.10.0"

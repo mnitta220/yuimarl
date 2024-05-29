@@ -117,7 +117,7 @@ html(lang="ja")
                           img.border.border-info.border-1.img-fluid(src="images/screen16.png")
                         br
                         | 必要に応じて、他のプロバイダも追加してください。
-                      p
+                      //- p
                         | 本番環境として使う場合は、Authentication の「設定」の「承認済みドメイン」から、「localhost」を削除してください。
                         br
                         | 開発環境、テスト環境として使う場合は、「localhost」を残したままで大丈夫です。
@@ -165,7 +165,8 @@ html(lang="ja")
                     section.pb-2
                       h3#step03 Cloud Run を設定する
                       p
-                        | Google Cloud コンソールにログインして「プロジェクトの選択」をクリックします。
+                        a(href="https://console.cloud.google.com") Google Cloud コンソール
+                        | にログインして「プロジェクトの選択」をクリックします。
                         a(href="images/screen26.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen26.png")
                       p
@@ -173,6 +174,14 @@ html(lang="ja")
                         a(href="images/screen27.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen27.png")
                       p
+                        | 「すべてのプロダクトを表示」を選択します。
+                        a(href="images/screen44.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen44.png")
+                      p
+                        | 「サーバーレス」の「Cloud Run」を選択します。
+                        a(href="images/screen45.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen45.png")
+                      //- p
                         | 「コンテナ化されたアプリの実行 Cloud Run」をクリックします。
                         a(href="images/screen28.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen28.png")
@@ -191,15 +200,31 @@ html(lang="ja")
                         a(href="images/screen31.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen31.png")
                         .alert.alert-primary(role="alert")
-                          | 現在の最新イメージは、「masahironitta/yuimarl:0.0.13」です。
+                          | 現在の最新イメージは、
+                          br
+                          b masahironitta/yuimarl:0.0.14
+                          br
+                          | です。
                           br
                           a(href="https://hub.docker.com/repository/docker/masahironitta/yuimarl/general" target="_blank") Yuimarl Docker Hub レジストリ
-                      p
+                      //- p
                         | 「ヘルスチェックを追加します」をクリックして、「ライブネスチェック」と「HTTP」を選択し、パスに「/health」と入力し、「追加」をクリックします。
                         a(href="images/screen43.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen43.png")
+                      //- p
+                        | サービスがデプロイされたら、「新しいリビジョンの編集とデプロイ」をクリックします。
+                        a(href="images/screen47.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen47.png")
                       p
-                        | 「コンテナ、ボリューム、ネットワーキング、セキュリティ」の「コンテナ」の「変数とシークレット」に、「Firebase SDK の追加」で表示された firebaseConfig の値を追加して「作成」をクリックします。
+                        | 「コンテナ、ボリューム、ネットワーキング、セキュリティ」の「コンテナ」の「設定」にある「ヘルスチェックを追加します」をクリックします。
+                        a(href="images/screen48.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen48.png")
+                      p
+                        | 「ライブネスチェック」と「HTTP」を選択し、パスに「/health」と入力し、「追加」をクリックします。
+                        a(href="images/screen43.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen43.png")
+                      p
+                        | 「コンテナ、ボリューム、ネットワーキング、セキュリティ」の「コンテナ」の「変数とシークレット」に、下の表に従って環境変数を追加して「完了」をクリックします。
                         a(href="images/screen32.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen32.png")
                       p
@@ -230,9 +255,46 @@ html(lang="ja")
                             td firebaseConfig の measurementId (これが無い場合は空欄)
                           tr
                             td RUST_LOG
-                            td 「debug」または「info」。出力されるログをdebugレベルとするかinfoレベルとするかの設定。
+                            td 「debug」または「info」。出力されるログをdebugレベルとするかinfoレベルとするかの設定する。
+                          tr
+                            td DB_CHECK_PASSWORD
+                            td データベースチェック(後述)を行う際に使用するパスワードを設定する。
                       p
-                        | サービスがデプロイされたら、URL にアクセスします。
+                        | 「作成」をクリックします。
+                        a(href="images/screen46.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen46.png")
+                      //- p
+                        | サービスがデプロイされたら、「新しいリビジョンの編集とデプロイ」をクリックします。
+                        a(href="images/screen47.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen47.png")
+                      //- p
+                        | 「ヘルスチェックを追加します」をクリックします。
+                        a(href="images/screen48.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen48.png")
+                      //- p
+                        | 「ライブネスチェック」と「HTTP」を選択し、パスに「/health」と入力し、「追加」をクリックします。
+                        a(href="images/screen43.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen43.png")
+                      //- p
+                        | 「デプロイ」をクリックします。
+                        a(href="images/screen49.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen49.png")
+                      p
+                        | Firebase コンソールの Authentication で、「設定」の「承認済みドメイン」で、「ドメインの追加」をクリックします。
+                        a(href="images/screen50.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen50.png")
+                      p
+                        | Cloud Run の URL に表示されたドメインを入力して、「追加」をクリックします。
+                        a(href="images/screen51.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen51.png")
+                      p
+                        | 本番環境として使う場合は、Authentication の「設定」の「承認済みドメイン」から、「localhost」を削除してください。
+                        br
+                        | 開発環境、テスト環境として使う場合は、「localhost」を残したままで大丈夫です。
+                        a(href="images/screen38.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen38.png")
+                      p
+                        | Cloud Run の URL にアクセスします。
                         a(href="images/screen33.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen33.png")
                       p
@@ -240,11 +302,21 @@ html(lang="ja")
                         a(href="images/screen34.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen34.png")
                       p
-                        | Yuimarl の操作中に、次のようなエラー画面が表示されることがあります。これは、データベースのインデックスが作成されていない場合のエラーです。
+                        | 利用規約画面で「同意する」を選択します。
+                        a(href="images/screen52.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen52.png")
+                      p
+                        | ブラウザでアクセス中の URL の最後を「/db_check」に置き換えると、データベースチェック画面に遷移します。
                         br
-                        | 「You can create it here: 」の次に表示されている URL（画像で選択してある部分）にアクセスすると、インデックスの作成画面になるので、そこでインデックスを作成することができます。
-                        a(href="images/screen35.png")
-                          img.border.border-info.border-1.img-fluid(src="images/screen35.png")
+                        | この画面の「DB_CHECK_PASSWORD」に、Cloud Run の環境変数に設定した「DB_CHECK_PASSWORD」の値を入力し、「実行」を選択します。
+                        a(href="images/screen53.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen53.png")
+                      p
+                        | 次の画像のような画面が表示されます。これは、データベースのインデックスが作成されていない場合のエラーです。
+                        br
+                        | 表示されている URL にアクセスすると、インデックスの作成画面になるので、そこでインデックスを作成することができます。
+                        a(href="images/screen54.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen54.png")
                       p
                         | 次のような「インデックスの作成または更新」画面で「保存」をクリックするとインデックスが作成されます。
                         a(href="images/screen36.png")
@@ -253,6 +325,12 @@ html(lang="ja")
                         | ステータスが「ビルド中...」から「有効」に変わったらインデックスが作成されました。
                         a(href="images/screen37.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen37.png")
+                      p
+                        | 再度、データベースチェック画面にアクセスすると、またインデックスが作成されていないメッセージが表示されますので、インデックスを作成してください。
+                        br
+                        | これを、「チェックが正常に完了しました。」というメッセージが表示されるまで繰り返してください。このメッセージが表示されたら、ホーム画面に遷移して、Yuimarl を使用することができます。
+                        a(href="images/screen55.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen55.png")
 
               .col-md-3
                 .submenu.mt-3

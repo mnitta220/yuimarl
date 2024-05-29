@@ -1,5 +1,7 @@
 use crate::{components::Component, Props};
 
+const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+
 pub struct Footer {}
 
 impl Component for Footer {
@@ -46,7 +48,9 @@ impl Component for Footer {
                 {
                     *buf += r#"<small>"#;
                     {
-                        *buf += r#"Yuimarl version 0.0.14&nbsp;&nbsp;&nbsp;Copyright &copy; 2024 Masahiro Nitta"#;
+                        *buf += r#"Yuimarl version "#;
+                        *buf += VERSION;
+                        *buf += r#"&nbsp;&nbsp;&nbsp;Copyright &copy; 2024 Masahiro Nitta"#;
                     }
                     *buf += r#"</small>"#;
                 }

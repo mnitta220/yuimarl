@@ -63,6 +63,7 @@ impl DbCheckValidation {
             &project_input,
             &session,
             &mut project_members,
+            true,
             &db,
         )
         .await
@@ -138,8 +139,9 @@ impl DbCheckValidation {
             }
         };
 
-        // TODO チケット削除
-        // TODO プロジェクト削除
+        if let Err(e) = model::project::Project::delete_db_check(&db).await {
+            return Err(anyhow::anyhow!(e));
+        }
 
         let mut validation = Self::new();
         validation.result = true;

@@ -10,8 +10,8 @@ use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
 use uuid::Uuid;
 
-const COLLECTION_NAME: &'static str = "ticket";
-const COLLECTION_MEMBER: &'static str = "ticket_member";
+pub const COLLECTION_NAME: &'static str = "ticket";
+pub const COLLECTION_MEMBER: &'static str = "ticket_member";
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Ticket {

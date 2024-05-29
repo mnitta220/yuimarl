@@ -227,13 +227,13 @@ impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         const INDEX_ERROR_MSG: &str = "The query requires an index. You can create it here: ";
 
-        let mut msg = format!("Something went wrong: {}", self.0);
+        let mut msg = format!("エラーが発生しました。:\r\n\r\n{}", self.0);
         let f = msg.find(INDEX_ERROR_MSG);
         if let Some(f) = f {
             let msg2 = &msg[f + INDEX_ERROR_MSG.len()..];
             let f = msg2.find(r#"""#);
             if let Some(f) = f {
-                msg = format!("データベースのインデックスを作成する必要があります。次の URL にアクセスして、インデックスを作成してください。\r\n{}", &msg2[..f]);
+                msg = format!("データベースのインデックスを作成する必要があります。次の URL にアクセスして、インデックスを作成してください。\r\n\r\n{}", &msg2[..f]);
             }
         }
 

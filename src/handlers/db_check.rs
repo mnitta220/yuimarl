@@ -32,7 +32,7 @@ pub async fn post(
     cookies: Cookies,
     Form(input): Form<DbCheckInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::info!(
+    tracing::debug!(
         "POST /db_check, db_check_password: {}",
         input.db_check_password
     );

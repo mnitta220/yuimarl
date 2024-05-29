@@ -246,7 +246,14 @@ pub async fn post(
     match action {
         crate::Action::Create => {
             // プロジェクト作成
-            match model::project::Project::insert(&input, &session, &mut project_members, &db).await
+            match model::project::Project::insert(
+                &input,
+                &session,
+                &mut project_members,
+                false,
+                &db,
+            )
+            .await
             {
                 Ok(p) => p,
                 Err(e) => {

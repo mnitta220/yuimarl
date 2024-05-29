@@ -10,18 +10,20 @@ pub struct TicketValidation {
 }
 
 impl TicketValidation {
+    /*
     pub fn new() -> Self {
         Self {
             info: None,
             name: None,
         }
     }
+    */
 
     pub async fn validate_post(
-        input: &handlers::ticket::TicketInput,
-        session: &model::session::Session,
+        _input: &handlers::ticket::TicketInput,
+        _session: &model::session::Session,
         action: crate::Action,
-        db: &FirestoreDb,
+        _db: &FirestoreDb,
     ) -> Result<Option<Self>> {
         match action {
             // チケット作成

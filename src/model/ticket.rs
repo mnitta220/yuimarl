@@ -100,6 +100,7 @@ impl Ticket {
         ticket.end_date = Some(input.end_date.clone());
         ticket.progress = progress;
         ticket.priority = priority;
+        ticket.parent_id = Some(input.parent.clone());
         ticket.owner = Some(session.uid.clone());
         ticket.created_at = Some(now);
         ticket.updated_at = Some(now);
@@ -465,7 +466,12 @@ impl Ticket {
     pub async fn find_ticket_and_project(
         id: &str,
         db: &FirestoreDb,
-    ) -> Result<(Option<Ticket>, Option<Project>, Vec<TicketMember>)> {
+    ) -> Result<(
+        Option<Ticket>,
+        Option<Project>,
+        Vec<TicketMember>,
+        Option<Ticket>,
+    )> {
         let ticket: Option<Ticket> = match db
             .fluent()
             .select()
@@ -489,6 +495,7 @@ impl Ticket {
         }
 
         let mut ticket_members: Vec<TicketMember> = Vec::new();
+        let mut parent: Option<Ticket> = None;
         if let Some(t) = &ticket {
             let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
                 .fluent()
@@ -513,6 +520,22 @@ impl Ticket {
                     return Err(anyhow::anyhow!(e.to_string()));
                 }
             };
+
+            if let Some(p) = &t.parent_id {
+                parent = match db
+                    .fluent()
+                    .select()
+                    .by_id_in(COLLECTION_NAME)
+                    .obj()
+                    .one(&p)
+                    .await
+                {
+                    Ok(ret) => ret,
+                    Err(e) => {
+                        return Err(anyhow::anyhow!(e.to_string()));
+                    }
+                };
+            }
         }
         for member in ticket_members.iter_mut() {
             let user = match super::user::User::find(&member.uid, db).await {
@@ -529,7 +552,48 @@ impl Ticket {
 
         tracing::debug!("Get by id {:?}", ticket);
 
-        Ok((ticket, project, ticket_members))
+        Ok((ticket, project, ticket_members, parent))
+    }
+
+    pub async fn search_by_id_disp(
+        project_id: &str,
+        id_disp: &str,
+        db: &FirestoreDb,
+    ) -> Result<Option<Ticket>> {
+        let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority, deleted}))
+            .from(COLLECTION_NAME)
+            .filter(|q| {
+                q.for_all([
+                    q.field(path!(Ticket::project_id)).eq(&project_id),
+                    q.field(path!(Ticket::id_disp)).eq(&id_disp.trim()),
+                    q.field(path!(Ticket::deleted)).eq(false),
+                ])
+            })
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let tickets: Vec<Ticket> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        if tickets.len() == 0 {
+            return Ok(None);
+        }
+
+        Ok(tickets.get(0).cloned())
     }
 }
 

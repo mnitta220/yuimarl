@@ -59,6 +59,7 @@ pub async fn firebase_config() -> String {
     buf
 }
 
+/// ユーザーをメールアドレスで検索する
 pub async fn user_by_email(Form(input): Form<UserByEmainInput>) -> String {
     tracing::debug!("GET /user_by_email");
 
@@ -165,6 +166,98 @@ pub async fn project_member(Form(input): Form<ProjectMemberInput>) -> String {
     let buf = match serde_json::to_string(&result) {
         Ok(r) => r,
         Err(e) => format!("メンバーの検索に失敗しました。 [{}]", e.to_string()),
+    };
+
+    buf
+}
+
+#[derive(Deserialize, Debug)]
+pub struct TicketByIdDispInput {
+    pub project_id: String,
+    pub id_disp: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct TicketByIdDispResult {
+    pub result: bool,
+    pub ticket: Option<model::ticket::Ticket>,
+    pub message: String,
+}
+
+/// チケットをid_dispで検索する
+pub async fn ticket_by_id_disp(Form(input): Form<TicketByIdDispInput>) -> String {
+    tracing::info!(
+        "GET /ticket_by_id_disp: {}, {}",
+        &input.project_id,
+        &input.id_disp
+    );
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            let result = TicketByIdDispResult {
+                result: false,
+                ticket: None,
+                message: format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            let buf = match serde_json::to_string(&result) {
+                Ok(r) => r,
+                Err(_) => format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            return buf;
+        }
+    };
+
+    let ticket = match model::ticket::Ticket::search_by_id_disp(
+        &input.project_id,
+        &input.id_disp,
+        &db,
+    )
+    .await
+    {
+        Ok(t) => t,
+        Err(e) => {
+            let result = TicketByIdDispResult {
+                result: false,
+                ticket: None,
+                message: format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            let buf = match serde_json::to_string(&result) {
+                Ok(r) => r,
+                Err(e) => format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            return buf;
+        }
+    };
+
+    let result = match ticket {
+        Some(t) => TicketByIdDispResult {
+            result: true,
+            ticket: Some(t),
+            message: "".to_string(),
+        },
+        None => TicketByIdDispResult {
+            result: false,
+            ticket: None,
+            message: "該当のチケットは存在しません。".to_string(),
+        },
+    };
+
+    /*
+    let result = TicketByIdDispResult {
+        result: true,
+        ticket: ticket,
+        message: "".to_string(),
+    };
+    */
+
+    let buf = match serde_json::to_string(&result) {
+        Ok(r) => r,
+        Err(e) => format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
     };
 
     buf

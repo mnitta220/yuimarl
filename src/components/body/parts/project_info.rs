@@ -215,6 +215,7 @@ impl Component for ProjectInfo {
         }
         *buf += r#"</form>"#;
 
+        // メンバー追加ダイアログ
         *buf += r#"<div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" "#;
         *buf += r#"aria-hidden="true">"#;
         {
@@ -292,6 +293,7 @@ impl Component for ProjectInfo {
         }
         *buf += r#"</div>"#;
 
+        // メンバー更新ダイアログ
         *buf += r#"<div class="modal fade" id="updateMemberModal" tabindex="-1" aria-labelledby="updateMemberModalLabel" "#;
         *buf += r#"aria-hidden="true">"#;
         {
@@ -333,6 +335,7 @@ impl Component for ProjectInfo {
         }
         *buf += r#"</div>"#;
 
+        // プロジェクト削除ダイアログ
         *buf += r#"<div class="modal fade" id="projectDelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">"#;
         {
             *buf += r#"<div class="modal-dialog">"#;

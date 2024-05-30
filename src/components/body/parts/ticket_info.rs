@@ -362,28 +362,40 @@ impl Component for TicketInfo {
                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="category">親チケット</label>"#;
                 *buf += r#"<div class="col-md-9">"#;
                 {
-                    if let Some(t) = &props.ticket_parent {
-                        *buf += r#"<a href="">"#;
-                        *buf += &t.id_disp.clone().unwrap();
-                        *buf += r#"</a>&nbsp;:&nbsp;"#;
-                        *buf += &t.name.clone().unwrap();
-                        *buf += r#"&nbsp;"#;
-                        *buf += r#"<a href="">"#;
-                        {
-                            *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
-                        }
-                        *buf += r#"</a>"#;
-                    } else {
-                        *buf += r#"<p class="my-1">"#;
-                        {
-                            *buf += r#"<a href="javascript:clickAddParent();">"#;
+                    *buf += r#"<div id="parentTicket">"#;
+                    {
+                        if let Some(t) = &props.ticket_parent {
+                            *buf += r#"<a href="">"#;
+                            *buf += &t.id_disp.clone().unwrap();
+                            *buf += r#"</a>&nbsp;:&nbsp;"#;
+                            *buf += &t.name.clone().unwrap();
+                            *buf += r#"&nbsp;"#;
+                            *buf += r#"<a href="javascript:removeParent();">"#;
                             {
-                                *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">"#;
+                                *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
                             }
                             *buf += r#"</a>"#;
+
+                            *buf += r#"<input type="hidden" id="parent" name="parent" value=""#;
+                            if let Some(p) = &t.parent_id {
+                                *buf += p;
+                            }
+                            *buf += r#"">"#;
+                        } else {
+                            *buf += r#"<p class="my-1">"#;
+                            {
+                                *buf += r#"<a href="javascript:clickAddParent();">"#;
+                                {
+                                    *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">"#;
+                                }
+                                *buf += r#"</a>"#;
+                            }
+                            *buf += r#"</p>"#;
+
+                            *buf += r#"<input type="hidden" id="parent" name="parent" value="">"#;
                         }
-                        *buf += r#"</p>"#;
                     }
+                    *buf += r#"</div>"#;
                 }
                 *buf += r#"</div>"#;
             }
@@ -479,7 +491,7 @@ impl Component for TicketInfo {
                         }
                         *buf += r#"</div>"#;
 
-                        *buf += r#"<input type="hidden" name="ticket_id" value=""#;
+                        *buf += r#"<input type="hidden" id="ticket_id" name="ticket_id" value=""#;
                         if let Some(id) = &t.id {
                             *buf += id;
                         }
@@ -559,17 +571,16 @@ impl Component for TicketInfo {
                     {
                         *buf += r#"<div class="row">"#;
                         {
-                            *buf += r#"<label class="col-md-3 col-form-label mb-1" for="email">チケットID</label>"#;
+                            *buf += r#"<label class="col-md-3 col-form-label mb-1" for="search_id">チケットID</label>"#;
                             *buf += r#"<div class="col-md-6 mb-1">"#;
                             {
-                                *buf += r#"<input class="form-control" id="email" type="text" maxlength="20" value="BN5">"#;
+                                *buf += r#"<input class="form-control" id="search_id" name="search_id" type="text" maxlength="20" value="">"#;
                             }
                             *buf += r#"</div>"#;
 
                             *buf += r#"<div class="col-md-3 mb-1">"#;
                             {
-                                *buf +=
-                                    r#"<button class="btn btn-info" type="button">検索</button>"#;
+                                *buf += r#"<button class="btn btn-info" id="search-parent" type="button">検索</button>"#;
                             }
                             *buf += r#"</div>"#;
                         }
@@ -579,9 +590,10 @@ impl Component for TicketInfo {
                         {
                             *buf += r#"<div class="col">"#;
                             {
-                                *buf +=
-                                    r#"<p class="text-danger">該当のチケットは存在しません。</p>"#;
+                                //*buf +=
+                                //    r#"<p class="text-danger">該当のチケットは存在しません。</p>"#;
                                 //*buf += r#"<p>BN5 文化祭出し物</p>"#;
+                                *buf += r#"<div id="searchedParent"></div>"#;
                             }
                             *buf += r#"</div>"#;
                         }
@@ -592,7 +604,7 @@ impl Component for TicketInfo {
                     *buf += r#"<div class="modal-footer">"#;
                     {
                         *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
-                        *buf += r#"<button class="btn btn-primary" type="button" disabled>親チケットを追加</button>"#;
+                        *buf += r#"<button class="btn btn-primary" id="btnAddParent" type="button" disabled>親チケットを追加</button>"#;
                     }
                     *buf += r#"</div>"#;
                 }

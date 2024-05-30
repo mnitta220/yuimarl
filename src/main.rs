@@ -76,6 +76,10 @@ async fn main() {
         .route("/api/userByEmail", post(handlers::api::user_by_email))
         .route("/api/projectMember", post(handlers::api::project_member))
         .route(
+            "/api/ticketByIdDisp",
+            post(handlers::api::ticket_by_id_disp),
+        )
+        .route(
             "/db_check",
             get(handlers::db_check::get).post(handlers::db_check::post),
         )

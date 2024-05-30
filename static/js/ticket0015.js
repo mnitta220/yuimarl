@@ -166,6 +166,85 @@ function clickAddParent() {
     addParentModal.show();
 }
 
+$('#search-parent').on('click', function () {
+    if (`${$("input#search_id").val()}`.trim() == "") {
+        var buf = '<p class="text-danger">チケットID を入力してください</p>';
+        buf += '<input type="hidden" id="searchedParentId" value="">';
+        buf += '<input type="hidden" id="searchedParentIdDisp" value="">';
+        buf += '<input type="hidden" id="searchedParentName" value="">';
+        $("#btnAddParent").attr({ 'disabled': 'disabled' });
+        $("div#searchedParent").html(buf);
+        return;
+    }
+
+    $("#add_members").val("");
+    $.ajax({
+        type: "POST",
+        url: "/api/ticketByIdDisp",
+        data: {
+            project_id: $("input#project_id").val(),
+            id_disp: $("input#search_id").val(),
+        },
+        success: function (result) {
+            var ret = JSON.parse(result);
+            var buf = '';
+            if (ret.result) {
+                if (ret.ticket.id == $("#ticket_id").val()) {
+                    buf += '<p class="text-danger">自身を親チケットにすることはできません</p>';
+                    buf += '<input type="hidden" id="searchedParentId" value="">';
+                    buf += '<input type="hidden" id="searchedParentIdDisp" value="">';
+                    buf += '<input type="hidden" id="searchedParentName" value="">';
+                    $("#btnAddParent").attr({ 'disabled': 'disabled' });
+                    $("div#searchedParent").html(buf);
+                    return;
+                }
+
+                buf += '<p><b>' + ret.ticket.id_disp + '</b> : ' + ret.ticket.name + '</p>';
+                buf += '<input type="hidden" id="searchedParentId" value="';
+                buf += ret.ticket.id + '">';
+                buf += '<input type="hidden" id="searchedParentIdDisp" value="';
+                buf += ret.ticket.id_disp + '">';
+                buf += '<input type="hidden" id="searchedParentName" value="';
+                buf += ret.ticket.name + '">';
+                $("#btnAddParent").removeAttr('disabled');
+            } else {
+                buf += '<p class="text-danger">';
+                buf += ret.message;
+                buf += '</p>';
+                buf += '<input type="hidden" id="searchedParentId" value="">';
+                buf += '<input type="hidden" id="searchedParentIdDisp" value="">';
+                buf += '<input type="hidden" id="searchedParentName" value="">';
+                $("#btnAddParent").attr({ 'disabled': 'disabled' });
+            }
+            $("div#searchedParent").html(buf);
+        }
+    });
+});
+
+$('#btnAddParent').on('click', function () {
+    var buf = '<a href="">';
+    buf += $("input#searchedParentIdDisp").val();
+    buf += '</a>&nbsp;:&nbsp;';
+    buf += $("input#searchedParentName").val();
+    buf += '&nbsp;';
+    buf += '<a href="javascript:removeParent();">';
+    buf += '<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">';
+    buf += '</a>';
+    buf += '<input type="hidden" id="parent" name="parent" value="';
+    buf += $("input#searchedParentId").val() + '">';
+    $("div#parentTicket").html(buf);
+    addParentModal.hide();
+});
+
+function removeParent() {
+    var buf = '<p class="my-1">';
+    buf += '<a href="javascript:clickAddParent();">';
+    buf += '<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">';
+    buf += '</a></p>';
+    buf += '<input type="hidden" id="parent" name="parent" value="">';
+    $("div#parentTicket").html(buf);
+}
+
 function clickDeliverables() {
     new bootstrap.Modal("#deliverablesModal").show();
 }

@@ -85,7 +85,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
         }
     }
 
-    let (ticket, project, members) =
+    let (ticket, project, members, parent) =
         match model::ticket::Ticket::find_ticket_and_project(&id, &db).await {
             Ok(ticket) => ticket,
             Err(e) => {
@@ -96,6 +96,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
     props.ticket = ticket;
     props.project = project;
     props.ticket_members = members;
+    props.ticket_parent = parent;
 
     props.session = Some(session);
     let mut page = TicketPage::new(props);
@@ -113,6 +114,7 @@ pub struct TicketInput {
     pub end_date: String,
     pub progress: String,
     pub priority: String,
+    pub parent: String,
     pub project_id: String,
     pub ticket_id: String,
     pub timestamp: String,
@@ -123,7 +125,7 @@ pub async fn post(
     Form(input): Form<TicketInput>,
 ) -> Result<Html<String>, AppError> {
     tracing::info!(
-        "POST /ticket {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
+        "POST /ticket {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
         input.action,
         input.name,
         input.description,
@@ -132,6 +134,7 @@ pub async fn post(
         input.end_date,
         input.progress,
         input.priority,
+        input.parent,
         input.project_id,
         input.ticket_id,
         input.timestamp

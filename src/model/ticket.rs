@@ -95,12 +95,20 @@ impl Ticket {
         ticket.project_id = project.id.clone();
         ticket.id_disp = Some(id_disp);
         ticket.name = Some(input.name.clone());
-        ticket.description = Some(input.description.clone());
-        ticket.start_date = Some(input.start_date.clone());
-        ticket.end_date = Some(input.end_date.clone());
+        if input.description.len() > 0 {
+            ticket.description = Some(input.description.clone());
+        }
+        if input.start_date.len() > 0 {
+            ticket.start_date = Some(input.start_date.clone());
+        }
+        if input.end_date.len() > 0 {
+            ticket.end_date = Some(input.end_date.clone());
+        }
         ticket.progress = progress;
         ticket.priority = priority;
-        ticket.parent_id = Some(input.parent.clone());
+        if input.parent.len() > 0 {
+            ticket.parent_id = Some(input.parent.clone());
+        }
         ticket.owner = Some(session.uid.clone());
         ticket.created_at = Some(now);
         ticket.updated_at = Some(now);
@@ -216,15 +224,26 @@ impl Ticket {
         ticket.name = Some(input.name.clone());
         if input.description.len() > 0 {
             ticket.description = Some(input.description.clone());
+        } else {
+            ticket.description = None;
         }
         if input.start_date.len() > 0 {
             ticket.start_date = Some(input.start_date.clone());
+        } else {
+            ticket.start_date = None;
         }
         if input.end_date.len() > 0 {
             ticket.end_date = Some(input.end_date.clone());
+        } else {
+            ticket.end_date = None;
         }
         ticket.progress = progress;
         ticket.priority = priority;
+        if input.parent.len() > 0 {
+            ticket.parent_id = Some(input.parent.clone());
+        } else {
+            ticket.parent_id = None;
+        }
         ticket.updated_at = Some(now);
 
         let history = History {
@@ -260,7 +279,7 @@ impl Ticket {
         if let Err(e) = db
             .fluent()
             .update()
-            .fields(paths!(Ticket::{name, description, start_date, end_date, progress, priority, updated_at, history}))
+            .fields(paths!(Ticket::{name, description, start_date, end_date, progress, priority, parent_id, updated_at, history}))
             .in_col(&COLLECTION_NAME)
             .document_id(&input.ticket_id)
             .object(&ticket)
@@ -471,6 +490,7 @@ impl Ticket {
         Option<Project>,
         Vec<TicketMember>,
         Option<Ticket>,
+        Vec<Ticket>,
     )> {
         let ticket: Option<Ticket> = match db
             .fluent()
@@ -550,9 +570,38 @@ impl Ticket {
             }
         }
 
+        let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(Ticket::{id, id_disp, name, progress, priority, deleted}))
+            .from(COLLECTION_NAME)
+            .filter(|q| {
+                q.for_all([
+                    q.field(path!(Ticket::parent_id)).eq(&id),
+                    q.field(path!(Ticket::deleted)).eq(false),
+                ])
+            })
+            .order_by([(path!(Ticket::id), FirestoreQueryDirection::Ascending)])
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let children: Vec<Ticket> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
         tracing::debug!("Get by id {:?}", ticket);
 
-        Ok((ticket, project, ticket_members, parent))
+        Ok((ticket, project, ticket_members, parent, children))
     }
 
     pub async fn search_by_id_disp(

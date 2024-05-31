@@ -365,7 +365,9 @@ impl Component for TicketInfo {
                     *buf += r#"<div id="parentTicket">"#;
                     {
                         if let Some(t) = &props.ticket_parent {
-                            *buf += r#"<a href="">"#;
+                            *buf += r#"<a href="/ticket?id="#;
+                            *buf += &t.id.clone().unwrap();
+                            *buf += r#"">"#;
                             *buf += &t.id_disp.clone().unwrap();
                             *buf += r#"</a>&nbsp;:&nbsp;"#;
                             *buf += &t.name.clone().unwrap();
@@ -377,7 +379,7 @@ impl Component for TicketInfo {
                             *buf += r#"</a>"#;
 
                             *buf += r#"<input type="hidden" id="parent" name="parent" value=""#;
-                            if let Some(p) = &t.parent_id {
+                            if let Some(p) = &t.id {
                                 *buf += p;
                             }
                             *buf += r#"">"#;
@@ -407,22 +409,24 @@ impl Component for TicketInfo {
                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="category">子チケット</label>"#;
                 *buf += r#"<div class="col-md-9 pb-md-2">"#;
                 {
-                    *buf += r#"<p class="mb-0">"#;
-                    {
-                        *buf += r#"<a href="">"#;
-                        *buf += r#"BN13"#;
-                        *buf += r#"</a>&nbsp;:&nbsp;"#;
-                        *buf += r#"備品準備"#;
+                    for child in &props.ticket_children {
+                        *buf += r#"<p class="mb-0">"#;
+                        {
+                            if let Some(id) = &child.id {
+                                if let Some(id_disp) = &child.id_disp {
+                                    *buf += r#"<a href="/ticket?id="#;
+                                    *buf += &id;
+                                    *buf += r#"">"#;
+                                    *buf += &id_disp;
+                                    *buf += r#"</a>&nbsp;:&nbsp;"#;
+                                }
+                            }
+                            if let Some(name) = &child.name {
+                                *buf += &name;
+                            }
+                        }
+                        *buf += r#"</p>"#;
                     }
-                    *buf += r#"</p>"#;
-                    *buf += r#"<p class="mb-0">"#;
-                    {
-                        *buf += r#"<a href="">"#;
-                        *buf += r#"BN14"#;
-                        *buf += r#"</a>&nbsp;:&nbsp;"#;
-                        *buf += r#"食材購入"#;
-                    }
-                    *buf += r#"</p>"#;
                 }
                 *buf += r#"</div>"#;
             }
@@ -471,12 +475,16 @@ impl Component for TicketInfo {
                                 *buf += r#"&nbsp;更新"#;
                             }
                             *buf += r#"</button>&nbsp;&nbsp;"#;
-                            *buf += r#"<button class="btn btn-primary" type="submit">"#;
-                            {
-                                *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">"#;
-                                *buf += r#"&nbsp;再読み込み"#;
+
+                            if let Some(id) = &t.id {
+                                *buf += r#"<a class="btn btn-primary" href="/ticket?id="#;
+                                *buf += id;
+                                *buf += r#"" role="button">"#;
+                                {
+                                    *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
+                                }
+                                *buf += r#"</a>"#;
                             }
-                            *buf += r#"</button>"#;
                         }
                         *buf += r#"</div>"#;
 

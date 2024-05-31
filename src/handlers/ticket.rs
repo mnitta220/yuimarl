@@ -56,7 +56,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
 pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<String>, AppError> {
     let id = params.id.unwrap_or_default();
     let tab = params.tab.unwrap_or_default();
-    tracing::debug!("GET /ticket id={} tab={}", id, tab);
+    tracing::info!("GET /ticket id={} tab={}", id, tab);
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
@@ -85,7 +85,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
         }
     }
 
-    let (ticket, project, members, parent) =
+    let (ticket, project, members, parent, children) =
         match model::ticket::Ticket::find_ticket_and_project(&id, &db).await {
             Ok(ticket) => ticket,
             Err(e) => {
@@ -97,6 +97,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
     props.project = project;
     props.ticket_members = members;
     props.ticket_parent = parent;
+    props.ticket_children = children;
 
     props.session = Some(session);
     let mut page = TicketPage::new(props);

@@ -438,13 +438,61 @@ impl Component for TicketInfo {
                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="category">成果物</label>"#;
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 {
-                    *buf += r#"<a href="step01.html">"#;
+                    *buf += r#"<div class="form-floating">"#;
                     {
-                        *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="成果物を追加">"#;
+                        *buf += r#"<table class="table table-hover">"#;
+                        {
+                            *buf += r#"<thead>"#;
+                            {
+                                *buf += r#"<tr>"#;
+                                {
+                                    *buf += r#"<th scope="col">成果物名</th>"#;
+                                    *buf += r#"<th scope="col">ファイルパス / URL</th>"#;
+                                    *buf += r#"<th scope="col"></th>"#;
+                                }
+                                *buf += r#"</tr>"#;
+                            }
+                            *buf += r#"</thead>"#;
+
+                            *buf += r#"<tbody>"#;
+                            {
+                                *buf += r#"<tr>"#;
+                                {
+                                    *buf += r#"<td>出店計画表</td>"#;
+                                    *buf += r#"<td>//server/文化祭2024/出店/たこやき/出店計画表.xlsx</td>"#;
+                                    *buf += r#"<td>"#;
+                                    {
+                                        *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                                    }
+                                    *buf += r#"</td>"#;
+                                }
+                                *buf += r#"</tr>"#;
+                            }
+                            *buf += r#"</tbody>"#;
+                        }
+                        *buf += r#"</table>"#;
+
+                        *buf += r#"<a href="javascript:clickDeliverables();">"#;
+                        {
+                            *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="成果物を追加">"#;
+                        }
+                        *buf += r#"</a>"#;
                     }
-                    *buf += r#"</a>"#;
+                    *buf += r#"</div>"#;
                 }
                 *buf += r#"</div>"#;
+
+                *buf += r#"<input type="hidden" id="deliverables" name="deliverables" value=""#;
+                if let Some(t) = &props.ticket {
+                    if let Some(d) = &t.deliverables {
+                        super::super::super::escape_html(&d, buf);
+                    } else {
+                        *buf += r#"[]"#;
+                    }
+                } else {
+                    *buf += r#"[]"#;
+                }
+                *buf += r#"">"#;
             }
             *buf += r#"</div>"#;
 
@@ -492,8 +540,7 @@ impl Component for TicketInfo {
                         {
                             *buf += r#"<button class="btn btn-secondary" type="submit">"#;
                             {
-                                *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">"#;
-                                *buf += r#"&nbsp;削除"#;
+                                *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
                             }
                             *buf += r#"</button>"#;
                         }
@@ -598,9 +645,6 @@ impl Component for TicketInfo {
                         {
                             *buf += r#"<div class="col">"#;
                             {
-                                //*buf +=
-                                //    r#"<p class="text-danger">該当のチケットは存在しません。</p>"#;
-                                //*buf += r#"<p>BN5 文化祭出し物</p>"#;
                                 *buf += r#"<div id="searchedParent"></div>"#;
                             }
                             *buf += r#"</div>"#;
@@ -613,6 +657,62 @@ impl Component for TicketInfo {
                     {
                         *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
                         *buf += r#"<button class="btn btn-primary" id="btnAddParent" type="button" disabled>親チケットを追加</button>"#;
+                    }
+                    *buf += r#"</div>"#;
+                }
+                *buf += r#"</div>"#;
+            }
+            *buf += r#"</div>"#;
+        }
+        *buf += r#"</div>"#;
+
+        // 成果物追加ダイアログ
+        *buf += r#"<div class="modal fade" id="deliverablesModal" tabindex="-1" aria-labelledby="deliverablesModalLabel" aria-hidden="true">"#;
+        {
+            *buf += r#"<div class="modal-dialog modal-lg">"#;
+            {
+                *buf += r#"<div class="modal-content">"#;
+                {
+                    *buf += r#"<div class="modal-header">"#;
+                    {
+                        *buf += r#"<h1 class="modal-title fs-5" id="deliverablesModalLabel">成果物を追加</h1>"#;
+                        *buf += r#"<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="キャンセル"></button>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="modal-body">"#;
+                    {
+                        *buf += r#"<div class="row py-1">"#;
+                        {
+                            *buf += r#"<label class="col-md-3 col-form-label mb-1" for="deliverable-name">成果物名</label>"#;
+                            *buf += r#"<div class="col-md-9 mb-1">"#;
+                            {
+                                *buf += r#"<input class="form-control" id="deliverable-name" type="text" maxlength="100" value="" required>"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</div>"#;
+                        *buf += r#"<div class="row py-1">"#;
+                        {
+                            *buf += r#"<label class="col-md-3 col-form-label mb-1" for="deliverable-path">ファイルパス / URL</label>"#;
+                            *buf += r#"<div class="col-md-9 mb-1">"#;
+                            {
+                                *buf += r#"<input class="form-control" id="deliverable-path" type="text" maxlength="300" value="">"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="modal-footer">"#;
+                    {
+                        *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
+                        *buf += r#"<button class="btn btn-primary" type="button">"#;
+                        {
+                            *buf += r#"<img class="icon" src="/static/ionicons/add-circle-outline2.svg">&nbsp;追加"#;
+                        }
+                        *buf += r#"</button>"#;
                     }
                     *buf += r#"</div>"#;
                 }

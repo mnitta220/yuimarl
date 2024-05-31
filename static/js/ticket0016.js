@@ -1,9 +1,12 @@
 var members = [];
+var deliverables = [];
 var inChargeModal = new bootstrap.Modal("#inChargeModal");
 var addParentModal = new bootstrap.Modal("#addParentModal");
+var deliverablesModal = new bootstrap.Modal("#deliverablesModal");
 
 $(document).ready(function () {
     members = JSON.parse($("#members").val());
+    deliverables = JSON.parse($("#deliverables").val());
 });
 
 function clickAddCharge() {
@@ -14,7 +17,6 @@ function clickAddCharge() {
             project_id: $("input#project_id").val()
         },
         success: function (result) {
-            //console.log(result);
             var ret = JSON.parse(result);
             var buf = '';
             if (ret.result == "OK") {
@@ -246,5 +248,7 @@ function removeParent() {
 }
 
 function clickDeliverables() {
-    new bootstrap.Modal("#deliverablesModal").show();
+    $("input#deliverable-name").val("");
+    $("input#deliverable-path").val("");
+    deliverablesModal.show();
 }

@@ -30,51 +30,63 @@
           <div class="pb-2">
             <ul class="nav nav-tabs">
               <li class="nav-item"><a class="nav-link" href="#">基本情報</a></li>
-              <li class="nav-item"><a class="nav-link" href="#">ノート</a></li>
-              <li class="nav-item"><a class="nav-link active" href="#">コメント</a></li>
+              <li class="nav-item"><a class="nav-link active" href="#">ノート</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">コメント</a></li>
               <li class="nav-item"><a class="nav-link" href="#">更新履歴</a></li>
             </ul>
           </div>
-          <form action="/ticket_add" method="POST">
-            <div class="row py-2 ticket-comment">
+          <form>
+            <!-- 編集スイッチ-->
+            <div class="row py-2">
               <div class="col">
-                <div class="row">
-                  <div class="col-6"><b>殿馬一人</b></div>
-                  <div class="col-6 text-end"><small>2024/09/04 18:49</small></div>
-                </div>
-                <div class="row">
-                  <div class="col">たこやきのレシピを見つけました。<br><a href="https://www.otafuku.co.jp/recipe/cook/taco/taco01.html" target="_blank">https://www.otafuku.co.jp/recipe/cook/taco/taco01.html</a></div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" id="edit" type="checkbox" role="switch" checked>
+                  <label class="form-check-label" for="edit">編集</label>
                 </div>
               </div>
             </div>
-            <div class="row py-2 ticket-comment">
-              <div class="col">
-                <div class="row">
-                  <div class="col-6"><b>山田太郎</b></div>
-                  <div class="col-6 text-end"><a href=""><img class="icon" src="../../static/ionicons/create-outline2.svg" title="編集"></a>&nbsp;<a href=""><img class="icon" src="../../static/ionicons/trash-outline.svg" title="削除"></a>&nbsp;&nbsp;<small>2024/09/05 16:23</small></div>
-                </div>
-                <div class="row">
-                  <div class="col">ありがとう！😍<br>チケットのノートに追加しました。</div>
-                </div>
+            <!-- ノート-->
+            <div class="row py-2" id="note1">
+              <div class="col-lg-6"><small>［マークダウン］</small>
+                <textarea class="form-control" id="markdown" rows="10">## たこやき模擬店
+### レシピ
+* [クックパッド](https://cookpad.com/search/%E3%81%9F%E3%81%93%E7%84%BC%E3%81%8D)
+* [小麦粉から作るたこ焼き](https://www.otafuku.co.jp/recipe/cook/taco/taco01.html)
+### 食材
+* 薄力粉
+* 卵
+* 牛乳
+* タコ
+* 天かす
+* ソース
+* 青のり
+* かつお節
+* 紅しょうが
+* マヨネーズ
+* サラダ油
+### 店舗設営
+* たこ焼き器レンタル
+* フードパック
+* 割りばし
+* 輪ゴム
+* のれん
+### 収益計画
+過去の事例を調べる。  
+8個入りパックの値段をいくらに設定するか？</textarea>
+              </div>
+              <div class="col-lg-6"><small>［プレビュー］</small>
+                <div class="px-2 bg-light preview" id="preview1"></div>
               </div>
             </div>
-            <div class="row py-2 ticket-comment">
+            <div class="row py-2 d-none" id="note2">
               <div class="col">
-                <div class="row">
-                  <div class="col-6"><b>里中智</b></div>
-                  <div class="col-6 text-end"><small>2024/09/05 17:05</small></div>
-                </div>
-                <div class="row">
-                  <div class="col">「薄力粉」って知りませんでした。</div>
-                </div>
+                <div class="px-2 bg-light preview" id="preview2"></div>
               </div>
             </div>
             <div class="row py-3 mt-2 bg-light">
-              <div class="col-9">
-                <textarea class="form-control ticket-comment" id="message" rows="3" name="message"></textarea>
-              </div>
-              <div class="col-3 text-end">
-                <button class="btn btn-primary" type="submit"><img class="icon" src="../../static/ionicons/add-circle-outline2.svg">&nbsp;コメント</button>
+              <div class="col">
+                <button class="btn btn-primary" type="submit"><img class="icon" src="../../static/ionicons/save-outline.svg">&nbsp;更新</button>&nbsp;&nbsp;
+                <button class="btn btn-primary" type="submit"><img class="icon" src="../../static/ionicons/refresh-outline.svg">&nbsp;再読み込み</button>
               </div>
             </div>
           </form>
@@ -97,7 +109,7 @@
         <div class="row align-items-end">
           <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step08.html">← prev</a></div>
           <div class="col-md-8">
-            <div class="alert alert-danger text-start" role="alert">チケット更新 step09.<br>コメントタブをクリック。<br>チケットのコメントが日時の順に表示される。<br>自分のコメントには、編集アイコンと削除アイコンが表示される。</div>
+            <div class="alert alert-danger text-start" role="alert">チケット更新 step09.<br>編集スイッチをONにすると、マークダウンエディタで編集できるようになる。</div>
           </div>
           <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step10.html">next →</a></div>
         </div>
@@ -105,5 +117,27 @@
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+      $('#markdown').keyup(function () {
+        var html = marked.parse($(this).val());
+        $('#preview1').html(html);
+        $('#preview2').html(html);
+      });
+      $('#edit').change(function () {
+        if ($(this).prop('checked')) {
+          $('#note1').removeClass('d-none');
+          $('#note2').addClass('d-none');
+        } else {
+          $('#note2').removeClass('d-none');
+          $('#note1').addClass('d-none');
+        }
+      });
+      $(document).ready(function() {
+        var html = marked.parse($('#markdown').val());
+        $('#preview1').html(html);
+        $('#preview2').html(html);
+      });
+    </script>
   </body>
 </html>

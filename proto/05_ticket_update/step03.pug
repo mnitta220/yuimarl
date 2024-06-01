@@ -184,13 +184,14 @@ html(lang="ja")
                         label.col-md-3.col-form-label.mb-1(for="deliverable") 成果物名
                         .col-md-9.mb-1
                           input.form-control#deliverable(type="text" maxlength="40" value="" required)
+                          .invalid-feedback.d-none#deliverable-feedback 入力してください。
                       .row.py-1
                         label.col-md-3.col-form-label.mb-1(for="path") ファイルパス / URL
                         .col-md-9.mb-1
                           input.form-control#path(type="text" maxlength="100" value="")
                     .modal-footer
                       button.btn.btn-secondary(type="button" data-bs-dismiss="modal") キャンセル
-                      button.btn.btn-primary(type="button" disabled)
+                      button.btn.btn-primary(type="button")
                         img.icon(src="../../static/ionicons/add-circle-outline2.svg")
                         | &nbsp;追加
 

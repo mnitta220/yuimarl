@@ -1,4 +1,4 @@
-use crate::{components::Component, Props};
+use crate::{components::Component, model, Props};
 
 pub struct TicketInfo {}
 
@@ -440,37 +440,81 @@ impl Component for TicketInfo {
                 {
                     *buf += r#"<div class="form-floating">"#;
                     {
-                        *buf += r#"<table class="table table-hover">"#;
+                        *buf += r#"<div id="deliverablesTbl">"#;
                         {
-                            *buf += r#"<thead>"#;
-                            {
-                                *buf += r#"<tr>"#;
-                                {
-                                    *buf += r#"<th scope="col">成果物名</th>"#;
-                                    *buf += r#"<th scope="col">ファイルパス / URL</th>"#;
-                                    *buf += r#"<th scope="col"></th>"#;
-                                }
-                                *buf += r#"</tr>"#;
-                            }
-                            *buf += r#"</thead>"#;
+                            if let Some(t) = &props.ticket {
+                                if let Some(d) = &t.deliverables {
+                                    let deliverables: Vec<model::deliverable::Deliverable> =
+                                        match serde_json::from_str(&d) {
+                                            Ok(h) => h,
+                                            Err(_) => Vec::new(),
+                                        };
+                                    if deliverables.len() > 0 {
+                                        *buf += r#"<table class="table table-hover">"#;
+                                        {
+                                            *buf += r#"<thead>"#;
+                                            {
+                                                *buf += r#"<tr>"#;
+                                                {
+                                                    *buf += r#"<th scope="col">成果物名</th>"#;
+                                                    *buf += r#"<th scope="col">ファイルパス / URL</th>"#;
+                                                    *buf += r#"<th scope="col"></th>"#;
+                                                }
+                                                *buf += r#"</tr>"#;
+                                            }
+                                            *buf += r#"</thead>"#;
 
-                            *buf += r#"<tbody>"#;
-                            {
-                                *buf += r#"<tr>"#;
-                                {
-                                    *buf += r#"<td>出店計画表</td>"#;
-                                    *buf += r#"<td>//server/文化祭2024/出店/たこやき/出店計画表.xlsx</td>"#;
-                                    *buf += r#"<td>"#;
-                                    {
-                                        *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                                            *buf += r#"<tbody>"#;
+                                            {
+                                                let mut i = 0;
+                                                for deliverable in deliverables {
+                                                    *buf += r#"<tr>"#;
+                                                    {
+                                                        *buf += r#"<td>"#;
+                                                        *buf += &deliverable.name;
+                                                        *buf += r#"</td>"#;
+
+                                                        *buf += r#"<td>"#;
+                                                        if deliverable.path.len() > 10
+                                                            && (&deliverable.path[0..7]
+                                                                == "http://"
+                                                                || &deliverable.path[0..8]
+                                                                    == "https://")
+                                                        {
+                                                            *buf += r#"<a href=""#;
+                                                            *buf += &deliverable.path;
+                                                            *buf += r#"" target="_blank">"#;
+                                                            *buf += &deliverable.path;
+                                                            *buf += r#"</a>"#;
+                                                        } else {
+                                                            *buf += &deliverable.path;
+                                                        }
+                                                        *buf += r#"</td>"#;
+
+                                                        *buf += r#"<td>"#;
+                                                        {
+                                                            *buf += r#"<a href="javascript:removeDeliverable("#;
+                                                            *buf += &i.to_string();
+                                                            *buf += r#")">"#;
+                                                            {
+                                                                *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                                                            }
+                                                            *buf += r#"</a>"#;
+                                                        }
+                                                        *buf += r#"</td>"#;
+                                                    }
+                                                    *buf += r#"</tr>"#;
+                                                    i += 1;
+                                                }
+                                            }
+                                            *buf += r#"</tbody>"#;
+                                        }
+                                        *buf += r#"</table>"#;
                                     }
-                                    *buf += r#"</td>"#;
                                 }
-                                *buf += r#"</tr>"#;
                             }
-                            *buf += r#"</tbody>"#;
                         }
-                        *buf += r#"</table>"#;
+                        *buf += r#"</div>"#;
 
                         *buf += r#"<a href="javascript:clickDeliverables();">"#;
                         {
@@ -688,6 +732,7 @@ impl Component for TicketInfo {
                             *buf += r#"<div class="col-md-9 mb-1">"#;
                             {
                                 *buf += r#"<input class="form-control" id="deliverable-name" type="text" maxlength="100" value="" required>"#;
+                                *buf += r#"<div class="invalid-feedback d-none" id="deliverable-feedback">入力してください。</div>"#;
                             }
                             *buf += r#"</div>"#;
                         }
@@ -708,7 +753,7 @@ impl Component for TicketInfo {
                     *buf += r#"<div class="modal-footer">"#;
                     {
                         *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
-                        *buf += r#"<button class="btn btn-primary" type="button">"#;
+                        *buf += r#"<button class="btn btn-primary" id="btnAddDeliverable" type="button">"#;
                         {
                             *buf += r#"<img class="icon" src="/static/ionicons/add-circle-outline2.svg">&nbsp;追加"#;
                         }

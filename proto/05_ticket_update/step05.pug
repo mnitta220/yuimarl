@@ -170,21 +170,8 @@ html(lang="ja")
             .row.pt-1.pb-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="category") 成果物
               .col-md-9.mb-1
-                .form-floating
-                  table.table.table-hover
-                    thead
-                      tr
-                        th(scope="col") 成果物名
-                        th(scope="col") ファイルパス / URL
-                        th(scope="col")
-                    tbody
-                      tr
-                        td 出店計画表
-                        td //server/文化祭2024/出店/たこやき/出店計画表.xlsx
-                        td
-                          img.icon(src="../../static/ionicons/remove-circle-outline.svg" title="削除")
-                  a(href="javascript:clickDeliverables();")
-                    img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="成果物を追加")
+                a(href="javascript:clickDeliverables();")
+                  img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="成果物を追加")
 
               .modal.fade#deliverablesModal(tabindex="-1" aria-labelledby="deliverablesModalLabel" aria-hidden="true")
                 .modal-dialog.modal-lg
@@ -234,7 +221,7 @@ html(lang="ja")
             .alert.alert-danger.text-start(role="alert")
               | チケット更新 step05.
               br
-              | 成果物が追加される。
+              | 成果物名とファイルパス/URLを入力して追加ボタンをクリックする。
           .col-md-2.text-start.py-1
             a.nav-link.px-2.px-md-0(href="step06.html") next →
 
@@ -246,3 +233,6 @@ html(lang="ja")
       function clickDeliverables() {
         new bootstrap.Modal("#deliverablesModal").show();
       }
+      $(document).ready(function() {
+        new bootstrap.Modal("#deliverablesModal").show();
+      });

@@ -210,13 +210,14 @@
                       <div class="row py-1">
                         <label class="col-md-3 col-form-label mb-1" for="deliverable">成果物名</label>
                         <div class="col-md-9 mb-1">
-                          <input class="form-control" id="deliverable" type="text" maxlength="40" value="出店計画表" required>
+                          <input class="form-control is-invalid" id="deliverable" type="text" maxlength="40" value="" required>
+                          <div class="invalid-feedback" id="deliverable-feedback">入力してください。</div>
                         </div>
                       </div>
                       <div class="row py-1">
                         <label class="col-md-3 col-form-label mb-1" for="path">ファイルパス / URL</label>
                         <div class="col-md-9 mb-1">
-                          <input class="form-control" id="path" type="text" maxlength="100" value="//server/文化祭2024/出店/たこやき/出店計画表.xlsx">
+                          <input class="form-control" id="path" type="text" maxlength="100" value="">
                         </div>
                       </div>
                     </div>
@@ -257,7 +258,7 @@
         <div class="row align-items-end">
           <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step03.html">← prev</a></div>
           <div class="col-md-8">
-            <div class="alert alert-danger text-start" role="alert">チケット更新 step04.<br>成果物名とファイルパス/URLを入力して追加ボタンをクリックする。</div>
+            <div class="alert alert-danger text-start" role="alert">チケット更新 step04.<br>「成果物名」は入力必須。</div>
           </div>
           <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step05.html">next →</a></div>
         </div>

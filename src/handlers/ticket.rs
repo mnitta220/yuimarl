@@ -56,7 +56,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
 pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<String>, AppError> {
     let id = params.id.unwrap_or_default();
     let tab = params.tab.unwrap_or_default();
-    tracing::info!("GET /ticket id={} tab={}", id, tab);
+    tracing::debug!("GET /ticket id={} tab={}", id, tab);
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
@@ -116,6 +116,7 @@ pub struct TicketInput {
     pub progress: String,
     pub priority: String,
     pub parent: String,
+    pub deliverables: String,
     pub project_id: String,
     pub ticket_id: String,
     pub timestamp: String,
@@ -125,8 +126,8 @@ pub async fn post(
     cookies: Cookies,
     Form(input): Form<TicketInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::info!(
-        "POST /ticket {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
+    tracing::debug!(
+        "POST /ticket {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
         input.action,
         input.name,
         input.description,
@@ -136,6 +137,7 @@ pub async fn post(
         input.progress,
         input.priority,
         input.parent,
+        input.deliverables,
         input.project_id,
         input.ticket_id,
         input.timestamp

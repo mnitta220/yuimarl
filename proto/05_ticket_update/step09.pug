@@ -19,59 +19,65 @@ html(lang="ja")
               li.nav-item
                 a.nav-link(href="#") 基本情報
               li.nav-item
-                a.nav-link(href="#") ノート
+                a.nav-link.active(href="#") ノート
               li.nav-item
-                a.nav-link.active(href="#") コメント
+                a.nav-link(href="#") コメント
               li.nav-item
                 a.nav-link(href="#") 更新履歴
-          form(action="/ticket_add" method="POST")
-            .row.py-2.ticket-comment
+          form
+            // 編集スイッチ
+            .row.py-2
               .col
-                .row
-                  .col-6
-                    b 殿馬一人
-                  .col-6.text-end
-                    small 2024/09/04 18:49
-                .row
-                  .col
-                    | たこやきのレシピを見つけました。
-                    br
-                    a(href="https://www.otafuku.co.jp/recipe/cook/taco/taco01.html" target="_blank") https://www.otafuku.co.jp/recipe/cook/taco/taco01.html
-            .row.py-2.ticket-comment
+                .form-check.form-switch
+                  input.form-check-input#edit(type="checkbox" role="switch" checked)
+                  label.form-check-label(for="edit") 編集
+            // ノート
+            .row.py-2#note1
+              .col-lg-6
+                small ［マークダウン］
+                textarea.form-control#markdown(rows="10")
+                  | ## たこやき模擬店
+                  | ### レシピ
+                  | * [クックパッド](https://cookpad.com/search/%E3%81%9F%E3%81%93%E7%84%BC%E3%81%8D)
+                  | * [小麦粉から作るたこ焼き](https://www.otafuku.co.jp/recipe/cook/taco/taco01.html)
+                  | ### 食材
+                  | * 薄力粉
+                  | * 卵
+                  | * 牛乳
+                  | * タコ
+                  | * 天かす
+                  | * ソース
+                  | * 青のり
+                  | * かつお節
+                  | * 紅しょうが
+                  | * マヨネーズ
+                  | * サラダ油
+                  | ### 店舗設営
+                  | * たこ焼き器レンタル
+                  | * フードパック
+                  | * 割りばし
+                  | * 輪ゴム
+                  | * のれん
+                  | ### 収益計画
+                  | 過去の事例を調べる。  
+                  | 8個入りパックの値段をいくらに設定するか？
+
+              .col-lg-6
+                small ［プレビュー］
+                .px-2.bg-light.preview#preview1
+            .row.py-2.d-none#note2
               .col
-                .row
-                  .col-6
-                    b 山田太郎
-                  .col-6.text-end
-                    a(href="")
-                      img.icon(src="../../static/ionicons/create-outline2.svg" title="編集")
-                    | &nbsp;
-                    a(href="")
-                      img.icon(src="../../static/ionicons/trash-outline.svg" title="削除")
-                    | &nbsp;&nbsp;
-                    small 2024/09/05 16:23
-                .row
-                  .col
-                    | ありがとう！😍
-                    br
-                    | チケットのノートに追加しました。
-            .row.py-2.ticket-comment
-              .col
-                .row
-                  .col-6
-                    b 里中智
-                  .col-6.text-end
-                    small 2024/09/05 17:05
-                .row
-                  .col 「薄力粉」って知りませんでした。
+                .px-2.bg-light.preview#preview2
 
             .row.py-3.mt-2.bg-light
-              .col-9
-                textarea.form-control.ticket-comment#message(rows="3" name="message")
-              .col-3.text-end
+              .col
                 button.btn.btn-primary(type="submit")
-                  img.icon(src="../../static/ionicons/add-circle-outline2.svg")
-                  | &nbsp;コメント
+                  img.icon(src="../../static/ionicons/save-outline.svg")
+                  | &nbsp;更新
+                | &nbsp;&nbsp;
+                button.btn.btn-primary(type="submit")
+                  img.icon(src="../../static/ionicons/refresh-outline.svg")
+                  | &nbsp;再読み込み
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light
@@ -86,11 +92,7 @@ html(lang="ja")
             .alert.alert-danger.text-start(role="alert")
               | チケット更新 step09.
               br
-              | コメントタブをクリック。
-              br
-              | チケットのコメントが日時の順に表示される。
-              br
-              | 自分のコメントには、編集アイコンと削除アイコンが表示される。
+              | 編集スイッチをONにすると、マークダウンエディタで編集できるようになる。
           .col-md-2.text-start.py-1
             a.nav-link.px-2.px-md-0(href="step10.html") next →
 
@@ -98,3 +100,24 @@ html(lang="ja")
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous")
     script(src="https://code.jquery.com/jquery-3.7.1.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/marked/marked.min.js")
+    script.
+      $('#markdown').keyup(function () {
+        var html = marked.parse($(this).val());
+        $('#preview1').html(html);
+        $('#preview2').html(html);
+      });
+      $('#edit').change(function () {
+        if ($(this).prop('checked')) {
+          $('#note1').removeClass('d-none');
+          $('#note2').addClass('d-none');
+        } else {
+          $('#note2').removeClass('d-none');
+          $('#note1').addClass('d-none');
+        }
+      });
+      $(document).ready(function() {
+        var html = marked.parse($('#markdown').val());
+        $('#preview1').html(html);
+        $('#preview2').html(html);
+      });

@@ -109,6 +109,7 @@ $('#btnMemberAdd').on('click', function () {
 
 $('#btnSave').on('click', function () {
     $("#members").val(JSON.stringify(members));
+    $("#deliverables").val(JSON.stringify(deliverables));
     $('#post_ticket').submit();
 });
 
@@ -250,5 +251,62 @@ function removeParent() {
 function clickDeliverables() {
     $("input#deliverable-name").val("");
     $("input#deliverable-path").val("");
+    $('#deliverable-name').removeClass('is-invalid');
+    $('#deliverable-feedback').addClass('d-none');
     deliverablesModal.show();
+}
+
+$('#btnAddDeliverable').on('click', function () {
+    console.log("add deliverable");
+    if (`${$("input#deliverable-name").val()}`.trim() == "") {
+        $('#deliverable-name').addClass('is-invalid');
+        $('#deliverable-feedback').removeClass('d-none');
+        return;
+    }
+
+    var deliverable = {
+        name: $("input#deliverable-name").val(),
+        path: $("input#deliverable-path").val(),
+    };
+    deliverables.push(deliverable);
+    setDeliverablesTable();
+    deliverablesModal.hide();
+});
+
+function removeDeliverable(idx) {
+    deliverables.splice(idx, 1);
+    setDeliverablesTable();
+}
+
+function setDeliverablesTable() {
+    var buf = '';
+    if (deliverables.length > 0) {
+        buf += '<table class="table table-hover">';
+        buf += '<thead><tr>';
+        buf += '<th scope="col">成果物名</th>';
+        buf += '<th scope="col">ファイルパス / URL</th>';
+        buf += '<th scope="col"></th>';
+        buf += '</tr></thead>';
+        buf += '<tbody>';
+        for (var i in deliverables) {
+            buf += '<tr><td>';
+            buf += deliverables[i].name;
+            buf += '</td><td>';
+            if (deliverables[i].path.startsWith('http://') || deliverables[i].path.startsWith('https://')) {
+                buf += '<a href="';
+                buf += deliverables[i].path;
+                buf += '" target="_blank">';
+                buf += deliverables[i].path;
+                buf += '</a>';
+            } else {
+                buf += deliverables[i].path;
+            }
+            buf += '</td><td>';
+            buf += '<a href="javascript:removeDeliverable(' + i + ')">';
+            buf += '<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除"></a>';
+            buf += '</td></tr>';
+        }
+        buf += '</tbody></table>';
+    }
+    $("div#deliverablesTbl").html(buf);
 }

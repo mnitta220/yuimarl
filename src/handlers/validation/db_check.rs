@@ -86,6 +86,7 @@ impl DbCheckValidation {
             progress: String::from("0"),
             priority: String::from("0"),
             parent: String::from("0"),
+            deliverables: String::from(""),
             project_id: String::from(&prj.id.clone().unwrap()),
             ticket_id: String::from(""),
             timestamp: String::from(""),

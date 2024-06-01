@@ -3,4 +3,7 @@ pub mod nav;
 pub mod project_history;
 pub mod project_info;
 pub mod project_note;
+pub mod ticket_comment;
+pub mod ticket_history;
 pub mod ticket_info;
+pub mod ticket_note;

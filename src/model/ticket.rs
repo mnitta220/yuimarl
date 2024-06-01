@@ -68,6 +68,27 @@ impl Ticket {
         }
     }
 
+    pub async fn find(id: &str, db: &FirestoreDb) -> Result<Option<Self>> {
+        let obj_by_id: Option<Ticket> = match db
+            .fluent()
+            .select()
+            .by_id_in(COLLECTION_NAME)
+            .obj()
+            .one(id)
+            .await
+        {
+            Ok(ret) => ret,
+            Err(e) => {
+                tracing::error!("failed to connect firestore: {:?}", e);
+                std::process::exit(0x0100);
+            }
+        };
+
+        tracing::debug!("Get by id {:?}", obj_by_id);
+
+        Ok(obj_by_id)
+    }
+
     pub async fn insert(
         input: &crate::handlers::ticket::TicketInput,
         session: &Session,
@@ -441,6 +462,73 @@ impl Ticket {
         tracing::debug!("Ticket updated {:?}", ticket);
 
         Ok(())
+    }
+
+    pub async fn update_note(
+        input: &crate::handlers::ticket::NoteInput,
+        session: &Session,
+        db: &FirestoreDb,
+    ) -> Result<Ticket> {
+        let ticket = match Ticket::find(&input.ticket_id, db).await {
+            Ok(t) => t,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+        let mut ticket = match ticket {
+            Some(t) => t,
+            None => {
+                return Err(anyhow::anyhow!("Ticket not found".to_string()));
+            }
+        };
+        let now = Utc::now();
+        ticket.note = Some(input.markdown.trim().to_string());
+        ticket.updated_at = Some(now);
+
+        let history = History {
+            timestamp: now,
+            uid: session.uid.clone(),
+            user_name: session.name.clone(),
+            event: HistoryEvent::UpdateNote as i32,
+        };
+
+        let mut histories = Vec::new();
+        if let Some(h) = &ticket.history {
+            let h: Vec<History> = match serde_json::from_str(&h) {
+                Ok(h) => h,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+            histories = h;
+        }
+        histories.push(history);
+
+        loop {
+            if histories.len() <= MAX_HISTORY {
+                break;
+            }
+            histories.remove(0);
+        }
+
+        if let Ok(h) = serde_json::to_string(&histories) {
+            ticket.history = Some(h);
+        }
+
+        if let Err(e) = db
+            .fluent()
+            .update()
+            .fields(paths!(Ticket::{note, updated_at, history}))
+            .in_col(&COLLECTION_NAME)
+            .document_id(&input.ticket_id)
+            .object(&ticket)
+            .execute::<Ticket>()
+            .await
+        {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+
+        Ok(ticket)
     }
 
     pub async fn find_current_tickets(

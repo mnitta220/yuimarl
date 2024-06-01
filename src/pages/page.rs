@@ -58,6 +58,7 @@ pub enum Tab {
     Info = 1,    // 基本情報
     Note = 2,    // ノート
     History = 3, // 更新履歴
+    Comment = 4, // コメント
 }
 
 pub struct Page {

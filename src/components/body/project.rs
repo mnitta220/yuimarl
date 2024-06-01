@@ -114,6 +114,7 @@ impl Component for ProjectBody {
                             Tab::History => {
                                 self.project_history.write(props, buf);
                             }
+                            _ => {}
                         }
                     }
                     *buf += r#"</div>"#;

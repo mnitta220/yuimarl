@@ -531,7 +531,7 @@ impl Project {
     }
 
     pub async fn update_note(
-        input: &crate::handlers::project::UpdNoteInput,
+        input: &crate::handlers::project::NoteInput,
         session: &Session,
         db: &FirestoreDb,
     ) -> Result<Project> {

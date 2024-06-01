@@ -1,19 +1,19 @@
 use crate::{components::Component, Props};
 
-pub struct ProjectNote {}
+pub struct TicketNote {}
 
-impl Component for ProjectNote {
+impl Component for TicketNote {
     fn write(&self, props: &Props, buf: &mut String) {
         // ノートが空の場合は、編集スイッチをONにする
         let mut edit_switch = true;
-        if let Some(p) = &props.project {
-            if let Some(note) = &p.note {
+        if let Some(t) = &props.ticket {
+            if let Some(note) = &t.note {
                 if !note.is_empty() {
                     edit_switch = false;
                 }
             }
 
-            *buf += r#"<form action="/project_note" method="POST">"#;
+            *buf += r#"<form action="/ticket_note" method="POST">"#;
             {
                 // 編集スイッチ
                 *buf += r#"<div class="row py-2">"#;
@@ -46,7 +46,7 @@ impl Component for ProjectNote {
                     {
                         *buf += r#"<small>［マークダウン］</small>"#;
                         *buf += r#"<textarea class="form-control" id="markdown" name="markdown" rows="10">"#;
-                        if let Some(note) = &p.note {
+                        if let Some(note) = &t.note {
                             *buf += note;
                         }
                         *buf += r#"</textarea>"#;
@@ -86,8 +86,8 @@ impl Component for ProjectNote {
                         }
                         *buf += r#"</button>&nbsp;&nbsp;"#;
 
-                        if let Some(id) = &p.id {
-                            *buf += r#"<a class="btn btn-primary" href="/project?id="#;
+                        if let Some(id) = &t.id {
+                            *buf += r#"<a class="btn btn-primary" href="/ticket?id="#;
                             *buf += id;
                             *buf += r#"&tab=note" role="button">"#;
                             {
@@ -100,14 +100,14 @@ impl Component for ProjectNote {
                 }
                 *buf += r#"</div>"#;
 
-                *buf += r#"<input type="hidden" name="project_id" value=""#;
-                if let Some(id) = &p.id {
+                *buf += r#"<input type="hidden" name="ticket_id" value=""#;
+                if let Some(id) = &t.id {
                     *buf += id;
                 }
                 *buf += r#"">"#;
 
                 *buf += r#"<input type="hidden" name="timestamp" value=""#;
-                if let Some(up) = &p.updated_at {
+                if let Some(up) = &t.updated_at {
                     *buf += &up.timestamp_micros().to_string();
                 }
                 *buf += r#"">"#;

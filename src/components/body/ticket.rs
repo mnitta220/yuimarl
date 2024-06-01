@@ -1,11 +1,17 @@
 use super::super::Component;
-use super::parts::{footer::Footer, nav::Nav, ticket_info::TicketInfo};
+use super::parts::{
+    footer::Footer, nav::Nav, ticket_comment::TicketComment, ticket_history::TicketHistory,
+    ticket_info::TicketInfo, ticket_note::TicketNote,
+};
 use crate::Props;
 use crate::Tab;
 
 pub struct TicketBody {
     pub nav: Box<dyn Component + Send>,
     pub ticket_info: Box<dyn Component + Send>,
+    pub ticket_note: Box<dyn Component + Send>,
+    pub ticket_comment: Box<dyn Component + Send>,
+    pub ticket_history: Box<dyn Component + Send>,
     pub footer: Box<dyn Component + Send>,
 }
 
@@ -14,6 +20,9 @@ impl TicketBody {
         TicketBody {
             nav: Box::new(Nav {}),
             ticket_info: Box::new(TicketInfo {}),
+            ticket_note: Box::new(TicketNote {}),
+            ticket_comment: Box::new(TicketComment {}),
+            ticket_history: Box::new(TicketHistory {}),
             footer: Box::new(Footer {}),
         }
     }
@@ -50,25 +59,84 @@ impl Component for TicketBody {
                         }
 
                         if props.action != crate::Action::Create {
-                            *buf += r#"<div class="pb-2">"#;
-                            {
-                                *buf += r#"<ul class="nav nav-tabs">"#;
+                            if let Some(t) = &props.ticket {
+                                *buf += r#"<div class="pb-2">"#;
                                 {
-                                    *buf += r#"<li class="nav-item"><a class="nav-link active" href="">基本情報</a></li>"#;
-                                    *buf += r#"<li class="nav-item"><a class="nav-link" href="">ノート</a></li>"#;
-                                    *buf += r#"<li class="nav-item"><a class="nav-link" href="">コメント</a></li>"#;
-                                    *buf += r#"<li class="nav-item"><a class="nav-link" href="">更新履歴</a></li>"#;
+                                    *buf += r#"<ul class="nav nav-tabs">"#;
+                                    {
+                                        *buf += r#"<li class="nav-item">"#;
+                                        {
+                                            *buf += r#"<a class="nav-link"#;
+                                            if props.tab == Tab::Info {
+                                                *buf += r#" active"#;
+                                            }
+                                            *buf += r#"" href="/ticket?id="#;
+                                            *buf += &t.id.clone().unwrap();
+                                            *buf += r#"&tab=info">基本情報</a>"#;
+                                        }
+                                        *buf += r#"</li>"#;
+
+                                        *buf += r#"<li class="nav-item">"#;
+                                        {
+                                            *buf += r#"<a class="nav-link"#;
+                                            if props.tab == Tab::Note {
+                                                *buf += r#" active"#;
+                                            }
+                                            *buf += r#"" href="/ticket?id="#;
+                                            *buf += &t.id.clone().unwrap();
+                                            *buf += r#"&tab=note">ノート</a>"#;
+                                        }
+                                        *buf += r#"</li>"#;
+
+                                        *buf += r#"<li class="nav-item">"#;
+                                        {
+                                            *buf += r#"<a class="nav-link"#;
+                                            if props.tab == Tab::Comment {
+                                                *buf += r#" active"#;
+                                            }
+                                            *buf += r#"" href="/ticket?id="#;
+                                            *buf += &t.id.clone().unwrap();
+                                            *buf += r#"&tab=comment">コメント</a>"#;
+                                        }
+                                        *buf += r#"</li>"#;
+
+                                        *buf += r#"<li class="nav-item">"#;
+                                        {
+                                            *buf += r#"<a class="nav-link"#;
+                                            if props.tab == Tab::History {
+                                                *buf += r#" active"#;
+                                            }
+                                            *buf += r#"" href="/ticket?id="#;
+                                            *buf += &t.id.clone().unwrap();
+                                            *buf += r#"&tab=history">更新履歴</a>"#;
+                                        }
+                                        *buf += r#"</li>"#;
+                                        /*
+                                         *buf += r#"<li class="nav-item"><a class="nav-link active" href="">基本情報</a></li>"#;
+                                         *buf += r#"<li class="nav-item"><a class="nav-link" href="">ノート</a></li>"#;
+                                         *buf += r#"<li class="nav-item"><a class="nav-link" href="">コメント</a></li>"#;
+                                         *buf += r#"<li class="nav-item"><a class="nav-link" href="">更新履歴</a></li>"#;
+                                         */
+                                    }
+                                    *buf += r#"</ul>"#;
                                 }
-                                *buf += r#"</ul>"#;
+                                *buf += r#"</div>"#;
                             }
-                            *buf += r#"</div>"#;
                         }
 
                         match &props.tab {
                             Tab::Info => {
                                 self.ticket_info.write(props, buf);
                             }
-                            _ => {}
+                            Tab::Note => {
+                                self.ticket_note.write(props, buf);
+                            }
+                            Tab::Comment => {
+                                self.ticket_comment.write(props, buf);
+                            }
+                            Tab::History => {
+                                self.ticket_history.write(props, buf);
+                            }
                         }
                     }
                     *buf += r#"</div>"#;
@@ -89,6 +157,10 @@ impl Component for TicketBody {
             match &props.tab {
                 Tab::Info => {
                     *buf += r#"<script src="/static/js/ticket0016a.js"></script>"#;
+                }
+                Tab::Note => {
+                    *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;
+                    *buf += r#"<script src="/static/js/markdown0012.js"></script>"#;
                 }
                 _ => {}
             }

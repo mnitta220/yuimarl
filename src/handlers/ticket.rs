@@ -77,6 +77,9 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
         "note" => {
             props.tab = crate::Tab::Note;
         }
+        "comment" => {
+            props.tab = crate::Tab::Comment;
+        }
         "history" => {
             props.tab = crate::Tab::History;
         }
@@ -258,6 +261,50 @@ pub async fn post(
     props.project_member = member;
     props.tickets = tickets;
     props.session = Some(session);
+    let mut page = HomePage::new(props);
+
+    Ok(Html(page.write()))
+}
+
+#[derive(Deserialize, Debug)]
+pub struct NoteInput {
+    pub markdown: String,
+    pub ticket_id: String,
+}
+
+pub async fn post_note(
+    cookies: Cookies,
+    Form(input): Form<NoteInput>,
+) -> Result<Html<String>, AppError> {
+    tracing::debug!("POST /post_note {}", input.markdown,);
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
+    let session = match super::get_session_info(cookies, true, &db).await {
+        Ok(session_id) => session_id,
+        Err(_) => return Ok(Html(LoginPage::write())),
+    };
+    let mut props = page::Props::new(&session.id);
+    match model::ticket::Ticket::update_note(&input, &session, &db).await {
+        Ok(t) => t,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
+    let (project, member, tickets) =
+        model::project::Project::current_project(&session, &db).await?;
+    props.action = crate::Action::Update;
+    props.project = project;
+    props.project_member = member;
+    props.tickets = tickets;
+    props.session = Some(session);
+
     let mut page = HomePage::new(props);
 
     Ok(Html(page.write()))

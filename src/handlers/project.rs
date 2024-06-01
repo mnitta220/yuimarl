@@ -296,16 +296,16 @@ pub async fn post(
 }
 
 #[derive(Deserialize, Debug)]
-pub struct UpdNoteInput {
+pub struct NoteInput {
     pub markdown: String,
     pub project_id: String,
 }
 
 pub async fn post_note(
     cookies: Cookies,
-    Form(input): Form<UpdNoteInput>,
+    Form(input): Form<NoteInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::debug!("POST /post_upd_note {}", input.markdown,);
+    tracing::debug!("POST /post_note {}", input.markdown,);
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,

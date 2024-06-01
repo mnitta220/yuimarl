@@ -1,7 +1,10 @@
 use super::validation;
 use crate::{
     model,
-    pages::{home_page::HomePage, login_page::LoginPage, page, ticket_page::TicketPage},
+    pages::{
+        home_page::HomePage, login_page::LoginPage, page, ticket_list_page::TicketListPage,
+        ticket_page::TicketPage,
+    },
     AppError,
 };
 use anyhow::Result;
@@ -306,6 +309,39 @@ pub async fn post_note(
     props.session = Some(session);
 
     let mut page = HomePage::new(props);
+
+    Ok(Html(page.write()))
+}
+
+pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
+    tracing::debug!("GET /ticket_list");
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
+    let session = match super::get_session_info(cookies, true, &db).await {
+        Ok(session_id) => session_id,
+        Err(_) => return Ok(Html(LoginPage::write())),
+    };
+    let mut props = page::Props::new(&session.id);
+    props.title = Some("チケット一覧".to_string());
+
+    /*
+    let projects = match model::project::ProjectMember::my_projects(&session, &db).await {
+        Ok(projects) => projects,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+    */
+
+    props.session = Some(session);
+    //props.project_members = projects;
+    let mut page = TicketListPage::new(props);
 
     Ok(Html(page.write()))
 }

@@ -40,7 +40,7 @@ impl Component for Nav {
 
                         *buf += r#"<li class="nav-item">"#;
                         {
-                            *buf += r##"<a class="nav-link" href="#items">チケット</a>"##;
+                            *buf += r#"<a class="nav-link" href="/ticket_list">チケット</a>"#;
                         }
                         *buf += r#"</li>"#;
 

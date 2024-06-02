@@ -284,7 +284,8 @@ pub async fn post(
     }
 
     let (project, member, tickets) =
-        model::project::Project::current_project(&session, &db).await?;
+        model::project::Project::current_project_and_tickets(&session, &db).await?;
+
     props.action = action;
     props.project = project;
     props.project_member = member;

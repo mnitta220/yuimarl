@@ -26,7 +26,7 @@ pub async fn get_home(cookies: Cookies) -> Result<Html<String>, AppError> {
     let mut props = page::Props::new(&session.id);
 
     let (project, member, tickets) =
-        match model::project::Project::current_project(&session, &db).await {
+        match model::project::Project::current_project_and_tickets(&session, &db).await {
             Ok((project, member, tickets)) => (project, member, tickets),
             Err(e) => {
                 return Err(AppError(anyhow::anyhow!(e)));

@@ -25,6 +25,8 @@ pub struct Ticket {
     pub progress: i32,                     // 進捗率
     pub priority: i32,                     // 優先度
     pub parent_id: Option<String>,         // 親チケットID
+    pub parent_id_disp: Option<String>,    // 親チケット表示用チケットID
+    pub parent_name: Option<String>,       // 親チケット名
     pub deliverables: Option<String>,      // 成果物(JSON)
     pub owner: Option<String>,             // 登録ユーザー
     pub note: Option<String>,              // ノート（マークダウン）
@@ -58,6 +60,8 @@ impl Ticket {
             progress: 0,
             priority: 0,
             parent_id: None,
+            parent_id_disp: None,
+            parent_name: None,
             deliverables: None,
             owner: None,
             note: None,
@@ -753,6 +757,102 @@ impl Ticket {
         }
 
         Ok(tickets.get(0).cloned())
+    }
+
+    pub async fn search_list(
+        project_id: &str,
+        input: &super::super::handlers::ticket::TicketListInput,
+        db: &FirestoreDb,
+    ) -> Result<Vec<Ticket>> {
+        let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority, start_date, end_date, parent_id, deleted}))
+            .from(COLLECTION_NAME)
+            .filter(|q| {
+                q.for_all([
+                    q.field(path!(Ticket::project_id)).eq(&project_id),
+                    q.field(path!(Ticket::deleted)).eq(false),
+                ])
+            })
+            .order_by([
+                (path!(Ticket::id), FirestoreQueryDirection::Ascending),
+            ])
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let tickets: Vec<Ticket> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let mut serched: Vec<Ticket> = Vec::new();
+        for ticket in &tickets {
+            if input.ticketid.len() > 0 {
+                if let Some(id_disp) = &ticket.id_disp {
+                    if id_disp != &input.ticketid {
+                        continue;
+                    }
+                }
+            }
+            if input.ticketname.len() > 0 {
+                if let Some(n) = &ticket.name {
+                    if n.find(&input.ticketname).is_none() {
+                        continue;
+                    }
+                }
+            }
+            if let Some(f) = &input.finished {
+                if f != "on" && f != "true" {
+                    if ticket.progress == 100 {
+                        continue;
+                    }
+                }
+            } else {
+                if ticket.progress == 100 {
+                    continue;
+                }
+            }
+
+            let mut new_ticket = ticket.clone();
+            if let Some(parent_id) = &ticket.parent_id {
+                let parent = tickets
+                    .iter()
+                    .find(|t| &t.id.as_ref().unwrap() == &parent_id);
+                if let Some(p) = parent {
+                    if input.parentid.len() > 0 {
+                        if let Some(parent_id) = &p.id_disp {
+                            if parent_id != &input.parentid {
+                                continue;
+                            }
+                        }
+                    }
+                    new_ticket.parent_id_disp = p.id_disp.clone();
+                    new_ticket.parent_name = p.name.clone();
+                } else {
+                    if input.parentid.len() > 0 {
+                        continue;
+                    }
+                }
+            } else {
+                if input.parentid.len() > 0 {
+                    continue;
+                }
+            }
+
+            serched.push(new_ticket);
+        }
+
+        Ok(serched)
     }
 }
 

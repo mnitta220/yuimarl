@@ -39,7 +39,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
     props.action = crate::Action::Create;
 
     let (project, member, tickets) =
-        match model::project::Project::current_project(&session, &db).await {
+        match model::project::Project::current_project_and_tickets(&session, &db).await {
             Ok((project, member, tickets)) => (project, member, tickets),
             Err(e) => {
                 return Err(AppError(anyhow::anyhow!(e)));
@@ -258,7 +258,8 @@ pub async fn post(
     }
 
     let (project, member, tickets) =
-        model::project::Project::current_project(&session, &db).await?;
+        model::project::Project::current_project_and_tickets(&session, &db).await?;
+
     props.action = action;
     props.project = project;
     props.project_member = member;
@@ -301,7 +302,8 @@ pub async fn post_note(
     };
 
     let (project, member, tickets) =
-        model::project::Project::current_project(&session, &db).await?;
+        model::project::Project::current_project_and_tickets(&session, &db).await?;
+
     props.action = crate::Action::Update;
     props.project = project;
     props.project_member = member;
@@ -316,6 +318,40 @@ pub async fn post_note(
 pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
     tracing::debug!("GET /ticket_list");
 
+    let input = TicketListInput {
+        ticketid: String::from(""),
+        ticketname: String::from(""),
+        parentid: String::from(""),
+        finished: None,
+    };
+
+    return get_list_sub(cookies, input).await;
+}
+
+#[derive(Deserialize, Debug)]
+pub struct TicketListInput {
+    pub ticketid: String,
+    pub ticketname: String,
+    pub parentid: String,
+    pub finished: Option<String>,
+}
+
+pub async fn post_list(
+    cookies: Cookies,
+    Form(input): Form<TicketListInput>,
+) -> Result<Html<String>, AppError> {
+    tracing::debug!(
+        "POST /post_list {:?}, {:?}, {:?}, {:?}",
+        input.ticketid,
+        input.ticketname,
+        input.parentid,
+        input.finished
+    );
+
+    return get_list_sub(cookies, input).await;
+}
+
+async fn get_list_sub(cookies: Cookies, input: TicketListInput) -> Result<Html<String>, AppError> {
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
         Err(e) => {
@@ -330,18 +366,31 @@ pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
     let mut props = page::Props::new(&session.id);
     props.title = Some("チケット一覧".to_string());
 
-    /*
-    let projects = match model::project::ProjectMember::my_projects(&session, &db).await {
-        Ok(projects) => projects,
+    let (project, member) = match model::project::Project::current_project(&session, &db).await {
+        Ok((project, member)) => (project, member),
         Err(e) => {
             return Err(AppError(anyhow::anyhow!(e)));
         }
     };
-    */
+
+    if let Some(project) = &project {
+        let tickets =
+            match model::ticket::Ticket::search_list(&project.id.as_ref().unwrap(), &input, &db)
+                .await
+            {
+                Ok(tickets) => tickets,
+                Err(e) => {
+                    return Err(AppError(anyhow::anyhow!(e)));
+                }
+            };
+        props.tickets = tickets;
+    }
 
     props.session = Some(session);
-    //props.project_members = projects;
-    let mut page = TicketListPage::new(props);
+    props.project = project;
+    props.project_member = member;
+
+    let mut page = TicketListPage::new(props, input);
 
     Ok(Html(page.write()))
 }

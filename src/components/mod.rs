@@ -18,3 +18,12 @@ pub fn escape_html(s: &str, buf: &mut String) {
         }
     }
 }
+
+pub fn replace_slash(s: &str, buf: &mut String) {
+    for c in s.chars() {
+        match c {
+            '-' => buf.push('/'),
+            _ => buf.push(c),
+        }
+    }
+}

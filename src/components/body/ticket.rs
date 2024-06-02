@@ -111,12 +111,6 @@ impl Component for TicketBody {
                                             *buf += r#"&tab=history">更新履歴</a>"#;
                                         }
                                         *buf += r#"</li>"#;
-                                        /*
-                                         *buf += r#"<li class="nav-item"><a class="nav-link active" href="">基本情報</a></li>"#;
-                                         *buf += r#"<li class="nav-item"><a class="nav-link" href="">ノート</a></li>"#;
-                                         *buf += r#"<li class="nav-item"><a class="nav-link" href="">コメント</a></li>"#;
-                                         *buf += r#"<li class="nav-item"><a class="nav-link" href="">更新履歴</a></li>"#;
-                                         */
                                     }
                                     *buf += r#"</ul>"#;
                                 }

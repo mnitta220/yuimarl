@@ -1,3 +1,4 @@
+use super::super::handlers::ticket::TicketListInput;
 use crate::{components::body::ticket_list::TicketListBody, pages::page};
 
 /// Component for rendering the Ticket List page.
@@ -7,12 +8,12 @@ pub struct TicketListPage {
 }
 
 impl TicketListPage {
-    pub fn new(props: page::Props) -> Self {
+    pub fn new(props: page::Props, input: TicketListInput) -> Self {
         // Construct the components of the HTML page.
         let mut page = page::Page::new();
 
         // Construct the components of the HTML body.
-        let body = TicketListBody::new();
+        let body = TicketListBody::new(input);
         page.body = Some(Box::new(body));
 
         TicketListPage { props, page }

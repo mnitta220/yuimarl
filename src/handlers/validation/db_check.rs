@@ -112,7 +112,19 @@ impl DbCheckValidation {
             }
         };
 
-        match model::project::ProjectMember::members_of_project(&prj.id.unwrap(), false, &db).await
+        match model::project::Project::current_project_and_tickets(&session, &db).await {
+            Ok(u) => u,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e));
+            }
+        };
+
+        match model::project::ProjectMember::members_of_project(
+            &prj.id.clone().unwrap(),
+            false,
+            &db,
+        )
+        .await
         {
             Ok(u) => u,
             Err(e) => {
@@ -136,6 +148,20 @@ impl DbCheckValidation {
 
         match model::ticket::Ticket::find_ticket_and_project(&ticket.id.unwrap(), &db).await {
             Ok(ticket) => ticket,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e));
+            }
+        };
+
+        let input = super::super::ticket::TicketListInput {
+            ticketid: String::from(""),
+            ticketname: String::from(""),
+            parentid: String::from(""),
+            finished: None,
+        };
+
+        match model::ticket::Ticket::search_list(&prj.id.clone().unwrap(), &input, &db).await {
+            Ok(tickets) => tickets,
             Err(e) => {
                 return Err(anyhow::anyhow!(e));
             }

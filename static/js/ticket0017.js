@@ -310,3 +310,11 @@ function setDeliverablesTable() {
     }
     $("div#deliverablesTbl").html(buf);
 }
+
+$('#finished').change(function () {
+    var r = $(this).prop('checked');
+    console.log(r);
+    if (r) {
+        $('#progress').val(100);
+    }
+})

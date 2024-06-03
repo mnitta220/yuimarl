@@ -266,7 +266,13 @@ impl Component for TicketInfo {
                         {
                             *buf += r#"<div class="form-check">"#;
                             {
-                                *buf += r#"<input class="form-check-input" id="finished" type="checkbox" value="">"#;
+                                *buf += r#"<input class="form-check-input" id="finished" type="checkbox""#;
+                                if let Some(t) = &props.ticket {
+                                    if t.progress == 100 {
+                                        *buf += r#" checked="checked""#;
+                                    }
+                                }
+                                *buf += r#">"#;
                                 *buf += r#"<label class="form-check-label" for="finished">完了済</label>"#;
                             }
                             *buf += r#"</div>"#;

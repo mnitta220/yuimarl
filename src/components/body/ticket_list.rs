@@ -205,6 +205,7 @@ impl Component for TicketListBody {
                                                     *buf += r#"<th scope="col">親チケット</th>"#;
                                                     *buf += r#"<th scope="col">開始日</th>"#;
                                                     *buf += r#"<th scope="col">終了日</th>"#;
+                                                    *buf += r#"<th scope="col">優先度</th>"#;
                                                     *buf += r#"<th class="text-right" scope="col">進捗率</th>"#;
                                                 }
                                                 *buf += r#"</tr>"#;
@@ -232,6 +233,7 @@ impl Component for TicketListBody {
                                                                 .unwrap_or_default();
                                                         }
                                                         *buf += r#"</td>"#;
+
                                                         *buf += r#"<td>"#;
                                                         {
                                                             if let Some(ref parent_id) =
@@ -252,16 +254,29 @@ impl Component for TicketListBody {
                                                             }
                                                         }
                                                         *buf += r#"</td>"#;
+
                                                         *buf += r#"<td>"#;
                                                         if let Some(s) = &ticket.start_date {
                                                             super::super::replace_slash(&s, buf);
                                                         }
                                                         *buf += r#"</td>"#;
+
                                                         *buf += r#"<td>"#;
                                                         if let Some(e) = &ticket.end_date {
                                                             super::super::replace_slash(&e, buf);
                                                         }
                                                         *buf += r#"</td>"#;
+
+                                                        *buf += r#"<td>"#;
+                                                        match &ticket.priority {
+                                                            1 => *buf += r#"最優先"#,
+                                                            2 => *buf += r#"高"#,
+                                                            3 => *buf += r#"中"#,
+                                                            4 => *buf += r#"低"#,
+                                                            _ => *buf += r#""#,
+                                                        }
+                                                        *buf += r#"</td>"#;
+
                                                         *buf += r#"<td class="text-right">"#;
                                                         *buf += &ticket.progress.to_string();
                                                         *buf += r#"%</td>"#;

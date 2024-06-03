@@ -150,7 +150,7 @@ impl Component for TicketBody {
             *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
             match &props.tab {
                 Tab::Info => {
-                    *buf += r#"<script src="/static/js/ticket0016a.js"></script>"#;
+                    *buf += r#"<script src="/static/js/ticket0017.js"></script>"#;
                 }
                 Tab::Note => {
                     *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;

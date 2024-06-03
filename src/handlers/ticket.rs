@@ -315,6 +315,14 @@ pub async fn post_note(
     Ok(Html(page.write()))
 }
 
+#[derive(Deserialize, Debug)]
+pub struct TicketListInput {
+    pub ticketid: String,
+    pub ticketname: String,
+    pub parentid: String,
+    pub finished: Option<String>,
+}
+
 pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
     tracing::debug!("GET /ticket_list");
 
@@ -326,14 +334,6 @@ pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
     };
 
     return get_list_sub(cookies, input).await;
-}
-
-#[derive(Deserialize, Debug)]
-pub struct TicketListInput {
-    pub ticketid: String,
-    pub ticketname: String,
-    pub parentid: String,
-    pub finished: Option<String>,
 }
 
 pub async fn post_list(

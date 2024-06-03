@@ -293,27 +293,14 @@ impl Component for TicketInfo {
                 {
                     *buf += r#"<div class="form-check form-check-inline">"#;
                     {
-                        *buf += r#"<input class="form-check-input" id="priority1" name="priority" type="radio" value="1""#;
+                        *buf += r#"<input class="form-check-input" id="priority4" name="priority" type="radio" value="4""#;
                         if let Some(t) = &props.ticket {
-                            if t.priority == 1 {
+                            if t.priority == 4 {
                                 *buf += r#" checked="checked""#;
                             }
                         }
                         *buf += r#">"#;
-                        *buf += r#"<label class="form-check-label" for="priority1">最優先</label>"#;
-                    }
-                    *buf += r#"</div>"#;
-
-                    *buf += r#"<div class="form-check form-check-inline">"#;
-                    {
-                        *buf += r#"<input class="form-check-input" id="priority2" name="priority" type="radio" value="2""#;
-                        if let Some(t) = &props.ticket {
-                            if t.priority == 2 {
-                                *buf += r#" checked="checked""#;
-                            }
-                        }
-                        *buf += r#">"#;
-                        *buf += r#"<label class="form-check-label" for="priority2">高</label>"#;
+                        *buf += r#"<label class="form-check-label" for="priority4">最優先</label>"#;
                     }
                     *buf += r#"</div>"#;
 
@@ -326,20 +313,33 @@ impl Component for TicketInfo {
                             }
                         }
                         *buf += r#">"#;
-                        *buf += r#"<label class="form-check-label" for="priority3">中</label>"#;
+                        *buf += r#"<label class="form-check-label" for="priority3">高</label>"#;
                     }
                     *buf += r#"</div>"#;
 
                     *buf += r#"<div class="form-check form-check-inline">"#;
                     {
-                        *buf += r#"<input class="form-check-input" id="priority4" name="priority" type="radio" value="4""#;
+                        *buf += r#"<input class="form-check-input" id="priority2" name="priority" type="radio" value="2""#;
                         if let Some(t) = &props.ticket {
-                            if t.priority == 4 {
+                            if t.priority == 2 {
                                 *buf += r#" checked="checked""#;
                             }
                         }
                         *buf += r#">"#;
-                        *buf += r#"<label class="form-check-label" for="priority4">低</label>"#;
+                        *buf += r#"<label class="form-check-label" for="priority2">中</label>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="form-check form-check-inline">"#;
+                    {
+                        *buf += r#"<input class="form-check-input" id="priority1" name="priority" type="radio" value="1""#;
+                        if let Some(t) = &props.ticket {
+                            if t.priority == 1 {
+                                *buf += r#" checked="checked""#;
+                            }
+                        }
+                        *buf += r#">"#;
+                        *buf += r#"<label class="form-check-label" for="priority1">低</label>"#;
                     }
                     *buf += r#"</div>"#;
 

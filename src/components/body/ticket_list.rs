@@ -269,10 +269,10 @@ impl Component for TicketListBody {
 
                                                         *buf += r#"<td>"#;
                                                         match &ticket.priority {
-                                                            1 => *buf += r#"最優先"#,
-                                                            2 => *buf += r#"高"#,
-                                                            3 => *buf += r#"中"#,
-                                                            4 => *buf += r#"低"#,
+                                                            4 => *buf += r#"最優先"#,
+                                                            3 => *buf += r#"高"#,
+                                                            2 => *buf += r#"中"#,
+                                                            1 => *buf += r#"低"#,
                                                             _ => *buf += r#""#,
                                                         }
                                                         *buf += r#"</td>"#;
@@ -298,7 +298,7 @@ impl Component for TicketListBody {
                             {
                                 *buf += r#"<div class="col">"#;
                                 {
-                                    *buf += r#"<a href="step02.html" title="チケットを作成">"#;
+                                    *buf += r#"<a href="/ticket_add" title="チケットを追加">"#;
                                     {
                                         *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg">"#;
                                     }

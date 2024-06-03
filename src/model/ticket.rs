@@ -640,7 +640,9 @@ impl Ticket {
             {
                 Ok(t) => match t {
                     Some(t) => {
-                        tickets.push(t);
+                        if t.progress != 100 {
+                            tickets.push(t);
+                        }
                     }
                     None => {
                         continue;

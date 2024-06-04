@@ -119,12 +119,42 @@ impl DbCheckValidation {
             }
         };
 
+        match model::project::Project::find_by_owner_and_name(
+            &session.uid,
+            &String::from("データベースチェック"),
+            &db,
+        )
+        .await
+        {
+            Ok(u) => u,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e));
+            }
+        };
+
         match model::project::ProjectMember::members_of_project(
             &prj.id.clone().unwrap(),
             false,
             &db,
         )
         .await
+        {
+            Ok(u) => u,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e));
+            }
+        };
+
+        match model::project::ProjectMember::members_of_project(&prj.id.clone().unwrap(), true, &db)
+            .await
+        {
+            Ok(u) => u,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e));
+            }
+        };
+
+        match model::project::ProjectMember::find(&prj.id.clone().unwrap(), &session.uid, &db).await
         {
             Ok(u) => u,
             Err(e) => {

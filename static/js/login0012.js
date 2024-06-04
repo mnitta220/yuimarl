@@ -32,11 +32,16 @@ $(document).ready(function () {
         signInFlow: 'popup',
         signInSuccessUrl: 'static/success.html',
         signInOptions: [
-          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-          firebase.auth.EmailAuthProvider.PROVIDER_ID,
+          {
+            provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+          },
+          {
+            provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+            signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
+          },
         ],
-        tosUrl: 'static/404.html',
-        privacyPolicyUrl: '/static/404.html'
+        tosUrl: 'https://mnitta220.github.io/yuimarl/',
+        privacyPolicyUrl: 'https://mnitta220.github.io/privacy.html'
       };
       ui.start('#firebaseui-auth-container', uiConfig);
     }

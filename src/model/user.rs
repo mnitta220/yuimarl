@@ -139,6 +139,44 @@ impl User {
         Ok(subs)
     }
 
+    pub async fn search_by_name(name: &String, db: &FirestoreDb) -> Result<Vec<UserSub>> {
+        let object_stream: BoxStream<FirestoreResult<User>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(User::{uid, name, email, photo_url, status, created_at, last_login}))
+            .from(COLLECTION_NAME)
+            .filter(|q| {
+                q.for_all([
+                    q.field(path!(User::name)).eq(name),
+                    q.field(path!(User::status)).eq(UserStatus::Approved as i32),
+                ])
+            })
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let users: Vec<User> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let mut subs = Vec::new();
+
+        for user in users {
+            subs.push(user.to_sub());
+        }
+
+        Ok(subs)
+    }
+
     pub async fn update_name(uid: &str, name: &str, db: &FirestoreDb) -> Result<()> {
         let mut user = User::new();
         user.name = name.to_string();

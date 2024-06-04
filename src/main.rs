@@ -79,6 +79,7 @@ async fn main() {
         .route("/contact", get(handlers::contact::get_contact))
         .route("/api/firebaseConfig", get(handlers::api::firebase_config))
         .route("/api/userByEmail", post(handlers::api::user_by_email))
+        .route("/api/userByName", post(handlers::api::user_by_name))
         .route("/api/projectMember", post(handlers::api::project_member))
         .route(
             "/api/ticketByIdDisp",

@@ -78,54 +78,72 @@ $('#search-email').on('click', function () {
             email: $("input#email").val()
         },
         success: function (result) {
-            var ret = JSON.parse(result);
-            var buf = '';
-            if (ret.result == "OK") {
-                if (ret.users.length > 0) {
-                    buf += '<table class="table table-hover">';
-                    buf += '<thead>';
-                    buf += '<tr>';
-                    buf += '<th scope="col">選択</th>';
-                    buf += '<th scope="col">メールアドレス</th>';
-                    buf += '<th scope="col">名前</th>';
-                    buf += '<th scope="col">ロール</th>';
-                    buf += '</tr>';
-                    buf += '</thead>';
-                    buf += '<tbody>';
-                    for (var i in ret.users) {
-                        buf += '<tr><td>';
-                        buf += '<input class="form-check-input" type="checkbox" ';
-                        buf += 'id="check' + i + '" checked></td><td>';
-                        buf += ret.users[i].email + '</td><td>';
-                        buf += ret.users[i].name + '</td><td>';
-                        buf += '<select class="form-select" id="role' + i;
-                        buf += '" name="role' + i + '">';
-                        buf += '<option value="2">管理者</option>';
-                        buf += '<option value="3">メンバー</option>';
-                        buf += '<option value="4">閲覧者</option>';
-                        buf += '</select>';
-                        buf += '<input type="hidden" id="uid' + i + '" value="';
-                        buf += ret.users[i].uid + '">';
-                        buf += '<input type="hidden" id="name' + i + '" value="';
-                        buf += ret.users[i].name + '">';
-                        buf += '<input type="hidden" id="email' + i + '" value="';
-                        buf += ret.users[i].email + '">';
-                        buf += '</td></tr>';
-                    }
-                    buf += '</tbody>';
-                    buf += '</table>';
-                    $("#btnAddMember").removeAttr('disabled');
-                } else {
-                    buf += '<div class="col"><p class="text-danger">該当するユーザーが登録されていません。</p></div>';
-                    $("#btnAddMember").attr({ 'disabled': 'disabled' });
-                }
-            } else {
-                buf += ret.message;
-            }
-            $("div#searched").html(buf);
+            memberSearchResult(result);
         }
     });
 });
+
+$('#search-name').on('click', function () {
+    $("#add_members").val("");
+    $.ajax({
+        type: "POST",
+        url: "/api/userByName",
+        data: {
+            name: $("input#member-name").val()
+        },
+        success: function (result) {
+            memberSearchResult(result);
+        }
+    });
+});
+
+function memberSearchResult(result) {
+    var ret = JSON.parse(result);
+    var buf = '';
+    if (ret.result == "OK") {
+        if (ret.users.length > 0) {
+            buf += '<table class="table table-hover">';
+            buf += '<thead>';
+            buf += '<tr>';
+            buf += '<th scope="col">選択</th>';
+            buf += '<th scope="col">メールアドレス</th>';
+            buf += '<th scope="col">名前</th>';
+            buf += '<th scope="col">ロール</th>';
+            buf += '</tr>';
+            buf += '</thead>';
+            buf += '<tbody>';
+            for (var i in ret.users) {
+                buf += '<tr><td>';
+                buf += '<input class="form-check-input" type="checkbox" ';
+                buf += 'id="check' + i + '" checked></td><td>';
+                buf += ret.users[i].email + '</td><td>';
+                buf += ret.users[i].name + '</td><td>';
+                buf += '<select class="form-select" id="role' + i;
+                buf += '" name="role' + i + '">';
+                buf += '<option value="2">管理者</option>';
+                buf += '<option value="3">メンバー</option>';
+                buf += '<option value="4">閲覧者</option>';
+                buf += '</select>';
+                buf += '<input type="hidden" id="uid' + i + '" value="';
+                buf += ret.users[i].uid + '">';
+                buf += '<input type="hidden" id="name' + i + '" value="';
+                buf += ret.users[i].name + '">';
+                buf += '<input type="hidden" id="email' + i + '" value="';
+                buf += ret.users[i].email + '">';
+                buf += '</td></tr>';
+            }
+            buf += '</tbody>';
+            buf += '</table>';
+            $("#btnAddMember").removeAttr('disabled');
+        } else {
+            buf += '<div class="col"><p class="text-danger">該当するユーザーが登録されていません。</p></div>';
+            $("#btnAddMember").attr({ 'disabled': 'disabled' });
+        }
+    } else {
+        buf += ret.message;
+    }
+    $("div#searched").html(buf);
+}
 
 $('#btnAddMember').on('click', function () {
     for (i = 0; i < 10; i++) {

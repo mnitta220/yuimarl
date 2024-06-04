@@ -14,8 +14,13 @@ pub struct FirebaseConfig {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct UserByEmainInput {
+pub struct UserByEmailInput {
     pub email: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct UserByNameInput {
+    pub name: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -58,7 +63,7 @@ pub async fn firebase_config() -> String {
 }
 
 /// ユーザーをメールアドレスで検索する
-pub async fn user_by_email(Form(input): Form<UserByEmainInput>) -> String {
+pub async fn user_by_email(Form(input): Form<UserByEmailInput>) -> String {
     tracing::debug!("GET /user_by_email");
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
@@ -80,6 +85,60 @@ pub async fn user_by_email(Form(input): Form<UserByEmainInput>) -> String {
     };
 
     let users = match model::user::User::search_by_email(&input.email, &db).await {
+        Ok(u) => u,
+        Err(e) => {
+            let result = UserResult {
+                result: "NG".to_string(),
+                users: Vec::new(),
+                message: format!("ユーザーの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            let buf = match serde_json::to_string(&result) {
+                Ok(r) => r,
+                Err(e) => format!("ユーザーの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            return buf;
+        }
+    };
+
+    let result = UserResult {
+        result: "OK".to_string(),
+        users: users,
+        message: "".to_string(),
+    };
+
+    let buf = match serde_json::to_string(&result) {
+        Ok(r) => r,
+        Err(e) => format!("ユーザーの検索に失敗しました。 [{}]", e.to_string()),
+    };
+
+    buf
+}
+
+/// ユーザーを名前で検索する
+pub async fn user_by_name(Form(input): Form<UserByNameInput>) -> String {
+    tracing::info!("GET /user_by_name");
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            let result = UserResult {
+                result: "NG".to_string(),
+                users: Vec::new(),
+                message: format!("ユーザーの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            let buf = match serde_json::to_string(&result) {
+                Ok(r) => r,
+                Err(_) => format!("ユーザーの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            return buf;
+        }
+    };
+
+    let users = match model::user::User::search_by_name(&input.name, &db).await {
         Ok(u) => u,
         Err(e) => {
             let result = UserResult {

@@ -237,7 +237,7 @@ impl Component for ProjectInfo {
                             *buf += r#"<label class="col-md-3 col-form-label mb-1" for="email">メールアドレス</label>"#;
                             *buf += r#"<div class="col-md-6 mb-1">"#;
                             {
-                                *buf += r#"<input class="form-control" id="email" type="text" maxlength="50">"#;
+                                *buf += r#"<input class="form-control" id="email" type="text" maxlength="60">"#;
                             }
                             *buf += r#"</div>"#;
 
@@ -254,14 +254,13 @@ impl Component for ProjectInfo {
                             *buf += r#"<label class="col-md-3 col-form-label mb-1" for="member-name">名前</label>"#;
                             *buf += r#"<div class="col-md-6 mb-1">"#;
                             {
-                                *buf += r#"<input class="form-control" id="member-name" type="text" maxlength="50">"#;
+                                *buf += r#"<input class="form-control" id="member-name" type="text" maxlength="60">"#;
                             }
                             *buf += r#"</div>"#;
 
                             *buf += r#"<div class="col-md-3 mb-1">"#;
                             {
-                                *buf +=
-                                    r#"<button class="btn btn-info" type="button">検索</button>"#;
+                                *buf += r#"<button class="btn btn-info" id="search-name" type="button">検索</button>"#;
                             }
                             *buf += r#"</div>"#;
                         }

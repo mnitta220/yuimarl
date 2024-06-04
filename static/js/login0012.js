@@ -11,7 +11,6 @@ $(document).ready(function () {
         storageBucket: ret.storage_bucket,
         messagingSenderId: ret.messaging_sender_id,
         appId: ret.app_id,
-        measurementId: ret.measurement_id,
       };
       firebase.initializeApp(firebaseConfig);
       const ui = new firebaseui.auth.AuthUI(firebase.auth());

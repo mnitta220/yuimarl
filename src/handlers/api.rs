@@ -11,7 +11,6 @@ pub struct FirebaseConfig {
     pub storage_bucket: String,
     pub messaging_sender_id: String,
     pub app_id: String,
-    pub measurement_id: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -48,7 +47,6 @@ pub async fn firebase_config() -> String {
         storage_bucket: crate::STORAGE_BUCKET.get().unwrap().clone(),
         messaging_sender_id: crate::MESSAGING_SENDER_ID.get().unwrap().clone(),
         app_id: crate::APP_ID.get().unwrap().clone(),
-        measurement_id: crate::MEASUREMENT_ID.get().unwrap().clone(),
     };
 
     let buf = match serde_json::to_string(&config) {

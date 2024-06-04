@@ -13,8 +13,8 @@ impl LoginPage {
                 buf += r#"<meta charset="utf-8">"#;
                 buf += r#"<meta name="viewport" content="width=device-width, initial-scale=1">"#;
                 buf += r#"<title>Yuimarl ログイン</title>"#;
-                buf += r#"<script src="https://www.gstatic.com/firebasejs/9.9.2/firebase-app-compat.js"></script>"#;
-                buf += r#"<script src="https://www.gstatic.com/firebasejs/9.9.2/firebase-auth-compat.js"></script>"#;
+                buf += r#"<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>"#;
+                buf += r#"<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>"#;
                 buf += r#"<script src="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth__ja.js"></script>"#;
                 buf += r#"<link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.css" />"#;
                 buf += r#"<link rel="icon" type="image/x-icon" href="/static/favicon.ico">"#;

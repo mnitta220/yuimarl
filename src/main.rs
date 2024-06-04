@@ -27,7 +27,6 @@ static AUTH_DOMAIN: OnceCell<String> = OnceCell::new();
 static STORAGE_BUCKET: OnceCell<String> = OnceCell::new();
 static MESSAGING_SENDER_ID: OnceCell<String> = OnceCell::new();
 static APP_ID: OnceCell<String> = OnceCell::new();
-static MEASUREMENT_ID: OnceCell<String> = OnceCell::new();
 static DB_CHECK_PASSWORD: OnceCell<String> = OnceCell::new();
 
 #[tokio::main]
@@ -184,16 +183,6 @@ fn get_environment_values() -> Result<()> {
     // set APP_ID static
     if let Err(_) = APP_ID.set(app_id) {
         return Err(anyhow::anyhow!("Failed to set APP_ID"));
-    }
-
-    // get MEASUREMENT_ID env
-    let measurement_id = match std::env::var("MEASUREMENT_ID") {
-        Ok(measurement_id) => measurement_id,
-        Err(_) => "".to_string(),
-    };
-    // set MEASUREMENT_ID static
-    if let Err(_) = MEASUREMENT_ID.set(measurement_id) {
-        return Err(anyhow::anyhow!("Failed to set MEASUREMENT_ID"));
     }
 
     // get DB_CHECK_PASSWORD env

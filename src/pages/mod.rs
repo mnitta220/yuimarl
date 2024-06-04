@@ -8,3 +8,4 @@ pub mod project_list_page;
 pub mod project_page;
 pub mod ticket_list_page;
 pub mod ticket_page;
+pub mod user_name_page;

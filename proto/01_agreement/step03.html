@@ -3,56 +3,36 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Yuimarl</title>
+    <title>利用規約 - Yuimarl</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link rel="stylesheet" href="../../static/css/style0012.css">
     <link rel="icon" type="image/x-icon" href="../../static/favicon.ico">
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
-      <div class="container"><a class="navbar-brand" href="/"><img class="mw-100" src="../../static/images/logo.png" alt="Yuimarl"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbar-content">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item active"><a class="nav-link" href="/">ホーム<span class="visually-hidden">(current)</span></a></li>
-            <li class="nav-item"><a class="nav-link" href="#about">プロジェクト</a></li>
-            <li class="nav-item"><a class="nav-link" href="#items">チケット</a></li>
-            <li class="nav-item"><a class="nav-link" href="#items">利用ガイド</a></li>
-            <li class="nav-item"><a class="nav-link" href="#items">ログアウト</a></li>
-          </ul>
-        </div>
-      </div>
+      <div class="container"><img class="mw-100" src="../../static/images/logo.png" alt="Yuimarl"></div>
     </nav>
     <main>
-      <form action="/ticket/add" method="POST">
-        <div class="py-3 bg-light">
-          <section id="news">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-3">
-                  <h3>プロジェクト</h3>
-                </div>
-                <div class="col-md-9">
-                  <div class="row">
-                    <div class="col"><a href="/project/add" title="プロジェクト一覧"> <img class="icon3" src="../../static/ionicons/list-outline.svg"></a><span class="btn-help">&nbsp;: プロジェクト一覧</span>&nbsp;&nbsp;&nbsp;<a href="step02.html" title="プロジェクトを作成"><img class="icon3" src="../../static/ionicons/add-circle-outline.svg"></a><span class="btn-help">&nbsp;: プロジェクトを作成</span></div>
-                  </div>
-                </div>
-              </div>
+      <div class="container pt-3 pb-1">
+        <h2>氏名入力</h2>
+        <p>あなたの氏名を入力してください。本名の入力をお願いいたします。</p>
+      </div>
+      <div class="container">
+        <form>
+          <!-- 氏名-->
+          <div class="row pt-1 pb-2">
+            <label class="col-md-3 col-form-label bg-light mb-1" for="name">氏名</label>
+            <div class="col-md-9 mb-1">
+              <input class="form-control" id="name" type="password" maxlength="60" value="" required>
             </div>
-          </section>
-        </div>
-        <div class="py-3">
-          <section class="mb-3" id="tickets">
-            <div class="container">
-              <div class="row">
-                <div class="col">
-                  <h3>チケット</h3>
-                </div>
-              </div>
+          </div>
+          <div class="row py-3 mt-2 bg-light">
+            <div class="col">
+              <button class="btn btn-primary" type="submit">登録</button>
             </div>
-          </section>
-        </div>
-      </form>
+          </div>
+        </form>
+      </div>
     </main>
     <footer class="py-1 mt-3 bg-dark text-light">
       <div class="container text-center pt-1">
@@ -70,9 +50,9 @@
         <div class="row align-items-end">
           <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step02.html">← prev</a></div>
           <div class="col-md-8">
-            <div class="alert alert-danger text-start" role="alert">利用規約 step03.<br>「同意する」をクリックすると、ホーム画面に遷移する。</div>
+            <div class="alert alert-danger text-start" role="alert">利用規約 step03.<br>メールリンクログインを行った場合は、氏名が入力されないので、この画面で入力していただく。</div>
           </div>
-          <div class="col-md-2 text-start py-1"></div>
+          <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step04.html">next →</a></div>
         </div>
       </div>
     </footer>

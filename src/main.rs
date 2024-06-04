@@ -58,6 +58,7 @@ async fn main() {
             get(handlers::agreement::get).post(handlers::agreement::post),
         )
         .route("/agree/no", get(handlers::agreement::get_disagree))
+        .route("/user_name", post(handlers::user_name::post))
         .route(
             "/project",
             get(handlers::project::get).post(handlers::project::post),

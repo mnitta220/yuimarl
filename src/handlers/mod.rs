@@ -12,6 +12,7 @@ pub mod home;
 pub mod login;
 pub mod project;
 pub mod ticket;
+pub mod user_name;
 pub mod validation;
 
 const COOKIE_SESSION_ID: &str = "yuimarl_session-id";

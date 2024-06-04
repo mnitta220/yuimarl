@@ -34,6 +34,18 @@ pub enum UserStatus {
 }
 
 impl User {
+    pub fn new() -> Self {
+        Self {
+            uid: String::new(),
+            email: String::new(),
+            name: String::new(),
+            photo_url: String::new(),
+            status: UserStatus::Unapproved as i32,
+            created_at: Utc::now(),
+            last_login: Utc::now(),
+        }
+    }
+
     pub async fn find(uid: &str, db: &FirestoreDb) -> Result<Option<Self>> {
         let obj_by_id: Option<User> = match db
             .fluent()
@@ -125,5 +137,25 @@ impl User {
         }
 
         Ok(subs)
+    }
+
+    pub async fn update_name(uid: &str, name: &str, db: &FirestoreDb) -> Result<()> {
+        let mut user = User::new();
+        user.name = name.to_string();
+
+        if let Err(e) = db
+            .fluent()
+            .update()
+            .fields(paths!(User::name))
+            .in_col(&COLLECTION_NAME)
+            .document_id(uid)
+            .object(&user)
+            .execute::<User>()
+            .await
+        {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+
+        Ok(())
     }
 }

@@ -2466,7 +2466,7 @@ dependencies = [
 
 [[package]]
 name = "yuimarl"
-version = "0.0.19"
+version = "0.0.20"
 dependencies = [
  "anyhow",
  "axum 0.7.5",

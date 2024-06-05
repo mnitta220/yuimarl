@@ -8,7 +8,11 @@ use crate::{
     AppError,
 };
 use anyhow::Result;
-use axum::{extract::Form, extract::Query, response::Html};
+use axum::{
+    extract::Query,
+    extract::{Form, Path},
+    response::Html,
+};
 use chrono::DateTime;
 use firestore::*;
 use serde::Deserialize;
@@ -330,6 +334,50 @@ pub async fn post_note(
     props.session = Some(session);
     props.project = Some(prj);
 
+    let mut page = HomePage::new(props);
+
+    Ok(Html(page.write()))
+}
+
+pub async fn get_project_select(
+    cookies: Cookies,
+    Path(id): Path<String>,
+) -> Result<Html<String>, AppError> {
+    tracing::info!("GET /project_select/{}", id);
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
+    let session = match super::get_session_info(cookies, true, &db).await {
+        Ok(session_id) => session_id,
+        Err(_) => return Ok(Html(LoginPage::write())),
+    };
+
+    match model::project::ProjectMember::update_current(&session, &id, &db).await {
+        Ok(_) => {}
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    }
+
+    let (project, member, tickets) =
+        match model::project::Project::current_project_and_tickets(&session, &db).await {
+            Ok((project, member, tickets)) => (project, member, tickets),
+            Err(e) => {
+                return Err(AppError(anyhow::anyhow!(e)));
+            }
+        };
+
+    let mut props = page::Props::new(&session.id);
+
+    props.project = project;
+    props.project_member = member;
+    props.tickets = tickets;
+    props.session = Some(session);
     let mut page = HomePage::new(props);
 
     Ok(Html(page.write()))

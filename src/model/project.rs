@@ -939,68 +939,6 @@ impl ProjectMember {
         }
     }
 
-    /*
-    pub async fn update_last_used(project_id: &str, member: &str, db: &FirestoreDb) -> Result<()> {
-        tracing::debug!(
-            "update_last_used project={:?}, member={}",
-            project_id,
-            member
-        );
-
-        let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
-            .fluent()
-            .select()
-            .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used}))
-            .from(COLLECTION_MEMBER)
-            .filter(|q| {
-                q.for_all([
-                    q.field(path!(ProjectMember::project_id)).eq(&project_id),
-                    q.field(path!(ProjectMember::uid)).eq(&member),
-                ])
-            })
-            .order_by([(
-                path!(ProjectMember::last_used),
-                FirestoreQueryDirection::Descending,
-            )])
-            .obj()
-            .stream_query_with_errors()
-            .await
-        {
-            Ok(s) => s,
-            Err(e) => {
-                return Err(anyhow::anyhow!(e.to_string()));
-            }
-        };
-
-        let mut project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
-            Ok(s) => s,
-            Err(e) => {
-                return Err(anyhow::anyhow!(e.to_string()));
-            }
-        };
-
-        for m in project_members.iter_mut() {
-            if let Some(id) = &m.id {
-                m.last_used = Some(Utc::now());
-                if let Err(e) = db
-                    .fluent()
-                    .update()
-                    .fields(paths!(ProjectMember::last_used))
-                    .in_col(&COLLECTION_MEMBER)
-                    .document_id(id)
-                    .object(m)
-                    .execute::<ProjectMember>()
-                    .await
-                {
-                    return Err(anyhow::anyhow!(e.to_string()));
-                }
-            }
-        }
-
-        Ok(())
-    }
-    */
-
     /// 自分のプロジェクトを検索する
     pub async fn my_projects(session: &Session, db: &FirestoreDb) -> Result<Vec<Self>> {
         let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
@@ -1050,7 +988,6 @@ impl ProjectMember {
                     if p.deleted {
                         continue;
                     }
-                    //member.project_name = p.project_name;
                     let mut m = member.clone();
                     m.project_name = p.project_name;
                     members.push(m);
@@ -1059,6 +996,60 @@ impl ProjectMember {
         }
 
         Ok(members)
+    }
+
+    /// ユーザーの選択中のプロジェクトを設定する
+    pub async fn update_current(
+        session: &Session,
+        project_id: &str,
+        db: &FirestoreDb,
+    ) -> Result<()> {
+        let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used}))
+            .from(COLLECTION_MEMBER)
+            .filter(|q| {
+                q.for_all([
+                    q.field(path!(ProjectMember::project_id)).eq(&project_id),
+                    q.field(path!(ProjectMember::uid)).eq(&session.uid),
+                ])
+            })
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        if let Some(member) = project_members.get(0) {
+            let mut member = member.clone();
+            member.last_used = Some(Utc::now());
+            if let Err(e) = db
+                .fluent()
+                .update()
+                .fields(paths!(ProjectMember::{last_used}))
+                .in_col(&COLLECTION_MEMBER)
+                .document_id(&member.id.clone().unwrap())
+                .object(&member)
+                .execute::<ProjectMember>()
+                .await
+            {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        }
+
+        Ok(())
     }
 
     /// ロールを文字列に変換する

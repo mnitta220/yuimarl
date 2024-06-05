@@ -12,7 +12,6 @@ pub struct Session {
     pub name: String,
     pub email: String,
     pub photo_url: String,
-    //pub project_id: Option<String>,
     pub created_at: DateTime<Utc>,
 }
 
@@ -59,27 +58,22 @@ impl Session {
         Ok(())
     }
 
-    /*
-    pub async fn update_project(session: &Session, db: &FirestoreDb) -> Result<()> {
-        let obj: Option<Session> = match db
+    pub async fn update_name(session: &mut Session, name: &str, db: &FirestoreDb) -> Result<()> {
+        session.name = name.to_string();
+
+        if let Err(e) = db
             .fluent()
             .update()
-            .fields(paths!(Session::project_id))
+            .fields(paths!(Session::name))
             .in_col(&COLLECTION_NAME)
             .document_id(&session.id)
             .object(session)
-            .execute()
+            .execute::<Session>()
             .await
         {
-            Ok(ret) => ret,
-            Err(e) => {
-                return Err(anyhow::anyhow!(e.to_string()));
-            }
-        };
-
-        tracing::debug!("Session upserted {:?}", obj);
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
 
         Ok(())
     }
-    */
 }

@@ -43,7 +43,7 @@ pub async fn post(
         }
     };
 
-    let session = match super::get_session_info(cookies, true, &db).await {
+    let mut session = match super::get_session_info(cookies, true, &db).await {
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
@@ -58,6 +58,13 @@ pub async fn post(
     }
 
     match model::user::User::update_name(&session.uid, name, &db).await {
+        Ok(_) => (),
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    }
+
+    match model::session::Session::update_name(&mut session, name, &db).await {
         Ok(_) => (),
         Err(e) => {
             return Err(AppError(anyhow::anyhow!(e)));

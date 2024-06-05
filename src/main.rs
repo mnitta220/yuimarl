@@ -66,6 +66,10 @@ async fn main() {
         .route("/project_add", get(handlers::project::get_add))
         .route("/project_list", get(handlers::project::get_list))
         .route("/project_note", post(handlers::project::post_note))
+        .route(
+            "/project_select/:id",
+            get(handlers::project::get_project_select),
+        )
         .route("/ticket_add", get(handlers::ticket::get_add))
         .route(
             "/ticket",

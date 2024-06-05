@@ -1,7 +1,7 @@
 use super::super::super::handlers::ticket::TicketListInput;
 use super::super::Component;
 use super::parts::{footer::Footer, nav::Nav};
-use crate::Props;
+use crate::{model, Props};
 
 pub struct TicketListBody {
     pub nav: Box<dyn Component + Send>,
@@ -294,19 +294,28 @@ impl Component for TicketListBody {
                             }
                             *buf += r#"</div>"#;
 
-                            *buf += r#"<div class="row">"#;
-                            {
-                                *buf += r#"<div class="col">"#;
-                                {
-                                    *buf += r#"<a href="/ticket_add" title="チケットを追加">"#;
+                            if let Some(m) = &props.project_member {
+                                if let Some(r) = m.role {
+                                    if r == model::project::ProjectRole::Owner as i32
+                                        || r == model::project::ProjectRole::Administrator as i32
+                                        || r == model::project::ProjectRole::Member as i32
                                     {
-                                        *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg">"#;
+                                        *buf += r#"<div class="row">"#;
+                                        {
+                                            *buf += r#"<div class="col">"#;
+                                            {
+                                                *buf += r#"<a href="/ticket_add" title="チケットを追加">"#;
+                                                {
+                                                    *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg">"#;
+                                                }
+                                                *buf += r#"</a>"#;
+                                            }
+                                            *buf += r#"</div>"#;
+                                        }
+                                        *buf += r#"</div>"#;
                                     }
-                                    *buf += r#"</a>"#;
                                 }
-                                *buf += r#"</div>"#;
                             }
-                            *buf += r#"</div>"#;
                         } else {
                             *buf += r#"<p>プロジェクトが登録されていません。</p>"#;
                         }

@@ -212,11 +212,6 @@ pub async fn post(
         }
     };
 
-    //let project = model::project::Project::find(&input.project_id, &db).await?;
-    //if project.is_none() {
-    //    return Ok(Html(LoginPage::write()));
-    //}
-
     let mut ticket_members = Vec::new();
     let empty_vec: Vec<serde_json::Value> = Vec::new();
     let mem = members["members"].as_array().unwrap_or_else(|| &empty_vec);

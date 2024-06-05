@@ -1,6 +1,8 @@
 use crate::{components::Component, Props};
 
-pub struct TicketNote {}
+pub struct TicketNote {
+    pub can_update: bool,
+}
 
 impl Component for TicketNote {
     fn write(&self, props: &Props, buf: &mut String) {
@@ -15,25 +17,30 @@ impl Component for TicketNote {
 
             *buf += r#"<form action="/ticket_note" method="POST">"#;
             {
-                // 編集スイッチ
-                *buf += r#"<div class="row py-2">"#;
-                {
-                    *buf += r#"<div class="col">"#;
+                if self.can_update {
+                    // 編集スイッチ
+                    *buf += r#"<div class="row py-2">"#;
                     {
-                        *buf += r#"<div class="form-check form-switch">"#;
+                        *buf += r#"<div class="col">"#;
                         {
-                            *buf += r#"<input class="form-check-input" id="edit" type="checkbox" role="switch""#;
-                            if edit_switch {
-                                *buf += r#" checked"#;
+                            *buf += r#"<div class="form-check form-switch">"#;
+                            {
+                                *buf += r#"<input class="form-check-input" id="edit" type="checkbox" role="switch""#;
+                                if edit_switch {
+                                    *buf += r#" checked"#;
+                                }
+                                *buf += r#">"#;
+                                *buf +=
+                                    r#"<label class="form-check-label" for="edit">編集</label>"#;
                             }
-                            *buf += r#">"#;
-                            *buf += r#"<label class="form-check-label" for="edit">編集</label>"#;
+                            *buf += r#"</div>"#;
                         }
                         *buf += r#"</div>"#;
                     }
                     *buf += r#"</div>"#;
+                } else {
+                    edit_switch = false;
                 }
-                *buf += r#"</div>"#;
 
                 // ノート
                 *buf += r#"<div class="row py-2"#;
@@ -76,29 +83,31 @@ impl Component for TicketNote {
                 }
                 *buf += r#"</div>"#;
 
-                *buf += r#"<div class="row py-3 mt-2 bg-light">"#;
-                {
-                    *buf += r#"<div class="col">"#;
+                if self.can_update {
+                    *buf += r#"<div class="row py-3 mt-2 bg-light">"#;
                     {
-                        *buf += r#"<button class="btn btn-primary" type="submit">"#;
+                        *buf += r#"<div class="col">"#;
                         {
-                            *buf += r#"<img class="icon" src="/static/ionicons/save-outline.svg">&nbsp;更新"#;
-                        }
-                        *buf += r#"</button>&nbsp;&nbsp;"#;
-
-                        if let Some(id) = &t.id {
-                            *buf += r#"<a class="btn btn-primary" href="/ticket?id="#;
-                            *buf += id;
-                            *buf += r#"&tab=note" role="button">"#;
+                            *buf += r#"<button class="btn btn-primary" type="submit">"#;
                             {
-                                *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
+                                *buf += r#"<img class="icon" src="/static/ionicons/save-outline.svg">&nbsp;更新"#;
                             }
-                            *buf += r#"</a>"#;
+                            *buf += r#"</button>&nbsp;&nbsp;"#;
+
+                            if let Some(id) = &t.id {
+                                *buf += r#"<a class="btn btn-primary" href="/ticket?id="#;
+                                *buf += id;
+                                *buf += r#"&tab=note" role="button">"#;
+                                {
+                                    *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
+                                }
+                                *buf += r#"</a>"#;
+                            }
                         }
+                        *buf += r#"</div>"#;
                     }
                     *buf += r#"</div>"#;
                 }
-                *buf += r#"</div>"#;
 
                 *buf += r#"<input type="hidden" name="ticket_id" value=""#;
                 if let Some(id) = &t.id {

@@ -23,7 +23,7 @@ impl TicketBody {
                 can_update,
                 can_delete,
             }),
-            ticket_note: Box::new(TicketNote {}),
+            ticket_note: Box::new(TicketNote { can_update }),
             ticket_comment: Box::new(TicketComment {}),
             ticket_history: Box::new(TicketHistory {}),
             footer: Box::new(Footer {}),

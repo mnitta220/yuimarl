@@ -133,32 +133,35 @@ impl Component for TicketInfo {
 
                                                 *buf += r#"<td>"#;
                                                 {
-                                                    *buf += r#"<a href="javascript:removeCharge("#;
-                                                    *buf += &i.to_string();
-                                                    *buf += r#")">"#;
-                                                    {
-                                                        *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
-                                                    }
-                                                    *buf += r#"</a>"#;
-
-                                                    if i != 0 {
-                                                        *buf += r#"&nbsp;<a href="javascript:chargeSeqUp("#;
+                                                    if self.can_update {
+                                                        *buf +=
+                                                            r#"<a href="javascript:removeCharge("#;
                                                         *buf += &i.to_string();
                                                         *buf += r#")">"#;
                                                         {
-                                                            *buf += r#"<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">"#;
+                                                            *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
                                                         }
                                                         *buf += r#"</a>"#;
-                                                    }
 
-                                                    if (i + 1) != props.ticket_members.len() {
-                                                        *buf += r#"&nbsp;<a href="javascript:chargeSeqDown("#;
-                                                        *buf += &i.to_string();
-                                                        *buf += r#")">"#;
-                                                        {
-                                                            *buf += r#"<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
+                                                        if i != 0 {
+                                                            *buf += r#"&nbsp;<a href="javascript:chargeSeqUp("#;
+                                                            *buf += &i.to_string();
+                                                            *buf += r#")">"#;
+                                                            {
+                                                                *buf += r#"<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">"#;
+                                                            }
+                                                            *buf += r#"</a>"#;
                                                         }
-                                                        *buf += r#"</a>"#;
+
+                                                        if (i + 1) != props.ticket_members.len() {
+                                                            *buf += r#"&nbsp;<a href="javascript:chargeSeqDown("#;
+                                                            *buf += &i.to_string();
+                                                            *buf += r#")">"#;
+                                                            {
+                                                                *buf += r#"<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
+                                                            }
+                                                            *buf += r#"</a>"#;
+                                                        }
                                                     }
                                                 }
                                                 *buf += r#"</td>"#;
@@ -174,11 +177,13 @@ impl Component for TicketInfo {
                         }
                         *buf += r#"</div>"#;
 
-                        *buf += r#"<a href="javascript:clickAddCharge();">"#;
-                        {
-                            *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="担当者を追加">"#;
+                        if self.can_update {
+                            *buf += r#"<a href="javascript:clickAddCharge();">"#;
+                            {
+                                *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="担当者を追加">"#;
+                            }
+                            *buf += r#"</a>"#;
                         }
-                        *buf += r#"</a>"#;
                     }
                     *buf += r#"</div>"#;
                 }
@@ -380,26 +385,30 @@ impl Component for TicketInfo {
                             *buf += &t.id_disp.clone().unwrap();
                             *buf += r#"</a>&nbsp;:&nbsp;"#;
                             *buf += &t.name.clone().unwrap();
-                            *buf += r#"&nbsp;"#;
-                            *buf += r#"<a href="javascript:removeParent();">"#;
-                            {
-                                *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
-                            }
-                            *buf += r#"</a>"#;
+                            if self.can_update {
+                                *buf += r#"&nbsp;"#;
+                                *buf += r#"<a href="javascript:removeParent();">"#;
+                                {
+                                    *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                                }
+                                *buf += r#"</a>"#;
 
-                            *buf += r#"<input type="hidden" id="parent" name="parent" value=""#;
-                            if let Some(p) = &t.id {
-                                *buf += p;
+                                *buf += r#"<input type="hidden" id="parent" name="parent" value=""#;
+                                if let Some(p) = &t.id {
+                                    *buf += p;
+                                }
+                                *buf += r#"">"#;
                             }
-                            *buf += r#"">"#;
                         } else {
                             *buf += r#"<p class="my-1">"#;
                             {
-                                *buf += r#"<a href="javascript:clickAddParent();">"#;
-                                {
-                                    *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">"#;
+                                if self.can_update {
+                                    *buf += r#"<a href="javascript:clickAddParent();">"#;
+                                    {
+                                        *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">"#;
+                                    }
+                                    *buf += r#"</a>"#;
                                 }
-                                *buf += r#"</a>"#;
                             }
                             *buf += r#"</p>"#;
 
@@ -502,13 +511,15 @@ impl Component for TicketInfo {
 
                                                         *buf += r#"<td>"#;
                                                         {
-                                                            *buf += r#"<a href="javascript:removeDeliverable("#;
-                                                            *buf += &i.to_string();
-                                                            *buf += r#")">"#;
-                                                            {
-                                                                *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                                                            if self.can_update {
+                                                                *buf += r#"<a href="javascript:removeDeliverable("#;
+                                                                *buf += &i.to_string();
+                                                                *buf += r#")">"#;
+                                                                {
+                                                                    *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                                                                }
+                                                                *buf += r#"</a>"#;
                                                             }
-                                                            *buf += r#"</a>"#;
                                                         }
                                                         *buf += r#"</td>"#;
                                                     }
@@ -525,11 +536,13 @@ impl Component for TicketInfo {
                         }
                         *buf += r#"</div>"#;
 
-                        *buf += r#"<a href="javascript:clickDeliverables();">"#;
-                        {
-                            *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="成果物を追加">"#;
+                        if self.can_update {
+                            *buf += r#"<a href="javascript:clickDeliverables();">"#;
+                            {
+                                *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="成果物を追加">"#;
+                            }
+                            *buf += r#"</a>"#;
                         }
-                        *buf += r#"</a>"#;
                     }
                     *buf += r#"</div>"#;
                 }
@@ -549,9 +562,9 @@ impl Component for TicketInfo {
             }
             *buf += r#"</div>"#;
 
-            *buf += r#"<div class="row py-3 mt-2 bg-light">"#;
-            {
-                if props.action == crate::Action::Create {
+            if props.action == crate::Action::Create {
+                *buf += r#"<div class="row py-3 mt-2 bg-light">"#;
+                {
                     *buf += r#"<div class="col">"#;
                     {
                         *buf += r#"<button id="btnSave" class="btn btn-primary" type="button">"#;
@@ -564,57 +577,62 @@ impl Component for TicketInfo {
 
                     *buf += r#"<input type="hidden" name="ticket_id" value="">"#;
                     *buf += r#"<input type="hidden" name="timestamp" value="">"#;
-                } else {
-                    if let Some(t) = &props.ticket {
-                        *buf += r#"<div class="col-9">"#;
-                        {
-                            if self.can_update {
+                }
+                *buf += r#"</div>"#;
+            } else {
+                if self.can_update {
+                    *buf += r#"<div class="row py-3 mt-2 bg-light">"#;
+                    {
+                        if let Some(t) = &props.ticket {
+                            *buf += r#"<div class="col-9">"#;
+                            {
                                 *buf += r#"<button id="btnSave" class="btn btn-primary" type="button">"#;
                                 {
                                     *buf += r#"<img class="icon" src="/static/ionicons/save-outline.svg">"#;
                                     *buf += r#"&nbsp;更新"#;
                                 }
                                 *buf += r#"</button>&nbsp;&nbsp;"#;
-                            }
 
+                                if let Some(id) = &t.id {
+                                    *buf += r#"<a class="btn btn-primary" href="/ticket?id="#;
+                                    *buf += id;
+                                    *buf += r#"" role="button">"#;
+                                    {
+                                        *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
+                                    }
+                                    *buf += r#"</a>"#;
+                                }
+                            }
+                            *buf += r#"</div>"#;
+
+                            *buf += r#"<div class="col-3 text-end">"#;
+                            {
+                                if self.can_delete {
+                                    *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#ticketDelModal">"##;
+                                    {
+                                        *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
+                                    }
+                                    *buf += r#"</button>"#;
+                                }
+                            }
+                            *buf += r#"</div>"#;
+
+                            *buf +=
+                                r#"<input type="hidden" id="ticket_id" name="ticket_id" value=""#;
                             if let Some(id) = &t.id {
-                                *buf += r#"<a class="btn btn-primary" href="/ticket?id="#;
                                 *buf += id;
-                                *buf += r#"" role="button">"#;
-                                {
-                                    *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
-                                }
-                                *buf += r#"</a>"#;
                             }
-                        }
-                        *buf += r#"</div>"#;
-
-                        *buf += r#"<div class="col-3 text-end">"#;
-                        {
-                            if self.can_delete {
-                                *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#ticketDelModal">"##;
-                                {
-                                    *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
-                                }
-                                *buf += r#"</button>"#;
+                            *buf += r#"">"#;
+                            *buf += r#"<input type="hidden" name="timestamp" value=""#;
+                            if let Some(up) = &t.updated_at {
+                                *buf += &up.timestamp_micros().to_string();
                             }
+                            *buf += r#"">"#;
                         }
-                        *buf += r#"</div>"#;
-
-                        *buf += r#"<input type="hidden" id="ticket_id" name="ticket_id" value=""#;
-                        if let Some(id) = &t.id {
-                            *buf += id;
-                        }
-                        *buf += r#"">"#;
-                        *buf += r#"<input type="hidden" name="timestamp" value=""#;
-                        if let Some(up) = &t.updated_at {
-                            *buf += &up.timestamp_micros().to_string();
-                        }
-                        *buf += r#"">"#;
                     }
+                    *buf += r#"</div>"#;
                 }
             }
-            *buf += r#"</div>"#;
 
             *buf += r#"<input type="hidden" name="action" id="action" value=""#;
             *buf += &props.action.to_string();

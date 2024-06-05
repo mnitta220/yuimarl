@@ -164,11 +164,19 @@ impl Component for ProjectInfo {
                     if let Some(p) = &props.project {
                         *buf += r#"<div class="col-9">"#;
                         {
-                            *buf += r#"<button class="btn btn-primary" type="submit">"#;
-                            {
-                                *buf += r#"<img class="icon" src="/static/ionicons/save-outline.svg">&nbsp;更新"#;
+                            if let Some(m) = &props.project_member {
+                                if let Some(r) = m.role {
+                                    if r == model::project::ProjectRole::Owner as i32
+                                        || r == model::project::ProjectRole::Administrator as i32
+                                    {
+                                        *buf += r#"<button class="btn btn-primary" type="submit">"#;
+                                        {
+                                            *buf += r#"<img class="icon" src="/static/ionicons/save-outline.svg">&nbsp;更新"#;
+                                        }
+                                        *buf += r#"</button>&nbsp;&nbsp;"#;
+                                    }
+                                }
                             }
-                            *buf += r#"</button>&nbsp;&nbsp;"#;
 
                             if let Some(id) = &p.id {
                                 *buf += r#"<a class="btn btn-primary" href="/project?id="#;
@@ -339,7 +347,7 @@ impl Component for ProjectInfo {
         *buf += r#"</div>"#;
 
         // プロジェクト削除ダイアログ
-        *buf += r#"<div class="modal fade" id="projectDelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">"#;
+        *buf += r#"<div class="modal fade" id="projectDelModal" tabindex="-1" aria-labelledby="projectDelModalLabel" aria-hidden="true">"#;
         {
             *buf += r#"<div class="modal-dialog">"#;
             {

@@ -25,116 +25,124 @@ impl Component for HomeBody {
             *buf += r#"<main>"#;
             {
                 // お知らせ
-                *buf += r#"<div class="pt-3">"#;
-                {
-                    *buf += r#"<section id="news">"#;
+                if props.news.len() > 0 {
+                    *buf += r#"<div class="pt-3">"#;
                     {
-                        *buf += r#"<div class="container">"#;
+                        *buf += r#"<section id="news">"#;
                         {
-                            *buf += r#"<div class="row">"#;
+                            *buf += r#"<div class="container">"#;
                             {
-                                *buf += r#"<div class="col-md-3">"#;
+                                *buf += r#"<div class="row">"#;
                                 {
-                                    *buf += r#"<h3>お知らせ</h3>"#;
-                                }
-                                *buf += r#"</div>"#;
-
-                                *buf += r#"<div class="col-md-9 py-0">"#;
-                                {
-                                    *buf += r#"<dl class="row">"#;
+                                    *buf += r#"<div class="col-md-3">"#;
                                     {
-                                        *buf += r#"<div class="col">"#;
-                                        {
-                                            *buf += r#"<table class="table table-sm table-hover">"#;
-                                            {
-                                                *buf += r#"<tbody>"#;
-                                                {
-                                                    *buf += r#"<tr>"#;
-                                                    {
-                                                        *buf += r#"<td>"#;
-                                                        {
-                                                            *buf += r#"<div class="row">"#;
-                                                            {
-                                                                *buf += r#"<div class="col-md-3">"#;
-                                                                {
-                                                                    *buf += r#"<small>2024/09/06 17:03</small>"#;
-                                                                }
-                                                                *buf += r#"</div>"#;
-                                                                *buf += r#"<div class="col-md-9">"#;
-                                                                {
-                                                                    *buf += r#"チケット&nbsp;"#;
-                                                                    *buf += r#"<a href="">BN10 : たこやき模擬店</a>"#;
-                                                                    *buf += r#"&nbsp;が更新されました。"#;
-                                                                }
-                                                                *buf += r#"</div>"#;
-                                                            }
-                                                            *buf += r#"</div>"#;
-                                                        }
-                                                        *buf += r#"</td>"#;
-
-                                                        *buf += r#"<td class="text-right">"#;
-                                                        {
-                                                            *buf += r#"<a href="step02.html" title="閉じる">"#;
-                                                            {
-                                                                *buf += r#"<img class="icon" src="/static/ionicons/close-outline.svg">"#;
-                                                            }
-                                                            *buf += r#"</a>"#;
-                                                        }
-                                                        *buf += r#"</td>"#;
-                                                    }
-                                                    *buf += r#"</tr>"#;
-
-                                                    *buf += r#"<tr>"#;
-                                                    {
-                                                        *buf += r#"<td>"#;
-                                                        {
-                                                            *buf += r#"<div class="row">"#;
-                                                            {
-                                                                *buf += r#"<div class="col-md-3">"#;
-                                                                {
-                                                                    *buf += r#"<small>2024/09/08 15:41</small>"#;
-                                                                }
-                                                                *buf += r#"</div>"#;
-                                                                *buf += r#"<div class="col-md-9">"#;
-                                                                {
-                                                                    *buf += r#"プロジェクト&nbsp;"#;
-                                                                    *buf += r#"<a href="">英語強化プロジェクト</a>"#;
-                                                                    *buf += r#"&nbsp;に追加されました。"#;
-                                                                }
-                                                                *buf += r#"</div>"#;
-                                                            }
-                                                            *buf += r#"</div>"#;
-                                                        }
-                                                        *buf += r#"</td>"#;
-                                                        *buf += r#"<td class="text-right">"#;
-                                                        {
-                                                            *buf += r#"<a href="step02.html" title="閉じる">"#;
-                                                            {
-                                                                *buf += r#"<img class="icon" src="/static/ionicons/close-outline.svg">"#;
-                                                            }
-                                                            *buf += r#"</a>"#;
-                                                        }
-                                                        *buf += r#"</td>"#;
-                                                    }
-                                                    *buf += r#"</tr>"#;
-                                                }
-                                                *buf += r#"</tbody>"#;
-                                            }
-                                            *buf += r#"</table>"#;
-                                        }
-                                        *buf += r#"</div>"#;
+                                        *buf += r#"<h3>お知らせ</h3>"#;
                                     }
-                                    *buf += r#"</dl>"#;
+                                    *buf += r#"</div>"#;
+
+                                    *buf += r#"<div class="col-md-9 py-0">"#;
+                                    {
+                                        *buf += r#"<dl class="row">"#;
+                                        {
+                                            *buf += r#"<div class="col">"#;
+                                            {
+                                                *buf +=
+                                                    r#"<table class="table table-sm table-hover">"#;
+                                                {
+                                                    *buf += r#"<tbody>"#;
+                                                    {
+                                                        *buf += r#"<tr>"#;
+                                                        {
+                                                            *buf += r#"<td>"#;
+                                                            {
+                                                                *buf += r#"<div class="row">"#;
+                                                                {
+                                                                    *buf +=
+                                                                        r#"<div class="col-md-3">"#;
+                                                                    {
+                                                                        *buf += r#"<small>2024/09/06 17:03</small>"#;
+                                                                    }
+                                                                    *buf += r#"</div>"#;
+                                                                    *buf +=
+                                                                        r#"<div class="col-md-9">"#;
+                                                                    {
+                                                                        *buf += r#"チケット&nbsp;"#;
+                                                                        *buf += r#"<a href="">BN10 : たこやき模擬店</a>"#;
+                                                                        *buf += r#"&nbsp;が更新されました。"#;
+                                                                    }
+                                                                    *buf += r#"</div>"#;
+                                                                }
+                                                                *buf += r#"</div>"#;
+                                                            }
+                                                            *buf += r#"</td>"#;
+
+                                                            *buf += r#"<td class="text-right">"#;
+                                                            {
+                                                                *buf += r#"<a href="step02.html" title="閉じる">"#;
+                                                                {
+                                                                    *buf += r#"<img class="icon" src="/static/ionicons/close-outline.svg">"#;
+                                                                }
+                                                                *buf += r#"</a>"#;
+                                                            }
+                                                            *buf += r#"</td>"#;
+                                                        }
+                                                        *buf += r#"</tr>"#;
+
+                                                        *buf += r#"<tr>"#;
+                                                        {
+                                                            *buf += r#"<td>"#;
+                                                            {
+                                                                *buf += r#"<div class="row">"#;
+                                                                {
+                                                                    *buf +=
+                                                                        r#"<div class="col-md-3">"#;
+                                                                    {
+                                                                        *buf += r#"<small>2024/09/08 15:41</small>"#;
+                                                                    }
+                                                                    *buf += r#"</div>"#;
+                                                                    *buf +=
+                                                                        r#"<div class="col-md-9">"#;
+                                                                    {
+                                                                        *buf +=
+                                                                            r#"プロジェクト&nbsp;"#;
+                                                                        *buf += r#"<a href="">英語強化プロジェクト</a>"#;
+                                                                        *buf += r#"&nbsp;に追加されました。"#;
+                                                                    }
+                                                                    *buf += r#"</div>"#;
+                                                                }
+                                                                *buf += r#"</div>"#;
+                                                            }
+                                                            *buf += r#"</td>"#;
+                                                            *buf += r#"<td class="text-right">"#;
+                                                            {
+                                                                *buf += r#"<a href="step02.html" title="閉じる">"#;
+                                                                {
+                                                                    *buf += r#"<img class="icon" src="/static/ionicons/close-outline.svg">"#;
+                                                                }
+                                                                *buf += r#"</a>"#;
+                                                            }
+                                                            *buf += r#"</td>"#;
+                                                        }
+                                                        *buf += r#"</tr>"#;
+                                                    }
+                                                    *buf += r#"</tbody>"#;
+                                                }
+                                                *buf += r#"</table>"#;
+                                            }
+                                            *buf += r#"</div>"#;
+                                        }
+                                        *buf += r#"</dl>"#;
+                                    }
+                                    *buf += r#"</div>"#;
                                 }
                                 *buf += r#"</div>"#;
                             }
                             *buf += r#"</div>"#;
                         }
-                        *buf += r#"</div>"#;
+                        *buf += r#"</section>"#;
                     }
-                    *buf += r#"</section>"#;
+                    *buf += r#"</div>"#;
                 }
-                *buf += r#"</div>"#;
 
                 *buf += r#"<form action="/ticket/add" method="POST">"#;
                 {

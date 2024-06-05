@@ -1,5 +1,5 @@
 use super::history::{History, HistoryEvent, MAX_HISTORY};
-use super::project::Project;
+use super::project::{Project, ProjectMember};
 use super::session::Session;
 use anyhow::Result;
 use chrono::{DateTime, Utc};
@@ -33,7 +33,6 @@ pub struct Ticket {
     pub history: Option<String>,           // 更新履歴 (JSON)
     pub created_at: Option<DateTime<Utc>>, // 作成日時
     pub updated_at: Option<DateTime<Utc>>, // 更新日時
-    pub deleted: bool,                     // 削除フラグ
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -69,7 +68,6 @@ impl Ticket {
             history: None,
             created_at: None,
             updated_at: None,
-            deleted: false,
         }
     }
 
@@ -660,11 +658,13 @@ impl Ticket {
     }
 
     pub async fn find_ticket_and_project(
-        id: &str,
+        ticket_id: &str,
+        uid: &str,
         db: &FirestoreDb,
     ) -> Result<(
         Option<Ticket>,
         Option<Project>,
+        Option<ProjectMember>,
         Vec<TicketMember>,
         Option<Ticket>,
         Vec<Ticket>,
@@ -674,7 +674,7 @@ impl Ticket {
             .select()
             .by_id_in(COLLECTION_NAME)
             .obj()
-            .one(id)
+            .one(ticket_id)
             .await
         {
             Ok(ret) => ret,
@@ -685,9 +685,18 @@ impl Ticket {
         };
 
         let mut project: Option<Project> = None;
+        let mut project_member: Option<ProjectMember> = None;
         if let Some(t) = &ticket {
             if let Some(project_id) = &t.project_id {
-                project = super::project::Project::find(&project_id, db).await?;
+                match super::project::Project::find(&project_id, db).await {
+                    Ok(p) => {
+                        project = p;
+                    }
+                    Err(e) => {
+                        return Err(anyhow::anyhow!(e.to_string()));
+                    }
+                }
+                project_member = super::project::ProjectMember::find(project_id, uid, db).await?;
             }
         }
 
@@ -750,14 +759,9 @@ impl Ticket {
         let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
             .fluent()
             .select()
-            .fields(paths!(Ticket::{id, id_disp, name, progress, priority, deleted}))
+            .fields(paths!(Ticket::{id, id_disp, name, progress, priority}))
             .from(COLLECTION_NAME)
-            .filter(|q| {
-                q.for_all([
-                    q.field(path!(Ticket::parent_id)).eq(&id),
-                    q.field(path!(Ticket::deleted)).eq(false),
-                ])
-            })
+            .filter(|q| q.for_all([q.field(path!(Ticket::parent_id)).eq(&ticket_id)]))
             .order_by([(path!(Ticket::id), FirestoreQueryDirection::Ascending)])
             .obj()
             .stream_query_with_errors()
@@ -778,7 +782,14 @@ impl Ticket {
 
         tracing::debug!("Get by id {:?}", ticket);
 
-        Ok((ticket, project, ticket_members, parent, children))
+        Ok((
+            ticket,
+            project,
+            project_member,
+            ticket_members,
+            parent,
+            children,
+        ))
     }
 
     pub async fn search_by_id_disp(
@@ -789,13 +800,12 @@ impl Ticket {
         let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
             .fluent()
             .select()
-            .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority, deleted}))
+            .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority}))
             .from(COLLECTION_NAME)
             .filter(|q| {
                 q.for_all([
                     q.field(path!(Ticket::project_id)).eq(&project_id),
                     q.field(path!(Ticket::id_disp)).eq(&id_disp.trim()),
-                    q.field(path!(Ticket::deleted)).eq(false),
                 ])
             })
             .obj()
@@ -830,12 +840,11 @@ impl Ticket {
         let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
             .fluent()
             .select()
-            .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority, start_date, end_date, parent_id, deleted}))
+            .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority, start_date, end_date, parent_id}))
             .from(COLLECTION_NAME)
             .filter(|q| {
                 q.for_all([
-                    q.field(path!(Ticket::project_id)).eq(&project_id),
-                    q.field(path!(Ticket::deleted)).eq(false),
+                    q.field(path!(Ticket::project_id)).eq(&project_id)
                 ])
             })
             .order_by([
@@ -916,6 +925,69 @@ impl Ticket {
         }
 
         Ok(serched)
+    }
+
+    pub async fn delete(
+        input: &crate::handlers::ticket::TicketInput,
+        db: &FirestoreDb,
+    ) -> Result<()> {
+        let mut transaction = match db.begin_transaction().await {
+            Ok(t) => t,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        if let Err(e) = db
+            .fluent()
+            .delete()
+            .from(COLLECTION_NAME)
+            .document_id(&input.ticket_id)
+            .add_to_transaction(&mut transaction)
+        {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+
+        let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(TicketMember::{id, ticket_id, uid, seq}))
+            .from(COLLECTION_MEMBER)
+            .filter(|q| q.for_all([q.field(path!(TicketMember::ticket_id)).eq(&input.ticket_id)]))
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let members: Vec<TicketMember> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        for member in members {
+            if let Err(e) = db
+                .fluent()
+                .delete()
+                .from(super::ticket::COLLECTION_MEMBER)
+                .document_id(&member.id.unwrap())
+                .add_to_transaction(&mut transaction)
+            {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        }
+
+        if let Err(e) = transaction.commit().await {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+
+        Ok(())
     }
 }
 

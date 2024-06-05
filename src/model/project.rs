@@ -756,7 +756,7 @@ impl Project {
             let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
                 .fluent()
                 .select()
-                .fields(paths!(Ticket::{id, project_id, progress, priority, deleted}))
+                .fields(paths!(Ticket::{id, project_id, progress, priority}))
                 .from(super::ticket::COLLECTION_NAME)
                 .filter(|q| q.for_all([q.field(path!(Ticket::project_id)).eq(&prj.id)]))
                 .obj()

@@ -318,3 +318,8 @@ $('#finished').change(function () {
         $('#progress').val(100);
     }
 })
+
+$('#btnTicketDel').on('click', function () {
+    $("#action").val('Delete');
+    $('#post_ticket').submit();
+});

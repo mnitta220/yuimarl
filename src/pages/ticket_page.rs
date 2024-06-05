@@ -7,12 +7,12 @@ pub struct TicketPage {
 }
 
 impl TicketPage {
-    pub fn new(props: page::Props) -> Self {
+    pub fn new(props: page::Props, can_update: bool, can_delete: bool) -> Self {
         // Construct the components of the HTML page.
         let mut page = page::Page::new();
 
         // Construct the components of the HTML body.
-        let body = TicketBody::new();
+        let body = TicketBody::new(can_update, can_delete);
         page.body = Some(Box::new(body));
 
         TicketPage { props, page }

@@ -16,10 +16,13 @@ pub struct TicketBody {
 }
 
 impl TicketBody {
-    pub fn new() -> Self {
+    pub fn new(can_update: bool, can_delete: bool) -> Self {
         TicketBody {
             nav: Box::new(Nav {}),
-            ticket_info: Box::new(TicketInfo {}),
+            ticket_info: Box::new(TicketInfo {
+                can_update,
+                can_delete,
+            }),
             ticket_note: Box::new(TicketNote {}),
             ticket_comment: Box::new(TicketComment {}),
             ticket_history: Box::new(TicketHistory {}),
@@ -150,7 +153,7 @@ impl Component for TicketBody {
             *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
             match &props.tab {
                 Tab::Info => {
-                    *buf += r#"<script src="/static/js/ticket0017.js"></script>"#;
+                    *buf += r#"<script src="/static/js/ticket0023.js"></script>"#;
                 }
                 Tab::Note => {
                     *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;

@@ -1,6 +1,9 @@
 use crate::{components::Component, model, Props};
 
-pub struct TicketInfo {}
+pub struct TicketInfo {
+    pub can_update: bool,
+    pub can_delete: bool,
+}
 
 impl Component for TicketInfo {
     fn write(&self, props: &Props, buf: &mut String) {
@@ -565,14 +568,14 @@ impl Component for TicketInfo {
                     if let Some(t) = &props.ticket {
                         *buf += r#"<div class="col-9">"#;
                         {
-                            *buf +=
-                                r#"<button id="btnSave" class="btn btn-primary" type="button">"#;
-                            {
-                                *buf +=
-                                    r#"<img class="icon" src="/static/ionicons/save-outline.svg">"#;
-                                *buf += r#"&nbsp;更新"#;
+                            if self.can_update {
+                                *buf += r#"<button id="btnSave" class="btn btn-primary" type="button">"#;
+                                {
+                                    *buf += r#"<img class="icon" src="/static/ionicons/save-outline.svg">"#;
+                                    *buf += r#"&nbsp;更新"#;
+                                }
+                                *buf += r#"</button>&nbsp;&nbsp;"#;
                             }
-                            *buf += r#"</button>&nbsp;&nbsp;"#;
 
                             if let Some(id) = &t.id {
                                 *buf += r#"<a class="btn btn-primary" href="/ticket?id="#;
@@ -588,11 +591,13 @@ impl Component for TicketInfo {
 
                         *buf += r#"<div class="col-3 text-end">"#;
                         {
-                            *buf += r#"<button class="btn btn-secondary" type="submit">"#;
-                            {
-                                *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
+                            if self.can_delete {
+                                *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#ticketDelModal">"##;
+                                {
+                                    *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
+                                }
+                                *buf += r#"</button>"#;
                             }
-                            *buf += r#"</button>"#;
                         }
                         *buf += r#"</div>"#;
 
@@ -762,6 +767,44 @@ impl Component for TicketInfo {
                         *buf += r#"<button class="btn btn-primary" id="btnAddDeliverable" type="button">"#;
                         {
                             *buf += r#"<img class="icon" src="/static/ionicons/add-circle-outline2.svg">&nbsp;追加"#;
+                        }
+                        *buf += r#"</button>"#;
+                    }
+                    *buf += r#"</div>"#;
+                }
+                *buf += r#"</div>"#;
+            }
+            *buf += r#"</div>"#;
+        }
+        *buf += r#"</div>"#;
+
+        // チケット削除ダイアログ
+        *buf += r#"<div class="modal fade" id="ticketDelModal" tabindex="-1" aria-labelledby="ticketDelModalLabel" aria-hidden="true">"#;
+        {
+            *buf += r#"<div class="modal-dialog">"#;
+            {
+                *buf += r#"<div class="modal-content">"#;
+                {
+                    *buf += r#"<div class="modal-header">"#;
+                    {
+                        *buf += r#"<h1 class="modal-title fs-5" id="ticketDelModalLabel">プロジェクト削除</h1>"#;
+                        *buf += r#"<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="modal-body">"#;
+                    {
+                        *buf += r#"<p>チケットを削除してもよろしいですか？</p>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="modal-footer">"#;
+                    {
+                        *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
+                        *buf +=
+                            r#"<button id="btnTicketDel" class="btn btn-danger" type="button">"#;
+                        {
+                            *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
                         }
                         *buf += r#"</button>"#;
                     }

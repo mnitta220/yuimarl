@@ -72,7 +72,13 @@ impl ProjectValidation {
 
                 let mut ok = false;
                 if let Some(p) = p {
-                    if p.deleted == false {
+                    if p.deleted {
+                        let mut validation = Self::new();
+                        validation.project_info = Some(
+                            "プロジェクトが削除されたため、更新できませんでした。".to_string(),
+                        );
+                        return Ok(Some(validation));
+                    } else {
                         if let Some(t) = p.updated_at {
                             if t.timestamp_micros().to_string() == input.timestamp {
                                 ok = true;

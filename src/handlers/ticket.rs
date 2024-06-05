@@ -51,7 +51,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
     props.tickets = tickets;
     props.session = Some(session);
 
-    let mut page = TicketPage::new(props);
+    let mut page = TicketPage::new(props, false, false);
 
     Ok(Html(page.write()))
 }
@@ -91,13 +91,42 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
         }
     }
 
-    let (ticket, project, members, parent, children) =
-        match model::ticket::Ticket::find_ticket_and_project(&id, &db).await {
+    let (ticket, project, project_member, members, parent, children) =
+        match model::ticket::Ticket::find_ticket_and_project(&id, &session.uid, &db).await {
             Ok(ticket) => ticket,
             Err(e) => {
                 return Err(AppError(anyhow::anyhow!(e)));
             }
         };
+
+    let mut can_update = false;
+    let mut can_delete = false;
+    // チケットを更新できるのは、作成者、担当者、オーナー、管理者
+    // チケットを削除できるのは、作成者、オーナー、管理者
+    if let Some(pmem) = project_member {
+        if let Some(r) = pmem.role {
+            if r == model::project::ProjectRole::Owner as i32
+                || r == model::project::ProjectRole::Administrator as i32
+            {
+                can_update = true;
+                can_delete = true;
+            }
+        }
+    }
+    if can_delete == false {
+        if let Some(t) = &ticket {
+            if let Some(o) = &t.owner {
+                if o == &session.uid {
+                    can_update = true;
+                    can_delete = true;
+                }
+            }
+            let member = members.iter().find(|m| m.uid == session.uid);
+            if member.is_some() {
+                can_update = true;
+            }
+        }
+    }
 
     props.ticket = ticket;
     props.project = project;
@@ -106,7 +135,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
     props.ticket_children = children;
 
     props.session = Some(session);
-    let mut page = TicketPage::new(props);
+    let mut page = TicketPage::new(props, can_update, can_delete);
 
     Ok(Html(page.write()))
 }
@@ -183,10 +212,10 @@ pub async fn post(
         }
     };
 
-    let project = model::project::Project::find(&input.project_id, &db).await?;
-    if project.is_none() {
-        return Ok(Html(LoginPage::write()));
-    }
+    //let project = model::project::Project::find(&input.project_id, &db).await?;
+    //if project.is_none() {
+    //    return Ok(Html(LoginPage::write()));
+    //}
 
     let mut ticket_members = Vec::new();
     let empty_vec: Vec<serde_json::Value> = Vec::new();
@@ -200,21 +229,55 @@ pub async fn post(
         i += 1;
     }
 
-    let v = match validation::ticket::TicketValidation::validate_post(
-        &input,
-        &session,
-        action.clone(),
-        &db,
-    )
-    .await
-    {
-        Ok(v) => v,
-        Err(e) => {
-            return Err(AppError(e));
-        }
-    };
+    let (validation, project, project_member, ticket) =
+        match validation::ticket::TicketValidation::validate_post(
+            &input,
+            &session,
+            action.clone(),
+            &db,
+        )
+        .await
+        {
+            Ok(v) => v,
+            Err(e) => {
+                return Err(AppError(e));
+            }
+        };
 
-    if let Some(v) = v {
+    if project.is_none() {
+        return Ok(Html(LoginPage::write()));
+    }
+
+    if let Some(v) = validation {
+        let mut can_update = false;
+        let mut can_delete = false;
+        // チケットを更新できるのは、作成者、担当者、オーナー、管理者
+        // チケットを削除できるのは、作成者、オーナー、管理者
+        if let Some(pmem) = project_member {
+            if let Some(r) = pmem.role {
+                if r == model::project::ProjectRole::Owner as i32
+                    || r == model::project::ProjectRole::Administrator as i32
+                {
+                    can_update = true;
+                    can_delete = true;
+                }
+            }
+        }
+        if can_delete == false {
+            if let Some(t) = &ticket {
+                if let Some(o) = &t.owner {
+                    if o == &session.uid {
+                        can_update = true;
+                        can_delete = true;
+                    }
+                }
+                let member = ticket_members.iter().find(|m| m.uid == session.uid);
+                if member.is_some() {
+                    can_update = true;
+                }
+            }
+        }
+
         let mut ticket = model::ticket::Ticket::new();
         ticket.name = Some(input.name);
         ticket.description = Some(input.description);
@@ -227,7 +290,7 @@ pub async fn post(
         props.ticket = Some(ticket);
         props.ticket_validation = Some(v);
         props.ticket_members = ticket_members;
-        let mut page = TicketPage::new(props);
+        let mut page = TicketPage::new(props, can_update, can_delete);
         return Ok(Html(page.write()));
     }
 
@@ -251,6 +314,12 @@ pub async fn post(
             if let Err(e) =
                 model::ticket::Ticket::update(&input, &session, &ticket_members, &db).await
             {
+                return Err(AppError(anyhow::anyhow!(e)));
+            }
+        }
+        crate::Action::Delete => {
+            // チケット削除
+            if let Err(e) = model::ticket::Ticket::delete(&input, &db).await {
                 return Err(AppError(anyhow::anyhow!(e)));
             }
         }

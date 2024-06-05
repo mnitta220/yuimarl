@@ -176,7 +176,9 @@ impl DbCheckValidation {
             }
         };
 
-        match model::ticket::Ticket::find_ticket_and_project(&ticket.id.unwrap(), &db).await {
+        match model::ticket::Ticket::find_ticket_and_project(&ticket.id.unwrap(), &session.uid, &db)
+            .await
+        {
             Ok(ticket) => ticket,
             Err(e) => {
                 return Err(anyhow::anyhow!(e));

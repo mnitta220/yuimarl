@@ -475,7 +475,11 @@ impl Project {
                                 if let Err(e) = db
                                     .fluent()
                                     .update()
-                                    .fields(paths!(ProjectMember::last_used))
+                                    .fields(paths!(
+                                        ProjectMember::email,
+                                        ProjectMember::name,
+                                        ProjectMember::role
+                                    ))
                                     .in_col(&COLLECTION_MEMBER)
                                     .document_id(&cur.id.as_ref().unwrap())
                                     .object(&cur)

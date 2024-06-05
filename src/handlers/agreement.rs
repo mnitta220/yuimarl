@@ -1,6 +1,9 @@
 use crate::{
     model,
-    pages::{agreement_page::AgreementPage, home_page::HomePage, login_page::LoginPage, page},
+    pages::{
+        agreement_page::AgreementPage, home_page::HomePage, login_page::LoginPage, page,
+        user_name_page::UserNamePage,
+    },
     AppError,
 };
 use anyhow::Result;
@@ -52,6 +55,11 @@ pub async fn post(cookies: Cookies) -> Result<Html<String>, AppError> {
 
     if let Err(e) = model::user::User::insert(&session, &db).await {
         return Err(AppError(anyhow::anyhow!(e)));
+    }
+
+    if session.name.trim().is_empty() {
+        let mut page = UserNamePage::new(props);
+        return Ok(Html(page.write()));
     }
 
     props.session = Some(session);

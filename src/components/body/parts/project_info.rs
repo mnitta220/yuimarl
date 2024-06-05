@@ -103,12 +103,16 @@ impl Component for ProjectInfo {
                                         }
                                         *buf += r#"</td><td>"#;
                                         if i > 0 {
-                                            *buf += r#"<a href="javascript:alert('hello');">"#;
+                                            *buf += r#"<a href="javascript:updateMember("#;
+                                            *buf += &i.to_string();
+                                            *buf += r#")">"#;
                                             {
                                                 *buf += r#"<img class="icon" src="/static/ionicons/settings-outline.svg" title="設定">"#;
                                             }
                                             *buf += r#"</a>&nbsp;"#;
-                                            *buf += r#"<a href="javascript:alert('hello');">"#;
+                                            *buf += r#"<a href="javascript:removeMember("#;
+                                            *buf += &i.to_string();
+                                            *buf += r#")">"#;
                                             {
                                                 *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
                                             }

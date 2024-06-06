@@ -126,6 +126,7 @@ impl Component for TicketListBody {
                             }
                             *buf += r#"</form>"#;
 
+                            /* TODO ページングを追加する。
                             *buf += r#"<div class="row pt-2">"#;
                             {
                                 *buf += r#"<div class="col-md-9"></div>"#;
@@ -187,8 +188,9 @@ impl Component for TicketListBody {
                                 *buf += r#"</div>"#;
                             }
                             *buf += r#"</div>"#;
+                            */
 
-                            *buf += r#"<div class="row">"#;
+                            *buf += r#"<div class="row pt-3">"#;
                             {
                                 *buf += r#"<div class="col">"#;
                                 {

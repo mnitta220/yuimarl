@@ -37,19 +37,23 @@ impl TicketValidation {
             }
         };
 
-        let mut ok = false;
+        //let mut ok = false;
         if let Some(p) = &project {
             if p.deleted {
-                validation.info = Some("プロジェクトが削除されています。".to_string());
-            } else {
-                ok = true;
+                return Err(anyhow::anyhow!(
+                    "プロジェクトが削除されています。".to_string()
+                ));
+                //validation.info = Some("プロジェクトが削除されています。".to_string());
+                //} else {
+                //ok = true;
             }
         } else {
-            validation.info = Some("プロジェクトが存在しません。".to_string());
+            return Err(anyhow::anyhow!("プロジェクトが存在しません。".to_string()));
+            //validation.info = Some("プロジェクトが存在しません。".to_string());
         }
-        if !ok {
-            return Ok((Some(validation), None, None, None));
-        }
+        //if !ok {
+        //    return Ok((Some(validation), None, None, None));
+        //}
 
         let project_member =
             match model::project::ProjectMember::find(&input.project_id, &session.uid, &db).await {
@@ -60,8 +64,11 @@ impl TicketValidation {
             };
 
         if project_member.is_none() {
-            validation.info = Some("プロジェクトのメンバーではありません。".to_string());
-            return Ok((Some(validation), project, None, None));
+            return Err(anyhow::anyhow!(
+                "プロジェクトのメンバーではありません。".to_string()
+            ));
+            //validation.info = Some("プロジェクトのメンバーではありません。".to_string());
+            //return Ok((Some(validation), project, None, None));
         }
 
         match action {
@@ -91,11 +98,12 @@ impl TicketValidation {
                     }
                     if !ok {
                         validation.info = Some("他のユーザーがチケットを更新しため、更新できませんでした。<br>再読み込みを行ってください。".to_string());
-                        return Ok((Some(validation), project, project_member, None));
+                        return Ok((Some(validation), project, project_member, ticket));
                     }
                 } else {
-                    validation.info = Some("チケットが存在しません。".to_string());
-                    return Ok((Some(validation), project, project_member, None));
+                    return Err(anyhow::anyhow!("チケットが存在しません。".to_string()));
+                    //        validation.info = Some("チケットが存在しません。".to_string());
+                    //return Ok((Some(validation), project, project_member, None));
                 }
             }
 

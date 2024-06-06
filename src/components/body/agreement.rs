@@ -84,8 +84,9 @@ impl Component for AgreementBody {
                             *buf += r#"</div>"#;
                         }
 
-                        *buf += r#"<div class="alert alert-info mb-4" role="alert">"#;
-                        *buf += r#"利用者がご自身でこのシステムのサーバーを運用する方法を公開しています。可能であれば、それによって利用することもご検討ください。"#;
+                        *buf += r#"<div class="alert alert-info mb-4" role="alert">利用者が&nbsp;"#;
+                        *buf += r#"<a href="https://mnitta220.github.io/yuimarl/deploy.html" target="_blank">ご自身でこのシステムのサーバーを運用する方法</a>"#;
+                        *buf += r#"&nbsp;を公開しています。可能であれば、それによって利用することもご検討ください。"#;
                         *buf += r#"</div>"#;
                     }
                     *buf += r#"</div>"#;

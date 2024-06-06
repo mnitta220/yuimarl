@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-pub const MAX_HISTORY: usize = 50;
+pub const MAX_HISTORY: usize = 30;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct History {

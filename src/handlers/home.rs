@@ -23,6 +23,13 @@ pub async fn get_home(cookies: Cookies) -> Result<Html<String>, AppError> {
         Err(_) => return Ok(Html(LoginPage::write())),
     };
 
+    return show_home(session, &db).await;
+}
+
+pub async fn show_home(
+    session: model::session::Session,
+    db: &FirestoreDb,
+) -> Result<Html<String>, AppError> {
     let mut props = page::Props::new(&session.id);
 
     let user = match model::user::User::find(&session.uid, &db).await {

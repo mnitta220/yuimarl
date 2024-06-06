@@ -2,8 +2,7 @@ use super::validation;
 use crate::{
     model,
     pages::{
-        home_page::HomePage, login_page::LoginPage, page, project_list_page::ProjectListPage,
-        project_page::ProjectPage,
+        login_page::LoginPage, page, project_list_page::ProjectListPage, project_page::ProjectPage,
     },
     AppError,
 };
@@ -287,17 +286,7 @@ pub async fn post(
         _ => {}
     }
 
-    let (project, member, tickets) =
-        model::project::Project::current_project_and_tickets(&session, &db).await?;
-
-    props.action = action;
-    props.project = project;
-    props.project_member = member;
-    props.tickets = tickets;
-    props.session = Some(session);
-    let mut page = HomePage::new(props);
-
-    Ok(Html(page.write()))
+    return super::home::show_home(session, &db).await;
 }
 
 #[derive(Deserialize, Debug)]
@@ -323,20 +312,15 @@ pub async fn post_note(
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
-    let mut props = page::Props::new(&session.id);
-    let prj = match model::project::Project::update_note(&input, &session, &db).await {
+    //let mut props = page::Props::new(&session.id);
+    match model::project::Project::update_note(&input, &session, &db).await {
         Ok(p) => p,
         Err(e) => {
             return Err(AppError(anyhow::anyhow!(e)));
         }
     };
 
-    props.session = Some(session);
-    props.project = Some(prj);
-
-    let mut page = HomePage::new(props);
-
-    Ok(Html(page.write()))
+    return super::home::show_home(session, &db).await;
 }
 
 pub async fn get_project_select(
@@ -364,21 +348,5 @@ pub async fn get_project_select(
         }
     }
 
-    let (project, member, tickets) =
-        match model::project::Project::current_project_and_tickets(&session, &db).await {
-            Ok((project, member, tickets)) => (project, member, tickets),
-            Err(e) => {
-                return Err(AppError(anyhow::anyhow!(e)));
-            }
-        };
-
-    let mut props = page::Props::new(&session.id);
-
-    props.project = project;
-    props.project_member = member;
-    props.tickets = tickets;
-    props.session = Some(session);
-    let mut page = HomePage::new(props);
-
-    Ok(Html(page.write()))
+    return super::home::show_home(session, &db).await;
 }

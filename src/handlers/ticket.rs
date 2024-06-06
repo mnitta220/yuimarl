@@ -2,8 +2,7 @@ use super::validation;
 use crate::{
     model,
     pages::{
-        home_page::HomePage, login_page::LoginPage, page, ticket_list_page::TicketListPage,
-        ticket_page::TicketPage,
+        login_page::LoginPage, page, ticket_list_page::TicketListPage, ticket_page::TicketPage,
     },
     AppError,
 };
@@ -273,16 +272,22 @@ pub async fn post(
             }
         }
 
-        let mut ticket = model::ticket::Ticket::new();
-        ticket.name = Some(input.name);
-        ticket.description = Some(input.description);
-        ticket.start_date = Some(input.start_date);
-        ticket.end_date = Some(input.end_date);
-        ticket.progress = input.progress.parse::<i32>().unwrap_or_default();
-        ticket.priority = input.priority.parse::<i32>().unwrap_or_default();
+        let mut ticket_new = model::ticket::Ticket::new();
+        if let Some(t) = ticket {
+            ticket_new.id = t.id;
+            ticket_new.owner = t.owner;
+            ticket_new.created_at = t.created_at;
+            ticket_new.updated_at = t.updated_at;
+        }
+        ticket_new.name = Some(input.name);
+        ticket_new.description = Some(input.description);
+        ticket_new.start_date = Some(input.start_date);
+        ticket_new.end_date = Some(input.end_date);
+        ticket_new.progress = input.progress.parse::<i32>().unwrap_or_default();
+        ticket_new.priority = input.priority.parse::<i32>().unwrap_or_default();
 
         props.session = Some(session);
-        props.ticket = Some(ticket);
+        props.ticket = Some(ticket_new);
         props.ticket_validation = Some(v);
         props.ticket_members = ticket_members;
         let mut page = TicketPage::new(props, can_update, can_delete);
@@ -321,17 +326,7 @@ pub async fn post(
         _ => {}
     }
 
-    let (project, member, tickets) =
-        model::project::Project::current_project_and_tickets(&session, &db).await?;
-
-    props.action = action;
-    props.project = project;
-    props.project_member = member;
-    props.tickets = tickets;
-    props.session = Some(session);
-    let mut page = HomePage::new(props);
-
-    Ok(Html(page.write()))
+    return super::home::show_home(session, &db).await;
 }
 
 #[derive(Deserialize, Debug)]
@@ -357,7 +352,7 @@ pub async fn post_note(
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
-    let mut props = page::Props::new(&session.id);
+    //let mut props = page::Props::new(&session.id);
     match model::ticket::Ticket::update_note(&input, &session, &db).await {
         Ok(t) => t,
         Err(e) => {
@@ -365,18 +360,7 @@ pub async fn post_note(
         }
     };
 
-    let (project, member, tickets) =
-        model::project::Project::current_project_and_tickets(&session, &db).await?;
-
-    props.action = crate::Action::Update;
-    props.project = project;
-    props.project_member = member;
-    props.tickets = tickets;
-    props.session = Some(session);
-
-    let mut page = HomePage::new(props);
-
-    Ok(Html(page.write()))
+    return super::home::show_home(session, &db).await;
 }
 
 #[derive(Deserialize, Debug)]

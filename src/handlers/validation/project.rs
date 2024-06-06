@@ -89,7 +89,7 @@ impl ProjectValidation {
                 if ok == false {
                     let mut validation = Self::new();
                     validation.project_info =
-                Some("他のユーザーがプロジェクトを更新しため、更新できませんでした。<br>再読み込みを行ってください。".to_string());
+                        Some("他のユーザーがプロジェクトを更新しため、更新できませんでした。<br>再読み込みを行ってください。".to_string());
                     return Ok(Some(validation));
                 }
             }

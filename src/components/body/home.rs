@@ -1,6 +1,6 @@
 use super::super::Component;
 use super::parts::{footer::Footer, nav::Nav};
-use crate::Props;
+use crate::{model, Props};
 
 pub struct HomeBody {
     pub nav: Box<dyn Component + Send>,
@@ -249,30 +249,48 @@ impl Component for HomeBody {
                                     *buf += r#"<div class="col-md-9">"#;
                                     {
                                         if props.project.is_some() {
-                                            for ticket in props.tickets.iter() {
-                                                *buf += r#"<p class="mb-0">"#;
-                                                {
-                                                    *buf += r#"<a href="/ticket?id="#;
-                                                    *buf += &ticket.id.clone().unwrap();
-                                                    *buf += r#"">"#;
-                                                    {
-                                                        *buf += &ticket.id_disp.clone().unwrap();
+                                            if let Some(m) = &props.project_member {
+                                                if let Some(role) = m.role {
+                                                    for ticket in props.tickets.iter() {
+                                                        *buf += r#"<p class="mb-0">"#;
+                                                        {
+                                                            *buf += r#"<a href="/ticket?id="#;
+                                                            *buf += &ticket.id.clone().unwrap();
+                                                            *buf += r#"">"#;
+                                                            {
+                                                                *buf += &ticket
+                                                                    .id_disp
+                                                                    .clone()
+                                                                    .unwrap();
+                                                            }
+                                                            *buf += r#"</a>&nbsp;:&nbsp;"#;
+                                                            *buf += &ticket.name.clone().unwrap();
+                                                        }
+                                                        *buf += r#"</p>"#;
                                                     }
-                                                    *buf += r#"</a>&nbsp;:&nbsp;"#;
-                                                    *buf += &ticket.name.clone().unwrap();
-                                                }
-                                                *buf += r#"</p>"#;
-                                            }
 
-                                            *buf += r#"<p class="my-1">"#;
-                                            {
-                                                *buf += r#"<a href="/ticket_add">"#;
-                                                {
-                                                    *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="チケットを追加">"#;
+                                                    *buf += r#"<p class="mt-2">"#;
+                                                    {
+                                                        *buf += r#"<a href="/ticket_list">"#;
+                                                        {
+                                                            *buf += r#"<img class="icon3" src="/static/ionicons/list-outline.svg" title="チケット一覧">"#;
+                                                        }
+                                                        *buf += r#"</a>"#;
+
+                                                        if role == model::project::ProjectRole::Owner as i32
+                                                            || role == model::project::ProjectRole::Administrator as i32
+                                                            || role == model::project::ProjectRole::Member as i32
+                                                        {
+                                                            *buf += r#"&nbsp;&nbsp;&nbsp;<a href="/ticket_add">"#;
+                                                            {
+                                                                *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="チケットを追加">"#;
+                                                            }
+                                                            *buf += r#"</a>"#;
+                                                        }
+                                                    }
+                                                    *buf += r#"</p>"#;
                                                 }
-                                                *buf += r#"</a>"#;
                                             }
-                                            *buf += r#"</p>"#;
                                         }
                                     }
                                     *buf += r#"</div>"#;

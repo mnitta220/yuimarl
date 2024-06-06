@@ -1,6 +1,6 @@
 use crate::{
     model,
-    pages::{home_page::HomePage, login_page::LoginPage, page, user_name_page::UserNamePage},
+    pages::{login_page::LoginPage, page, user_name_page::UserNamePage},
     AppError,
 };
 use anyhow::Result;
@@ -8,22 +8,6 @@ use axum::{extract::Form, response::Html};
 use firestore::*;
 use serde::Deserialize;
 use tower_cookies::Cookies;
-
-/*
-pub async fn get(cookies: Cookies) -> Result<Html<String>, AppError> {
-    tracing::debug!("GET /db_check");
-
-    let session_id = match super::get_session_id(cookies, false) {
-        Ok(session_id) => session_id,
-        Err(_) => return Ok(Html(LoginPage::write())),
-    };
-    let mut props = page::Props::new(&session_id);
-    props.title = Some(String::from("データベースチェック"));
-    let mut page = DbCheckPage::new(props);
-
-    Ok(Html(page.write()))
-}
-*/
 
 #[derive(Deserialize, Debug)]
 pub struct UserNameInput {
@@ -48,7 +32,7 @@ pub async fn post(
         Err(_) => return Ok(Html(LoginPage::write())),
     };
 
-    let mut props = page::Props::new(&session.id);
+    let props = page::Props::new(&session.id);
 
     let name = input.name.trim();
 
@@ -71,19 +55,5 @@ pub async fn post(
         }
     }
 
-    let (project, member, tickets) =
-        match model::project::Project::current_project_and_tickets(&session, &db).await {
-            Ok((project, member, tickets)) => (project, member, tickets),
-            Err(e) => {
-                return Err(AppError(anyhow::anyhow!(e)));
-            }
-        };
-
-    props.project = project;
-    props.project_member = member;
-    props.tickets = tickets;
-    props.session = Some(session);
-    let mut page = HomePage::new(props);
-
-    Ok(Html(page.write()))
+    return super::home::show_home(session, &db).await;
 }

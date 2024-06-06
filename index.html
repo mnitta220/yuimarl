@@ -30,24 +30,152 @@
                 </div>
               </nav>
             </div>
-            <div class="row">
+            <section class="row">
               <div class="col-md-9">
-                <div class="row py-3">
-                  <div class="col">
-                    <div class="alert alert-danger" role="alert">このシステムは、現在、開発中です。</div>
-                  </div>
-                </div>
+                <section class="py-3">
+                  <div class="alert alert-warning" role="alert">このシステムは、現在開発中です。<br>まだ、正式リリースされていませんが、ある程度、使えるようになっていますので、プレビュー版として公開します。<br>下記「プレビュー版 URL」から実際にお使いいただくことができますが、動作は保証しません。</div>
+                </section>
+                <section class="pb-3">
+                  <p>「Yuimarl」（ゆいまーる）は、少人数のグループ、または、個人のプロジェクトを管理するためのシステムです。<br>以下の特徴があります。</p>
+                  <ul>
+                    <li>グループまたは個人のプロジェクトを自由に登録することができます。</li>
+                    <li>制限内であれば、無料で使うことができます。</li>
+                    <li>インターネットにつながった、パソコン、スマートフォン、タブレットの Webブラウザで使うことができます。</li>
+                    <li>サーバーをご自身で運用するための情報が公開されています。</li>
+                    <li>ソースコードが公開されているので、プログラミングの知識があれば、ご自身で機能を改変することができます。</li>
+                  </ul>
+                  <p>Yuimarl には、以下の利用制限があります。</p>
+                  <ul>
+                    <li>１人のアカウントで、最大10個のプロジェクトを作成することができます。（他のユーザーが作成したプロジェクトには、何個でも参加できます。）</li>
+                    <li>１つのプロジェクトには、（オーナーを含めて）最大で 20人のメンバーを参加させることができます。</li>
+                    <li>１つのプロジェクトには、最大で 1000個のチケットを作成することができます。（このシステムでは、プロジェクトで行うタスクを「チケット」として登録します）</li>
+                  </ul>
+                  <p>この制限を超えて利用したい場合は、有料で対応させていただきます。</p>
+                </section>
+                <section class="pb-3">
+                  <h3>プレビュー版 URL</h3>
+                  <p>次の URL からお使いいただくことができます。</p>
+                  <div class="card mb-3 p-2 bg-light"><a href="https://yuimarl-iyzuisrc3a-an.a.run.app" target="_blank">https://yuimarl-iyzuisrc3a-an.a.run.app</a></div>
+                  <p>現時点での機能は、以下の通りです。順次、機能を追加していきます。</p>
+                  <ul>
+                    <li>Googleアカウント / GitHubアカウント / メールアドレス のいずれかでログインする。（Facebook、X、Apple、Yahoo! のアカウントでも、ログインできるようにする予定です）</li>
+                    <li>プロジェクトを登録する。</li>
+                    <li>チケットを登録する。</li>
+                  </ul>
+                </section>
+                <section class="pb-3">
+                  <h3>名前の由来</h3>
+                  <p>
+                    「ゆいまーる」は、沖縄の言葉で、「相互扶助」（そうごふじょ）、「助け合い」を意味します。
+                    「ゆい」は「結ぶ」、「まーる」は「交流の場」です。<br>
+                    このシステムが、共同作業や個人作業の基盤となって、価値的な作業が推進されればよいと願っています。<br>
+                    また、多くの方からのご意見、ご協力をいただき、このシステムが成長していけばよいと思っています。<br>
+                    そうした願いと期待を込めて、この名前を付けました。
+                  </p>
+                </section>
+                <section class="pb-3">
+                  <h3>画面イメージ</h3>
+                  <p>チケット編集画面のイメージ （パソコン）<br><a href="images/screen01.png"><img class="border border-info border-1 img-fluid" src="images/screen01.png" alt="チケット編集画面"></a></p>
+                  <p>チケット編集画面のイメージ （スマートフォン）<br><a href="images/screen02.png"><img class="border border-info border-1 img-fluid" src="images/screen02.png" alt="チケット編集画面"></a></p>
+                </section>
+                <section class="pb-3">
+                  <h3>開発情報、動作環境</h3>
+                  <p>Yuimarl のソースコードは、次の URL で公開されています。<br><a href="https://github.com/mnitta220/yuimarl" target="_blank">https://github.com/mnitta220/yuimarl</a></p>
+                  <p>Yuimarl のプログラミング言語には、<a href="https://www.rust-lang.org/ja/" target="_blank">Rust</a>&nbsp;が使用されています。<br>サーバーが&nbsp;<a href="https://cloud.google.com/?hl=ja" target="_blank">Google Cloud</a>&nbsp;のインフラで動作します。アプリケーションの実行環境は Cloud Run、データベースは Firestore、ユーザー認証には Firebase Authentication が使われています。</p>
+                </section>
+                <section class="pb-3">
+                  <h3>アーキテクチャー</h3>
+                  <p>Yuimarl のシステムを構成するソフトウェア階層と、そこで使用されているプロダクトは、次のようになっています。</p>
+                  <table class="table table-bordered">
+                    <tr>
+                      <th>階層</th>
+                      <th>プロダクト</th>
+                      <th>説明</th>
+                    </tr>
+                    <tr>
+                      <td rowspan="4">プレゼンテーション層</td>
+                      <td>各種Webブラウザ</td>
+                      <td>Google Chrome、Microsoft Edge、Safari、Firefox で動作確認済みです。</td>
+                    </tr>
+                    <tr>
+                      <td><a href="https://github.com/firebase/firebaseui-web" target="_blank">FirebaseUI Auth</a></td>
+                      <td>Firebase Authentication を使ったユーザー認証のUIライブラリ</td>
+                    </tr>
+                    <tr>
+                      <td><a href="https://getbootstrap.jp/" target="_blank">Bootstrap</a></td>
+                      <td>フロントエンドツールキット</td>
+                    </tr>
+                    <tr>
+                      <td><a href="http://jquery.com/" target="_blank">jQuery</a></td>
+                      <td>JavaScript ライブラリ</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="3">アプリケーション層</td>
+                      <td><a href="https://cloud.google.com/run?hl=ja" target="_blank">Cloud Run</a></td>
+                      <td>アプリケーションを Docker コンテナで実行する Google Cloud 環境</td>
+                    </tr>
+                    <tr>
+                      <td><a href="https://github.com/firebase/firebaseui-web" target="_blank">Firebase Authentication</a></td>
+                      <td>Google Cloud のユーザー認証基盤</td>
+                    </tr>
+                    <tr>
+                      <td><a href="https://github.com/tokio-rs/axum" target="_blank">axum</a></td>
+                      <td>Rust の Webアプリケーションフレームワーク</td>
+                    </tr>
+                    <tr>
+                      <td>データアクセス層</td>
+                      <td><a href="https://cloud.google.com/firestore?hl=ja" target="_blank">Firestore</a></td>
+                      <td>Google Cloud のドキュメントデータベース</td>
+                    </tr>
+                  </table>
+                </section>
+                <section class="pb-3">
+                  <h3>ライセンス</h3>
+                  <p>Yuimarl は、<a href="http://opensource.org/licenses/mit-license.php" target="_blank">MITライセンス</a>（<a href="http://sourceforge.jp/projects/opensource/wiki/licenses/MIT_license" target="_blank">参考日本語訳</a>）の下で公開されています。ソースコードのご使用に当たっては、このライセンス条項に従ってください。</p>
+                  <ul>
+                    <li>ソフトウェア・成果物の著作権は作者が保持しています。</li>
+                    <li>作者または著作権者は、ソフトウェアに関して、一切の責任を負いません。</li>
+                    <li>このソフトウェアのソースコードを、商用・非商用に関わらす、誰でも無料で使っていただいて結構です。ただし、著作権表示および本許諾表示をソフトウェアのすべての複製または重要な部分に記載しなければなりません。</li>
+                    <li>配布の際には、ライセンス条項も配布する必要があります。</li>
+                  </ul>
+                </section>
+                <section class="pb-3">
+                  <h3>カスタマイズ</h3>
+                  <p>
+                    Yuimarl のソースコードは、自由に改変することができます。Yuimarl
+                    をベースとして、別のシステムを開発することもできます。<br>カスタマイズを新田システム事務所に依頼される場合は、ご連絡ください。
+                  </p>
+                </section>
+                <section class="pb-3">
+                  <h3>問い合わせ</h3>
+                  <p>
+                    Yuimarl に関するお問い合わせ、ご意見、ご要望等は、masa.nitta@nifty.ne.jp
+                    まで、電子メールでお願いいたします。
+                  </p>
+                </section>
+                <section class="pb-3">
+                  <h3>共同開発者募集</h3>
+                  <p>Yuimarl を共同で開発してくださる企業または個人の方を募集しています。<br>報酬は出せませんので、ボランティアとなります。開発環境はご自身で用意していただき、お好きな時間にご自宅等で開発を行っていただきます。<br>プログラミングはしないけれども、機能・デザインについてご意見を述べていただいたり、テストに参加するというだけでも結構です。<br>参加をご希望される方は、masa.nitta@nifty.ne.jp まで、電子メールでご連絡ください。</p>
+                </section>
               </div>
               <div class="col-md-3">
                 <div class="submenu mt-3">
                   <h3>CONTENTS</h3>
                   <ul>
-                    <li><a href="../index.html">新田システム事務所</a></li>
-                    <li><a class="current" href="index.html">ホーム</a></li>
+                    <li><a href="https://mnitta220.github.io/">新田システム事務所</a></li>
+                    <li><a class="current" href="index.html">ホーム</a>
+                      <ul>
+                        <li><a href="devsetup.html">開発環境構築</a></li>
+                        <li><a href="deploy.html">運用環境構築</a></li>
+                        <li><a href="develop.html">開発情報</a></li>
+                        <li><a href="howtouse.html">使い方</a></li>
+                        <li><a href="agreement.html">利用規約</a></li>
+                      </ul>
+                    </li>
                   </ul>
                 </div>
               </div>
-            </div>
+            </section>
             <div class="row bg-dark px-3">
               <footer class="py-1 text-light">
                 <div class="container text-center">

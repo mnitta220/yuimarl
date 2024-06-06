@@ -53,6 +53,8 @@
                     <hr>
                     <section class="pb-2">
                       <h3 id="step01">Google Cloud プロジェクトを作成する</h3>
+                      <p><a href="https://www.google.com/intl/ja/account/about/" target="_blank">Google アカウント</a>をお持ちでない場合は、取得してください。</p>
+                      <p><a href="https://cloud.google.com/sdk/docs/install?hl=ja" target="_blank">gcloud CLI</a>&nbsp;をインストールしてください。</p>
                       <p>次のコマンドで、Yuimarl 用の Google Cloud プロジェクトを作成してください。（&lt;project-id&gt;の箇所は、作成するプロジェクトのID）</p><code>gcloud projects create &lt;project-id&gt;</code><br><br>
                       <p>プロジェクトを作成したら、次のコマンドを実行してください。</p><code>gcloud config set project &lt;project-id&gt;</code><br><br><code>gcloud auth application-default login</code><br><br><a href="images/screen41.png"><img class="border border-info border-1 img-fluid" src="images/screen41.png"></a>
                     </section>
@@ -68,7 +70,7 @@
                       <p>「構築」の中の「Authentication」をクリックします。<a href="images/screen10.png"><img class="border border-info border-1 img-fluid" src="images/screen10.png"></a></p>
                       <p>「Authentication」の「始める」をクリックします。<a href="images/screen11.png"><img class="border border-info border-1 img-fluid" src="images/screen11.png"></a></p>
                       <p>「ログイン方法」の「メール / パスワード」をクリックします。<a href="images/screen12.png"><img class="border border-info border-1 img-fluid" src="images/screen12.png"></a></p>
-                      <p>「メール / パスワード」を「有効にする」にして「保存」をクリックします。<a href="images/screen13.png"><img class="border border-info border-1 img-fluid" src="images/screen13.png"></a></p>
+                      <p>「メール / パスワード」と「メールリンク（パスワードなしでログイン）」を「有効にする」にして「保存」をクリックします。<a href="images/screen13.png"><img class="border border-info border-1 img-fluid" src="images/screen13.png"></a></p>
                       <p>「新しいプロバイダを追加」をクリックします。<a href="images/screen14.png"><img class="border border-info border-1 img-fluid" src="images/screen14.png"></a></p>
                       <p>「Google」をクリックします。<a href="images/screen15.png"><img class="border border-info border-1 img-fluid" src="images/screen15.png"></a></p>
                       <p>「Google」を「有効にする」にし、サポートメールを選択して「保存」をクリックします。<a href="images/screen16.png"><img class="border border-info border-1 img-fluid" src="images/screen16.png"></a><br>必要に応じて、他のプロバイダも追加してください。</p>
@@ -85,14 +87,14 @@
                     <hr>
                     <section class="pb-2">
                       <h3 id="step03">Cloud Run を設定する</h3>
-                      <p><a href="https://console.cloud.google.com">Google Cloud コンソール</a>にログインして「プロジェクトの選択」をクリックします。<a href="images/screen26.png"><img class="border border-info border-1 img-fluid" src="images/screen26.png"></a></p>
+                      <p><a href="https://console.cloud.google.com" target="_blank">Google Cloud コンソール</a>にログインして「プロジェクトの選択」をクリックします。<a href="images/screen26.png"><img class="border border-info border-1 img-fluid" src="images/screen26.png"></a></p>
                       <p>作成済みのプロジェクトを選択します。<a href="images/screen27.png"><img class="border border-info border-1 img-fluid" src="images/screen27.png"></a></p>
                       <p>「すべてのプロダクトを表示」を選択します。<a href="images/screen44.png"><img class="border border-info border-1 img-fluid" src="images/screen44.png"></a></p>
                       <p>「サーバーレス」の「Cloud Run」を選択します。<a href="images/screen45.png"><img class="border border-info border-1 img-fluid" src="images/screen45.png"></a></p>
                       <p>「サービスを作成」をクリックします。<a href="images/screen29.png"><img class="border border-info border-1 img-fluid" src="images/screen29.png"></a></p>
                       <p>「課金を有効にして Cloud Run の使用を継続します」画面が表示された場合は、「[お支払い]に移動」をクリックして支払いの設定を行います。<a href="images/screen30.png"><img class="border border-info border-1 img-fluid" src="images/screen30.png"></a></p>
                       <p>「サービスを作成」で次の画像のように設定します。<br>（&nbsp;「コンテナイメージのURL」は、<a href="https://hub.docker.com/repository/docker/masahironitta/yuimarl/general" target="_blank">Docker Hub</a>&nbsp;に登録されている最新のイメージを設定します）<a href="images/screen31.png"><img class="border border-info border-1 img-fluid" src="images/screen31.png"></a>
-                        <div class="alert alert-primary" role="alert">現在の最新イメージは、<br><b>masahironitta/yuimarl:0.0.19</b><br>です。<br><a href="https://hub.docker.com/repository/docker/masahironitta/yuimarl/general" target="_blank">Yuimarl Docker Hub レジストリ</a></div>
+                        <div class="alert alert-primary" role="alert">現在の最新イメージは、<br><b>masahironitta/yuimarl:0.0.26</b><br>です。<br><a href="https://hub.docker.com/repository/docker/masahironitta/yuimarl/general" target="_blank">Yuimarl Docker Hub レジストリ</a></div>
                       </p>
                       <p>「コンテナ、ボリューム、ネットワーキング、セキュリティ」の「コンテナ」の「設定」にある「ヘルスチェックを追加します」をクリックします。<a href="images/screen48.png"><img class="border border-info border-1 img-fluid" src="images/screen48.png"></a></p>
                       <p>「ライブネスチェック」と「HTTP」を選択し、パスに「/health」と入力し、「追加」をクリックします。<a href="images/screen43.png"><img class="border border-info border-1 img-fluid" src="images/screen43.png"></a></p>
@@ -139,7 +141,7 @@
                       </p>
                       <p>「作成」をクリックします。<a href="images/screen46.png"><img class="border border-info border-1 img-fluid" src="images/screen46.png"></a></p>
                       <p>Firebase コンソールの Authentication で、「設定」の「承認済みドメイン」で、「ドメインの追加」をクリックします。<a href="images/screen50.png"><img class="border border-info border-1 img-fluid" src="images/screen50.png"></a></p>
-                      <p>Cloud Run の URL に表示されたドメインを入力して、「追加」をクリックします。<a href="images/screen51.png"><img class="border border-info border-1 img-fluid" src="images/screen51.png"></a></p>
+                      <p>Cloud Run の URL に表示されたドメインを入力して、「追加」をクリックします。（&nbsp;「https://」は削除してください）<a href="images/screen51.png"><img class="border border-info border-1 img-fluid" src="images/screen51.png"></a></p>
                       <p>本番環境として使う場合は、Authentication の「設定」の「承認済みドメイン」から、「localhost」を削除してください。<br>開発環境、テスト環境として使う場合は、「localhost」を残したままで大丈夫です。<a href="images/screen38.png"><img class="border border-info border-1 img-fluid" src="images/screen38.png"></a></p>
                       <p>Cloud Run の URL にアクセスします。<a href="images/screen33.png"><img class="border border-info border-1 img-fluid" src="images/screen33.png"></a></p>
                       <p>Yuimarl ログイン画面でログインします。<a href="images/screen34.png"><img class="border border-info border-1 img-fluid" src="images/screen34.png"></a></p>

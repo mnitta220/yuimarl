@@ -43,6 +43,12 @@ html(lang="ja")
                     hr
                     section.pb-2
                       h3#step01 Google Cloud プロジェクトを作成する
+                      p
+                        a(href="https://www.google.com/intl/ja/account/about/"  target="_blank") Google アカウント
+                        | をお持ちでない場合は、取得してください。
+                      p
+                        a(href="https://cloud.google.com/sdk/docs/install?hl=ja" target="_blank") gcloud CLI
+                        | &nbsp;をインストールしてください。
                       p 次のコマンドで、Yuimarl 用の Google Cloud プロジェクトを作成してください。（&lt;project-id&gt;の箇所は、作成するプロジェクトのID）
                       code
                         | gcloud projects create &lt;project-id&gt;
@@ -100,7 +106,7 @@ html(lang="ja")
                         a(href="images/screen12.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen12.png")
                       p
-                        | 「メール / パスワード」を「有効にする」にして「保存」をクリックします。
+                        | 「メール / パスワード」と「メールリンク（パスワードなしでログイン）」を「有効にする」にして「保存」をクリックします。
                         a(href="images/screen13.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen13.png")
                       p
@@ -165,7 +171,7 @@ html(lang="ja")
                     section.pb-2
                       h3#step03 Cloud Run を設定する
                       p
-                        a(href="https://console.cloud.google.com") Google Cloud コンソール
+                        a(href="https://console.cloud.google.com" target="_blank") Google Cloud コンソール
                         | にログインして「プロジェクトの選択」をクリックします。
                         a(href="images/screen26.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen26.png")
@@ -204,19 +210,11 @@ html(lang="ja")
                         .alert.alert-primary(role="alert")
                           | 現在の最新イメージは、
                           br
-                          b masahironitta/yuimarl:0.0.19
+                          b masahironitta/yuimarl:0.0.26
                           br
                           | です。
                           br
                           a(href="https://hub.docker.com/repository/docker/masahironitta/yuimarl/general" target="_blank") Yuimarl Docker Hub レジストリ
-                      //- p
-                        | 「ヘルスチェックを追加します」をクリックして、「ライブネスチェック」と「HTTP」を選択し、パスに「/health」と入力し、「追加」をクリックします。
-                        a(href="images/screen43.png")
-                          img.border.border-info.border-1.img-fluid(src="images/screen43.png")
-                      //- p
-                        | サービスがデプロイされたら、「新しいリビジョンの編集とデプロイ」をクリックします。
-                        a(href="images/screen47.png")
-                          img.border.border-info.border-1.img-fluid(src="images/screen47.png")
                       p
                         | 「コンテナ、ボリューム、ネットワーキング、セキュリティ」の「コンテナ」の「設定」にある「ヘルスチェックを追加します」をクリックします。
                         a(href="images/screen48.png")
@@ -262,28 +260,12 @@ html(lang="ja")
                         | 「作成」をクリックします。
                         a(href="images/screen46.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen46.png")
-                      //- p
-                        | サービスがデプロイされたら、「新しいリビジョンの編集とデプロイ」をクリックします。
-                        a(href="images/screen47.png")
-                          img.border.border-info.border-1.img-fluid(src="images/screen47.png")
-                      //- p
-                        | 「ヘルスチェックを追加します」をクリックします。
-                        a(href="images/screen48.png")
-                          img.border.border-info.border-1.img-fluid(src="images/screen48.png")
-                      //- p
-                        | 「ライブネスチェック」と「HTTP」を選択し、パスに「/health」と入力し、「追加」をクリックします。
-                        a(href="images/screen43.png")
-                          img.border.border-info.border-1.img-fluid(src="images/screen43.png")
-                      //- p
-                        | 「デプロイ」をクリックします。
-                        a(href="images/screen49.png")
-                          img.border.border-info.border-1.img-fluid(src="images/screen49.png")
                       p
                         | Firebase コンソールの Authentication で、「設定」の「承認済みドメイン」で、「ドメインの追加」をクリックします。
                         a(href="images/screen50.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen50.png")
                       p
-                        | Cloud Run の URL に表示されたドメインを入力して、「追加」をクリックします。
+                        | Cloud Run の URL に表示されたドメインを入力して、「追加」をクリックします。（&nbsp;「https://」は削除してください）
                         a(href="images/screen51.png")
                           img.border.border-info.border-1.img-fluid(src="images/screen51.png")
                       p

@@ -38,7 +38,7 @@ impl LoginPage {
                 buf += r#"</form>"#;
 
                 buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
-                buf += r#"<script src="/static/js/login0028.js"></script>"#;
+                buf += r#"<script src="/static/js/login0029.js"></script>"#;
             }
             buf += r#"</body>"#;
         }

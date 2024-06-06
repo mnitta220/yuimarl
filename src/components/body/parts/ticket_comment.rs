@@ -4,6 +4,8 @@ pub struct TicketComment {}
 
 impl Component for TicketComment {
     fn write(&self, _props: &Props, buf: &mut String) {
+        *buf += r#"<div class="row py-3">この画面は、まだ使用することができません。</div>"#;
+        /*
         *buf += r#"<form action="/ticket_add" method="POST">"#;
         {
             *buf += r#"<div class="row py-2 ticket-comment">"#;
@@ -111,5 +113,6 @@ impl Component for TicketComment {
             *buf += r#"</div>"#;
         }
         *buf += r#"</form>"#;
+        */
     }
 }

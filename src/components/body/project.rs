@@ -15,11 +15,14 @@ pub struct ProjectBody {
 }
 
 impl ProjectBody {
-    pub fn new() -> Self {
+    pub fn new(can_update: bool, can_delete: bool) -> Self {
         ProjectBody {
             nav: Box::new(Nav {}),
-            project_info: Box::new(ProjectInfo {}),
-            project_note: Box::new(ProjectNote {}),
+            project_info: Box::new(ProjectInfo {
+                can_update,
+                can_delete,
+            }),
+            project_note: Box::new(ProjectNote { can_update }),
             project_history: Box::new(ProjectHistory {}),
             footer: Box::new(Footer {}),
         }

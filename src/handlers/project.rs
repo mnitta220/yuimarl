@@ -50,7 +50,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
     props.project_members.push(member);
 
     props.session = Some(session);
-    let mut page = ProjectPage::new(props);
+    let mut page = ProjectPage::new(props, true, true);
 
     Ok(Html(page.write()))
 }
@@ -139,10 +139,26 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
         }
     }
 
+    let mut can_update = false;
+    let mut can_delete = false;
+    // プロジェクトを更新できるのは、オーナー、管理者
+    // プロジェクトを削除できるのは、オーナー
+    if let Some(pmem) = &props.project_member {
+        if let Some(r) = pmem.role {
+            if r == model::project::ProjectRole::Owner as i32 {
+                can_update = true;
+                can_delete = true;
+            }
+            if r == model::project::ProjectRole::Administrator as i32 {
+                can_update = true;
+            }
+        }
+    }
+
     props.project_members = members;
 
     props.session = Some(session);
-    let mut page = ProjectPage::new(props);
+    let mut page = ProjectPage::new(props, can_update, can_delete);
 
     Ok(Html(page.write()))
 }
@@ -217,21 +233,37 @@ pub async fn post(
         project_members.push(member);
     }
 
-    let v = match validation::project::ProjectValidation::validate_post(
-        &input,
-        &session,
-        action.clone(),
-        &db,
-    )
-    .await
-    {
-        Ok(v) => v,
-        Err(e) => {
-            return Err(AppError(e));
-        }
-    };
+    let (validation, _project, member) =
+        match validation::project::ProjectValidation::validate_post(
+            &input,
+            &session,
+            action.clone(),
+            &db,
+        )
+        .await
+        {
+            Ok(v) => v,
+            Err(e) => {
+                return Err(AppError(e));
+            }
+        };
 
-    if let Some(v) = v {
+    if let Some(v) = validation {
+        let mut can_update = false;
+        let mut can_delete = false;
+        // プロジェクトを更新できるのは、オーナー、管理者
+        // プロジェクトを削除できるのは、オーナー
+        if let Some(pmem) = &member {
+            if let Some(r) = pmem.role {
+                if r == model::project::ProjectRole::Owner as i32 {
+                    can_update = true;
+                    can_delete = true;
+                }
+                if r == model::project::ProjectRole::Administrator as i32 {
+                    can_update = true;
+                }
+            }
+        }
         let mut project = model::project::Project::new();
         project.id = Some(input.project_id.clone());
         project.project_name = Some(project_name);
@@ -242,7 +274,7 @@ pub async fn post(
         props.project = Some(project);
         props.project_validation = Some(v);
         props.project_members = project_members;
-        let mut page = ProjectPage::new(props);
+        let mut page = ProjectPage::new(props, can_update, can_delete);
         return Ok(Html(page.write()));
     }
 

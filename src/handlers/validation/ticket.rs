@@ -43,17 +43,10 @@ impl TicketValidation {
                 return Err(anyhow::anyhow!(
                     "プロジェクトが削除されています。".to_string()
                 ));
-                //validation.info = Some("プロジェクトが削除されています。".to_string());
-                //} else {
-                //ok = true;
             }
         } else {
             return Err(anyhow::anyhow!("プロジェクトが存在しません。".to_string()));
-            //validation.info = Some("プロジェクトが存在しません。".to_string());
         }
-        //if !ok {
-        //    return Ok((Some(validation), None, None, None));
-        //}
 
         let project_member =
             match model::project::ProjectMember::find(&input.project_id, &session.uid, &db).await {
@@ -67,8 +60,6 @@ impl TicketValidation {
             return Err(anyhow::anyhow!(
                 "プロジェクトのメンバーではありません。".to_string()
             ));
-            //validation.info = Some("プロジェクトのメンバーではありません。".to_string());
-            //return Ok((Some(validation), project, None, None));
         }
 
         match action {
@@ -102,8 +93,6 @@ impl TicketValidation {
                     }
                 } else {
                     return Err(anyhow::anyhow!("チケットが存在しません。".to_string()));
-                    //        validation.info = Some("チケットが存在しません。".to_string());
-                    //return Ok((Some(validation), project, project_member, None));
                 }
             }
 

@@ -36,11 +36,14 @@ $(document).ready(function () {
             provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
           },
           {
+            provider: firebase.auth.GithubAuthProvider.PROVIDER_ID,
+          },
+          {
             provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
             signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
           },
         ],
-        tosUrl: 'https://mnitta220.github.io/yuimarl/',
+        tosUrl: 'https://mnitta220.github.io/yuimarl/agreement.html',
         privacyPolicyUrl: 'https://mnitta220.github.io/privacy.html'
       };
       ui.start('#firebaseui-auth-container', uiConfig);

@@ -1,6 +1,9 @@
 use crate::{components::Component, Props};
 
-pub struct ProjectInfo {}
+pub struct ProjectInfo {
+    pub can_update: bool,
+    pub can_delete: bool,
+}
 
 impl Component for ProjectInfo {
     fn write(&self, props: &Props, buf: &mut String) {
@@ -103,7 +106,7 @@ impl Component for ProjectInfo {
                                         }
                                         *buf += r#"</td><td>"#;
 
-                                        if i > 0 {
+                                        if i > 0 && self.can_update {
                                             *buf += r#"<a href="javascript:updateMember("#;
                                             *buf += &i.to_string();
                                             *buf += r#")">"#;
@@ -129,11 +132,13 @@ impl Component for ProjectInfo {
                         }
                         *buf += r#"</table>"#;
 
-                        *buf += r#"<a href="javascript:clickAddMember();">"#;
-                        {
-                            *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="メンバーを追加">"#;
+                        if self.can_update {
+                            *buf += r#"<a href="javascript:clickAddMember();">"#;
+                            {
+                                *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="メンバーを追加">"#;
+                            }
+                            *buf += r#"</a>"#;
                         }
-                        *buf += r#"</a>"#;
                     }
                     *buf += r#"</div>"#;
                 }
@@ -164,52 +169,56 @@ impl Component for ProjectInfo {
                 }
                 *buf += r#"</div>"#;
             } else {
-                *buf += r#"<div class="row py-3 mt-2 bg-light">"#;
-                {
-                    if let Some(p) = &props.project {
-                        *buf += r#"<div class="col-9">"#;
-                        {
-                            *buf += r#"<button class="btn btn-primary" type="submit">"#;
+                if self.can_update {
+                    *buf += r#"<div class="row py-3 mt-2 bg-light">"#;
+                    {
+                        if let Some(p) = &props.project {
+                            *buf += r#"<div class="col-9">"#;
                             {
-                                *buf += r#"<img class="icon" src="/static/ionicons/save-outline.svg">&nbsp;更新"#;
-                            }
-                            *buf += r#"</button>&nbsp;&nbsp;"#;
-
-                            if let Some(id) = &p.id {
-                                *buf += r#"<a class="btn btn-primary" href="/project?id="#;
-                                *buf += id;
-                                *buf += r#"" role="button">"#;
+                                *buf += r#"<button class="btn btn-primary" type="submit">"#;
                                 {
-                                    *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
+                                    *buf += r#"<img class="icon" src="/static/ionicons/save-outline.svg">&nbsp;更新"#;
                                 }
-                                *buf += r#"</a>"#;
-                            }
-                        }
-                        *buf += r#"</div>"#;
+                                *buf += r#"</button>&nbsp;&nbsp;"#;
 
-                        *buf += r#"<div class="col-3 text-end">"#;
-                        {
-                            *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#projectDelModal">"##;
+                                if let Some(id) = &p.id {
+                                    *buf += r#"<a class="btn btn-primary" href="/project?id="#;
+                                    *buf += id;
+                                    *buf += r#"" role="button">"#;
+                                    {
+                                        *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
+                                    }
+                                    *buf += r#"</a>"#;
+                                }
+                            }
+                            *buf += r#"</div>"#;
+
+                            *buf += r#"<div class="col-3 text-end">"#;
                             {
-                                *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
+                                if self.can_delete {
+                                    *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#projectDelModal">"##;
+                                    {
+                                        *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
+                                    }
+                                    *buf += r#"</button>"#;
+                                }
                             }
-                            *buf += r#"</button>"#;
-                        }
-                        *buf += r#"</div>"#;
+                            *buf += r#"</div>"#;
 
-                        *buf += r#"<input type="hidden" name="project_id" value=""#;
-                        if let Some(id) = &p.id {
-                            *buf += id;
+                            *buf += r#"<input type="hidden" name="project_id" value=""#;
+                            if let Some(id) = &p.id {
+                                *buf += id;
+                            }
+                            *buf += r#"">"#;
+                            *buf += r#"<input type="hidden" name="timestamp" value=""#;
+                            if let Some(up) = &p.updated_at {
+                                *buf += &up.timestamp_micros().to_string();
+                            }
+                            *buf += r#"">"#;
                         }
-                        *buf += r#"">"#;
-                        *buf += r#"<input type="hidden" name="timestamp" value=""#;
-                        if let Some(up) = &p.updated_at {
-                            *buf += &up.timestamp_micros().to_string();
-                        }
-                        *buf += r#"">"#;
                     }
+                    *buf += r#"</div>"#;
                 }
-                *buf += r#"</div>"#;
             }
 
             *buf += r#"<input type="hidden" name="action" id="action" value=""#;

@@ -29,6 +29,7 @@ impl TicketValidation {
         Option<model::ticket::Ticket>,
     )> {
         let mut validation = TicketValidation::new();
+        let mut ticket: Option<model::ticket::Ticket> = None;
 
         let project = match model::project::Project::find(&input.project_id, &db).await {
             Ok(p) => p,
@@ -73,7 +74,7 @@ impl TicketValidation {
 
             // チケット更新
             crate::Action::Update => {
-                let ticket = match model::ticket::Ticket::find(&input.ticket_id, &db).await {
+                ticket = match model::ticket::Ticket::find(&input.ticket_id, &db).await {
                     Ok(t) => t,
                     Err(e) => {
                         return Err(anyhow::anyhow!(e));
@@ -101,6 +102,18 @@ impl TicketValidation {
             _ => {}
         }
 
-        Ok((None, project, project_member, None))
+        match action {
+            crate::Action::Create | crate::Action::Update => {
+                let name = input.name.trim().to_string();
+                if name.len() == 0 {
+                    //let mut validation = Self::new();
+                    validation.name = Some("入力してください".to_string());
+                    return Ok((Some(validation), project, project_member, ticket));
+                }
+            }
+            _ => {}
+        }
+
+        Ok((None, project, project_member, ticket))
     }
 }

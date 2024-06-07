@@ -50,7 +50,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
     props.tickets = tickets;
     props.session = Some(session);
 
-    let mut page = TicketPage::new(props, false, false);
+    let mut page = TicketPage::new(props, true, true);
 
     Ok(Html(page.write()))
 }
@@ -218,6 +218,8 @@ pub async fn post(
     let mut i = 0;
     for m in mem {
         let mut member = model::ticket::TicketMember::new(String::from(m["uid"].as_str().unwrap()));
+        member.email = Some(String::from(m["email"].as_str().unwrap()));
+        member.name = Some(String::from(m["name"].as_str().unwrap()));
         member.seq = i;
         ticket_members.push(member);
         i += 1;
@@ -247,27 +249,32 @@ pub async fn post(
         let mut can_delete = false;
         // チケットを更新できるのは、作成者、担当者、オーナー、管理者
         // チケットを削除できるのは、作成者、オーナー、管理者
-        if let Some(pmem) = project_member {
-            if let Some(r) = pmem.role {
-                if r == model::project::ProjectRole::Owner as i32
-                    || r == model::project::ProjectRole::Administrator as i32
-                {
-                    can_update = true;
-                    can_delete = true;
-                }
-            }
-        }
-        if can_delete == false {
-            if let Some(t) = &ticket {
-                if let Some(o) = &t.owner {
-                    if o == &session.uid {
+        if action == crate::Action::Create {
+            can_update = true;
+            can_delete = true;
+        } else {
+            if let Some(pmem) = project_member {
+                if let Some(r) = pmem.role {
+                    if r == model::project::ProjectRole::Owner as i32
+                        || r == model::project::ProjectRole::Administrator as i32
+                    {
                         can_update = true;
                         can_delete = true;
                     }
                 }
-                let member = ticket_members.iter().find(|m| m.uid == session.uid);
-                if member.is_some() {
-                    can_update = true;
+            }
+            if can_delete == false {
+                if let Some(t) = &ticket {
+                    if let Some(o) = &t.owner {
+                        if o == &session.uid {
+                            can_update = true;
+                            can_delete = true;
+                        }
+                    }
+                    let member = ticket_members.iter().find(|m| m.uid == session.uid);
+                    if member.is_some() {
+                        can_update = true;
+                    }
                 }
             }
         }
@@ -287,6 +294,8 @@ pub async fn post(
         ticket_new.priority = input.priority.parse::<i32>().unwrap_or_default();
 
         props.session = Some(session);
+        props.action = action;
+        props.project = project;
         props.ticket = Some(ticket_new);
         props.ticket_validation = Some(v);
         props.ticket_members = ticket_members;

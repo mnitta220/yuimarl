@@ -270,6 +270,7 @@ pub async fn post(
         project.prefix = Some(input.prefix);
         let t = input.timestamp.parse::<i64>().unwrap_or_default();
         project.updated_at = DateTime::from_timestamp_micros(t);
+        props.action = action;
         props.session = Some(session);
         props.project = Some(project);
         props.project_validation = Some(v);

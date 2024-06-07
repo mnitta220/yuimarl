@@ -23,8 +23,8 @@ impl Component for TicketInfo {
                         *buf += &name;
                     }
                     if let Some(t) = &props.ticket {
-                        *buf += r#" / "#;
                         if let Some(id) = &t.id_disp {
+                            *buf += r#" / "#;
                             *buf += &id;
                         }
                     }

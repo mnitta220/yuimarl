@@ -6,7 +6,7 @@
     <title>Yuimarl</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/style3.css">
+    <link rel="stylesheet" href="css/style4.css">
     <link rel="icon" type="image/x-icon" href="static/favicon.ico">
   </head>
   <body>
@@ -62,9 +62,9 @@
                   <p>初回のアクセス時には、次のログイン画面が表示されます。</p><a href="images/screen56.png"><img class="border border-info border-1 img-fluid" src="images/screen56.png"></a>
                   <p class="mt-2">ログイン方法は、以下の３つから選択してください。</p>
                   <ul>
-                    <li><b>Googleアカウント</b><br>Googleアカウントでログインします。</li>
-                    <li><b>GitHubアカウント</b><br>GitHubアカウントでログインします。</li>
-                    <li><b>メールアドレス</b><br>次のような、メールアドレスの入力画面が表示されます。<br><a href="images/screen57.png"><img class="border border-info border-1 img-fluid" src="images/screen57.png"></a><br>メールアドレスを入力して、「次へ」ボタンをクリックすると、メールが送信されます。<br>そのメールには、ログインするための URL が書かれているので、送信を行ったブラウザで、その URL にアクセスすると、ログインすることができます。</li>
+                    <li><b>Google でログイン</b><br>Googleアカウントでログインします。</li>
+                    <li><b>GitHub でログイン</b><br>GitHubアカウントでログインします。</li>
+                    <li><b>メールでログイン</b><br>次のような、メールアドレスの入力画面が表示されます。<br><a href="images/screen57.png"><img class="border border-info border-1 img-fluid" src="images/screen57.png"></a><br>メールアドレスを入力して、「次へ」ボタンをクリックすると、メールが送信されます。<br>そのメールには、ログインするための URL が書かれているので、送信を行ったブラウザで、その URL にアクセスすると、ログインすることができます。</li>
                   </ul>
                   <p>初回のログインをすると、利用規約画面が表示されます。利用規約に同意される場合は、「同意する」を選択してください。</p>
                   <hr>
@@ -73,18 +73,117 @@
                   <h3 id="prj">プロジェクト</h3>
                   <section class="pb-2">
                     <h4 id="prjadd">プロジェクトを作成する</h4>
+                    <p>プロジェクトを作成するには、ホーム画面で、「プロジェクト」欄にある&nbsp;<img class="icon3" src="images/ionicons/add-circle-outline.svg">&nbsp;アイコンをクリックします。</p><a href="images/screen58.png"><img class="border border-info border-1 img-fluid" src="images/screen58.png"></a>
+                    <p class="pt-2">「プロジェクトを作成」画面で、以下の情報を入力します。</p><a href="images/screen59.png"><img class="border border-info border-1 img-fluid" src="images/screen59.png"></a>
+                    <div class="py-2">
+                      <table class="table table-bordered">
+                        <tr>
+                          <th>項目名</th>
+                          <th>説明</th>
+                        </tr>
+                        <tr>
+                          <td>プロジェクト名</td>
+                          <td>プロジェクトの名前を入力します。</td>
+                        </tr>
+                        <tr>
+                          <td>チケットID接頭辞</td>
+                          <td>プロジェクト内でチケットを作成すると、ID が付与されます。その ID が、「接頭辞＋連番」となります。 <br>例えば、接頭辞に「BN」と入力すると、チケットは、BN1、BN2、BN3 ・・・ となります。</td>
+                        </tr>
+                        <tr>
+                          <td>メンバー</td>
+                          <td>プロジェクトのメンバーを登録します。登録方法は後述します。</td>
+                        </tr>
+                      </table>
+                    </div>
+                    <p>プロジェクトのメンバーを登録するには、「メンバー」欄にある&nbsp;<img class="icon3" src="images/ionicons/add-circle-outline.svg">&nbsp;アイコンをクリックします。</p>
+                    <p>「メンバーを検索」ダイアログが表示されます。</p><a href="images/screen60.png"><img class="border border-info border-1 img-fluid" src="images/screen60.png"></a>
+                    <p class="pt-2">メンバーとして登録したい人のメールアドレスまたは名前を入力して、「検索」ボタンをクリックします。<br>検索されるのは、Yuimarl のユーザーとして登録されているメールアドレスと名前です。登録されている通りのメールアドレスまたは名前でなければ検索されません。たとえば、姓と名の間にスペースが入って登録されていれば、その通りでなければ検索されません。</p><a href="images/screen61.png"><img class="border border-info border-1 img-fluid" src="images/screen61.png"></a>
+                    <p class="pt-2">メンバーが検索されたら、「選択」をチェックし、「ロール」を選択します。<br>ロールは、「管理者」、「メンバー」、「閲覧者」から選択します。ロールの権限は、次の表をご覧ください。（&nbsp;「オーナー」は、プロジェクトを登録した人です）</p>
+                    <div class="pb-2">
+                      <table class="table table-bordered">
+                        <tr>
+                          <th>機能</th>
+                          <th>オーナー</th>
+                          <th>管理者</th>
+                          <th>メンバー</th>
+                          <th>閲覧者</th>
+                        </tr>
+                        <tr>
+                          <td>プロジェクトを削除</td>
+                          <td>〇</td>
+                          <td>×</td>
+                          <td>×</td>
+                          <td>×</td>
+                        </tr>
+                        <tr>
+                          <td>プロジェクト情報を更新</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>×</td>
+                          <td>×</td>
+                        </tr>
+                        <tr>
+                          <td>メンバーを追加</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>×</td>
+                          <td>×</td>
+                        </tr>
+                        <tr>
+                          <td>メンバー情報を閲覧</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                        </tr>
+                        <tr>
+                          <td>メンバー情報を更新</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>×</td>
+                          <td>×</td>
+                        </tr>
+                        <tr>
+                          <td>メンバーを削除</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>×</td>
+                          <td>×</td>
+                        </tr>
+                        <tr>
+                          <td>チケットを作成</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>×</td>
+                        </tr>
+                      </table>
+                    </div>
+                    <p>メンバーを追加し終わったら、「作成」を選択します。</p><a href="images/screen62.png"><img class="border border-info border-1 img-fluid" src="images/screen62.png"></a>
+                    <p class="pt-2">作成したプロジェクトがホーム画面に表示されます。</p><a href="images/screen63.png"><img class="border border-info border-1 img-fluid" src="images/screen63.png"></a>
                     <hr>
                   </section>
                   <section class="pb-2">
                     <h4 id="prjlst">プロジェクト一覧</h4>
+                    <p>自分がオーナーまたは参加しているプロジェクトの一覧を表示するには、画面上部のメニューにある「プロジェクト」を選択するか、ホーム画面で、「プロジェクト」欄にある&nbsp;<img class="icon3" src="images/ionicons/list-outline.svg">&nbsp;アイコンをクリックします。</p><a href="images/screen64.png"><img class="border border-info border-1 img-fluid" src="images/screen64.png"></a>
+                    <p class="pt-2">プロジェクトの一覧が表示されます。</p><a href="images/screen65.png"><img class="border border-info border-1 img-fluid" src="images/screen65.png"></a>
+                    <p class="pt-2">一覧の先頭に表示されているのが、現在選択中のプロジェクトです。<br>選択中のプロジェクトを変更するためには、&nbsp;<img class="icon3" src="images/ionicons/open-outline.svg">&nbsp;アイコンをクリックします。</p>
                     <hr>
                   </section>
                   <section class="pb-2">
                     <h4 id="prjupd">プロジェクトを更新する</h4>
+                    <p>プロジェクトの情報を更新するには、ホーム画面またはプロジェクト一覧画面で、プロジェクトを選択します。</p>
+                    <p>プロジェクト情報画面が表示されます。</p><a href="images/screen66.png"><img class="border border-info border-1 img-fluid" src="images/screen66.png"></a>
+                    <p class="pt-2">プロジェクトメンバーのロールを変更するには、&nbsp;<img class="icon3" src="images/ionicons/settings-outline.svg">&nbsp;アイコンをクリックします。</p>
+                    <p>プロジェクトメンバーを削除するには、&nbsp;<img class="icon3" src="images/ionicons/remove-circle-outline.svg">&nbsp;アイコンをクリックします。</p>
+                    <p>プロジェクトの情報の更新内容を入力し終わったら、「更新」を選択します。</p>
+                    <p>プロジェクトのノートを入力するには、「ノート」タブを選択します。<br>ノートの入力方法は、<a href="markdown.html">マークダウン</a>&nbsp;をご覧ください。</p>
+                    <p>プロジェクトの更新履歴を参照するには、「更新履歴」タブを選択します。<br>表示されるのは、直近の30履歴です。</p><a href="images/screen67.png"><img class="border border-info border-1 img-fluid" src="images/screen67.png"></a>
                     <hr>
                   </section>
                   <section class="pb-2">
                     <h4 id="prjdel">プロジェクトを削除する</h4>
+                    <p>プロジェクトのオーナーは、プロジェクトを削除することができます。<br>プロジェクトを削除するには、プロジェクト情報画面で「削除」を選択します。<br>削除確認メッセージが表示されるので、「削除」を選択します。</p><a href="images/screen68.png"><img class="border border-info border-1 img-fluid" src="images/screen68.png"></a>
                     <hr>
                   </section>
                 </section>

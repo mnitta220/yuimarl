@@ -6,7 +6,7 @@ html(lang="ja")
     title Yuimarl
     link(rel="stylesheet" href="css/bootstrap.min.css")
     link(rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css")
-    link(rel="stylesheet" href="css/style3.css")
+    link(rel="stylesheet" href="css/style4.css")
     link(rel="icon" type="image/x-icon" href="static/favicon.ico")
   body
     main
@@ -56,35 +56,17 @@ html(lang="ja")
                   a(href="images/screen56.png")
                     img.border.border-info.border-1.img-fluid(src="images/screen56.png")
                   p.mt-2 ログイン方法は、以下の３つから選択してください。
-                  //- table.table.table-bordered
-                    tr
-                      td Googleアカウント
-                      td Googleアカウントでログインします。
-                    tr
-                      td GitHubアカウント
-                      td GitHubアカウントでログインします。
-                    tr
-                      td メールアドレス
-                      td
-                        | 次のような、メールアドレスの入力画面が表示されます。
-                        br
-                        a(href="images/screen57.png")
-                          img.border.border-info.border-1.img-fluid(src="images/screen57.png")
-                        br
-                        | メールアドレスを入力して、「次へ」ボタンをクリックすると、メールが送信されます。
-                        br
-                        | そのメールには、ログインするための URL が書かれているので、送信を行ったブラウザで、その URL にアクセスすると、ログインすることができます。
                   ul
                     li
-                      b Googleアカウント
+                      b Google でログイン
                       br
                       | Googleアカウントでログインします。
                     li
-                      b GitHubアカウント
+                      b GitHub でログイン
                       br
                       | GitHubアカウントでログインします。
                     li
-                      b メールアドレス
+                      b メールでログイン
                       br
                       | 次のような、メールアドレスの入力画面が表示されます。
                       br
@@ -101,15 +83,163 @@ html(lang="ja")
                   h3#prj プロジェクト
                   section.pb-2
                     h4#prjadd プロジェクトを作成する
+                    p
+                      | プロジェクトを作成するには、ホーム画面で、「プロジェクト」欄にある&nbsp;
+                      img.icon3(src="images/ionicons/add-circle-outline.svg")
+                      | &nbsp;アイコンをクリックします。
+                    a(href="images/screen58.png")
+                      img.border.border-info.border-1.img-fluid(src="images/screen58.png")
+                    p.pt-2 「プロジェクトを作成」画面で、以下の情報を入力します。
+                    a(href="images/screen59.png")
+                      img.border.border-info.border-1.img-fluid(src="images/screen59.png")
+                    .py-2
+                      table.table.table-bordered
+                        tr
+                          th 項目名
+                          th 説明
+                        tr
+                          td プロジェクト名
+                          td プロジェクトの名前を入力します。
+                        tr
+                          td チケットID接頭辞
+                          td
+                            | プロジェクト内でチケットを作成すると、ID が付与されます。その ID が、「接頭辞＋連番」となります。 
+                            br
+                            | 例えば、接頭辞に「BN」と入力すると、チケットは、BN1、BN2、BN3 ・・・ となります。
+                        tr
+                          td メンバー
+                          td プロジェクトのメンバーを登録します。登録方法は後述します。
+                    p
+                      | プロジェクトのメンバーを登録するには、「メンバー」欄にある&nbsp;
+                      img.icon3(src="images/ionicons/add-circle-outline.svg")
+                      | &nbsp;アイコンをクリックします。
+                    p 「メンバーを検索」ダイアログが表示されます。
+                    a(href="images/screen60.png")
+                      img.border.border-info.border-1.img-fluid(src="images/screen60.png")
+                    p.pt-2
+                      | メンバーとして登録したい人のメールアドレスまたは名前を入力して、「検索」ボタンをクリックします。
+                      br
+                      | 検索されるのは、Yuimarl のユーザーとして登録されているメールアドレスと名前です。登録されている通りのメールアドレスまたは名前でなければ検索されません。たとえば、姓と名の間にスペースが入って登録されていれば、その通りでなければ検索されません。
+                    a(href="images/screen61.png")
+                      img.border.border-info.border-1.img-fluid(src="images/screen61.png")
+                    p.pt-2
+                      | メンバーが検索されたら、「選択」をチェックし、「ロール」を選択します。
+                      br
+                      | ロールは、「管理者」、「メンバー」、「閲覧者」から選択します。ロールの権限は、次の表をご覧ください。（&nbsp;「オーナー」は、プロジェクトを登録した人です）
+                    .pb-2
+                      table.table.table-bordered
+                        tr
+                          th 機能
+                          th オーナー
+                          th 管理者
+                          th メンバー
+                          th 閲覧者
+                        tr
+                          td プロジェクトを削除
+                          td 〇
+                          td ×
+                          td ×
+                          td ×
+                        tr
+                          td プロジェクト情報を更新
+                          td 〇
+                          td 〇
+                          td ×
+                          td ×
+                        tr
+                          td メンバーを追加
+                          td 〇
+                          td 〇
+                          td ×
+                          td ×
+                        tr
+                          td メンバー情報を閲覧
+                          td 〇
+                          td 〇
+                          td 〇
+                          td 〇
+                        tr
+                          td メンバー情報を更新
+                          td 〇
+                          td 〇
+                          td ×
+                          td ×
+                        tr
+                          td メンバーを削除
+                          td 〇
+                          td 〇
+                          td ×
+                          td ×
+                        tr
+                          td チケットを作成
+                          td 〇
+                          td 〇
+                          td 〇
+                          td ×
+                    p メンバーを追加し終わったら、「作成」を選択します。
+                    a(href="images/screen62.png")
+                      img.border.border-info.border-1.img-fluid(src="images/screen62.png")
+                    p.pt-2 作成したプロジェクトがホーム画面に表示されます。
+                    a(href="images/screen63.png")
+                      img.border.border-info.border-1.img-fluid(src="images/screen63.png")
+
                     hr
                   section.pb-2
                     h4#prjlst プロジェクト一覧
+                    p
+                      | 自分がオーナーまたは参加しているプロジェクトの一覧を表示するには、画面上部のメニューにある「プロジェクト」を選択するか、ホーム画面で、「プロジェクト」欄にある&nbsp;
+                      img.icon3(src="images/ionicons/list-outline.svg")
+                      | &nbsp;アイコンをクリックします。
+                    a(href="images/screen64.png")
+                      img.border.border-info.border-1.img-fluid(src="images/screen64.png")
+                    p.pt-2 プロジェクトの一覧が表示されます。
+                    a(href="images/screen65.png")
+                      img.border.border-info.border-1.img-fluid(src="images/screen65.png")
+                    p.pt-2
+                      | 一覧の先頭に表示されているのが、現在選択中のプロジェクトです。
+                      br
+                      | 選択中のプロジェクトを変更するためには、&nbsp;
+                      img.icon3(src="images/ionicons/open-outline.svg")
+                      | &nbsp;アイコンをクリックします。
                     hr
                   section.pb-2
                     h4#prjupd プロジェクトを更新する
+                    p プロジェクトの情報を更新するには、ホーム画面またはプロジェクト一覧画面で、プロジェクトを選択します。
+                    p プロジェクト情報画面が表示されます。
+                    a(href="images/screen66.png")
+                      img.border.border-info.border-1.img-fluid(src="images/screen66.png")
+                    p.pt-2
+                      | プロジェクトメンバーのロールを変更するには、&nbsp;
+                      img.icon3(src="images/ionicons/settings-outline.svg")
+                      | &nbsp;アイコンをクリックします。
+                    p
+                      | プロジェクトメンバーを削除するには、&nbsp;
+                      img.icon3(src="images/ionicons/remove-circle-outline.svg")
+                      | &nbsp;アイコンをクリックします。
+                    p プロジェクトの情報の更新内容を入力し終わったら、「更新」を選択します。
+                    p
+                      | プロジェクトのノートを入力するには、「ノート」タブを選択します。
+                      br
+                      | ノートの入力方法は、
+                      a(href="markdown.html") マークダウン
+                      | &nbsp;をご覧ください。
+                    p
+                      | プロジェクトの更新履歴を参照するには、「更新履歴」タブを選択します。
+                      br
+                      | 表示されるのは、直近の30履歴です。
+                    a(href="images/screen67.png")
+                      img.border.border-info.border-1.img-fluid(src="images/screen67.png")
                     hr
                   section.pb-2
                     h4#prjdel プロジェクトを削除する
+                    p
+                      | プロジェクトのオーナーは、プロジェクトを削除することができます。
+                      br
+                      | プロジェクトを削除するには、プロジェクト情報画面で「削除」を選択します。
+                      br
+                      | 削除確認メッセージが表示されるので、「削除」を選択します。
+                    a(href="images/screen68.png")
+                      img.border.border-info.border-1.img-fluid(src="images/screen68.png")
                     hr
                 section.pb-2
                   h3#tkt チケット

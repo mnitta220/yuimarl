@@ -46,7 +46,7 @@ impl Component for Nav {
 
                         *buf += r#"<li class="nav-item">"#;
                         {
-                            *buf += r##"<a class="nav-link" href="#items">利用ガイド</a>"##;
+                            *buf += r#"<a class="nav-link" href="https://mnitta220.github.io/yuimarl/howtouse.html" target="_blank">利用ガイド</a>"#;
                         }
                         *buf += r#"</li>"#;
 

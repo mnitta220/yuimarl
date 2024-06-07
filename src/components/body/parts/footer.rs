@@ -26,13 +26,13 @@ impl Component for Footer {
 
                     *buf += r#"<li class="nav-item">"#;
                     {
-                        *buf += r##"<a class="nav-link" href="#about">利用規約</a>"##;
+                        *buf += r#"<a class="nav-link" href="https://mnitta220.github.io/yuimarl/agreement.html" target="_blank">利用規約</a>"#;
                     }
                     *buf += r#"</li>"#;
 
                     *buf += r#"<li class="nav-item">"#;
                     {
-                        *buf += r#"<a class="nav-link" href="/contact">お問い合わせ</a>"#;
+                        *buf += r#"<a class="nav-link" href="https://mnitta220.github.io/yuimarl/index.html#contact" target="_blank">お問い合わせ</a>"#;
                     }
                     *buf += r#"</li>"#;
 

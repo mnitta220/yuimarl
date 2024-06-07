@@ -174,10 +174,13 @@
                     <h4 id="prjupd">プロジェクトを更新する</h4>
                     <p>プロジェクトの情報を更新するには、ホーム画面またはプロジェクト一覧画面で、プロジェクトを選択します。</p>
                     <p>プロジェクト情報画面が表示されます。</p><a href="images/screen66.png"><img class="border border-info border-1 img-fluid" src="images/screen66.png"></a>
-                    <p class="pt-2">プロジェクトメンバーのロールを変更するには、&nbsp;<img class="icon3" src="images/ionicons/settings-outline.svg">&nbsp;アイコンをクリックします。</p>
+                    <h5 class="pt-2">基本情報タブ</h5>
+                    <p>プロジェクトメンバーのロールを変更するには、&nbsp;<img class="icon3" src="images/ionicons/settings-outline.svg">&nbsp;アイコンをクリックします。</p>
                     <p>プロジェクトメンバーを削除するには、&nbsp;<img class="icon3" src="images/ionicons/remove-circle-outline.svg">&nbsp;アイコンをクリックします。</p>
                     <p>プロジェクトの情報の更新内容を入力し終わったら、「更新」を選択します。</p>
+                    <h5 class="pt-2">ノートタブ</h5>
                     <p>プロジェクトのノートを入力するには、「ノート」タブを選択します。<br>ノートの入力方法は、<a href="markdown.html">マークダウン</a>&nbsp;をご覧ください。</p>
+                    <h5 class="pt-2">更新履歴タブ</h5>
                     <p>プロジェクトの更新履歴を参照するには、「更新履歴」タブを選択します。<br>表示されるのは、直近の30履歴です。</p><a href="images/screen67.png"><img class="border border-info border-1 img-fluid" src="images/screen67.png"></a>
                     <hr>
                   </section>
@@ -191,18 +194,93 @@
                   <h3 id="tkt">チケット</h3>
                   <section class="pb-2">
                     <h4 id="tktadd">チケットを作成する</h4>
+                    <p>プロジェクトのチケットを作成するには、ホーム画面で、「チケット」欄にある&nbsp;<img class="icon3" src="images/ionicons/add-circle-outline.svg">&nbsp;アイコンをクリックします。</p><a href="images/screen69.png"><img class="border border-info border-1 img-fluid" src="images/screen69.png"></a>
+                    <p class="pt-2">「チケットを作成」画面で、以下の情報を入力します。</p><a href="images/screen70.png"><img class="border border-info border-1 img-fluid" src="images/screen70.png"></a>
+                    <div class="py-2">
+                      <table class="table table-bordered">
+                        <tr>
+                          <th>項目名</th>
+                          <th>説明</th>
+                        </tr>
+                        <tr>
+                          <td>チケット名</td>
+                          <td>チケットの名前を入力します。</td>
+                        </tr>
+                        <tr>
+                          <td>内容</td>
+                          <td>チケットの内容を入力します。</td>
+                        </tr>
+                        <tr>
+                          <td>担当者</td>
+                          <td>チケットの担当者を選択します。選択方法は後述します。</td>
+                        </tr>
+                        <tr>
+                          <td>開始日 / 終了日</td>
+                          <td>開始日と終了日が決まっていれば入力します。</td>
+                        </tr>
+                        <tr>
+                          <td>進捗率</td>
+                          <td>進捗率を0～100で入力します。「完了済」をチェックすると「100」と入力されます。</td>
+                        </tr>
+                        <tr>
+                          <td>優先度</td>
+                          <td>優先度を「最優先」、「高」、「中」、「低」、「未設定」から選択します。</td>
+                        </tr>
+                        <tr>
+                          <td>親チケット</td>
+                          <td>このチケットの親となるチケットを選択します。選択方法は後述します。</td>
+                        </tr>
+                        <tr>
+                          <td>子チケット</td>
+                          <td>ここは入力時には入力できません。（このチケットを親チケットとするチケットが表示されます）</td>
+                        </tr>
+                        <tr>
+                          <td>成果物</td>
+                          <td>このチケットの成果物を入力します。入力方法は後述します。</td>
+                        </tr>
+                      </table>
+                    </div>
+                    <p>チケットの担当者を登録するには、「担当者」欄にある&nbsp;<img class="icon3" src="images/ionicons/add-circle-outline.svg">&nbsp;アイコンをクリックします。</p>
+                    <p>「担当者を追加」ダイアログが表示されます。プロジェクトのメンバーが一覧表示されています。<br>担当者として登録したい人の「選択」をチェックして、「担当者に追加」ボタンをクリックします。</p><a href="images/screen71.png"><img class="border border-info border-1 img-fluid" src="images/screen71.png"></a>
+                    <p class="pt-2">チケット情報画面に担当者が表示されます。<br><img class="icon3" src="images/ionicons/arrow-down-outline.svg">&nbsp;または&nbsp;<img class="icon3" src="images/ionicons/arrow-up-outline.svg">&nbsp;アイコンで上下に移動することができます。</p><a href="images/screen72.png"><img class="border border-info border-1 img-fluid" src="images/screen72.png"></a>
+                    <p class="pt-2">チケットの親チケットを登録するには、「親チケット」欄にある&nbsp;<img class="icon3" src="images/ionicons/add-circle-outline.svg">&nbsp;アイコンをクリックします。</p>
+                    <p>「親チケットを追加」ダイアログが表示されます。<br>親チケットの ID を入力して「検索」をクリックすると、チケットが検索されるので、「親チケットを追加」ボタンをクリックすると、親チケットが設定されます。</p><a href="images/screen73.png"><img class="border border-info border-1 img-fluid" src="images/screen73.png"></a>
+                    <p class="pt-2">チケットの成果物を登録するには、「成果物」欄にある&nbsp;<img class="icon3" src="images/ionicons/add-circle-outline.svg">&nbsp;アイコンをクリックします。</p>
+                    <p>「成果物を追加」ダイアログが表示されます。<br>「成果物名」と「ファイルパス / URL」を入力してください。成果物がファイルサーバーにある場合は「ファイルパス」、Web上にある場合は「URL」を入力してください。<br>「追加」ボタンをクリックすると、成果物が設定されます。</p><a href="images/screen74.png"><img class="border border-info border-1 img-fluid" src="images/screen74.png"></a>
+                    <p class="pt-2">入力が終わったら、「作成」を選択します。</p>
                     <hr>
                   </section>
                   <section class="pb-2">
                     <h4 id="tktlst">チケット一覧</h4>
+                    <p>プロジェクトに登録されているチケットの一覧を表示するには、画面上部のメニューにある「チケット」を選択するか、ホーム画面で、「チケット」欄にある&nbsp;<img class="icon3" src="images/ionicons/list-outline.svg">&nbsp;アイコンをクリックします。</p><a href="images/screen75.png"><img class="border border-info border-1 img-fluid" src="images/screen75.png"></a>
+                    <p class="pt-2">チケットの一覧が表示されます。</p><a href="images/screen76.png"><img class="border border-info border-1 img-fluid" src="images/screen76.png"></a>
+                    <p class="pt-2">以下の条件を入力して「フィルター」ボタンをクリックすると、条件に該当するチケットが絞り込まれて表示されます。</p>
+                    <ul>
+                      <li><b>チケットID</b><br>入力されたチケットID のチケットを表示します。</li>
+                      <li><b>チケット名（部分一致）</b><br>チケット名に、入力された文字列が含まれるチケットを表示します。</li>
+                      <li><b>親チケットID</b><br>入力されたチケットID の子チケットを表示します。</li>
+                      <li><b>完了済を表示</b><br>チェックを付けると、完了済みのチケットも表示されます。（チェックを付けていないと、完了済みのチケットは表示されません）</li>
+                    </ul>
                     <hr>
                   </section>
                   <section class="pb-2">
                     <h4 id="tktupd">チケットを更新する</h4>
+                    <p>チケットの情報を更新するには、ホーム画面またはチケット一覧画面で、チケットID を選択します。</p>
+                    <p>チケット情報画面が表示されます。</p><a href="images/screen01.png"><img class="border border-info border-1 img-fluid" src="images/screen01.png"></a>
+                    <h5 class="pt-2">基本情報タブ</h5>
+                    <p>基本情報タブでの入力内容は、チケットの作成時と同じです。</p>
+                    <p>更新内容を入力し終わったら、「更新」を選択します。</p>
+                    <h5 class="pt-2">ノートタブ</h5>
+                    <p>チケットのノートを入力するには、「ノート」タブを選択します。<br>ノートの入力方法は、<a href="markdown.html">マークダウン</a>&nbsp;をご覧ください。</p>
+                    <h5 class="pt-2">コメントタブ</h5>
+                    <p>現在は、コメントタブはお使いいただくことができません。</p>
+                    <h5 class="pt-2">更新履歴タブ</h5>
+                    <p>チケットの更新履歴を参照するには、「更新履歴」タブを選択します。<br>表示されるのは、直近の30履歴です。</p><a href="images/screen77.png"><img class="border border-info border-1 img-fluid" src="images/screen77.png"></a>
                     <hr>
                   </section>
                   <section class="pb-2">
                     <h4 id="tktdel">チケットを削除する</h4>
+                    <p>プロジェクトのオーナーまたは管理者と、チケットを作成したメンバーは、チケットを削除することができます。<br>チケットを削除するには、チケット情報画面で「削除」を選択します。<br>削除確認メッセージが表示されるので、「削除」を選択します。</p><a href="images/screen78.png"><img class="border border-info border-1 img-fluid" src="images/screen78.png"></a>
                   </section>
                 </section>
               </div>

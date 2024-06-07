@@ -805,7 +805,7 @@ impl Component for TicketInfo {
                 {
                     *buf += r#"<div class="modal-header">"#;
                     {
-                        *buf += r#"<h1 class="modal-title fs-5" id="ticketDelModalLabel">プロジェクト削除</h1>"#;
+                        *buf += r#"<h1 class="modal-title fs-5" id="ticketDelModalLabel">チケット削除</h1>"#;
                         *buf += r#"<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>"#;
                     }
                     *buf += r#"</div>"#;

@@ -68,10 +68,7 @@ html(lang="ja")
                           | &nbsp;を作成し、pug をコンパイルして html を生成します。
                           br
                           | 生成された html をブラウザで表示して確認し、必要に応じて修正します。
-                        p
-                          | たとえば、プロジェクト作成のシナリオのプロトタイプは、次の場所にあります。
-                          br
-                          a(href="https://github.com/mnitta220/yuimarl/tree/main/proto/02_project_add" target="_blank") https://github.com/mnitta220/yuimarl/tree/main/proto/02_project_add
+                        p たとえば、プロジェクト作成のシナリオのプロトタイプは、「proto/02_project_add/」にあります。
                         p proto/02_project_add のフォルダにある pug をコンパイルするには、次のコマンドを実行します。
                         code
                           | pug -P proto/02_project_add
@@ -112,9 +109,15 @@ html(lang="ja")
                       hr
                       section.pb-2
                         h4#step07 開発環境にデプロイしてテストする
+                        p
+                          a(href="deploy.html") 運用環境構築
+                          | &nbsp;の手順で、開発環境用の Cloud Run にデプロイしてテストを行います。
                       hr
                       section.pb-2
                         h4#step08 本番環境にリリースする
+                        p
+                          a(href="deploy.html") 運用環境構築
+                          | &nbsp;の手順で、本番環境用の Cloud Run にデプロイして動作確認を行います。
 
               .col-md-3
                 .submenu.mt-3

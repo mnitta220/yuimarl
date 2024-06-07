@@ -49,6 +49,7 @@
                       <li><a href="#step01">Google Cloud プロジェクトを作成する</a></li>
                       <li><a href="#step02">Firebase プロジェクトを作成する</a></li>
                       <li><a href="#step03">Cloud Run を設定する</a></li>
+                      <li><a href="#step04">新バージョンのデプロイ</a></li>
                     </ol>
                     <hr>
                     <section class="pb-2">
@@ -62,7 +63,7 @@
                     <section class="pb-2">
                       <h3 id="step02">Firebase プロジェクトを作成する</h3>
                       <p><a href="https://console.firebase.google.com/" target="_blank">Firebase コンソール</a>で「プロジェクトを作成」をクリックします。<a href="images/screen04.png"><img class="border border-info border-1 img-fluid" src="images/screen04.png"></a></p>
-                      <p>プロジェクトの名前を入力して「続行」をクリックします。<a href="images/screen05.png"><img class="border border-info border-1 img-fluid" src="images/screen05.png"></a></p>
+                      <p>プロジェクトの名前を入力して「続行」をクリックします。（上記で作成したプロジェクトがリストに表示されるので、それを選択してください。）<a href="images/screen05.png"><img class="border border-info border-1 img-fluid" src="images/screen05.png"></a></p>
                       <p>「続行」をクリックします。<a href="images/screen06.png"><img class="border border-info border-1 img-fluid" src="images/screen06.png"></a></p>
                       <p>「Firebaseを追加」をクリックします。<a href="images/screen07.png"><img class="border border-info border-1 img-fluid" src="images/screen07.png"></a></p>
                       <p>「続行」をクリックします。<a href="images/screen08.png"><img class="border border-info border-1 img-fluid" src="images/screen08.png"></a></p>
@@ -154,6 +155,12 @@
                       <p>次のような「インデックスの作成または更新」画面で「保存」をクリックするとインデックスが作成されます。<a href="images/screen36.png"><img class="border border-info border-1 img-fluid" src="images/screen36.png"></a></p>
                       <p>ステータスが「ビルド中...」から「有効」に変わったらインデックスが作成されました。<a href="images/screen37.png"><img class="border border-info border-1 img-fluid" src="images/screen37.png"></a></p>
                       <p>再度、データベースチェック画面にアクセスすると、またインデックスが作成されていないメッセージが表示されますので、インデックスを作成してください。<br>これを、「チェックが正常に完了しました。」というメッセージが表示されるまで繰り返してください（現在、7個のインデックスが必要です）。このメッセージが表示されたら、ホーム画面に遷移して、Yuimarl を使用することができます。<a href="images/screen55.png"><img class="border border-info border-1 img-fluid" src="images/screen55.png"></a></p>
+                    </section>
+                    <hr>
+                    <section class="pb-2">
+                      <h3 id="step04">新バージョンのデプロイ</h3>
+                      <p>新しいバージョンをデプロイするためには、Cloud Run のコンソール画面で、「新しいリビジョンの編集とデプロイ」を選択して、新バージョンの Docker イメージを選択して「デプロイ」を実行します。</p>
+                      <p><a href="https://hub.docker.com/repository/docker/masahironitta/yuimarl/general" target="_blank">Yuimarl Docker Hub レジストリ</a>&nbsp; に登録されている最新のイメージを設定してください。<br>定期的に最新バージョンのチェックを行われることをお勧めいたします。</p>
                     </section>
                   </section>
                 </section>

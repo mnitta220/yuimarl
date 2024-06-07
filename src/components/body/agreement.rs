@@ -89,7 +89,7 @@ impl Component for AgreementBody {
                         }
 
                         *buf += r#"<div class="alert alert-info mb-4" role="alert">"#;
-                        *buf += r#"利用者がご自身でこのシステムのサーバーを運用する方法を公開しています。可能であれば、それによって利用することもご検討ください。"#;
+                        *buf += r#"利用者がご自身でこのシステムのサーバーを構築する方法を公開しています。可能であれば、それによって利用することもご検討ください。"#;
                         *buf += r#"</div>"#;
                     }
                     *buf += r#"</div>"#;

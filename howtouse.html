@@ -50,6 +50,7 @@
                         <li><a href="#tktlst">チケット一覧</a></li>
                         <li><a href="#tktupd">チケットを更新する</a></li>
                         <li><a href="#tktdel">チケットを削除する</a></li>
+                        <li><a href="#tktprv">チケットの権限</a></li>
                       </ol>
                     </li>
                   </ol>
@@ -252,6 +253,7 @@
                   </section>
                   <section class="pb-2">
                     <h4 id="tktlst">チケット一覧</h4>
+                    <p>ホーム画面の「チケット」欄には、自分が担当者として設定されているチケットが、優先度順に表示されます。</p>
                     <p>プロジェクトに登録されているチケットの一覧を表示するには、画面上部のメニューにある「チケット」を選択するか、ホーム画面で、「チケット」欄にある&nbsp;<img class="icon3" src="images/ionicons/list-outline.svg">&nbsp;アイコンをクリックします。</p><a href="images/screen75.png"><img class="border border-info border-1 img-fluid" src="images/screen75.png"></a>
                     <p class="pt-2">チケットの一覧が表示されます。</p><a href="images/screen76.png"><img class="border border-info border-1 img-fluid" src="images/screen76.png"></a>
                     <p class="pt-2">以下の条件を入力して「フィルター」ボタンをクリックすると、条件に該当するチケットが絞り込まれて表示されます。</p>
@@ -281,6 +283,60 @@
                   <section class="pb-2">
                     <h4 id="tktdel">チケットを削除する</h4>
                     <p>プロジェクトのオーナーまたは管理者と、チケットを作成したメンバーは、チケットを削除することができます。<br>チケットを削除するには、チケット情報画面で「削除」を選択します。<br>削除確認メッセージが表示されるので、「削除」を選択します。</p><a href="images/screen78.png"><img class="border border-info border-1 img-fluid" src="images/screen78.png"></a>
+                    <hr>
+                  </section>
+                  <section class="pb-2">
+                    <h4 id="tktprv">チケットの権限</h4>
+                    <p class="pt-2">チケットの権限は、次の表をご覧ください。</p>
+                    <div class="pb-2">
+                      <table class="table table-bordered">
+                        <tr>
+                          <th>機能</th>
+                          <th>作成者</th>
+                          <th>担当者</th>
+                          <th>オーナー</th>
+                          <th>管理者</th>
+                          <th>メンバー</th>
+                          <th>閲覧者</th>
+                        </tr>
+                        <tr>
+                          <td>チケットを閲覧</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                        </tr>
+                        <tr>
+                          <td>チケットを更新</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>×</td>
+                          <td>×</td>
+                        </tr>
+                        <tr>
+                          <td>コメントを追加</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>×</td>
+                        </tr>
+                        <tr>
+                          <td>チケットを削除</td>
+                          <td>〇</td>
+                          <td>×</td>
+                          <td>〇</td>
+                          <td>〇</td>
+                          <td>×</td>
+                          <td>×</td>
+                        </tr>
+                      </table>
+                    </div>
                   </section>
                 </section>
               </div>

@@ -118,7 +118,7 @@ pub async fn user_by_email(Form(input): Form<UserByEmailInput>) -> String {
 
 /// ユーザーを名前で検索する
 pub async fn user_by_name(Form(input): Form<UserByNameInput>) -> String {
-    tracing::info!("GET /user_by_name");
+    tracing::debug!("GET /user_by_name");
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
@@ -243,7 +243,7 @@ pub struct TicketByIdDispResult {
 
 /// チケットをid_dispで検索する
 pub async fn ticket_by_id_disp(Form(input): Form<TicketByIdDispInput>) -> String {
-    tracing::info!(
+    tracing::debug!(
         "GET /ticket_by_id_disp: {}, {}",
         &input.project_id,
         &input.id_disp

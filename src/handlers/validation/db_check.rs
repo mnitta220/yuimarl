@@ -199,6 +199,13 @@ impl DbCheckValidation {
             }
         };
 
+        match model::news::News::get_news_list(&session.uid, db).await {
+            Ok(news) => news,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e));
+            }
+        };
+
         if let Err(e) = model::project::Project::delete_db_check(&db).await {
             return Err(anyhow::anyhow!(e));
         }

@@ -80,6 +80,7 @@ async fn main() {
             "/ticket_list",
             get(handlers::ticket::get_list).post(handlers::ticket::post_list),
         )
+        .route("/news_del/:id", get(handlers::news::del_news))
         .route("/contact", get(handlers::contact::get_contact))
         .route("/api/firebaseConfig", get(handlers::api::firebase_config))
         .route("/api/userByEmail", post(handlers::api::user_by_email))

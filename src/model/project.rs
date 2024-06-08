@@ -362,6 +362,26 @@ impl Project {
                     },
                 };
             }
+
+            if member.uid != session.uid {
+                match super::news::News::upsert(
+                    &member.uid,
+                    super::news::NewsEvent::ProjectMemberAdd,
+                    &id,
+                    &input.project_name,
+                    None,
+                    &db,
+                )
+                .await
+                {
+                    Ok(_) => {
+                        tracing::debug!("News inserted");
+                    }
+                    Err(e) => {
+                        return Err(anyhow::anyhow!(e.to_string()));
+                    }
+                }
+            }
         }
 
         tracing::debug!("Project inserted {:?}", prj);

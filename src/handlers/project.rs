@@ -361,7 +361,7 @@ pub async fn get_project_select(
     cookies: Cookies,
     Path(id): Path<String>,
 ) -> Result<Html<String>, AppError> {
-    tracing::info!("GET /project_select/{}", id);
+    tracing::debug!("GET /project_select/{}", id);
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,

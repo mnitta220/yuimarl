@@ -63,10 +63,18 @@ pub async fn show_home(
         }
     };
 
+    let news = match model::news::News::get_news_list(&session.uid, &db).await {
+        Ok(news) => news,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
     props.project = project;
     props.project_member = member;
     props.tickets = tickets;
     props.session = Some(session);
+    props.news = news;
     let mut page = HomePage::new(props, owner_cnt);
 
     Ok(Html(page.write()))

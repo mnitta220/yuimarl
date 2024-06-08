@@ -127,7 +127,7 @@ impl Ticket {
         let mut ticket = Ticket::new();
         let now = Utc::now();
         ticket.project_id = project.id.clone();
-        ticket.id_disp = Some(id_disp);
+        ticket.id_disp = Some(id_disp.clone());
         ticket.name = Some(input.name.clone());
 
         if input.description.len() > 0 {
@@ -225,6 +225,28 @@ impl Ticket {
                 Ok(_) => {}
                 Err(e) => return Err(anyhow::anyhow!(e.to_string())),
             };
+
+            if member.uid != session.uid {
+                let news_ticket = super::news::NewsTicket {
+                    id: id.clone(),
+                    id_disp: id_disp.clone(),
+                    name: input.name.clone(),
+                };
+
+                if let Err(e) = super::news::News::upsert(
+                    &member.uid,
+                    super::news::NewsEvent::TicketMemberAdd,
+                    &id,
+                    &project.project_name.clone().unwrap_or_default(),
+                    Some(news_ticket),
+                    &db,
+                )
+                .await
+                {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            }
+
             seq += 1;
         }
 
@@ -500,6 +522,42 @@ impl Ticket {
                 }
                 c += 1;
                 current = current_members.get(c);
+            }
+        }
+
+        for upd in members {
+            if upd.uid == session.uid {
+                continue;
+            }
+
+            let mut found = false;
+            for cur in &current_members {
+                if upd.uid == cur.uid {
+                    found = true;
+                    break;
+                }
+            }
+            if found {
+                continue;
+            }
+
+            let news_ticket = super::news::NewsTicket {
+                id: input.ticket_id.to_string(),
+                id_disp: ticket.id_disp.clone().unwrap_or_default(),
+                name: ticket.name.clone().unwrap_or_default(),
+            };
+
+            if let Err(e) = super::news::News::upsert(
+                &upd.uid,
+                super::news::NewsEvent::TicketMemberAdd,
+                &ticket.project_id.clone().unwrap_or_default(),
+                "",
+                Some(news_ticket),
+                &db,
+            )
+            .await
+            {
+                return Err(anyhow::anyhow!(e.to_string()));
             }
         }
 

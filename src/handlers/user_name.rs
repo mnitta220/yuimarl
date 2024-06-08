@@ -18,7 +18,7 @@ pub async fn post(
     cookies: Cookies,
     Form(input): Form<UserNameInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::info!("POST /user_name: {}", input.name);
+    tracing::debug!("POST /user_name: {}", input.name);
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,

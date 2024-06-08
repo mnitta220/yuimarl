@@ -64,7 +64,7 @@ pub async fn post(cookies: Cookies) -> Result<Html<String>, AppError> {
 
     props.session = Some(session);
 
-    let mut page = HomePage::new(props);
+    let mut page = HomePage::new(props, 0);
 
     Ok(Html(page.write()))
 }

@@ -5,13 +5,15 @@ use crate::{model, Props};
 pub struct HomeBody {
     pub nav: Box<dyn Component + Send>,
     pub footer: Box<dyn Component + Send>,
+    pub owner_cnt: usize,
 }
 
 impl HomeBody {
-    pub fn new() -> Self {
+    pub fn new(owner_cnt: usize) -> Self {
         HomeBody {
             nav: Box::new(Nav {}),
             footer: Box::new(Footer {}),
+            owner_cnt,
         }
     }
 }
@@ -208,13 +210,16 @@ impl Component for HomeBody {
                                                     *buf += r#"<span class="btn-help">&nbsp;: プロジェクト一覧</span>"#;
                                                 }
                                                 *buf += r#"&nbsp;&nbsp;&nbsp;"#;
-                                                *buf += r#"<a href="/project_add" title="プロジェクトを作成">"#;
-                                                {
-                                                    *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg">"#;
-                                                }
-                                                *buf += r#"</a>"#;
-                                                if let None = &props.project {
-                                                    *buf += r#"<span class="btn-help">&nbsp;: プロジェクトを作成</span>"#;
+
+                                                if self.owner_cnt < 10 {
+                                                    *buf += r#"<a href="/project_add" title="プロジェクトを作成">"#;
+                                                    {
+                                                        *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg">"#;
+                                                    }
+                                                    *buf += r#"</a>"#;
+                                                    if let None = &props.project {
+                                                        *buf += r#"<span class="btn-help">&nbsp;: プロジェクトを作成</span>"#;
+                                                    }
                                                 }
                                             }
                                             *buf += r#"</div>"#;
@@ -248,7 +253,7 @@ impl Component for HomeBody {
 
                                     *buf += r#"<div class="col-md-9">"#;
                                     {
-                                        if props.project.is_some() {
+                                        if let Some(project) = &props.project {
                                             if let Some(m) = &props.project_member {
                                                 if let Some(role) = m.role {
                                                     for ticket in props.tickets.iter() {
@@ -281,11 +286,15 @@ impl Component for HomeBody {
                                                             || role == model::project::ProjectRole::Administrator as i32
                                                             || role == model::project::ProjectRole::Member as i32
                                                         {
-                                                            *buf += r#"&nbsp;&nbsp;&nbsp;<a href="/ticket_add">"#;
-                                                            {
-                                                                *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="チケットを追加">"#;
+                                                            let ticket_cnt = project.ticket_number.unwrap_or_default();
+                                                            let ticket_limit = project.ticket_limit.unwrap_or_default();
+                                                            if ticket_cnt < ticket_limit {
+                                                                *buf += r#"&nbsp;&nbsp;&nbsp;<a href="/ticket_add">"#;
+                                                                {
+                                                                    *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="チケットを追加">"#;
+                                                                }
+                                                                *buf += r#"</a>"#;
                                                             }
-                                                            *buf += r#"</a>"#;
                                                         }
                                                     }
                                                     *buf += r#"</p>"#;

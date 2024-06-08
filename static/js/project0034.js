@@ -202,6 +202,13 @@ function setMemberList() {
     }
 
     $("#members-tbody").html(buf);
+
+    var limit = Number($("#member_limit").val());
+    if (members.length < limit) {
+        $('#divAddMember').removeClass('d-none');
+    } else {
+        $('#divAddMember').addClass('d-none');
+    }
 }
 
 $('#btnProjectDel').on('click', function () {

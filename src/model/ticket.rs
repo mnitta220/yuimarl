@@ -71,6 +71,16 @@ impl Ticket {
         }
     }
 
+    pub fn priority_to_string(&self) -> String {
+        match self.priority {
+            4 => "最優先".to_string(),
+            3 => "高".to_string(),
+            2 => "中".to_string(),
+            1 => "低".to_string(),
+            _ => "".to_string(),
+        }
+    }
+
     pub async fn find(id: &str, db: &FirestoreDb) -> Result<Option<Self>> {
         let obj_by_id: Option<Ticket> = match db
             .fluent()

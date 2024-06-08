@@ -6,13 +6,15 @@ use chrono::{DateTime, FixedOffset};
 pub struct ProjectListBody {
     pub nav: Box<dyn Component + Send>,
     pub footer: Box<dyn Component + Send>,
+    pub owner_cnt: i32,
 }
 
 impl ProjectListBody {
-    pub fn new() -> Self {
+    pub fn new(owner_cnt: i32) -> Self {
         ProjectListBody {
             nav: Box::new(Nav {}),
             footer: Box::new(Footer {}),
+            owner_cnt,
         }
     }
 }
@@ -136,19 +138,21 @@ impl Component for ProjectListBody {
                         }
                         *buf += r#"</div>"#;
 
-                        *buf += r#"<div class="row">"#;
-                        {
-                            *buf += r#"<div class="col">"#;
+                        if self.owner_cnt < 10 {
+                            *buf += r#"<div class="row">"#;
                             {
-                                *buf += r#"<a href="/project_add" title="プロジェクトを作成">"#;
+                                *buf += r#"<div class="col">"#;
                                 {
-                                    *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg">"#;
+                                    *buf += r#"<a href="/project_add" title="プロジェクトを作成">"#;
+                                    {
+                                        *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg">"#;
+                                    }
+                                    *buf += r#"</a>"#;
                                 }
-                                *buf += r#"</a>"#;
+                                *buf += r#"</div>"#;
                             }
                             *buf += r#"</div>"#;
                         }
-                        *buf += r#"</div>"#;
                     }
                     *buf += r#"</div>"#;
                 }

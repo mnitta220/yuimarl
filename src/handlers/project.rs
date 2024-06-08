@@ -72,16 +72,17 @@ pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
     let mut props = page::Props::new(&session.id);
     props.title = Some("プロジェクト一覧".to_string());
 
-    let projects = match model::project::ProjectMember::my_projects(&session, &db).await {
-        Ok(projects) => projects,
-        Err(e) => {
-            return Err(AppError(anyhow::anyhow!(e)));
-        }
-    };
+    let (projects, owner_cnt) =
+        match model::project::ProjectMember::my_projects(&session, &db).await {
+            Ok(projects) => projects,
+            Err(e) => {
+                return Err(AppError(anyhow::anyhow!(e)));
+            }
+        };
 
     props.session = Some(session);
     props.project_members = projects;
-    let mut page = ProjectListPage::new(props);
+    let mut page = ProjectListPage::new(props, owner_cnt);
 
     Ok(Html(page.write()))
 }

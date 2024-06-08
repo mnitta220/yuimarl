@@ -1,4 +1,4 @@
-use crate::{components::Component, Props};
+use crate::{components::Component, model, Props};
 
 pub struct ProjectInfo {
     pub can_update: bool,
@@ -66,6 +66,13 @@ impl Component for ProjectInfo {
             // メンバー
             *buf += r#"<div class="row py-2">"#;
             {
+                let mut member_limit = model::project::MEMBER_LIMIT_DEFAULT as usize;
+                if let Some(p) = &props.project {
+                    if let Some(l) = p.member_limit {
+                        member_limit = l as usize;
+                    }
+                }
+
                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="member">"#;
                 *buf += r#"メンバー</label>"#;
 
@@ -133,17 +140,28 @@ impl Component for ProjectInfo {
                         *buf += r#"</table>"#;
 
                         if self.can_update {
-                            *buf += r#"<a href="javascript:clickAddMember();">"#;
-                            {
-                                *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="メンバーを追加">"#;
+                            *buf += r#"<div"#;
+                            if props.project_members.len() >= member_limit {
+                                *buf += r#" class="d-none""#;
                             }
-                            *buf += r#"</a>"#;
+                            *buf += r#" id="divAddMember">"#;
+                            {
+                                *buf += r#"<a href="javascript:clickAddMember();">"#;
+                                {
+                                    *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="メンバーを追加">"#;
+                                }
+                                *buf += r#"</a>"#;
+                            }
+                            *buf += r#"</div>"#;
                         }
                     }
                     *buf += r#"</div>"#;
                 }
                 *buf += r#"</div>"#;
 
+                *buf += r#"<input type="hidden" id="member_limit" name="member_limit" value=""#;
+                *buf += &member_limit.to_string();
+                *buf += r#"">"#;
                 *buf += r#"<input type="hidden" id="members" name="members" value=""#;
                 if let Ok(r) = serde_json::to_string(&props.project_members) {
                     super::super::super::escape_html(&r, buf);

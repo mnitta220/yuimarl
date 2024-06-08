@@ -226,6 +226,39 @@ impl Project {
         Ok(projects)
     }
 
+    // ログインユーザーがオーナーになっているプロジェクトの件数を取得する。
+    pub async fn count_owner_projects(owner: &String, db: &FirestoreDb) -> Result<usize> {
+        let object_stream: BoxStream<FirestoreResult<Project>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(Project::{id, db_check, deleted}))
+            .from(COLLECTION_NAME)
+            .filter(|q| {
+                q.for_all([
+                    q.field(path!(Project::owner)).eq(owner),
+                    q.field(path!(Project::deleted)).eq(false),
+                ])
+            })
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let projects: Vec<Project> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        Ok(projects.len())
+    }
+
     pub async fn insert(
         input: &crate::handlers::project::ProjectInput,
         session: &Session,
@@ -944,7 +977,7 @@ impl ProjectMember {
     }
 
     /// 自分のプロジェクトを検索する
-    pub async fn my_projects(session: &Session, db: &FirestoreDb) -> Result<Vec<Self>> {
+    pub async fn my_projects(session: &Session, db: &FirestoreDb) -> Result<(Vec<Self>, i32)> {
         let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
@@ -973,6 +1006,7 @@ impl ProjectMember {
         };
 
         let mut members = Vec::new();
+        let mut owner_cnt = 0;
         for member in &mut project_members {
             if let Some(id) = &member.project_id {
                 let prj: Option<Project> = match db
@@ -992,14 +1026,19 @@ impl ProjectMember {
                     if p.deleted {
                         continue;
                     }
-                    let mut m = member.clone();
-                    m.project_name = p.project_name;
-                    members.push(m);
+                    if let Some(r) = member.role {
+                        if r == 1 {
+                            owner_cnt += 1;
+                        }
+                        let mut m = member.clone();
+                        m.project_name = p.project_name;
+                        members.push(m);
+                    }
                 }
             }
         }
 
-        Ok(members)
+        Ok((members, owner_cnt))
     }
 
     /// ユーザーの選択中のプロジェクトを設定する

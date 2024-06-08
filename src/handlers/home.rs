@@ -56,11 +56,18 @@ pub async fn show_home(
             }
         };
 
+    let owner_cnt = match model::project::Project::count_owner_projects(&session.uid, &db).await {
+        Ok(cnt) => cnt,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
     props.project = project;
     props.project_member = member;
     props.tickets = tickets;
     props.session = Some(session);
-    let mut page = HomePage::new(props);
+    let mut page = HomePage::new(props, owner_cnt);
 
     Ok(Html(page.write()))
 }

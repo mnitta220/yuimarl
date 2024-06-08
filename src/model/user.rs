@@ -13,7 +13,7 @@ pub struct User {
     pub uid: String,
     pub email: String,
     pub name: String,
-    pub photo_url: String,
+    pub photo_url: Option<String>,
     pub status: i32, // 0:未承認, 1:承認済, 2:禁止
     pub created_at: DateTime<Utc>,
     pub last_login: DateTime<Utc>,
@@ -39,7 +39,7 @@ impl User {
             uid: String::new(),
             email: String::new(),
             name: String::new(),
-            photo_url: String::new(),
+            photo_url: None,
             status: UserStatus::Unapproved as i32,
             created_at: Utc::now(),
             last_login: Utc::now(),
@@ -72,7 +72,7 @@ impl User {
             uid: session.uid.clone(),
             email: session.email.clone(),
             name: session.name.clone(),
-            photo_url: session.photo_url.clone(),
+            photo_url: Some(session.photo_url.clone()),
             status: UserStatus::Approved as i32,
             created_at: Utc::now(),
             last_login: Utc::now(),
@@ -105,7 +105,7 @@ impl User {
         let object_stream: BoxStream<FirestoreResult<User>> = match db
             .fluent()
             .select()
-            .fields(paths!(User::{uid, name, email, photo_url, status, created_at, last_login}))
+            .fields(paths!(User::{uid, name, email, status, created_at, last_login}))
             .from(COLLECTION_NAME)
             .filter(|q| {
                 q.for_all([
@@ -143,7 +143,7 @@ impl User {
         let object_stream: BoxStream<FirestoreResult<User>> = match db
             .fluent()
             .select()
-            .fields(paths!(User::{uid, name, email, photo_url, status, created_at, last_login}))
+            .fields(paths!(User::{uid, name, email, status, created_at, last_login}))
             .from(COLLECTION_NAME)
             .filter(|q| {
                 q.for_all([

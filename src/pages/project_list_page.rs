@@ -7,12 +7,12 @@ pub struct ProjectListPage {
 }
 
 impl ProjectListPage {
-    pub fn new(props: page::Props) -> Self {
+    pub fn new(props: page::Props, owner_cnt: i32) -> Self {
         // Construct the components of the HTML page.
         let mut page = page::Page::new();
 
         // Construct the components of the HTML body.
-        let body = ProjectListBody::new();
+        let body = ProjectListBody::new(owner_cnt);
         page.body = Some(Box::new(body));
 
         ProjectListPage { props, page }

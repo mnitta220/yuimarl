@@ -270,6 +270,8 @@ impl Component for TicketListBody {
                                                         *buf += r#"</td>"#;
 
                                                         *buf += r#"<td>"#;
+                                                        *buf += &ticket.priority_to_string();
+                                                        /*
                                                         match &ticket.priority {
                                                             4 => *buf += r#"最優先"#,
                                                             3 => *buf += r#"高"#,
@@ -277,6 +279,7 @@ impl Component for TicketListBody {
                                                             1 => *buf += r#"低"#,
                                                             _ => *buf += r#""#,
                                                         }
+                                                        */
                                                         *buf += r#"</td>"#;
 
                                                         *buf += r#"<td class="text-right">"#;
@@ -302,19 +305,23 @@ impl Component for TicketListBody {
                                         || r == model::project::ProjectRole::Administrator as i32
                                         || r == model::project::ProjectRole::Member as i32
                                     {
-                                        *buf += r#"<div class="row">"#;
-                                        {
-                                            *buf += r#"<div class="col">"#;
+                                        let ticket_cnt = p.ticket_number.unwrap_or_default();
+                                        let ticket_limit = p.ticket_limit.unwrap_or_default();
+                                        if ticket_cnt < ticket_limit {
+                                            *buf += r#"<div class="row">"#;
                                             {
-                                                *buf += r#"<a href="/ticket_add" title="チケットを追加">"#;
+                                                *buf += r#"<div class="col">"#;
                                                 {
-                                                    *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg">"#;
+                                                    *buf += r#"<a href="/ticket_add" title="チケットを追加">"#;
+                                                    {
+                                                        *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg">"#;
+                                                    }
+                                                    *buf += r#"</a>"#;
                                                 }
-                                                *buf += r#"</a>"#;
+                                                *buf += r#"</div>"#;
                                             }
                                             *buf += r#"</div>"#;
                                         }
-                                        *buf += r#"</div>"#;
                                     }
                                 }
                             }

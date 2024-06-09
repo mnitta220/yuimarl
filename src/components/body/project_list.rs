@@ -81,7 +81,6 @@ impl Component for ProjectListBody {
                                                     *buf += r#"">"#;
                                                     if let Some(name) = &prj.project_name {
                                                         super::super::escape_html(&name, buf);
-                                                        //*buf += name;
                                                     }
                                                     *buf += r#"</a>"#;
                                                 }

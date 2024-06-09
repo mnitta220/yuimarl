@@ -96,7 +96,8 @@ impl Component for HomeBody {
                                                         *buf += &p.id;
                                                         *buf += r#"">"#;
                                                         {
-                                                            *buf += n;
+                                                            super::super::escape_html(n, buf);
+                                                            //*buf += n;
                                                         }
                                                         *buf += r#"</a>"#;
 
@@ -190,7 +191,12 @@ impl Component for HomeBody {
                                                                     .unwrap();
                                                             }
                                                             *buf += r#"</a>&nbsp;:&nbsp;"#;
-                                                            *buf += &ticket.name.clone().unwrap();
+
+                                                            if let Some(name) = &ticket.name {
+                                                                super::super::escape_html(
+                                                                    name, buf,
+                                                                );
+                                                            }
                                                         }
                                                         *buf += r#"</p>"#;
                                                     }

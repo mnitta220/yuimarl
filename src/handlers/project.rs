@@ -37,6 +37,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
+
     let mut props = page::Props::new(&session.id);
     props.title = Some("プロジェクトを作成".to_string());
     props.action = crate::Action::Create;
@@ -69,6 +70,7 @@ pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
+
     let mut props = page::Props::new(&session.id);
     props.title = Some("プロジェクト一覧".to_string());
 
@@ -103,6 +105,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
+
     let mut props = page::Props::new(&session.id);
     props.action = crate::Action::Update;
     props.title = Some("プロジェクト".to_string());
@@ -142,6 +145,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
 
     let mut can_update = false;
     let mut can_delete = false;
+
     // プロジェクトを更新できるのは、オーナー、管理者
     // プロジェクトを削除できるのは、オーナー
     if let Some(pmem) = &props.project_member {
@@ -252,6 +256,7 @@ pub async fn post(
     if let Some(v) = validation {
         let mut can_update = false;
         let mut can_delete = false;
+
         // プロジェクトを更新できるのは、オーナー、管理者
         // プロジェクトを削除できるのは、オーナー
         if let Some(pmem) = &member {
@@ -265,6 +270,7 @@ pub async fn post(
                 }
             }
         }
+
         let mut project = model::project::Project::new(&input.project_id);
         project.project_name = Some(project_name);
         project.prefix = Some(input.prefix);
@@ -328,6 +334,7 @@ pub async fn post(
 pub struct NoteInput {
     pub markdown: String,
     pub project_id: String,
+    pub timestamp: String,
 }
 
 pub async fn post_note(
@@ -347,7 +354,51 @@ pub async fn post_note(
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
-    //let mut props = page::Props::new(&session.id);
+
+    let (validation, project, member) =
+        match validation::project::ProjectValidation::validate_post_note(&input, &session, &db)
+            .await
+        {
+            Ok(v) => v,
+            Err(e) => {
+                return Err(AppError(e));
+            }
+        };
+
+    let mut props = page::Props::new(&session.id);
+
+    if let Some(v) = validation {
+        let mut can_update = false;
+        let mut can_delete = false;
+
+        // プロジェクトを更新できるのは、オーナー、管理者
+        // プロジェクトを削除できるのは、オーナー
+        if let Some(pmem) = &member {
+            if let Some(r) = pmem.role {
+                if r == model::project::ProjectRole::Owner as i32 {
+                    can_update = true;
+                    can_delete = true;
+                }
+                if r == model::project::ProjectRole::Administrator as i32 {
+                    can_update = true;
+                }
+            }
+        }
+
+        if let Some(p) = project {
+            let mut p = p.clone();
+            p.note = Some(input.markdown);
+            props.project = Some(p.clone());
+        }
+
+        props.tab = crate::Tab::Note;
+        props.action = crate::Action::Update;
+        props.session = Some(session);
+        props.project_validation = Some(v);
+        let mut page = ProjectPage::new(props, can_update, can_delete);
+        return Ok(Html(page.write()));
+    }
+
     match model::project::Project::update_note(&input, &session, &db).await {
         Ok(p) => p,
         Err(e) => {

@@ -110,6 +110,9 @@ impl Component for TicketNote {
                 *buf += r#"<input type="hidden" name="ticket_id" value=""#;
                 *buf += &t.id;
                 *buf += r#"">"#;
+                *buf += r#"<input type="hidden" name="project_id" value=""#;
+                *buf += &t.project_id;
+                *buf += r#"">"#;
 
                 *buf += r#"<input type="hidden" name="timestamp" value=""#;
                 if let Some(up) = &t.updated_at {

@@ -58,7 +58,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
 pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<String>, AppError> {
     let id = params.id.unwrap_or_default();
     let tab = params.tab.unwrap_or_default();
-    tracing::info!("GET /ticket id={} tab={}", id, tab);
+    tracing::debug!("GET /ticket id={} tab={}", id, tab);
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
@@ -71,6 +71,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
+
     let mut props = page::Props::new(&session.id);
     props.action = crate::Action::Update;
     props.title = Some("チケット".to_string());
@@ -100,6 +101,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
 
     let mut can_update = false;
     let mut can_delete = false;
+
     // チケットを更新できるのは、作成者、担当者、オーナー、管理者
     // チケットを削除できるのは、作成者、オーナー、管理者
     if let Some(pmem) = project_member {
@@ -223,6 +225,7 @@ pub async fn post(
             &input.project_id,
             m["uid"].as_str().unwrap(),
         );
+
         member.email = Some(String::from(m["email"].as_str().unwrap()));
         member.name = Some(String::from(m["name"].as_str().unwrap()));
         member.seq = i;
@@ -252,6 +255,7 @@ pub async fn post(
     if let Some(v) = validation {
         let mut can_update = false;
         let mut can_delete = false;
+
         // チケットを更新できるのは、作成者、担当者、オーナー、管理者
         // チケットを削除できるのは、作成者、オーナー、管理者
         if action == crate::Action::Create {
@@ -268,6 +272,7 @@ pub async fn post(
                     }
                 }
             }
+
             if can_delete == false {
                 if let Some(t) = &ticket {
                     if let Some(o) = &t.owner {
@@ -304,6 +309,7 @@ pub async fn post(
         props.ticket = Some(ticket_new);
         props.ticket_validation = Some(v);
         props.ticket_members = ticket_members;
+
         let mut page = TicketPage::new(props, can_update, can_delete);
         return Ok(Html(page.write()));
     }
@@ -345,8 +351,10 @@ pub async fn post(
 
 #[derive(Deserialize, Debug)]
 pub struct NoteInput {
+    pub project_id: String,
     pub markdown: String,
     pub ticket_id: String,
+    pub timestamp: String,
 }
 
 pub async fn post_note(
@@ -366,7 +374,75 @@ pub async fn post_note(
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
-    //let mut props = page::Props::new(&session.id);
+
+    let (validation, project, project_member, ticket) =
+        match validation::ticket::TicketValidation::validate_post_note(&input, &session, &db).await
+        {
+            Ok(v) => v,
+            Err(e) => {
+                return Err(AppError(e));
+            }
+        };
+
+    if project.is_none() {
+        return Ok(Html(LoginPage::write()));
+    }
+
+    let mut props = page::Props::new(&session.id);
+
+    if let Some(v) = validation {
+        let mut can_update = false;
+        let mut can_delete = false;
+        // チケットを更新できるのは、作成者、担当者、オーナー、管理者
+        // チケットを削除できるのは、作成者、オーナー、管理者
+        if let Some(pmem) = &project_member {
+            if let Some(r) = pmem.role {
+                if r == model::project::ProjectRole::Owner as i32
+                    || r == model::project::ProjectRole::Administrator as i32
+                {
+                    can_update = true;
+                    can_delete = true;
+                }
+            }
+        }
+
+        if can_delete == false {
+            if let Some(t) = &ticket {
+                if let Some(o) = &t.owner {
+                    if o == &session.uid {
+                        can_update = true;
+                        can_delete = true;
+                    }
+                }
+            }
+
+            if let Some(m) = &project_member {
+                if let Some(r) = m.role {
+                    if r == model::project::ProjectRole::Owner as i32
+                        || r == model::project::ProjectRole::Administrator as i32
+                    {
+                        can_update = true;
+                    }
+                }
+            }
+        }
+
+        if let Some(t) = ticket {
+            let mut t = t.clone();
+            t.note = Some(input.markdown);
+            props.ticket = Some(t);
+        }
+
+        props.tab = crate::Tab::Note;
+        props.session = Some(session);
+        props.action = crate::Action::Update;
+        props.project = project;
+        props.ticket_validation = Some(v);
+
+        let mut page = TicketPage::new(props, can_update, can_delete);
+        return Ok(Html(page.write()));
+    }
+
     match model::ticket::Ticket::update_note(&input, &session, &db).await {
         Ok(t) => t,
         Err(e) => {

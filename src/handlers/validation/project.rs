@@ -191,4 +191,76 @@ impl ProjectValidation {
 
         Ok((None, project, member))
     }
+
+    pub async fn validate_post_note(
+        input: &handlers::project::NoteInput,
+        session: &model::session::Session,
+        db: &FirestoreDb,
+    ) -> Result<(
+        Option<ProjectValidation>,
+        Option<model::project::Project>,
+        Option<model::project::ProjectMember>,
+    )> {
+        let mut validation = ProjectValidation::new();
+
+        let project = match model::project::Project::find(&input.project_id, &db).await {
+            Ok(p) => p,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e));
+            }
+        };
+
+        if let Some(p) = &project {
+            if p.deleted {
+                return Err(anyhow::anyhow!(
+                    "プロジェクトが削除されています。".to_string()
+                ));
+            }
+        } else {
+            return Err(anyhow::anyhow!("プロジェクトが存在しません。".to_string()));
+        }
+
+        // プロジェクトを更新できるのは、オーナーか管理者のみ
+        let member =
+            match model::project::ProjectMember::find(&input.project_id, &session.uid, &db).await {
+                Ok(member) => member,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e));
+                }
+            };
+
+        let mut ok = false;
+        if let Some(member) = &member {
+            if let Some(role) = member.role {
+                if role == model::project::ProjectRole::Owner as i32
+                    || role == model::project::ProjectRole::Administrator as i32
+                {
+                    ok = true;
+                }
+            }
+        }
+        if ok == false {
+            validation.project_info =
+                Some("プロジェクト情報を更新する権限がありません".to_string());
+            return Ok((Some(validation), project, member));
+        }
+
+        // 読み込み時のタイムスタンプと現在のタイムスタンプを比較し、他のユーザーが更新していたら更新できない。
+        let mut ok = false;
+        if let Some(p) = &project {
+            if let Some(t) = p.updated_at {
+                if t.timestamp_micros().to_string() == input.timestamp {
+                    ok = true;
+                }
+            }
+        }
+
+        if ok == false {
+            validation.project_info =
+                        Some("他のユーザーがプロジェクトを更新しため、更新できませんでした。<br>再読み込みを行ってください。".to_string());
+            return Ok((Some(validation), project, member));
+        }
+
+        Ok((None, project, member))
+    }
 }

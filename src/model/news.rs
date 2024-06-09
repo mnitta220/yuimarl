@@ -60,32 +60,80 @@ impl News {
         ticket: Option<NewsTicket>,
         db: &FirestoreDb,
     ) -> Result<()> {
+        let ev = event as i32;
+        let now = Utc::now();
+
+        if let Some(ref t) = ticket {
+            // 同じユーザーに１つのチケットのイベントは１つのみにする
+            let object_stream: BoxStream<FirestoreResult<News>> = match db
+                .fluent()
+                .select()
+                .from(COLLECTION_NAME)
+                .filter(|q| q.for_all([q.field(path!(News::uid)).eq(uid)]))
+                .order_by([(path!(News::timestamp), FirestoreQueryDirection::Ascending)])
+                .obj()
+                .stream_query_with_errors()
+                .await
+            {
+                Ok(s) => s,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+
+            let news: Vec<News> = match object_stream.try_collect().await {
+                Ok(s) => s,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+
+            for mut n in news {
+                if n.event == ev {
+                    if let Some(tkt) = &n.ticket {
+                        if tkt.id == t.id {
+                            n.timestamp = now;
+
+                            if let Err(e) = db
+                                .fluent()
+                                .update()
+                                .in_col(&COLLECTION_NAME)
+                                .document_id(&n.id)
+                                .object(&n)
+                                .execute::<News>()
+                                .await
+                            {
+                                return Err(anyhow::anyhow!(e.to_string()));
+                            };
+
+                            return Ok(());
+                        }
+                    }
+                }
+            }
+        }
+
         let news = News {
             id: Uuid::now_v7().to_string(),
-            timestamp: Utc::now(),
+            timestamp: now,
             uid: uid.to_string(),
-            event: event as i32,
+            event: ev,
             project_id: project_id.to_string(),
             project_name: project_name.to_string(),
             ticket,
         };
 
-        let obj: Option<News> = match db
+        if let Err(e) = db
             .fluent()
             .update()
             .in_col(&COLLECTION_NAME)
             .document_id(&news.id)
             .object(&news)
-            .execute()
+            .execute::<News>()
             .await
         {
-            Ok(ret) => ret,
-            Err(e) => {
-                return Err(anyhow::anyhow!(e.to_string()));
-            }
+            return Err(anyhow::anyhow!(e.to_string()));
         };
-
-        tracing::debug!("News upserted {:?}", obj);
 
         Ok(())
     }

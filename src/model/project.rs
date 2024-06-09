@@ -359,7 +359,7 @@ impl Project {
             }
 
             if member.uid != session.uid {
-                match super::news::News::upsert(
+                if let Err(e) = super::news::News::upsert(
                     &member.uid,
                     super::news::NewsEvent::ProjectMemberAdd,
                     &id,
@@ -369,12 +369,7 @@ impl Project {
                 )
                 .await
                 {
-                    Ok(_) => {
-                        tracing::debug!("News inserted");
-                    }
-                    Err(e) => {
-                        return Err(anyhow::anyhow!(e.to_string()));
-                    }
+                    return Err(anyhow::anyhow!(e.to_string()));
                 }
             }
         }
@@ -494,10 +489,27 @@ impl Project {
                                 {
                                     return Err(anyhow::anyhow!(e.to_string()));
                                 }
+
+                                if up.uid != session.uid {
+                                    if let Err(e) = super::news::News::upsert(
+                                        &up.uid,
+                                        super::news::NewsEvent::ProjectMemberAdd,
+                                        &input.project_id,
+                                        &input.project_name,
+                                        None,
+                                        &db,
+                                    )
+                                    .await
+                                    {
+                                        return Err(anyhow::anyhow!(e.to_string()));
+                                    }
+                                }
                             }
+
                             u += 1;
                             upd = project_members.get(u);
                         }
+
                         Ordering::Greater => {
                             if let Err(e) = db
                                 .fluent()
@@ -509,15 +521,33 @@ impl Project {
                             {
                                 return Err(anyhow::anyhow!(e.to_string()));
                             }
+
+                            if cur.uid != session.uid {
+                                if let Err(e) = super::news::News::upsert(
+                                    &cur.uid,
+                                    super::news::NewsEvent::ProjectMemberDelete,
+                                    &input.project_id,
+                                    &input.project_name,
+                                    None,
+                                    &db,
+                                )
+                                .await
+                                {
+                                    return Err(anyhow::anyhow!(e.to_string()));
+                                }
+                            }
+
                             c += 1;
                             current = current_members.get(c);
                         }
+
                         Ordering::Equal => {
                             if cur.email != up.email || cur.name != up.name || cur.role != up.role {
                                 let mut cur = cur.clone();
                                 cur.email = up.email.clone();
                                 cur.name = up.name.clone();
                                 cur.role = up.role;
+
                                 if let Err(e) = db
                                     .fluent()
                                     .update()
@@ -561,6 +591,21 @@ impl Project {
                         return Err(anyhow::anyhow!(e.to_string()));
                     }
 
+                    if up.uid != session.uid {
+                        if let Err(e) = super::news::News::upsert(
+                            &up.uid,
+                            super::news::NewsEvent::ProjectMemberAdd,
+                            &input.project_id,
+                            &input.project_name,
+                            None,
+                            &db,
+                        )
+                        .await
+                        {
+                            return Err(anyhow::anyhow!(e.to_string()));
+                        }
+                    }
+
                     u += 1;
                     upd = project_members.get(u);
                 }
@@ -576,9 +621,25 @@ impl Project {
                     {
                         return Err(anyhow::anyhow!(e.to_string()));
                     }
+
+                    if cur.uid != session.uid {
+                        if let Err(e) = super::news::News::upsert(
+                            &cur.uid,
+                            super::news::NewsEvent::ProjectMemberDelete,
+                            &input.project_id,
+                            &input.project_name,
+                            None,
+                            &db,
+                        )
+                        .await
+                        {
+                            return Err(anyhow::anyhow!(e.to_string()));
+                        }
+                    }
                 } else {
                     break;
                 }
+
                 c += 1;
                 current = current_members.get(c);
             }
@@ -722,6 +783,30 @@ impl Project {
             .await
         {
             return Err(anyhow::anyhow!(e.to_string()));
+        }
+
+        let members = match ProjectMember::members_of_project(&input.project_id, true, &db).await {
+            Ok(m) => m,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        for member in members {
+            if member.uid != session.uid {
+                if let Err(e) = super::news::News::upsert(
+                    &member.uid,
+                    super::news::NewsEvent::ProjectDelete,
+                    &input.project_id,
+                    &input.project_name,
+                    None,
+                    &db,
+                )
+                .await
+                {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            }
         }
 
         tracing::debug!("Project deleted {:?}", prj);

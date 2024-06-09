@@ -266,7 +266,6 @@ pub async fn post(
             }
         }
         let mut project = model::project::Project::new(&input.project_id);
-        //project.id = Some(input.project_id.clone());
         project.project_name = Some(project_name);
         project.prefix = Some(input.prefix);
         let t = input.timestamp.parse::<i64>().unwrap_or_default();
@@ -298,6 +297,7 @@ pub async fn post(
                 }
             };
         }
+
         crate::Action::Update => {
             // プロジェクト更新
             match model::project::Project::update(&input, &session, &mut project_members, &db).await
@@ -308,6 +308,7 @@ pub async fn post(
                 }
             };
         }
+
         crate::Action::Delete => {
             // プロジェクト削除
             match model::project::Project::delete(&input, &session, &db).await {

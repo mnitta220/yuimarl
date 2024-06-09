@@ -32,38 +32,60 @@ impl Component for News {
                                 {
                                     match news.event_conv() {
                                         news::NewsEvent::ProjectMemberAdd => {
-                                            *buf += r#"プロジェクト <a href="/project?id="#;
+                                            *buf += r#"プロジェクト 「 <a href="/project?id="#;
                                             *buf += &news.project_id;
                                             *buf += r#"">"#;
-                                            *buf += &news.project_name;
-                                            *buf += r#"</a> に追加されました。"#;
+                                            super::super::super::escape_html(
+                                                &news.project_name,
+                                                buf,
+                                            );
+                                            //*buf += &news.project_name;
+                                            *buf += r#"</a> 」 に追加されました。"#;
                                         }
                                         news::NewsEvent::ProjectRoleUpdate => {}
-                                        news::NewsEvent::ProjectMemberDelete => {}
+                                        news::NewsEvent::ProjectMemberDelete => {
+                                            *buf += r#"プロジェクト 「 "#;
+                                            super::super::super::escape_html(
+                                                &news.project_name,
+                                                buf,
+                                            );
+                                            //*buf += &news.project_name;
+                                            *buf += r#" 」 のメンバーから削除されました。"#;
+                                        }
                                         news::NewsEvent::TicketMemberAdd => {
                                             if let Some(t) = &news.ticket {
-                                                *buf += r#"チケット <a href="/ticket?id="#;
+                                                *buf += r#"チケット 「 <a href="/ticket?id="#;
                                                 *buf += &t.id;
                                                 *buf += r#"">"#;
                                                 *buf += &t.id_disp;
                                                 *buf += r#" : "#;
-                                                *buf += &t.name;
-                                                *buf += r#"</a> の担当者に追加されました。"#;
+                                                super::super::super::escape_html(&t.name, buf);
+                                                //*buf += &t.name;
+                                                *buf += r#"</a> 」 の担当者に追加されました。"#;
                                             }
                                         }
                                         news::NewsEvent::TicketMemberDelete => {}
                                         news::NewsEvent::TicketUpdate => {
                                             if let Some(t) = &news.ticket {
-                                                *buf += r#"チケット <a href="/ticket?id="#;
+                                                *buf += r#"チケット 「 <a href="/ticket?id="#;
                                                 *buf += &t.id;
                                                 *buf += r#"">"#;
                                                 *buf += &t.id_disp;
                                                 *buf += r#" : "#;
-                                                *buf += &t.name;
-                                                *buf += r#"</a> が更新されました。"#;
+                                                super::super::super::escape_html(&t.name, buf);
+                                                //*buf += &t.name;
+                                                *buf += r#"</a> 」 が更新されました。"#;
                                             }
                                         }
-                                        news::NewsEvent::ProjectDelete => {}
+                                        news::NewsEvent::ProjectDelete => {
+                                            *buf += r#"プロジェクト 「 "#;
+                                            super::super::super::escape_html(
+                                                &news.project_name,
+                                                buf,
+                                            );
+                                            //*buf += &news.project_name;
+                                            *buf += r#" 」 が削除されました。"#;
+                                        }
                                         _ => {}
                                     }
                                 }

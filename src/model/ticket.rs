@@ -421,9 +421,11 @@ impl Ticket {
                                     return Err(anyhow::anyhow!(e.to_string()));
                                 }
                             }
+
                             u += 1;
                             upd = members.get(u);
                         }
+
                         Ordering::Greater => {
                             if let Err(e) = db
                                 .fluent()
@@ -439,6 +441,7 @@ impl Ticket {
                             c += 1;
                             current = current_members.get(c);
                         }
+
                         Ordering::Equal => {
                             if cur.uid == up.uid {
                                 if cur.uid == session.uid {
@@ -518,6 +521,7 @@ impl Ticket {
                 } else {
                     break;
                 }
+
                 c += 1;
                 current = current_members.get(c);
             }
@@ -528,6 +532,12 @@ impl Ticket {
                 continue;
             }
 
+            let news_ticket = super::news::NewsTicket {
+                id: input.ticket_id.to_string(),
+                id_disp: ticket.id_disp.clone().unwrap_or_default(),
+                name: ticket.name.clone().unwrap_or_default(),
+            };
+
             let mut found = false;
             for cur in &current_members {
                 if upd.uid == cur.uid {
@@ -535,27 +545,33 @@ impl Ticket {
                     break;
                 }
             }
+
             if found {
-                continue;
-            }
-
-            let news_ticket = super::news::NewsTicket {
-                id: input.ticket_id.to_string(),
-                id_disp: ticket.id_disp.clone().unwrap_or_default(),
-                name: ticket.name.clone().unwrap_or_default(),
-            };
-
-            if let Err(e) = super::news::News::upsert(
-                &upd.uid,
-                super::news::NewsEvent::TicketMemberAdd,
-                &ticket.project_id,
-                "",
-                Some(news_ticket),
-                &db,
-            )
-            .await
-            {
-                return Err(anyhow::anyhow!(e.to_string()));
+                if let Err(e) = super::news::News::upsert(
+                    &upd.uid,
+                    super::news::NewsEvent::TicketUpdate,
+                    &ticket.project_id,
+                    "",
+                    Some(news_ticket),
+                    &db,
+                )
+                .await
+                {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            } else {
+                if let Err(e) = super::news::News::upsert(
+                    &upd.uid,
+                    super::news::NewsEvent::TicketMemberAdd,
+                    &ticket.project_id,
+                    "",
+                    Some(news_ticket),
+                    &db,
+                )
+                .await
+                {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
             }
         }
 
@@ -647,6 +663,38 @@ impl Ticket {
                 }
             }
             Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        }
+
+        let members = match TicketMember::members_of_ticket(&input.ticket_id, db).await {
+            Ok(m) => m,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        for member in members {
+            if member.uid == session.uid {
+                continue;
+            }
+
+            let news_ticket = super::news::NewsTicket {
+                id: input.ticket_id.to_string(),
+                id_disp: ticket.id_disp.clone().unwrap_or_default(),
+                name: ticket.name.clone().unwrap_or_default(),
+            };
+
+            if let Err(e) = super::news::News::upsert(
+                &member.uid,
+                super::news::NewsEvent::TicketUpdate,
+                &ticket.project_id,
+                "",
+                Some(news_ticket),
+                &db,
+            )
+            .await
+            {
                 return Err(anyhow::anyhow!(e.to_string()));
             }
         }

@@ -68,65 +68,61 @@ impl Component for ProjectListBody {
                                                 continue;
                                             }
 
-                                            if let Some(project_id) = &prj.project_id {
-                                                *buf += r#"<tr"#;
-                                                if i == 0 {
-                                                    *buf += r#" class="table-light""#;
-                                                }
-                                                *buf += r#">"#;
-                                                {
-                                                    *buf += r#"<td>"#;
-                                                    {
-                                                        *buf += r#"<a href="/project?id="#;
-                                                        *buf += project_id;
-                                                        *buf += r#"">"#;
-                                                        if let Some(name) = &prj.project_name {
-                                                            *buf += name;
-                                                        }
-                                                        *buf += r#"</a>"#;
-                                                    }
-                                                    *buf += r#"</td>"#;
-
-                                                    *buf += r#"<td>"#;
-                                                    {
-                                                        *buf += &prj.role_to_string();
-                                                    }
-                                                    *buf += r#"</td>"#;
-
-                                                    *buf += r#"<td>"#;
-                                                    {
-                                                        if let Some(dt) = &prj.last_used {
-                                                            // UTCからJSTに変換
-                                                            let jst: DateTime<FixedOffset> = dt
-                                                                .with_timezone(
-                                                                    &FixedOffset::east_opt(
-                                                                        9 * 3600,
-                                                                    )
-                                                                    .unwrap(),
-                                                                );
-                                                            *buf +=
-                                                                &jst.format("%Y/%m/%d").to_string();
-                                                        }
-                                                    }
-                                                    *buf += r#"</td>"#;
-
-                                                    *buf += r#"<td>"#;
-                                                    if i == 0 {
-                                                        *buf += r#"<div class="badge bg-secondary text-light">選択中</div>"#;
-                                                    } else {
-                                                        *buf += r#"<a href="/project_select/"#;
-                                                        *buf += project_id;
-                                                        *buf += r#"" title="選択">"#;
-                                                        {
-                                                            *buf += r#"<img class="icon3" src="/static/ionicons/open-outline.svg">"#;
-                                                        }
-                                                        *buf += r#"</a>"#;
-                                                        *buf += r#"<span class="btn-help">&nbsp;選択</span>"#;
-                                                    }
-                                                    *buf += r#"</td>"#;
-                                                }
-                                                *buf += r#"</tr>"#;
+                                            *buf += r#"<tr"#;
+                                            if i == 0 {
+                                                *buf += r#" class="table-light""#;
                                             }
+                                            *buf += r#">"#;
+                                            {
+                                                *buf += r#"<td>"#;
+                                                {
+                                                    *buf += r#"<a href="/project?id="#;
+                                                    *buf += &prj.project_id;
+                                                    *buf += r#"">"#;
+                                                    if let Some(name) = &prj.project_name {
+                                                        *buf += name;
+                                                    }
+                                                    *buf += r#"</a>"#;
+                                                }
+                                                *buf += r#"</td>"#;
+
+                                                *buf += r#"<td>"#;
+                                                {
+                                                    *buf += &prj.role_to_string();
+                                                }
+                                                *buf += r#"</td>"#;
+
+                                                *buf += r#"<td>"#;
+                                                {
+                                                    if let Some(dt) = &prj.last_used {
+                                                        // UTCからJSTに変換
+                                                        let jst: DateTime<FixedOffset> = dt
+                                                            .with_timezone(
+                                                                &FixedOffset::east_opt(9 * 3600)
+                                                                    .unwrap(),
+                                                            );
+                                                        *buf += &jst.format("%Y/%m/%d").to_string();
+                                                    }
+                                                }
+                                                *buf += r#"</td>"#;
+
+                                                *buf += r#"<td>"#;
+                                                if i == 0 {
+                                                    *buf += r#"<div class="badge bg-secondary text-light">選択中</div>"#;
+                                                } else {
+                                                    *buf += r#"<a href="/project_select/"#;
+                                                    *buf += &prj.project_id;
+                                                    *buf += r#"" title="選択">"#;
+                                                    {
+                                                        *buf += r#"<img class="icon3" src="/static/ionicons/open-outline.svg">"#;
+                                                    }
+                                                    *buf += r#"</a>"#;
+                                                    *buf += r#"<span class="btn-help">&nbsp;選択</span>"#;
+                                                }
+                                                *buf += r#"</td>"#;
+                                            }
+                                            *buf += r#"</tr>"#;
+
                                             i += 1;
                                         }
                                     }

@@ -36,8 +36,7 @@ impl Component for News {
                                             *buf += &news.project_id;
                                             *buf += r#"">"#;
                                             *buf += &news.project_name;
-                                            *buf += r#"</a>"#;
-                                            *buf += r#" に追加されました。"#;
+                                            *buf += r#"</a> に追加されました。"#;
                                         }
                                         news::NewsEvent::TicketMemberAdd => {
                                             if let Some(t) = &news.ticket {

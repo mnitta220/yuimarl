@@ -94,15 +94,13 @@ impl Component for TicketNote {
                             }
                             *buf += r#"</button>&nbsp;&nbsp;"#;
 
-                            if let Some(id) = &t.id {
-                                *buf += r#"<a class="btn btn-primary" href="/ticket?id="#;
-                                *buf += id;
-                                *buf += r#"&tab=note" role="button">"#;
-                                {
-                                    *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
-                                }
-                                *buf += r#"</a>"#;
+                            *buf += r#"<a class="btn btn-primary" href="/ticket?id="#;
+                            *buf += &t.id;
+                            *buf += r#"&tab=note" role="button">"#;
+                            {
+                                *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
                             }
+                            *buf += r#"</a>"#;
                         }
                         *buf += r#"</div>"#;
                     }
@@ -110,9 +108,7 @@ impl Component for TicketNote {
                 }
 
                 *buf += r#"<input type="hidden" name="ticket_id" value=""#;
-                if let Some(id) = &t.id {
-                    *buf += id;
-                }
+                *buf += &t.id;
                 *buf += r#"">"#;
 
                 *buf += r#"<input type="hidden" name="timestamp" value=""#;

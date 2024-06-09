@@ -38,7 +38,7 @@ impl Component for TicketListBody {
                                 {
                                     if let Some(n) = &p.project_name {
                                         *buf += r#"<a href="/project?id="#;
-                                        *buf += &p.id.clone().unwrap();
+                                        *buf += &p.id;
                                         *buf += r#"">"#;
                                         {
                                             *buf += n;
@@ -222,7 +222,7 @@ impl Component for TicketListBody {
                                                         *buf += r#"<td>"#;
                                                         {
                                                             *buf += r#"<a href="/ticket?id="#;
-                                                            *buf += &ticket.id.clone().unwrap();
+                                                            *buf += &ticket.id;
                                                             *buf += r#"">"#;
                                                             *buf += &ticket
                                                                 .id_disp

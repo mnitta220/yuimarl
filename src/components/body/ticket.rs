@@ -74,7 +74,7 @@ impl Component for TicketBody {
                                                 *buf += r#" active"#;
                                             }
                                             *buf += r#"" href="/ticket?id="#;
-                                            *buf += &t.id.clone().unwrap();
+                                            *buf += &t.id;
                                             *buf += r#"&tab=info">基本情報</a>"#;
                                         }
                                         *buf += r#"</li>"#;
@@ -86,7 +86,7 @@ impl Component for TicketBody {
                                                 *buf += r#" active"#;
                                             }
                                             *buf += r#"" href="/ticket?id="#;
-                                            *buf += &t.id.clone().unwrap();
+                                            *buf += &t.id;
                                             *buf += r#"&tab=note">ノート</a>"#;
                                         }
                                         *buf += r#"</li>"#;
@@ -98,7 +98,7 @@ impl Component for TicketBody {
                                                 *buf += r#" active"#;
                                             }
                                             *buf += r#"" href="/ticket?id="#;
-                                            *buf += &t.id.clone().unwrap();
+                                            *buf += &t.id;
                                             *buf += r#"&tab=comment">コメント</a>"#;
                                         }
                                         *buf += r#"</li>"#;
@@ -110,7 +110,7 @@ impl Component for TicketBody {
                                                 *buf += r#" active"#;
                                             }
                                             *buf += r#"" href="/ticket?id="#;
-                                            *buf += &t.id.clone().unwrap();
+                                            *buf += &t.id;
                                             *buf += r#"&tab=history">更新履歴</a>"#;
                                         }
                                         *buf += r#"</li>"#;
@@ -143,9 +143,7 @@ impl Component for TicketBody {
             *buf += r#"</main>"#;
             *buf += r#"<input type="hidden" id="project_id" name="project_id" value=""#;
             if let Some(p) = &props.project {
-                if let Some(id) = &p.id {
-                    *buf += id;
-                }
+                *buf += &p.id;
             }
             *buf += r#"">"#;
 

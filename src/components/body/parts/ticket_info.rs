@@ -29,9 +29,7 @@ impl Component for TicketInfo {
                         }
                     }
                     *buf += r#"<input type="hidden" id="project_id" name="project_id" value=""#;
-                    if let Some(id) = &p.id {
-                        *buf += &id;
-                    }
+                    *buf += &p.id;
                     *buf += r#"">"#;
                 }
                 *buf += r#"</div>"#;
@@ -380,7 +378,7 @@ impl Component for TicketInfo {
                     {
                         if let Some(t) = &props.ticket_parent {
                             *buf += r#"<a href="/ticket?id="#;
-                            *buf += &t.id.clone().unwrap();
+                            *buf += &t.id;
                             *buf += r#"">"#;
                             *buf += &t.id_disp.clone().unwrap();
                             *buf += r#"</a>&nbsp;:&nbsp;"#;
@@ -394,9 +392,7 @@ impl Component for TicketInfo {
                                 *buf += r#"</a>"#;
 
                                 *buf += r#"<input type="hidden" id="parent" name="parent" value=""#;
-                                if let Some(p) = &t.id {
-                                    *buf += p;
-                                }
+                                *buf += &t.id;
                                 *buf += r#"">"#;
                             }
                         } else {
@@ -430,15 +426,14 @@ impl Component for TicketInfo {
                     for child in &props.ticket_children {
                         *buf += r#"<p class="mb-0">"#;
                         {
-                            if let Some(id) = &child.id {
-                                if let Some(id_disp) = &child.id_disp {
-                                    *buf += r#"<a href="/ticket?id="#;
-                                    *buf += &id;
-                                    *buf += r#"">"#;
-                                    *buf += &id_disp;
-                                    *buf += r#"</a>&nbsp;:&nbsp;"#;
-                                }
+                            if let Some(id_disp) = &child.id_disp {
+                                *buf += r#"<a href="/ticket?id="#;
+                                *buf += &child.id;
+                                *buf += r#"">"#;
+                                *buf += &id_disp;
+                                *buf += r#"</a>&nbsp;:&nbsp;"#;
                             }
+
                             if let Some(name) = &child.name {
                                 *buf += &name;
                             }
@@ -593,15 +588,13 @@ impl Component for TicketInfo {
                                 }
                                 *buf += r#"</button>&nbsp;&nbsp;"#;
 
-                                if let Some(id) = &t.id {
-                                    *buf += r#"<a class="btn btn-primary" href="/ticket?id="#;
-                                    *buf += id;
-                                    *buf += r#"" role="button">"#;
-                                    {
-                                        *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
-                                    }
-                                    *buf += r#"</a>"#;
+                                *buf += r#"<a class="btn btn-primary" href="/ticket?id="#;
+                                *buf += &t.id;
+                                *buf += r#"" role="button">"#;
+                                {
+                                    *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
                                 }
+                                *buf += r#"</a>"#;
                             }
                             *buf += r#"</div>"#;
 
@@ -619,9 +612,7 @@ impl Component for TicketInfo {
 
                             *buf +=
                                 r#"<input type="hidden" id="ticket_id" name="ticket_id" value=""#;
-                            if let Some(id) = &t.id {
-                                *buf += id;
-                            }
+                            *buf += &t.id;
                             *buf += r#"">"#;
                             *buf += r#"<input type="hidden" name="timestamp" value=""#;
                             if let Some(up) = &t.updated_at {

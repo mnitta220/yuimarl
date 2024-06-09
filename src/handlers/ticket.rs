@@ -217,7 +217,12 @@ pub async fn post(
 
     let mut i = 0;
     for m in mem {
-        let mut member = model::ticket::TicketMember::new(String::from(m["uid"].as_str().unwrap()));
+        let mut member = model::ticket::TicketMember::new(
+            "",
+            &input.ticket_id,
+            &input.project_id,
+            m["uid"].as_str().unwrap(),
+        );
         member.email = Some(String::from(m["email"].as_str().unwrap()));
         member.name = Some(String::from(m["name"].as_str().unwrap()));
         member.seq = i;
@@ -279,7 +284,7 @@ pub async fn post(
             }
         }
 
-        let mut ticket_new = model::ticket::Ticket::new();
+        let mut ticket_new = model::ticket::Ticket::new("", &input.project_id);
         if let Some(t) = ticket {
             ticket_new.id = t.id;
             ticket_new.owner = t.owner;
@@ -431,15 +436,12 @@ async fn get_list_sub(cookies: Cookies, input: TicketListInput) -> Result<Html<S
     };
 
     if let Some(project) = &project {
-        let tickets =
-            match model::ticket::Ticket::search_list(&project.id.as_ref().unwrap(), &input, &db)
-                .await
-            {
-                Ok(tickets) => tickets,
-                Err(e) => {
-                    return Err(AppError(anyhow::anyhow!(e)));
-                }
-            };
+        let tickets = match model::ticket::Ticket::search_list(&project.id, &input, &db).await {
+            Ok(tickets) => tickets,
+            Err(e) => {
+                return Err(AppError(anyhow::anyhow!(e)));
+            }
+        };
         props.tickets = tickets;
     }
 

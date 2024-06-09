@@ -176,7 +176,7 @@ impl ProjectValidation {
                 };
 
                 for prj in projects {
-                    if prj.deleted || prj.id.unwrap() == input.project_id {
+                    if prj.deleted || prj.id == input.project_id {
                         continue;
                     }
 

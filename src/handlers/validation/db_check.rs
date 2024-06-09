@@ -52,7 +52,7 @@ impl DbCheckValidation {
         };
 
         let mut project_members = Vec::new();
-        let mut member = model::project::ProjectMember::new(session.uid.clone());
+        let mut member = model::project::ProjectMember::new("", "", &session.uid);
         member.email = Some(String::from("db_check@mail.com"));
         member.name = Some(String::from("データベースチェック"));
         member.role = Some(1);
@@ -87,13 +87,13 @@ impl DbCheckValidation {
             priority: String::from("0"),
             parent: String::from("0"),
             deliverables: String::from(""),
-            project_id: String::from(&prj.id.clone().unwrap()),
+            project_id: String::from(&prj.id),
             ticket_id: String::from(""),
             timestamp: String::from(""),
         };
 
         let mut ticket_members = Vec::new();
-        let mut member = model::ticket::TicketMember::new(session.uid.clone());
+        let mut member = model::ticket::TicketMember::new("", "", &prj.id, &session.uid);
         member.seq = 0;
         ticket_members.push(member);
 
@@ -132,30 +132,21 @@ impl DbCheckValidation {
             }
         };
 
-        match model::project::ProjectMember::members_of_project(
-            &prj.id.clone().unwrap(),
-            false,
-            &db,
-        )
-        .await
-        {
+        match model::project::ProjectMember::members_of_project(&prj.id, false, &db).await {
             Ok(u) => u,
             Err(e) => {
                 return Err(anyhow::anyhow!(e));
             }
         };
 
-        match model::project::ProjectMember::members_of_project(&prj.id.clone().unwrap(), true, &db)
-            .await
-        {
+        match model::project::ProjectMember::members_of_project(&prj.id, true, &db).await {
             Ok(u) => u,
             Err(e) => {
                 return Err(anyhow::anyhow!(e));
             }
         };
 
-        match model::project::ProjectMember::find(&prj.id.clone().unwrap(), &session.uid, &db).await
-        {
+        match model::project::ProjectMember::find(&prj.id, &session.uid, &db).await {
             Ok(u) => u,
             Err(e) => {
                 return Err(anyhow::anyhow!(e));
@@ -176,9 +167,7 @@ impl DbCheckValidation {
             }
         };
 
-        match model::ticket::Ticket::find_ticket_and_project(&ticket.id.unwrap(), &session.uid, &db)
-            .await
-        {
+        match model::ticket::Ticket::find_ticket_and_project(&ticket.id, &session.uid, &db).await {
             Ok(ticket) => ticket,
             Err(e) => {
                 return Err(anyhow::anyhow!(e));
@@ -192,7 +181,7 @@ impl DbCheckValidation {
             finished: None,
         };
 
-        match model::ticket::Ticket::search_list(&prj.id.clone().unwrap(), &input, &db).await {
+        match model::ticket::Ticket::search_list(&prj.id, &input, &db).await {
             Ok(tickets) => tickets,
             Err(e) => {
                 return Err(anyhow::anyhow!(e));

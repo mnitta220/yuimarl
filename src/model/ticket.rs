@@ -15,8 +15,8 @@ pub const COLLECTION_MEMBER: &'static str = "ticket_member";
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Ticket {
-    pub id: Option<String>,                // ID(uuid)
-    pub project_id: Option<String>,        // プロジェクトID
+    pub id: String,                        // ID(uuid)
+    pub project_id: String,                // プロジェクトID
     pub id_disp: Option<String>,           // 表示用チケットID（接頭辞＋連番）
     pub name: Option<String>,              // チケット名
     pub description: Option<String>,       // 内容
@@ -37,9 +37,9 @@ pub struct Ticket {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct TicketMember {
-    pub id: Option<String>,               // ID(uuid)
-    pub ticket_id: Option<String>,        // チケットID
-    pub project_id: Option<String>,       // プロジェクトID
+    pub id: String,                       // ID(uuid)
+    pub ticket_id: String,                // チケットID
+    pub project_id: String,               // プロジェクトID
     pub uid: String,                      // メンバーのユーザーID
     pub seq: i32,                         // 表示順
     pub name: Option<String>,             // メンバーの名前
@@ -48,10 +48,10 @@ pub struct TicketMember {
 }
 
 impl Ticket {
-    pub fn new() -> Self {
+    pub fn new(ticket_id: &str, project_id: &str) -> Self {
         Self {
-            id: None,
-            project_id: None,
+            id: ticket_id.to_string(),
+            project_id: project_id.to_string(),
             id_disp: None,
             name: None,
             description: None,
@@ -124,7 +124,8 @@ impl Ticket {
             Err(_) => 0,
         };
 
-        let mut ticket = Ticket::new();
+        let mut id = Uuid::now_v7().to_string();
+        let mut ticket = Ticket::new(&id, &project.id);
         let now = Utc::now();
         ticket.project_id = project.id.clone();
         ticket.id_disp = Some(id_disp.clone());
@@ -169,14 +170,13 @@ impl Ticket {
         }
 
         let mut count = 0u32;
-        let mut id = Uuid::now_v7().to_string();
 
         loop {
             count += 1;
             if count > 9 {
                 return Err(anyhow::anyhow!("Failed to create ticket".to_string()));
             }
-            ticket.id = Some(id.clone());
+            //ticket.id = Some(id.clone());
 
             match db
                 .fluent()
@@ -194,6 +194,7 @@ impl Ticket {
                     firestore::errors::FirestoreError::DataConflictError(e) => {
                         tracing::error!("DataConflictError: {:?}", e);
                         id = Uuid::now_v7().to_string();
+                        ticket.id = id.clone();
                         continue;
                     }
                     _ => {
@@ -206,10 +207,10 @@ impl Ticket {
         let mut seq = 0;
         for member in members {
             let mid = Uuid::now_v7().to_string();
-            let mut member_new = TicketMember::new(member.uid.clone());
-            member_new.id = Some(mid.clone());
-            member_new.ticket_id = Some(id.clone());
-            member_new.project_id = Some(project.id.clone().unwrap());
+            let mut member_new = TicketMember::new(&mid, &id, &project.id, &member.uid);
+            //member_new.id = mid.clone();
+            //member_new.ticket_id = id.clone();
+            //member_new.project_id = project.id.to_string();
             member_new.seq = seq;
             member_new.last_used = Some(now);
 
@@ -258,7 +259,7 @@ impl Ticket {
             .update()
             .fields(paths!(super::project::Project::ticket_number))
             .in_col(&super::project::COLLECTION_NAME)
-            .document_id(&project.id.clone().unwrap())
+            .document_id(&project.id)
             .object(&project)
             .execute::<super::project::Project>()
             .await
@@ -403,9 +404,9 @@ impl Ticket {
                             if let Some(up) = upd {
                                 let mut up = up.clone();
                                 let id = Uuid::now_v7().to_string();
-                                up.id = Some(id.clone());
-                                up.project_id = Some(input.project_id.clone());
-                                up.ticket_id = Some(input.ticket_id.clone());
+                                up.id = id.clone();
+                                up.project_id = input.project_id.clone();
+                                up.ticket_id = input.ticket_id.clone();
                                 up.last_used = Some(now);
 
                                 if let Err(e) = db
@@ -424,18 +425,17 @@ impl Ticket {
                             upd = members.get(u);
                         }
                         Ordering::Greater => {
-                            if let Some(id) = &cur.id {
-                                if let Err(e) = db
-                                    .fluent()
-                                    .delete()
-                                    .from(&COLLECTION_MEMBER)
-                                    .document_id(id)
-                                    .execute()
-                                    .await
-                                {
-                                    return Err(anyhow::anyhow!(e.to_string()));
-                                }
+                            if let Err(e) = db
+                                .fluent()
+                                .delete()
+                                .from(&COLLECTION_MEMBER)
+                                .document_id(&cur.id)
+                                .execute()
+                                .await
+                            {
+                                return Err(anyhow::anyhow!(e.to_string()));
                             }
+
                             c += 1;
                             current = current_members.get(c);
                         }
@@ -449,7 +449,7 @@ impl Ticket {
                                         .update()
                                         .fields(paths!(TicketMember::last_used))
                                         .in_col(&COLLECTION_MEMBER)
-                                        .document_id(&cur.id.as_ref().unwrap())
+                                        .document_id(&cur.id)
                                         .object(&cur)
                                         .execute::<TicketMember>()
                                         .await
@@ -465,7 +465,7 @@ impl Ticket {
                                     .update()
                                     .fields(paths!(TicketMember::uid))
                                     .in_col(&COLLECTION_MEMBER)
-                                    .document_id(&cur.id.as_ref().unwrap())
+                                    .document_id(&cur.id)
                                     .object(&cur)
                                     .execute::<TicketMember>()
                                     .await
@@ -483,9 +483,9 @@ impl Ticket {
                 } else {
                     let mut up = up.clone();
                     let id = Uuid::now_v7().to_string();
-                    up.id = Some(id.clone());
-                    up.project_id = Some(input.project_id.clone());
-                    up.ticket_id = Some(input.ticket_id.clone());
+                    up.id = id.clone();
+                    up.project_id = input.project_id.clone();
+                    up.ticket_id = input.ticket_id.clone();
                     up.last_used = Some(now);
 
                     if let Err(e) = db
@@ -505,17 +505,15 @@ impl Ticket {
                 }
             } else {
                 if let Some(cur) = current {
-                    if let Some(id) = &cur.id {
-                        if let Err(e) = db
-                            .fluent()
-                            .delete()
-                            .from(&COLLECTION_MEMBER)
-                            .document_id(id)
-                            .execute()
-                            .await
-                        {
-                            return Err(anyhow::anyhow!(e.to_string()));
-                        }
+                    if let Err(e) = db
+                        .fluent()
+                        .delete()
+                        .from(&COLLECTION_MEMBER)
+                        .document_id(&cur.id)
+                        .execute()
+                        .await
+                    {
+                        return Err(anyhow::anyhow!(e.to_string()));
                     }
                 } else {
                     break;
@@ -550,7 +548,7 @@ impl Ticket {
             if let Err(e) = super::news::News::upsert(
                 &upd.uid,
                 super::news::NewsEvent::TicketMemberAdd,
-                &ticket.project_id.clone().unwrap_or_default(),
+                &ticket.project_id,
                 "",
                 Some(news_ticket),
                 &db,
@@ -639,7 +637,7 @@ impl Ticket {
                         .update()
                         .fields(paths!(TicketMember::last_used))
                         .in_col(&COLLECTION_MEMBER)
-                        .document_id(&m.id.as_ref().unwrap())
+                        .document_id(&m.id)
                         .object(&m)
                         .execute::<TicketMember>()
                         .await
@@ -701,7 +699,7 @@ impl Ticket {
                 .select()
                 .by_id_in(&COLLECTION_NAME)
                 .obj::<Ticket>()
-                .one(&member.ticket_id.clone().unwrap_or_default())
+                .one(&member.ticket_id.clone())
                 .await
             {
                 Ok(t) => match t {
@@ -755,17 +753,15 @@ impl Ticket {
         let mut project: Option<Project> = None;
         let mut project_member: Option<ProjectMember> = None;
         if let Some(t) = &ticket {
-            if let Some(project_id) = &t.project_id {
-                match super::project::Project::find(&project_id, db).await {
-                    Ok(p) => {
-                        project = p;
-                    }
-                    Err(e) => {
-                        return Err(anyhow::anyhow!(e.to_string()));
-                    }
+            match super::project::Project::find(&t.project_id, db).await {
+                Ok(p) => {
+                    project = p;
                 }
-                project_member = super::project::ProjectMember::find(project_id, uid, db).await?;
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
             }
+            project_member = super::project::ProjectMember::find(&t.project_id, uid, db).await?;
         }
 
         let mut ticket_members: Vec<TicketMember> = Vec::new();
@@ -965,9 +961,7 @@ impl Ticket {
 
             let mut new_ticket = ticket.clone();
             if let Some(parent_id) = &ticket.parent_id {
-                let parent = tickets
-                    .iter()
-                    .find(|t| &t.id.as_ref().unwrap() == &parent_id);
+                let parent = tickets.iter().find(|t| &t.id == parent_id);
                 if let Some(p) = parent {
                     if input.parentid.len() > 0 {
                         if let Some(parent_id) = &p.id_disp {
@@ -1044,7 +1038,7 @@ impl Ticket {
                 .fluent()
                 .delete()
                 .from(super::ticket::COLLECTION_MEMBER)
-                .document_id(&member.id.unwrap())
+                .document_id(&member.id)
                 .add_to_transaction(&mut transaction)
             {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -1060,12 +1054,12 @@ impl Ticket {
 }
 
 impl TicketMember {
-    pub fn new(uid: String) -> Self {
+    pub fn new(id: &str, ticket_id: &str, project_id: &str, uid: &str) -> Self {
         Self {
-            id: None,
-            ticket_id: None,
-            project_id: None,
-            uid,
+            id: id.to_string(),
+            ticket_id: ticket_id.to_string(),
+            project_id: project_id.to_string(),
+            uid: uid.to_string(),
             seq: 0,
             name: None,
             email: None,

@@ -72,7 +72,7 @@ impl Component for ProjectBody {
                                                 *buf += r#" active"#;
                                             }
                                             *buf += r#"" href="/project?id="#;
-                                            *buf += &p.id.clone().unwrap();
+                                            *buf += &p.id;
                                             *buf += r#"&tab=info">基本情報</a>"#;
                                         }
                                         *buf += r#"</li>"#;
@@ -84,7 +84,7 @@ impl Component for ProjectBody {
                                                 *buf += r#" active"#;
                                             }
                                             *buf += r#"" href="/project?id="#;
-                                            *buf += &p.id.clone().unwrap();
+                                            *buf += &p.id;
                                             *buf += r#"&tab=note">ノート</a>"#;
                                         }
                                         *buf += r#"</li>"#;
@@ -96,7 +96,7 @@ impl Component for ProjectBody {
                                                 *buf += r#" active"#;
                                             }
                                             *buf += r#"" href="/project?id="#;
-                                            *buf += &p.id.clone().unwrap();
+                                            *buf += &p.id;
                                             *buf += r#"&tab=history">更新履歴</a>"#;
                                         }
                                         *buf += r#"</li>"#;

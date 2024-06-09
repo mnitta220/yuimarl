@@ -94,15 +94,13 @@ impl Component for ProjectNote {
                             }
                             *buf += r#"</button>&nbsp;&nbsp;"#;
 
-                            if let Some(id) = &p.id {
-                                *buf += r#"<a class="btn btn-primary" href="/project?id="#;
-                                *buf += id;
-                                *buf += r#"&tab=note" role="button">"#;
-                                {
-                                    *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
-                                }
-                                *buf += r#"</a>"#;
+                            *buf += r#"<a class="btn btn-primary" href="/project?id="#;
+                            *buf += &p.id;
+                            *buf += r#"&tab=note" role="button">"#;
+                            {
+                                *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
                             }
+                            *buf += r#"</a>"#;
                         }
                         *buf += r#"</div>"#;
                     }
@@ -110,9 +108,7 @@ impl Component for ProjectNote {
                 }
 
                 *buf += r#"<input type="hidden" name="project_id" value=""#;
-                if let Some(id) = &p.id {
-                    *buf += id;
-                }
+                *buf += &p.id;
                 *buf += r#"">"#;
 
                 *buf += r#"<input type="hidden" name="timestamp" value=""#;

@@ -202,7 +202,7 @@ $('#search-parent').on('click', function () {
                     return;
                 }
 
-                buf += '<p><b>' + ret.ticket.id_disp + '</b> : ' + ret.ticket.name + '</p>';
+                buf += '<p><b>' + ret.ticket.id_disp + '</b> : ' + escape_html(ret.ticket.name) + '</p>';
                 buf += '<input type="hidden" id="searchedParentId" value="';
                 buf += ret.ticket.id + '">';
                 buf += '<input type="hidden" id="searchedParentIdDisp" value="';
@@ -225,10 +225,11 @@ $('#search-parent').on('click', function () {
 });
 
 $('#btnAddParent').on('click', function () {
-    var buf = '<a href="">';
+    var buf = '<a href="/ticket?id=';
+    buf += $("input#searchedParentId").val() + '">';
     buf += $("input#searchedParentIdDisp").val();
     buf += '</a>&nbsp;:&nbsp;';
-    buf += $("input#searchedParentName").val();
+    buf += escape_html($("input#searchedParentName").val());
     buf += '&nbsp;';
     buf += '<a href="javascript:removeParent();">';
     buf += '<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">';
@@ -257,7 +258,7 @@ function clickDeliverables() {
 }
 
 $('#btnAddDeliverable').on('click', function () {
-    console.log("add deliverable");
+    //console.log("add deliverable");
     if (`${$("input#deliverable-name").val()}`.trim() == "") {
         $('#deliverable-name').addClass('is-invalid');
         $('#deliverable-feedback').removeClass('d-none');
@@ -290,7 +291,7 @@ function setDeliverablesTable() {
         buf += '<tbody>';
         for (var i in deliverables) {
             buf += '<tr><td>';
-            buf += deliverables[i].name;
+            buf += escape_html(deliverables[i].name);
             buf += '</td><td>';
             if (deliverables[i].path.startsWith('http://') || deliverables[i].path.startsWith('https://')) {
                 buf += '<a href="';
@@ -299,7 +300,7 @@ function setDeliverablesTable() {
                 buf += deliverables[i].path;
                 buf += '</a>';
             } else {
-                buf += deliverables[i].path;
+                buf += escape_html(deliverables[i].path);
             }
             buf += '</td><td>';
             buf += '<a href="javascript:removeDeliverable(' + i + ')">';
@@ -323,3 +324,19 @@ $('#btnTicketDel').on('click', function () {
     $("#action").val('Delete');
     $('#post_ticket').submit();
 });
+
+function escape_html(string) {
+    if (typeof string !== 'string') {
+        return string;
+    }
+    return string.replace(/[&'`"<>]/g, function (match) {
+        return {
+            '&': '&amp;',
+            "'": '&#x27;',
+            '`': '&#x60;',
+            '"': '&quot;',
+            '<': '&lt;',
+            '>': '&gt;',
+        }[match]
+    });
+}

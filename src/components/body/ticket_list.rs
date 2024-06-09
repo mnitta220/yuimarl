@@ -229,10 +229,11 @@ impl Component for TicketListBody {
                                                                 .clone()
                                                                 .unwrap_or_default();
                                                             *buf += r#"</a>&nbsp;"#;
-                                                            *buf += &ticket
-                                                                .name
-                                                                .clone()
-                                                                .unwrap_or_default();
+                                                            if let Some(ref name) = ticket.name {
+                                                                super::super::escape_html(
+                                                                    &name, buf,
+                                                                );
+                                                            }
                                                         }
                                                         *buf += r#"</td>"#;
 
@@ -249,10 +250,13 @@ impl Component for TicketListBody {
                                                                     .clone()
                                                                     .unwrap_or_default();
                                                                 *buf += r#"</a>&nbsp;"#;
-                                                                *buf += &ticket
-                                                                    .parent_name
-                                                                    .clone()
-                                                                    .unwrap_or_default();
+                                                                if let Some(ref name) =
+                                                                    ticket.parent_name
+                                                                {
+                                                                    super::super::escape_html(
+                                                                        &name, buf,
+                                                                    );
+                                                                }
                                                             }
                                                         }
                                                         *buf += r#"</td>"#;

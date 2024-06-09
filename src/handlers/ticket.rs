@@ -58,7 +58,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
 pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<String>, AppError> {
     let id = params.id.unwrap_or_default();
     let tab = params.tab.unwrap_or_default();
-    tracing::debug!("GET /ticket id={} tab={}", id, tab);
+    tracing::info!("GET /ticket id={} tab={}", id, tab);
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,

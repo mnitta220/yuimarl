@@ -807,6 +807,7 @@ impl Ticket {
                 };
             }
         }
+
         for member in ticket_members.iter_mut() {
             let user = match super::user::User::find(&member.uid, db).await {
                 Ok(u) => u,
@@ -823,7 +824,7 @@ impl Ticket {
         let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
             .fluent()
             .select()
-            .fields(paths!(Ticket::{id, id_disp, name, progress, priority}))
+            .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority}))
             .from(COLLECTION_NAME)
             .filter(|q| q.for_all([q.field(path!(Ticket::parent_id)).eq(&ticket_id)]))
             .order_by([(path!(Ticket::id), FirestoreQueryDirection::Ascending)])

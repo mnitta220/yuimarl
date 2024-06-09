@@ -34,6 +34,7 @@ pub enum NewsEvent {
     TicketMemberAdd = 4,     // チケットメンバーに追加された
     TicketMemberDelete = 5,  // チケットメンバーから削除された
     TicketUpdate = 6,        // チケットが更新された
+    ProjectDelete = 7,       // プロジェクトが削除された
     None = 0,
 }
 
@@ -46,6 +47,7 @@ impl News {
             4 => NewsEvent::TicketMemberAdd,
             5 => NewsEvent::TicketMemberDelete,
             6 => NewsEvent::TicketUpdate,
+            7 => NewsEvent::ProjectDelete,
             _ => NewsEvent::None,
         }
     }

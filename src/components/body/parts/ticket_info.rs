@@ -382,7 +382,11 @@ impl Component for TicketInfo {
                             *buf += r#"">"#;
                             *buf += &t.id_disp.clone().unwrap();
                             *buf += r#"</a>&nbsp;:&nbsp;"#;
-                            *buf += &t.name.clone().unwrap();
+                            if let Some(ref name) = t.name {
+                                super::super::super::escape_html(&name, buf);
+                            }
+
+                            //*buf += &t.name.clone().unwrap();
                             if self.can_update {
                                 *buf += r#"&nbsp;"#;
                                 *buf += r#"<a href="javascript:removeParent();">"#;
@@ -435,7 +439,8 @@ impl Component for TicketInfo {
                             }
 
                             if let Some(name) = &child.name {
-                                *buf += &name;
+                                super::super::super::escape_html(&name, buf);
+                                //*buf += &name;
                             }
                         }
                         *buf += r#"</p>"#;
@@ -484,7 +489,11 @@ impl Component for TicketInfo {
                                                     *buf += r#"<tr>"#;
                                                     {
                                                         *buf += r#"<td>"#;
-                                                        *buf += &deliverable.name;
+                                                        super::super::super::escape_html(
+                                                            &deliverable.name,
+                                                            buf,
+                                                        );
+                                                        //*buf += &deliverable.name;
                                                         *buf += r#"</td>"#;
 
                                                         *buf += r#"<td>"#;
@@ -500,7 +509,11 @@ impl Component for TicketInfo {
                                                             *buf += &deliverable.path;
                                                             *buf += r#"</a>"#;
                                                         } else {
-                                                            *buf += &deliverable.path;
+                                                            super::super::super::escape_html(
+                                                                &deliverable.path,
+                                                                buf,
+                                                            );
+                                                            //*buf += &deliverable.path;
                                                         }
                                                         *buf += r#"</td>"#;
 

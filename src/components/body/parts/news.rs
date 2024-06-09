@@ -38,6 +38,8 @@ impl Component for News {
                                             *buf += &news.project_name;
                                             *buf += r#"</a> に追加されました。"#;
                                         }
+                                        news::NewsEvent::ProjectRoleUpdate => {}
+                                        news::NewsEvent::ProjectMemberDelete => {}
                                         news::NewsEvent::TicketMemberAdd => {
                                             if let Some(t) = &news.ticket {
                                                 *buf += r#"チケット <a href="/ticket?id="#;
@@ -49,6 +51,7 @@ impl Component for News {
                                                 *buf += r#"</a> の担当者に追加されました。"#;
                                             }
                                         }
+                                        news::NewsEvent::TicketMemberDelete => {}
                                         news::NewsEvent::TicketUpdate => {
                                             if let Some(t) = &news.ticket {
                                                 *buf += r#"チケット <a href="/ticket?id="#;
@@ -60,6 +63,7 @@ impl Component for News {
                                                 *buf += r#"</a> が更新されました。"#;
                                             }
                                         }
+                                        news::NewsEvent::ProjectDelete => {}
                                         _ => {}
                                     }
                                 }

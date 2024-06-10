@@ -176,7 +176,6 @@ impl Ticket {
             if count > 9 {
                 return Err(anyhow::anyhow!("Failed to create ticket".to_string()));
             }
-            //ticket.id = Some(id.clone());
 
             match db
                 .fluent()
@@ -208,9 +207,6 @@ impl Ticket {
         for member in members {
             let mid = Uuid::now_v7().to_string();
             let mut member_new = TicketMember::new(&mid, &id, &project.id, &member.uid);
-            //member_new.id = mid.clone();
-            //member_new.ticket_id = id.clone();
-            //member_new.project_id = project.id.to_string();
             member_new.seq = seq;
             member_new.last_used = Some(now);
 
@@ -947,7 +943,7 @@ impl Ticket {
 
     pub async fn search_list(
         project_id: &str,
-        input: &super::super::handlers::ticket::TicketListInput,
+        input: &super::super::handlers::ticket_list::TicketListInput,
         db: &FirestoreDb,
     ) -> Result<Vec<Ticket>> {
         let object_stream: BoxStream<FirestoreResult<Ticket>> = match db

@@ -174,7 +174,7 @@ impl DbCheckValidation {
             }
         };
 
-        let input = super::super::ticket::TicketListInput {
+        let input = super::super::ticket_list::TicketListInput {
             ticketid: String::from(""),
             ticketname: String::from(""),
             parentid: String::from(""),

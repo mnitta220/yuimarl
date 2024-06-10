@@ -44,26 +44,27 @@ html(lang="ja")
                   | &nbsp;フィルター
 
           .row.pt-2
-            .col-md-9
-            .col-md-3
-              nav
-                ul.pagination.pagination-sm
-                  li.page-item.disabled
-                    a.page-link(href="#" tabindex="-1" aria-label="前へ")
-                      span(aria-hidden="true") &laquo;
-                      span.visually-hidden 前へ
-                  li.page-item
-                    a.page-link.active(href="#")
-                      | 1
-                      span.visually-hidden (現ページ)
-                  li.page-item
-                    a.page-link(href="#") 2
-                  li.page-item
-                    a.page-link(href="#") 3
-                  li.page-item
-                    a.page-link(href="#" aria-label="次へ")
-                      span(aria-hidden="true") &raquo;
-                      span.visually-hidden 次へ
+            .col
+              .d-flex.justify-content-end.px-1
+                nav
+                  ul.pagination.pagination-sm
+                    li.page-item.disabled
+                      a.page-link(href="#" tabindex="-1" aria-label="前へ")
+                        span(aria-hidden="true") &laquo;
+                        span.visually-hidden 前へ
+                    li.page-item
+                      a.page-link.active(href="#")
+                        | 1
+                        span.visually-hidden (現ページ)
+                    li.page-item
+                      a.page-link(href="#") 2
+                    li.page-item
+                      a.page-link(href="#") 3
+                    li.page-item
+                      a.page-link(href="#" aria-label="次へ")
+                        span(aria-hidden="true") &raquo;
+                        span.visually-hidden 次へ
+
           .row
             .col
               .table-responsive

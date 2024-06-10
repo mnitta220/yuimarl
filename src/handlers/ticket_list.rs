@@ -1,0 +1,122 @@
+use crate::{
+    model,
+    pages::{
+        login_page::LoginPage,
+        page,
+        ticket_list_page::{TicketListPage, PAGE_COUNT},
+    },
+    AppError,
+};
+use anyhow::Result;
+use axum::{extract::Form, extract::Query, response::Html};
+use firestore::*;
+use serde::Deserialize;
+use tower_cookies::Cookies;
+
+#[derive(Deserialize, Debug)]
+pub struct TicketListInput {
+    pub ticketid: String,
+    pub ticketname: String,
+    pub parentid: String,
+    pub finished: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TicketListParams {
+    page: Option<String>,
+}
+
+pub struct TicketListProps {
+    pub current_page: usize,
+    pub total_page: usize,
+    pub data_count: usize,
+}
+
+pub async fn get_list(
+    cookies: Cookies,
+    Query(params): Query<TicketListParams>,
+) -> Result<Html<String>, AppError> {
+    let page = params.page.unwrap_or_default();
+    let page = match page.parse::<usize>() {
+        Ok(p) => p,
+        Err(_) => 1,
+    };
+    tracing::info!("GET /ticket_list page={}", page);
+
+    let input = TicketListInput {
+        ticketid: String::from(""),
+        ticketname: String::from(""),
+        parentid: String::from(""),
+        finished: None,
+    };
+
+    return get_list_sub(cookies, input, page).await;
+}
+
+pub async fn post_list(
+    cookies: Cookies,
+    Form(input): Form<TicketListInput>,
+) -> Result<Html<String>, AppError> {
+    tracing::debug!(
+        "POST /post_list {:?}, {:?}, {:?}, {:?}",
+        input.ticketid,
+        input.ticketname,
+        input.parentid,
+        input.finished
+    );
+
+    return get_list_sub(cookies, input, 1).await;
+}
+
+async fn get_list_sub(
+    cookies: Cookies,
+    input: TicketListInput,
+    page: usize,
+) -> Result<Html<String>, AppError> {
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
+    let session = match super::get_session_info(cookies, true, &db).await {
+        Ok(session_id) => session_id,
+        Err(_) => return Ok(Html(LoginPage::write())),
+    };
+    let mut props = page::Props::new(&session.id);
+    props.title = Some("チケット一覧".to_string());
+
+    let (project, member) = match model::project::Project::current_project(&session, &db).await {
+        Ok((project, member)) => (project, member),
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
+    let mut list_props = TicketListProps {
+        current_page: page,
+        total_page: 1,
+        data_count: 0,
+    };
+
+    if let Some(project) = &project {
+        let tickets = match model::ticket::Ticket::search_list(&project.id, &input, &db).await {
+            Ok(tickets) => tickets,
+            Err(e) => {
+                return Err(AppError(anyhow::anyhow!(e)));
+            }
+        };
+        list_props.data_count = tickets.len();
+        list_props.total_page = (list_props.data_count / PAGE_COUNT) + 1;
+        props.tickets = tickets;
+    }
+
+    props.session = Some(session);
+    props.project = project;
+    props.project_member = member;
+
+    let mut page = TicketListPage::new(props, input, list_props);
+
+    Ok(Html(page.write()))
+}

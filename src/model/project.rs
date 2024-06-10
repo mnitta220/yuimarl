@@ -127,7 +127,6 @@ impl Project {
         let mut project_member: Option<ProjectMember> = None;
 
         for member in project_members {
-            //if let Some(ref project_id) = member.project_id {
             match db
                 .fluent()
                 .select()
@@ -153,7 +152,6 @@ impl Project {
                     return Err(anyhow::anyhow!(e.to_string()));
                 }
             };
-            //}
         }
 
         Ok((prj, project_member))
@@ -291,7 +289,6 @@ impl Project {
             if count > 9 {
                 return Err(anyhow::anyhow!("Failed to create project".to_string()));
             }
-            //prj.id = Some(id.clone());
 
             match db
                 .fluent()

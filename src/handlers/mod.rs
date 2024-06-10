@@ -13,6 +13,7 @@ pub mod login;
 pub mod news;
 pub mod project;
 pub mod ticket;
+pub mod ticket_list;
 pub mod user_name;
 pub mod validation;
 

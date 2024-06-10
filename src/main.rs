@@ -78,7 +78,7 @@ async fn main() {
         .route("/ticket_note", post(handlers::ticket::post_note))
         .route(
             "/ticket_list",
-            get(handlers::ticket::get_list).post(handlers::ticket::post_list),
+            get(handlers::ticket_list::get_list).post(handlers::ticket_list::post_list),
         )
         .route("/news_del/:id", get(handlers::news::del_news))
         .route("/contact", get(handlers::contact::get_contact))

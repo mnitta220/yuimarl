@@ -1,4 +1,5 @@
-use super::super::super::handlers::ticket::TicketListInput;
+use super::super::super::handlers::ticket_list::{TicketListInput, TicketListProps};
+use super::super::super::pages::ticket_list_page::PAGE_COUNT;
 use super::super::Component;
 use super::parts::{footer::Footer, nav::Nav};
 use crate::{model, Props};
@@ -7,14 +8,23 @@ pub struct TicketListBody {
     pub nav: Box<dyn Component + Send>,
     pub footer: Box<dyn Component + Send>,
     pub input: TicketListInput,
+    pub list_props: TicketListProps,
+    pub start_pos: usize,
+    pub end_pos: usize,
 }
 
 impl TicketListBody {
-    pub fn new(input: TicketListInput) -> Self {
+    pub fn new(input: TicketListInput, list_props: TicketListProps) -> Self {
+        let start_pos = (list_props.current_page - 1) * PAGE_COUNT;
+        let end_pos = start_pos + PAGE_COUNT;
+
         TicketListBody {
             nav: Box::new(Nav {}),
             footer: Box::new(Footer {}),
             input,
+            list_props,
+            start_pos,
+            end_pos,
         }
     }
 }
@@ -126,69 +136,71 @@ impl Component for TicketListBody {
                             }
                             *buf += r#"</form>"#;
 
-                            /* TODO ページングを追加する。
                             *buf += r#"<div class="row pt-2">"#;
                             {
-                                *buf += r#"<div class="col-md-9"></div>"#;
-                                *buf += r#"<div class="col-md-3">"#;
+                                *buf += r#"<div class="col">"#;
                                 {
-                                    *buf += r#"<nav>"#;
+                                    *buf += r#"<div class="d-flex justify-content-end px-1">"#;
                                     {
-                                        *buf += r#"<ul class="pagination pagination-sm">"#;
+                                        *buf += r#"<nav>"#;
                                         {
-                                            *buf += r#"<li class="page-item disabled">"#;
+                                            *buf += r#"<ul class="pagination pagination-sm">"#;
                                             {
-                                                *buf += r#"<a class="page-link" href="" tabindex="-1" aria-label="前へ">"#;
+                                                *buf += r#"<li class="page-item disabled">"#;
                                                 {
-                                                    *buf += r#"<span aria-hidden="true">&laquo;</span>"#;
-                                                    *buf += r#"<span class="visually-hidden">前へ</span>"#;
+                                                    *buf += r#"<a class="page-link" href="/ticket_list?page=prev" tabindex="-1" aria-label="前へ">"#;
+                                                    {
+                                                        *buf += r#"<span aria-hidden="true">&laquo;</span>"#;
+                                                        *buf += r#"<span class="visually-hidden">前へ</span>"#;
+                                                    }
+                                                    *buf += r#"</a>"#;
                                                 }
-                                                *buf += r#"</a>"#;
-                                            }
-                                            *buf += r#"</li>"#;
+                                                *buf += r#"</li>"#;
 
-                                            *buf += r#"<li class="page-item">"#;
-                                            {
-                                                *buf += r#"<a class="page-link active" href="">"#;
+                                                *buf += r#"<li class="page-item">"#;
                                                 {
-                                                    *buf += r#"1"#;
-                                                    *buf += r#"<span class="visually-hidden">(現ページ)</span>"#;
+                                                    *buf +=
+                                                        r#"<a class="page-link active" href="">"#;
+                                                    {
+                                                        *buf += r#"1"#;
+                                                        *buf += r#"<span class="visually-hidden">(現ページ)</span>"#;
+                                                    }
+                                                    *buf += r#"</a>"#;
                                                 }
-                                                *buf += r#"</a>"#;
-                                            }
-                                            *buf += r#"</li>"#;
+                                                *buf += r#"</li>"#;
 
-                                            *buf += r#"<li class="page-item">"#;
-                                            {
-                                                *buf += r#"<a class="page-link" href="">2</a>"#;
-                                            }
-                                            *buf += r#"</li>"#;
-
-                                            *buf += r#"<li class="page-item">"#;
-                                            {
-                                                *buf += r#"<a class="page-link" href="">3</a>"#;
-                                            }
-                                            *buf += r#"</li>"#;
-
-                                            *buf += r#"<li class="page-item">"#;
-                                            {
-                                                *buf += r#"<a class="page-link" href="" aria-label="次へ">"#;
+                                                *buf += r#"<li class="page-item">"#;
                                                 {
-                                                    *buf += r#"<span aria-hidden="true">&raquo;</span>"#;
-                                                    *buf += r#"<span class="visually-hidden">次へ</span>"#;
+                                                    *buf += r#"<a class="page-link" href="/ticket_list?page=2">2</a>"#;
                                                 }
-                                                *buf += r#"</a>"#;
+                                                *buf += r#"</li>"#;
+
+                                                *buf += r#"<li class="page-item">"#;
+                                                {
+                                                    *buf += r#"<a class="page-link" href="/ticket_list?page=2">3</a>"#;
+                                                }
+                                                *buf += r#"</li>"#;
+
+                                                *buf += r#"<li class="page-item">"#;
+                                                {
+                                                    *buf += r#"<a class="page-link" href="/ticket_list?page=next" aria-label="次へ">"#;
+                                                    {
+                                                        *buf += r#"<span aria-hidden="true">&raquo;</span>"#;
+                                                        *buf += r#"<span class="visually-hidden">次へ</span>"#;
+                                                    }
+                                                    *buf += r#"</a>"#;
+                                                }
+                                                *buf += r#"</li>"#;
                                             }
-                                            *buf += r#"</li>"#;
+                                            *buf += r#"</ul>"#;
                                         }
-                                        *buf += r#"</ul>"#;
+                                        *buf += r#"</nav>"#;
                                     }
-                                    *buf += r#"</nav>"#;
+                                    *buf += r#"</div>"#;
                                 }
                                 *buf += r#"</div>"#;
                             }
                             *buf += r#"</div>"#;
-                            */
 
                             *buf += r#"<div class="row pt-3">"#;
                             {
@@ -216,6 +228,90 @@ impl Component for TicketListBody {
 
                                             *buf += r#"<tbody>"#;
                                             {
+                                                let mut i = self.start_pos;
+                                                loop {
+                                                    if i >= self.end_pos {
+                                                        break;
+                                                    }
+                                                    let ticket = &props.tickets.get(i);
+                                                    if let Some(ticket) = ticket {
+                                                        *buf += r#"<tr>"#;
+                                                        {
+                                                            *buf += r#"<td>"#;
+                                                            {
+                                                                *buf += r#"<a href="/ticket?id="#;
+                                                                *buf += &ticket.id;
+                                                                *buf += r#"">"#;
+                                                                *buf += &ticket
+                                                                    .id_disp
+                                                                    .clone()
+                                                                    .unwrap_or_default();
+                                                                *buf += r#"</a>&nbsp;"#;
+                                                                if let Some(ref name) = ticket.name
+                                                                {
+                                                                    super::super::escape_html(
+                                                                        &name, buf,
+                                                                    );
+                                                                }
+                                                            }
+                                                            *buf += r#"</td>"#;
+
+                                                            *buf += r#"<td>"#;
+                                                            {
+                                                                if let Some(ref parent_id) =
+                                                                    ticket.parent_id
+                                                                {
+                                                                    *buf +=
+                                                                        r#"<a href="/ticket?id="#;
+                                                                    *buf += parent_id;
+                                                                    *buf += r#"">"#;
+                                                                    *buf += &ticket
+                                                                        .parent_id_disp
+                                                                        .clone()
+                                                                        .unwrap_or_default();
+                                                                    *buf += r#"</a>&nbsp;"#;
+                                                                    if let Some(ref name) =
+                                                                        ticket.parent_name
+                                                                    {
+                                                                        super::super::escape_html(
+                                                                            &name, buf,
+                                                                        );
+                                                                    }
+                                                                }
+                                                            }
+                                                            *buf += r#"</td>"#;
+
+                                                            *buf += r#"<td>"#;
+                                                            if let Some(s) = &ticket.start_date {
+                                                                super::super::replace_slash(
+                                                                    &s, buf,
+                                                                );
+                                                            }
+                                                            *buf += r#"</td>"#;
+
+                                                            *buf += r#"<td>"#;
+                                                            if let Some(e) = &ticket.end_date {
+                                                                super::super::replace_slash(
+                                                                    &e, buf,
+                                                                );
+                                                            }
+                                                            *buf += r#"</td>"#;
+
+                                                            *buf += r#"<td>"#;
+                                                            *buf += &ticket.priority_to_string();
+                                                            *buf += r#"</td>"#;
+
+                                                            *buf += r#"<td class="text-right">"#;
+                                                            *buf += &ticket.progress.to_string();
+                                                            *buf += r#"%</td>"#;
+                                                        }
+                                                        *buf += r#"</tr>"#;
+                                                    } else {
+                                                        break;
+                                                    }
+                                                    i += 1;
+                                                }
+                                                /*
                                                 for ticket in &props.tickets {
                                                     *buf += r#"<tr>"#;
                                                     {
@@ -275,15 +371,6 @@ impl Component for TicketListBody {
 
                                                         *buf += r#"<td>"#;
                                                         *buf += &ticket.priority_to_string();
-                                                        /*
-                                                        match &ticket.priority {
-                                                            4 => *buf += r#"最優先"#,
-                                                            3 => *buf += r#"高"#,
-                                                            2 => *buf += r#"中"#,
-                                                            1 => *buf += r#"低"#,
-                                                            _ => *buf += r#""#,
-                                                        }
-                                                        */
                                                         *buf += r#"</td>"#;
 
                                                         *buf += r#"<td class="text-right">"#;
@@ -292,6 +379,7 @@ impl Component for TicketListBody {
                                                     }
                                                     *buf += r#"</tr>"#;
                                                 }
+                                                */
                                             }
                                             *buf += r#"</tbody>"#;
                                         }

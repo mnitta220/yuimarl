@@ -39,7 +39,6 @@ impl Component for News {
                                                 &news.project_name,
                                                 buf,
                                             );
-                                            //*buf += &news.project_name;
                                             *buf += r#"</a> 」 に追加されました。"#;
                                         }
                                         news::NewsEvent::ProjectRoleUpdate => {}
@@ -49,7 +48,6 @@ impl Component for News {
                                                 &news.project_name,
                                                 buf,
                                             );
-                                            //*buf += &news.project_name;
                                             *buf += r#" 」 のメンバーから削除されました。"#;
                                         }
                                         news::NewsEvent::TicketMemberAdd => {
@@ -60,7 +58,6 @@ impl Component for News {
                                                 *buf += &t.id_disp;
                                                 *buf += r#" : "#;
                                                 super::super::super::escape_html(&t.name, buf);
-                                                //*buf += &t.name;
                                                 *buf += r#"</a> 」 の担当者に追加されました。"#;
                                             }
                                         }
@@ -73,7 +70,6 @@ impl Component for News {
                                                 *buf += &t.id_disp;
                                                 *buf += r#" : "#;
                                                 super::super::super::escape_html(&t.name, buf);
-                                                //*buf += &t.name;
                                                 *buf += r#"</a> 」 が更新されました。"#;
                                             }
                                         }
@@ -83,7 +79,6 @@ impl Component for News {
                                                 &news.project_name,
                                                 buf,
                                             );
-                                            //*buf += &news.project_name;
                                             *buf += r#" 」 が削除されました。"#;
                                         }
                                         _ => {}

@@ -179,6 +179,7 @@ impl DbCheckValidation {
             ticketname: String::from(""),
             parentid: String::from(""),
             finished: None,
+            page: 1,
         };
 
         match model::ticket::Ticket::search_list(&prj.id, &input, &db).await {

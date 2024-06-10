@@ -3,8 +3,7 @@ use super::parts::{
     footer::Footer, nav::Nav, project_history::ProjectHistory, project_info::ProjectInfo,
     project_note::ProjectNote,
 };
-use crate::Props;
-use crate::Tab;
+use crate::{handlers::validation, Props, Tab};
 
 pub struct ProjectBody {
     pub nav: Box<dyn Component + Send>,
@@ -12,19 +11,26 @@ pub struct ProjectBody {
     pub project_note: Box<dyn Component + Send>,
     pub project_history: Box<dyn Component + Send>,
     pub footer: Box<dyn Component + Send>,
+    pub validation: Option<validation::project::ProjectValidation>,
 }
 
 impl ProjectBody {
-    pub fn new(can_update: bool, can_delete: bool) -> Self {
+    pub fn new(
+        can_update: bool,
+        can_delete: bool,
+        validation: Option<validation::project::ProjectValidation>,
+    ) -> Self {
         ProjectBody {
             nav: Box::new(Nav {}),
             project_info: Box::new(ProjectInfo {
                 can_update,
                 can_delete,
+                validation: validation.clone(),
             }),
             project_note: Box::new(ProjectNote { can_update }),
             project_history: Box::new(ProjectHistory {}),
             footer: Box::new(Footer {}),
+            validation,
         }
     }
 }
@@ -47,7 +53,7 @@ impl Component for ProjectBody {
                         }
                         *buf += r#"</h3>"#;
 
-                        if let Some(v) = &props.project_validation {
+                        if let Some(v) = &self.validation {
                             if let Some(e) = &v.project_info {
                                 *buf += r#"<div class="row p-2">"#;
                                 {

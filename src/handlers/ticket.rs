@@ -52,7 +52,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
     props.tickets = tickets;
     props.session = Some(session);
 
-    let mut page = TicketPage::new(props, true, true);
+    let mut page = TicketPage::new(props, true, true, None);
 
     Ok(Html(page.write()))
 }
@@ -141,7 +141,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
     props.ticket_children = children;
 
     props.session = Some(session);
-    let mut page = TicketPage::new(props, can_update, can_delete);
+    let mut page = TicketPage::new(props, can_update, can_delete, None);
 
     Ok(Html(page.write()))
 }
@@ -312,10 +312,10 @@ pub async fn post(
         props.action = action;
         props.project = project;
         props.ticket = Some(ticket_new);
-        props.ticket_validation = Some(v);
+        //props.ticket_validation = Some(v);
         props.ticket_members = ticket_members;
 
-        let mut page = TicketPage::new(props, can_update, can_delete);
+        let mut page = TicketPage::new(props, can_update, can_delete, Some(v));
         return Ok(Html(page.write()));
     }
 
@@ -442,9 +442,9 @@ pub async fn post_note(
         props.session = Some(session);
         props.action = crate::Action::Update;
         props.project = project;
-        props.ticket_validation = Some(v);
+        //props.ticket_validation = Some(v);
 
-        let mut page = TicketPage::new(props, can_update, can_delete);
+        let mut page = TicketPage::new(props, can_update, can_delete, Some(v));
         return Ok(Html(page.write()));
     }
 

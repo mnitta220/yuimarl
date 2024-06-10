@@ -1,17 +1,24 @@
 use super::super::Component;
 use super::parts::{footer::Footer, nav::Nav};
-use crate::Props;
+use crate::{handlers::validation, Props};
 
 pub struct DbCheckBody {
     pub nav: Box<dyn Component + Send>,
     pub footer: Box<dyn Component + Send>,
+    pub password: Option<String>,
+    pub validation: Option<validation::db_check::DbCheckValidation>,
 }
 
 impl DbCheckBody {
-    pub fn new() -> Self {
+    pub fn new(
+        password: Option<String>,
+        validation: Option<validation::db_check::DbCheckValidation>,
+    ) -> Self {
         DbCheckBody {
             nav: Box::new(Nav {}),
             footer: Box::new(Footer {}),
+            password,
+            validation,
         }
     }
 }
@@ -32,7 +39,7 @@ impl Component for DbCheckBody {
                         *buf += r#"<p>システム管理者が、Firestore のドキュメントとインデックスの作成状態のチェックを行います。<br>"#;
                         *buf += r#"システム環境変数に設定した「DB_CHECK_PASSWORD」の値を入力して、「実行」をクリックしてください。</p>"#;
 
-                        if let Some(v) = &props.db_check_validation {
+                        if let Some(v) = &self.validation {
                             if let Some(e) = &v.info {
                                 *buf += r#"<div class="row p-2">"#;
                                 {
@@ -53,18 +60,18 @@ impl Component for DbCheckBody {
                                 *buf += r#"<div class="col-md-9 mb-1">"#;
                                 {
                                     *buf += r#"<input class="form-control"#;
-                                    if let Some(v) = &props.db_check_validation {
+                                    if let Some(v) = &self.validation {
                                         if v.db_check_password.is_some() {
                                             *buf += r#" is-invalid"#;
                                         }
                                     }
                                     *buf += r#"" id="db_check_password" name="db_check_password" type="password" maxlength="40" value=""#;
-                                    if let Some(p) = &props.db_check_password {
+                                    if let Some(p) = &self.password {
                                         *buf += p;
                                     }
                                     *buf += r#"" required>"#;
 
-                                    if let Some(v) = &props.db_check_validation {
+                                    if let Some(v) = &self.validation {
                                         if let Some(e) = &v.db_check_password {
                                             *buf += r#"<div class="invalid-feedback">"#;
                                             *buf += e;
@@ -88,7 +95,7 @@ impl Component for DbCheckBody {
                         }
                         *buf += r#"</form>"#;
 
-                        if let Some(v) = &props.db_check_validation {
+                        if let Some(v) = &self.validation {
                             if v.result {
                                 *buf += r#"<div class="alert alert-primary mt-3">チェックが正常に完了しました。</div>"#;
                             }

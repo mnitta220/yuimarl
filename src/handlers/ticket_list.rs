@@ -8,7 +8,7 @@ use crate::{
     AppError,
 };
 use anyhow::Result;
-use axum::{extract::Form, extract::Query, response::Html};
+use axum::{extract::Form, response::Html};
 use firestore::*;
 use serde::Deserialize;
 use tower_cookies::Cookies;
@@ -19,11 +19,7 @@ pub struct TicketListInput {
     pub ticketname: String,
     pub parentid: String,
     pub finished: Option<String>,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct TicketListParams {
-    page: Option<String>,
+    pub page: usize,
 }
 
 pub struct TicketListProps {
@@ -32,25 +28,18 @@ pub struct TicketListProps {
     pub data_count: usize,
 }
 
-pub async fn get_list(
-    cookies: Cookies,
-    Query(params): Query<TicketListParams>,
-) -> Result<Html<String>, AppError> {
-    let page = params.page.unwrap_or_default();
-    let page = match page.parse::<usize>() {
-        Ok(p) => p,
-        Err(_) => 1,
-    };
-    tracing::info!("GET /ticket_list page={}", page);
+pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
+    tracing::debug!("GET /ticket_list");
 
     let input = TicketListInput {
         ticketid: String::from(""),
         ticketname: String::from(""),
         parentid: String::from(""),
         finished: None,
+        page: 1,
     };
 
-    return get_list_sub(cookies, input, page).await;
+    return get_list_sub(cookies, input).await;
 }
 
 pub async fn post_list(
@@ -58,21 +47,18 @@ pub async fn post_list(
     Form(input): Form<TicketListInput>,
 ) -> Result<Html<String>, AppError> {
     tracing::debug!(
-        "POST /post_list {:?}, {:?}, {:?}, {:?}",
+        "POST /post_list {:?}, {:?}, {:?}, {:?}, {}",
         input.ticketid,
         input.ticketname,
         input.parentid,
-        input.finished
+        input.finished,
+        input.page
     );
 
-    return get_list_sub(cookies, input, 1).await;
+    return get_list_sub(cookies, input).await;
 }
 
-async fn get_list_sub(
-    cookies: Cookies,
-    input: TicketListInput,
-    page: usize,
-) -> Result<Html<String>, AppError> {
+async fn get_list_sub(cookies: Cookies, input: TicketListInput) -> Result<Html<String>, AppError> {
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
         Err(e) => {
@@ -95,7 +81,7 @@ async fn get_list_sub(
     };
 
     let mut list_props = TicketListProps {
-        current_page: page,
+        current_page: input.page,
         total_page: 1,
         data_count: 0,
     };
@@ -108,7 +94,7 @@ async fn get_list_sub(
             }
         };
         list_props.data_count = tickets.len();
-        list_props.total_page = (list_props.data_count / PAGE_COUNT) + 1;
+        list_props.total_page = (list_props.data_count + PAGE_COUNT - 1) / PAGE_COUNT;
         props.tickets = tickets;
     }
 

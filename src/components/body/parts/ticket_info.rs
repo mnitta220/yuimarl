@@ -1,8 +1,9 @@
-use crate::{components::Component, model, Props};
+use crate::{components::Component, handlers::validation, model, Props};
 
 pub struct TicketInfo {
     pub can_update: bool,
     pub can_delete: bool,
+    pub validation: Option<validation::ticket::TicketValidation>,
 }
 
 impl Component for TicketInfo {
@@ -43,7 +44,7 @@ impl Component for TicketInfo {
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 {
                     *buf += r#"<input class="form-control"#;
-                    if let Some(v) = &props.ticket_validation {
+                    if let Some(v) = &self.validation {
                         if v.name.is_some() {
                             *buf += r#" is-invalid"#;
                         }
@@ -56,7 +57,7 @@ impl Component for TicketInfo {
                     }
                     *buf += r#"" required>"#;
 
-                    if let Some(v) = &props.ticket_validation {
+                    if let Some(v) = &self.validation {
                         if let Some(e) = &v.name {
                             *buf += r#"<div class="invalid-feedback">"#;
                             *buf += e;

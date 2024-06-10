@@ -78,7 +78,7 @@ impl Component for TicketListBody {
                             }
                             *buf += r#"</div>"#;
 
-                            *buf += r#"<form class="row py-2 mx-1 border bg-light" action="/ticket_list" method="POST">"#;
+                            *buf += r#"<form class="row py-2 mx-1 border bg-light" name="form_filter" id="form_filter" action="/ticket_list" method="POST">"#;
                             {
                                 *buf += r#"<div class="col-md-2 pb-1">"#;
                                 {
@@ -124,7 +124,7 @@ impl Component for TicketListBody {
 
                                     *buf += r#"<div class="text-end">"#;
                                     {
-                                        *buf += r#"<button class="btn btn-sm btn-primary" type="submit">"#;
+                                        *buf += r#"<button id="btnFilter" class="btn btn-sm btn-primary" type="button">"#;
                                         {
                                             *buf += r#"<img class="icon" src="/static/ionicons/funnel-outline.svg">&nbsp;フィルター"#;
                                         }
@@ -133,74 +133,149 @@ impl Component for TicketListBody {
                                     *buf += r#"</div>"#;
                                 }
                                 *buf += r#"</div>"#;
+                                *buf += r#"<input type="hidden" id="page" name="page" value=""#;
+                                *buf += &self.input.page.to_string();
+                                *buf += r#"">"#;
                             }
                             *buf += r#"</form>"#;
 
-                            *buf += r#"<div class="row pt-2">"#;
-                            {
-                                *buf += r#"<div class="col">"#;
+                            if self.list_props.total_page > 1 {
+                                *buf += r#"<div class="row pt-2">"#;
                                 {
-                                    *buf += r#"<div class="d-flex justify-content-end px-1">"#;
+                                    *buf += r#"<div class="col">"#;
                                     {
-                                        *buf += r#"<nav>"#;
+                                        *buf += r#"<div class="d-flex justify-content-end px-1">"#;
                                         {
-                                            *buf += r#"<ul class="pagination pagination-sm">"#;
+                                            *buf += r#"<nav>"#;
                                             {
-                                                *buf += r#"<li class="page-item disabled">"#;
+                                                *buf += r#"<ul class="pagination pagination-sm">"#;
                                                 {
-                                                    *buf += r#"<a class="page-link" href="/ticket_list?page=prev" tabindex="-1" aria-label="前へ">"#;
-                                                    {
-                                                        *buf += r#"<span aria-hidden="true">&laquo;</span>"#;
-                                                        *buf += r#"<span class="visually-hidden">前へ</span>"#;
+                                                    // 前へ
+                                                    *buf += r#"<li class="page-item"#;
+                                                    if self.list_props.current_page == 1 {
+                                                        *buf += r#" disabled"#;
                                                     }
-                                                    *buf += r#"</a>"#;
-                                                }
-                                                *buf += r#"</li>"#;
-
-                                                *buf += r#"<li class="page-item">"#;
-                                                {
-                                                    *buf +=
-                                                        r#"<a class="page-link active" href="">"#;
+                                                    *buf += r#"">"#;
                                                     {
-                                                        *buf += r#"1"#;
-                                                        *buf += r#"<span class="visually-hidden">(現ページ)</span>"#;
+                                                        *buf += r#"<a class="page-link" href="javascript:pageChange("#;
+                                                        *buf += &(self.list_props.current_page - 1)
+                                                            .to_string();
+                                                        *buf += r#")" tabindex="-1" aria-label="前へ">"#;
+                                                        {
+                                                            *buf += r#"<span aria-hidden="true">&laquo;</span>"#;
+                                                        }
+                                                        *buf += r#"</a>"#;
                                                     }
-                                                    *buf += r#"</a>"#;
-                                                }
-                                                *buf += r#"</li>"#;
+                                                    *buf += r#"</li>"#;
 
-                                                *buf += r#"<li class="page-item">"#;
-                                                {
-                                                    *buf += r#"<a class="page-link" href="/ticket_list?page=2">2</a>"#;
-                                                }
-                                                *buf += r#"</li>"#;
+                                                    // 2ページ前
+                                                    if self.list_props.current_page > 2 {
+                                                        *buf += r#"<li class="page-item">"#;
+                                                        {
+                                                            let page =
+                                                                self.list_props.current_page - 2;
+                                                            *buf += r#"<a class="page-link" href="javascript:pageChange("#;
+                                                            *buf += &page.to_string();
+                                                            *buf += r#")">"#;
+                                                            *buf += &page.to_string();
+                                                            *buf += r#"</a>"#;
+                                                        }
+                                                        *buf += r#"</li>"#;
+                                                    }
 
-                                                *buf += r#"<li class="page-item">"#;
-                                                {
-                                                    *buf += r#"<a class="page-link" href="/ticket_list?page=2">3</a>"#;
-                                                }
-                                                *buf += r#"</li>"#;
+                                                    // 1ページ前
+                                                    if self.list_props.current_page > 1 {
+                                                        *buf += r#"<li class="page-item">"#;
+                                                        {
+                                                            let page =
+                                                                self.list_props.current_page - 1;
+                                                            *buf += r#"<a class="page-link" href="javascript:pageChange("#;
+                                                            *buf += &page.to_string();
+                                                            *buf += r#")">"#;
+                                                            *buf += &page.to_string();
+                                                            *buf += r#"</a>"#;
+                                                        }
+                                                        *buf += r#"</li>"#;
+                                                    }
 
-                                                *buf += r#"<li class="page-item">"#;
-                                                {
-                                                    *buf += r#"<a class="page-link" href="/ticket_list?page=next" aria-label="次へ">"#;
+                                                    // 現ページ
+                                                    *buf += r#"<li class="page-item">"#;
                                                     {
-                                                        *buf += r#"<span aria-hidden="true">&raquo;</span>"#;
-                                                        *buf += r#"<span class="visually-hidden">次へ</span>"#;
+                                                        *buf += r#"<a class="page-link active" href="">"#;
+                                                        {
+                                                            *buf += &self
+                                                                .list_props
+                                                                .current_page
+                                                                .to_string();
+                                                        }
+                                                        *buf += r#"</a>"#;
                                                     }
-                                                    *buf += r#"</a>"#;
+                                                    *buf += r#"</li>"#;
+
+                                                    // 1ページ次
+                                                    if (self.list_props.current_page + 1)
+                                                        <= self.list_props.total_page
+                                                    {
+                                                        *buf += r#"<li class="page-item">"#;
+                                                        {
+                                                            let page =
+                                                                self.list_props.current_page + 1;
+                                                            *buf += r#"<a class="page-link" href="javascript:pageChange("#;
+                                                            *buf += &page.to_string();
+                                                            *buf += r#")">"#;
+                                                            *buf += &page.to_string();
+                                                            *buf += r#"</a>"#;
+                                                        }
+                                                        *buf += r#"</li>"#;
+                                                    }
+
+                                                    // 2ページ次
+                                                    if (self.list_props.current_page + 2)
+                                                        <= self.list_props.total_page
+                                                    {
+                                                        *buf += r#"<li class="page-item">"#;
+                                                        {
+                                                            let page =
+                                                                self.list_props.current_page + 2;
+                                                            *buf += r#"<a class="page-link" href="javascript:pageChange("#;
+                                                            *buf += &page.to_string();
+                                                            *buf += r#")">"#;
+                                                            *buf += &page.to_string();
+                                                            *buf += r#"</a>"#;
+                                                        }
+                                                        *buf += r#"</li>"#;
+                                                    }
+
+                                                    // 次へ
+                                                    *buf += r#"<li class="page-item"#;
+                                                    if self.list_props.current_page
+                                                        == self.list_props.total_page
+                                                    {
+                                                        *buf += r#" disabled"#;
+                                                    }
+                                                    *buf += r#"">"#;
+                                                    {
+                                                        *buf += r#"<a class="page-link" href="javascript:pageChange("#;
+                                                        *buf += &(self.list_props.current_page + 1)
+                                                            .to_string();
+                                                        *buf += r#")" aria-label="次へ">"#;
+                                                        {
+                                                            *buf += r#"<span aria-hidden="true">&raquo;</span>"#;
+                                                        }
+                                                        *buf += r#"</a>"#;
+                                                    }
+                                                    *buf += r#"</li>"#;
                                                 }
-                                                *buf += r#"</li>"#;
+                                                *buf += r#"</ul>"#;
                                             }
-                                            *buf += r#"</ul>"#;
+                                            *buf += r#"</nav>"#;
                                         }
-                                        *buf += r#"</nav>"#;
+                                        *buf += r#"</div>"#;
                                     }
                                     *buf += r#"</div>"#;
                                 }
                                 *buf += r#"</div>"#;
                             }
-                            *buf += r#"</div>"#;
 
                             *buf += r#"<div class="row pt-3">"#;
                             {
@@ -311,75 +386,6 @@ impl Component for TicketListBody {
                                                     }
                                                     i += 1;
                                                 }
-                                                /*
-                                                for ticket in &props.tickets {
-                                                    *buf += r#"<tr>"#;
-                                                    {
-                                                        *buf += r#"<td>"#;
-                                                        {
-                                                            *buf += r#"<a href="/ticket?id="#;
-                                                            *buf += &ticket.id;
-                                                            *buf += r#"">"#;
-                                                            *buf += &ticket
-                                                                .id_disp
-                                                                .clone()
-                                                                .unwrap_or_default();
-                                                            *buf += r#"</a>&nbsp;"#;
-                                                            if let Some(ref name) = ticket.name {
-                                                                super::super::escape_html(
-                                                                    &name, buf,
-                                                                );
-                                                            }
-                                                        }
-                                                        *buf += r#"</td>"#;
-
-                                                        *buf += r#"<td>"#;
-                                                        {
-                                                            if let Some(ref parent_id) =
-                                                                ticket.parent_id
-                                                            {
-                                                                *buf += r#"<a href="/ticket?id="#;
-                                                                *buf += parent_id;
-                                                                *buf += r#"">"#;
-                                                                *buf += &ticket
-                                                                    .parent_id_disp
-                                                                    .clone()
-                                                                    .unwrap_or_default();
-                                                                *buf += r#"</a>&nbsp;"#;
-                                                                if let Some(ref name) =
-                                                                    ticket.parent_name
-                                                                {
-                                                                    super::super::escape_html(
-                                                                        &name, buf,
-                                                                    );
-                                                                }
-                                                            }
-                                                        }
-                                                        *buf += r#"</td>"#;
-
-                                                        *buf += r#"<td>"#;
-                                                        if let Some(s) = &ticket.start_date {
-                                                            super::super::replace_slash(&s, buf);
-                                                        }
-                                                        *buf += r#"</td>"#;
-
-                                                        *buf += r#"<td>"#;
-                                                        if let Some(e) = &ticket.end_date {
-                                                            super::super::replace_slash(&e, buf);
-                                                        }
-                                                        *buf += r#"</td>"#;
-
-                                                        *buf += r#"<td>"#;
-                                                        *buf += &ticket.priority_to_string();
-                                                        *buf += r#"</td>"#;
-
-                                                        *buf += r#"<td class="text-right">"#;
-                                                        *buf += &ticket.progress.to_string();
-                                                        *buf += r#"%</td>"#;
-                                                    }
-                                                    *buf += r#"</tr>"#;
-                                                }
-                                                */
                                             }
                                             *buf += r#"</tbody>"#;
                                         }
@@ -426,6 +432,9 @@ impl Component for TicketListBody {
                 *buf += r#"</div>"#;
             }
             *buf += r#"</main>"#;
+
+            *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
+            *buf += r#"<script src="/static/js/ticket_list0040.js"></script>"#;
 
             self.footer.write(props, buf);
         }

@@ -18,7 +18,7 @@ pub async fn get(cookies: Cookies) -> Result<Html<String>, AppError> {
     };
     let mut props = page::Props::new(&session_id);
     props.title = Some(String::from("データベースチェック"));
-    let mut page = DbCheckPage::new(props);
+    let mut page = DbCheckPage::new(props, None, None);
 
     Ok(Html(page.write()))
 }
@@ -59,10 +59,10 @@ pub async fn post(
 
     let mut props = page::Props::new(&session.id);
     props.title = Some(String::from("データベースチェック"));
-    props.db_check_password = Some(input.db_check_password);
-    props.db_check_validation = v;
+    //props.db_check_password = Some(input.db_check_password);
+    //props.db_check_validation = v;
     props.session = Some(session);
-    let mut page = DbCheckPage::new(props);
+    let mut page = DbCheckPage::new(props, Some(input.db_check_password), v);
 
     Ok(Html(page.write()))
 }

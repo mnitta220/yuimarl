@@ -1,6 +1,5 @@
 use crate::{
     components::{head::Head, Component},
-    handlers::validation,
     model,
 };
 
@@ -15,16 +14,12 @@ pub struct Props {
     pub project: Option<model::project::Project>,
     pub project_member: Option<model::project::ProjectMember>,
     pub project_members: Vec<model::project::ProjectMember>,
-    pub project_validation: Option<validation::project::ProjectValidation>,
     pub ticket: Option<model::ticket::Ticket>,
     pub ticket_members: Vec<model::ticket::TicketMember>,
-    pub ticket_validation: Option<validation::ticket::TicketValidation>,
     pub tickets: Vec<model::ticket::Ticket>,
     pub ticket_parent: Option<model::ticket::Ticket>,
     pub ticket_children: Vec<model::ticket::Ticket>,
     pub news: Vec<model::news::News>,
-    pub db_check_password: Option<String>,
-    pub db_check_validation: Option<validation::db_check::DbCheckValidation>,
     pub tab: Tab,
     pub action: crate::Action,
 }
@@ -38,16 +33,12 @@ impl Props {
             project: None,
             project_member: None,
             project_members: Vec::new(),
-            project_validation: None,
             ticket: None,
             ticket_members: Vec::new(),
-            ticket_validation: None,
             tickets: Vec::new(),
             ticket_parent: None,
             ticket_children: Vec::new(),
             news: Vec::new(),
-            db_check_password: None,
-            db_check_validation: None,
             tab: Tab::Info,
             action: crate::Action::Read,
         }

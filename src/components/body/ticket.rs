@@ -3,8 +3,7 @@ use super::parts::{
     footer::Footer, nav::Nav, ticket_comment::TicketComment, ticket_history::TicketHistory,
     ticket_info::TicketInfo, ticket_note::TicketNote,
 };
-use crate::Props;
-use crate::Tab;
+use crate::{handlers::validation, Props, Tab};
 
 pub struct TicketBody {
     pub nav: Box<dyn Component + Send>,
@@ -13,20 +12,27 @@ pub struct TicketBody {
     pub ticket_comment: Box<dyn Component + Send>,
     pub ticket_history: Box<dyn Component + Send>,
     pub footer: Box<dyn Component + Send>,
+    pub validation: Option<validation::ticket::TicketValidation>,
 }
 
 impl TicketBody {
-    pub fn new(can_update: bool, can_delete: bool) -> Self {
+    pub fn new(
+        can_update: bool,
+        can_delete: bool,
+        validation: Option<validation::ticket::TicketValidation>,
+    ) -> Self {
         TicketBody {
             nav: Box::new(Nav {}),
             ticket_info: Box::new(TicketInfo {
                 can_update,
                 can_delete,
+                validation: validation.clone(),
             }),
             ticket_note: Box::new(TicketNote { can_update }),
             ticket_comment: Box::new(TicketComment {}),
             ticket_history: Box::new(TicketHistory {}),
             footer: Box::new(Footer {}),
+            validation,
         }
     }
 }
@@ -49,7 +55,7 @@ impl Component for TicketBody {
                         }
                         *buf += r#"</h3>"#;
 
-                        if let Some(v) = &props.ticket_validation {
+                        if let Some(v) = &self.validation {
                             if let Some(e) = &v.info {
                                 *buf += r#"<div class="row p-2">"#;
                                 {

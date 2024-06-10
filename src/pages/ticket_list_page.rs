@@ -1,7 +1,7 @@
 use super::super::handlers::ticket_list::{TicketListInput, TicketListProps};
 use crate::{components::body::ticket_list::TicketListBody, pages::page};
 
-pub const PAGE_COUNT: usize = 3;
+pub const PAGE_COUNT: usize = 25;
 
 /// Component for rendering the Ticket List page.
 pub struct TicketListPage {

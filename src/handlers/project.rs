@@ -51,7 +51,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
     props.project_members.push(member);
 
     props.session = Some(session);
-    let mut page = ProjectPage::new(props, true, true);
+    let mut page = ProjectPage::new(props, true, true, None);
 
     Ok(Html(page.write()))
 }
@@ -165,7 +165,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
     props.project_members = members;
 
     props.session = Some(session);
-    let mut page = ProjectPage::new(props, can_update, can_delete);
+    let mut page = ProjectPage::new(props, can_update, can_delete, None);
 
     Ok(Html(page.write()))
 }
@@ -281,9 +281,9 @@ pub async fn post(
         props.action = action;
         props.session = Some(session);
         props.project = Some(project);
-        props.project_validation = Some(v);
+        //props.project_validation = Some(v);
         props.project_members = project_members;
-        let mut page = ProjectPage::new(props, can_update, can_delete);
+        let mut page = ProjectPage::new(props, can_update, can_delete, Some(v));
         return Ok(Html(page.write()));
     }
 
@@ -396,8 +396,8 @@ pub async fn post_note(
         props.tab = crate::Tab::Note;
         props.action = crate::Action::Update;
         props.session = Some(session);
-        props.project_validation = Some(v);
-        let mut page = ProjectPage::new(props, can_update, can_delete);
+        //props.project_validation = Some(v);
+        let mut page = ProjectPage::new(props, can_update, can_delete, Some(v));
         return Ok(Html(page.write()));
     }
 

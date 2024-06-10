@@ -977,6 +977,7 @@ impl Ticket {
         };
 
         let mut serched: Vec<Ticket> = Vec::new();
+
         for ticket in &tickets {
             if input.ticketid.len() > 0 {
                 if let Some(id_disp) = &ticket.id_disp {

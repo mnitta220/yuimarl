@@ -1,8 +1,9 @@
-use crate::{components::Component, model, Props};
+use crate::{components::Component, handlers::validation, model, Props};
 
 pub struct ProjectInfo {
     pub can_update: bool,
     pub can_delete: bool,
+    pub validation: Option<validation::project::ProjectValidation>,
 }
 
 impl Component for ProjectInfo {
@@ -18,7 +19,7 @@ impl Component for ProjectInfo {
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 {
                     *buf += r#"<input class="form-control"#;
-                    if let Some(v) = &props.project_validation {
+                    if let Some(v) = &self.validation {
                         if v.project_name.is_some() {
                             *buf += r#" is-invalid"#;
                         }
@@ -31,7 +32,7 @@ impl Component for ProjectInfo {
                     }
                     *buf += r#"" required>"#;
 
-                    if let Some(v) = &props.project_validation {
+                    if let Some(v) = &self.validation {
                         if let Some(e) = &v.project_name {
                             *buf += r#"<div class="invalid-feedback">"#;
                             *buf += e;

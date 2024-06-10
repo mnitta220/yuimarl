@@ -158,6 +158,8 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
                 can_update = true;
             }
         }
+    } else {
+        return Ok(Html(LoginPage::write()));
     }
 
     props.project_members = members;

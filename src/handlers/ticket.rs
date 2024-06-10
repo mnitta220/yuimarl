@@ -45,6 +45,10 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
             }
         };
 
+    if member.is_none() {
+        return Ok(Html(LoginPage::write()));
+    }
+
     props.project = project;
     props.project_member = member;
     props.tickets = tickets;
@@ -113,7 +117,10 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
                 can_delete = true;
             }
         }
+    } else {
+        return Ok(Html(LoginPage::write()));
     }
+
     if can_delete == false {
         if let Some(t) = &ticket {
             if let Some(o) = &t.owner {

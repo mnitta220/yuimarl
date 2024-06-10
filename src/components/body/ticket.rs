@@ -91,6 +91,7 @@ impl Component for TicketBody {
                                         }
                                         *buf += r#"</li>"#;
 
+                                        /*
                                         *buf += r#"<li class="nav-item">"#;
                                         {
                                             *buf += r#"<a class="nav-link"#;
@@ -102,6 +103,7 @@ impl Component for TicketBody {
                                             *buf += r#"&tab=comment">コメント</a>"#;
                                         }
                                         *buf += r#"</li>"#;
+                                        */
 
                                         *buf += r#"<li class="nav-item">"#;
                                         {

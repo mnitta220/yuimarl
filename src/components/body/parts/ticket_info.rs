@@ -55,7 +55,11 @@ impl Component for TicketInfo {
                             *buf += n;
                         }
                     }
-                    *buf += r#"" required>"#;
+                    *buf += r#"" required"#;
+                    if !self.can_update {
+                        *buf += r#" disabled"#;
+                    }
+                    *buf += r#">"#;
 
                     if let Some(v) = &self.validation {
                         if let Some(e) = &v.name {
@@ -75,7 +79,11 @@ impl Component for TicketInfo {
                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="description">内容</label>"#;
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 {
-                    *buf += r#"<textarea class="form-control" id="description" name="description" rows="3">"#;
+                    *buf += r#"<textarea class="form-control" id="description" name="description" rows="3""#;
+                    if !self.can_update {
+                        *buf += r#" disabled"#;
+                    }
+                    *buf += r#">"#;
                     if let Some(t) = &props.ticket {
                         if let Some(d) = &t.description {
                             *buf += d;
@@ -213,7 +221,11 @@ impl Component for TicketInfo {
                                     *buf += s;
                                 }
                             }
-                            *buf += r#"">"#;
+                            *buf += r#"""#;
+                            if !self.can_update {
+                                *buf += r#" disabled"#;
+                            }
+                            *buf += r#">"#;
                         }
                         *buf += r#"</div>"#;
 
@@ -226,7 +238,11 @@ impl Component for TicketInfo {
                                     *buf += e;
                                 }
                             }
-                            *buf += r#"">"#;
+                            *buf += r#"""#;
+                            if !self.can_update {
+                                *buf += r#" disabled"#;
+                            }
+                            *buf += r#">"#;
                         }
                         *buf += r#"</div>"#;
                     }
@@ -258,7 +274,11 @@ impl Component for TicketInfo {
                                         } else {
                                             *buf += "0";
                                         }
-                                        *buf += r#"">"#;
+                                        *buf += r#"""#;
+                                        if !self.can_update {
+                                            *buf += r#" disabled"#;
+                                        }
+                                        *buf += r#">"#;
                                     }
                                     *buf += r#"</td>"#;
                                     *buf += r#"<td>&nbsp;%</td>"#;
@@ -278,6 +298,9 @@ impl Component for TicketInfo {
                                     if t.progress == 100 {
                                         *buf += r#" checked="checked""#;
                                     }
+                                }
+                                if !self.can_update {
+                                    *buf += r#" disabled"#;
                                 }
                                 *buf += r#">"#;
                                 *buf += r#"<label class="form-check-label" for="finished">完了済</label>"#;
@@ -306,6 +329,9 @@ impl Component for TicketInfo {
                                 *buf += r#" checked="checked""#;
                             }
                         }
+                        if !self.can_update {
+                            *buf += r#" disabled"#;
+                        }
                         *buf += r#">"#;
                         *buf += r#"<label class="form-check-label" for="priority4">最優先</label>"#;
                     }
@@ -318,6 +344,9 @@ impl Component for TicketInfo {
                             if t.priority == 3 {
                                 *buf += r#" checked="checked""#;
                             }
+                        }
+                        if !self.can_update {
+                            *buf += r#" disabled"#;
                         }
                         *buf += r#">"#;
                         *buf += r#"<label class="form-check-label" for="priority3">高</label>"#;
@@ -332,6 +361,9 @@ impl Component for TicketInfo {
                                 *buf += r#" checked="checked""#;
                             }
                         }
+                        if !self.can_update {
+                            *buf += r#" disabled"#;
+                        }
                         *buf += r#">"#;
                         *buf += r#"<label class="form-check-label" for="priority2">中</label>"#;
                     }
@@ -344,6 +376,9 @@ impl Component for TicketInfo {
                             if t.priority == 1 {
                                 *buf += r#" checked="checked""#;
                             }
+                        }
+                        if !self.can_update {
+                            *buf += r#" disabled"#;
                         }
                         *buf += r#">"#;
                         *buf += r#"<label class="form-check-label" for="priority1">低</label>"#;
@@ -359,6 +394,9 @@ impl Component for TicketInfo {
                             }
                         } else {
                             *buf += r#" checked="checked""#;
+                        }
+                        if !self.can_update {
+                            *buf += r#" disabled"#;
                         }
                         *buf += r#">"#;
                         *buf += r#"<label class="form-check-label" for="priority0">未設定</label>"#;
@@ -383,11 +421,11 @@ impl Component for TicketInfo {
                             *buf += r#"">"#;
                             *buf += &t.id_disp.clone().unwrap();
                             *buf += r#"</a>&nbsp;:&nbsp;"#;
+
                             if let Some(ref name) = t.name {
                                 super::super::super::escape_html(&name, buf);
                             }
 
-                            //*buf += &t.name.clone().unwrap();
                             if self.can_update {
                                 *buf += r#"&nbsp;"#;
                                 *buf += r#"<a href="javascript:removeParent();">"#;
@@ -441,7 +479,6 @@ impl Component for TicketInfo {
 
                             if let Some(name) = &child.name {
                                 super::super::super::escape_html(&name, buf);
-                                //*buf += &name;
                             }
                         }
                         *buf += r#"</p>"#;

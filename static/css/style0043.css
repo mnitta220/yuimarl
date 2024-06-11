@@ -1,17 +1,17 @@
 .icon {
-  width: 22px;
-}
-
-.icon1 {
   width: 24px;
 }
 
-.icon2 {
+.icon1 {
   width: 26px;
 }
 
+.icon2 {
+  width: 28px;
+}
+
 .icon3 {
-  width: 30px;
+  width: 33px;
 }
 
 .btn-help {

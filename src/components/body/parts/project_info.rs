@@ -30,7 +30,11 @@ impl Component for ProjectInfo {
                             *buf += n;
                         }
                     }
-                    *buf += r#"" required>"#;
+                    *buf += r#"" required"#;
+                    if !self.can_update {
+                        *buf += r#" disabled"#;
+                    }
+                    *buf += r#">"#;
 
                     if let Some(v) = &self.validation {
                         if let Some(e) = &v.project_name {
@@ -58,7 +62,11 @@ impl Component for ProjectInfo {
                             *buf += p;
                         }
                     }
-                    *buf += r#"" required>"#;
+                    *buf += r#"" required"#;
+                    if !self.can_update {
+                        *buf += r#" disabled"#;
+                    }
+                    *buf += r#">"#;
                 }
                 *buf += r#"</div>"#;
             }

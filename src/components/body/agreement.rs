@@ -26,7 +26,7 @@ impl Component for AgreementBody {
             {
                 *buf += r#"<div class="container">"#;
                 {
-                    *buf += r#"<img class="mw-100" src="/static/images/logo.png" alt="Yuimarl">"#;
+                    *buf += r#"<img class="mw-100" src="/static/images/logo2.png" alt="Yuimarl">"#;
                 }
                 *buf += r#"</div>"#;
             }

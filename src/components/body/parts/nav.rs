@@ -10,7 +10,7 @@ impl Component for Nav {
             {
                 *buf += r#"<a class="navbar-brand" href="/">"#;
                 {
-                    *buf += r#"<img class="mw-100" src="/static/images/logo.png" alt="Yuimarl">"#;
+                    *buf += r#"<img class="mw-100" src="/static/images/logo2.png" alt="Yuimarl">"#;
                 }
                 *buf += r#"</a>"#;
 

@@ -49,6 +49,8 @@ html(lang="ja")
                           a(href="#tktdel") チケットを削除する
                         li
                           a(href="#tktprv") チケットの権限
+                    li
+                      a(href="#news") お知らせ
                 hr
                 section.pb-2
                   h3#login ログイン
@@ -386,7 +388,29 @@ html(lang="ja")
                       | &nbsp;をご覧ください。
                     h5.pt-2 コメントタブ
                     p
-                      | 現在は、コメントタブはお使いいただくことができません。
+                      | コメントタブでは、チケットについて、プロジェクトのメンバーがコメントすることができます。
+                    a(href="images/screen80.png")
+                      img.border.border-info.border-1.img-fluid(src="images/screen80.png")
+                    p.pt-2
+                      | コメントを追加するには、&nbsp;
+                      img.icon3(src="images/ionicons/add-circle-outline.svg")
+                      | &nbsp;アイコンをクリックします。
+                      br
+                      | 自分のコメントを更新するには、
+                      img.icon3(src="images/ionicons/create-outline2.svg")
+                      | &nbsp;アイコンをクリックします。
+                      br
+                      | 自分のコメントを削除するには、
+                      img.icon3(src="images/ionicons/trash-outline.svg")
+                      | &nbsp;アイコンをクリックします。
+                    p
+                      | コメントの追加・更新では、次のようなダイアログが表示されるので、マークダウンで入力します。
+                    a(href="images/screen81.png")
+                      img.border.border-info.border-1.img-fluid(src="images/screen81.png")
+                    p.pt-2
+                      | マークダウンの入力方法は、
+                      a(href="markdown.html") マークダウン
+                      | &nbsp;をご覧ください。
                     h5.pt-2 更新履歴タブ
                     p
                       | チケットの更新履歴を参照するには、「更新履歴」タブを選択します。
@@ -452,6 +476,24 @@ html(lang="ja")
                           td ×
                           td ×
 
+                hr
+                section.pb-2
+                  h3#news お知らせ
+                  p 自分に関係する変更があった場合は、ホーム画面にお知らせが表示されます。
+                  a(href="images/screen82.png")
+                    img.border.border-info.border-1.img-fluid(src="images/screen82.png")
+                  p.mt-2 お知らせが表示されるのは、以下の場合です。
+                  ol
+                    li 他のユーザーによって、プロジェクトのメンバーに追加された時。
+                    li プロジェクトのメンバーから削除された時。
+                    li 他のユーザーによって、チケットの担当者に追加された時。
+                    li 他のユーザーによって、自分が担当になっているチケットが更新された時。
+                    li 他のユーザーによって、自分が担当になっているチケットにコメントが追加された時。
+                    li 他のユーザーによって、自分がメンバーになっているプロジェクトが削除された時。
+                  p
+                    | お知らせを削除するには、
+                    img.icon3(src="images/ionicons/close-outline.svg")
+                    | &nbsp;アイコンをクリックします。
 
               .col-md-3
                 .submenu.mt-3

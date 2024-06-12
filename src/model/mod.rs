@@ -1,3 +1,4 @@
+pub mod comment;
 pub mod deliverable;
 pub mod history;
 pub mod news;

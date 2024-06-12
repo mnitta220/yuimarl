@@ -20,6 +20,7 @@ impl TicketBody {
         can_update: bool,
         can_delete: bool,
         validation: Option<validation::ticket::TicketValidation>,
+        is_edit: bool,
     ) -> Self {
         TicketBody {
             nav: Box::new(Nav {}),
@@ -29,7 +30,11 @@ impl TicketBody {
                 validation: validation.clone(),
             }),
             ticket_note: Box::new(TicketNote { can_update }),
-            ticket_comment: Box::new(TicketComment {}),
+            ticket_comment: Box::new(TicketComment {
+                can_update,
+                validation: validation.clone(),
+                is_edit,
+            }),
             ticket_history: Box::new(TicketHistory {}),
             footer: Box::new(Footer {}),
             validation,
@@ -97,7 +102,6 @@ impl Component for TicketBody {
                                         }
                                         *buf += r#"</li>"#;
 
-                                        /*
                                         *buf += r#"<li class="nav-item">"#;
                                         {
                                             *buf += r#"<a class="nav-link"#;
@@ -109,7 +113,6 @@ impl Component for TicketBody {
                                             *buf += r#"&tab=comment">コメント</a>"#;
                                         }
                                         *buf += r#"</li>"#;
-                                        */
 
                                         *buf += r#"<li class="nav-item">"#;
                                         {
@@ -164,6 +167,9 @@ impl Component for TicketBody {
                 Tab::Note => {
                     *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;
                     *buf += r#"<script src="/static/js/markdown0012.js"></script>"#;
+                }
+                Tab::Comment => {
+                    *buf += r#"<script src="/static/js/comment0045.js"></script>"#;
                 }
                 _ => {}
             }

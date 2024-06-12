@@ -43,12 +43,6 @@ html(lang="ja")
                   .col-6
                     b 山田太郎
                   .col-6.text-end
-                    a(href="")
-                      img.icon(src="../../static/ionicons/create-outline2.svg" title="編集")
-                    | &nbsp;
-                    a(href="")
-                      img.icon(src="../../static/ionicons/trash-outline.svg" title="削除")
-                    | &nbsp;&nbsp;
                     small 2024/09/05 16:23
                 .row
                   .col-9
@@ -56,11 +50,11 @@ html(lang="ja")
                       | ありがとう！😍👍
                       | チケットのノートに追加しました。
                   .col-3.text-end
-                    button.btn.btn-primary(type="submit")
-                      img.icon(src="../../static/ionicons/save-outline.svg")
-                      | &nbsp;更新
-                    | &nbsp;&nbsp;
-                    button.btn.btn-secondary(type="submit") キャンセル
+                    .row
+                      .col.d-flex.justify-content-end.px-1.pt-2
+                        button.btn.btn-primary.btn-sm(type="submit") 更新
+                        | &nbsp;&nbsp;
+                        button.btn.btn-secondary.btn-sm(type="submit") キャンセル
             .row.py-2.ticket-comment
               .col
                 .row

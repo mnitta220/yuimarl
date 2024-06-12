@@ -1,125 +1,112 @@
 <!DOCTYPE html>
 <html lang="ja">
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>チケットを更新 - Yuimarl</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-  <link rel="stylesheet" href="../../static/css/style0044.css">
-  <link rel="icon" type="image/x-icon" href="../../static/favicon.ico">
-</head>
-
-<body>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
-    <div class="container"><a class="navbar-brand" href="/"><img class="mw-100" src="../../static/images/logo2.png"
-          alt="Yuimarl"></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content"
-        aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation"><span
-          class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="navbar-content">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item active"><a class="nav-link" href="/">ホーム<span class="visually-hidden">(current)</span></a>
-          </li>
-          <li class="nav-item"><a class="nav-link" href="#about">プロジェクト</a></li>
-          <li class="nav-item"><a class="nav-link" href="#items">チケット</a></li>
-          <li class="nav-item"><a class="nav-link" href="#items">利用ガイド</a></li>
-          <li class="nav-item"><a class="nav-link" href="#items">ログアウト</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <main>
-    <div class="py-3">
-      <div class="container">
-        <h3 class="mb-3">チケット</h3>
-        <div class="pb-2">
-          <ul class="nav nav-tabs">
-            <li class="nav-item"><a class="nav-link" href="#">基本情報</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">ノート</a></li>
-            <li class="nav-item"><a class="nav-link active" href="#">コメント</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">更新履歴</a></li>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>チケットを更新 - Yuimarl</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style0044.css">
+    <link rel="icon" type="image/x-icon" href="../../static/favicon.ico">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+      <div class="container"><a class="navbar-brand" href="/"><img class="mw-100" src="../../static/images/logo2.png" alt="Yuimarl"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbar-content">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item active"><a class="nav-link" href="/">ホーム<span class="visually-hidden">(current)</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#about">プロジェクト</a></li>
+            <li class="nav-item"><a class="nav-link" href="#items">チケット</a></li>
+            <li class="nav-item"><a class="nav-link" href="#items">利用ガイド</a></li>
+            <li class="nav-item"><a class="nav-link" href="#items">ログアウト</a></li>
           </ul>
         </div>
-        <form action="/ticket_add" method="POST">
-          <div class="row py-2 ticket-comment">
-            <div class="col">
-              <div class="row">
-                <div class="col-6"><b>殿馬一人</b></div>
-                <div class="col-6 text-end"><small>2024/09/04 18:49</small></div>
-              </div>
-              <div class="row">
-                <div class="col">たこやきのレシピを見つけました。<br><a href="https://www.otafuku.co.jp/recipe/cook/taco/taco01.html"
-                    target="_blank">https://www.otafuku.co.jp/recipe/cook/taco/taco01.html</a></div>
+      </div>
+    </nav>
+    <main>
+      <div class="py-3">
+        <div class="container">
+          <h3 class="mb-3">チケット</h3>
+          <div class="pb-2">
+            <ul class="nav nav-tabs">
+              <li class="nav-item"><a class="nav-link" href="#">基本情報</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">ノート</a></li>
+              <li class="nav-item"><a class="nav-link active" href="#">コメント</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">更新履歴</a></li>
+            </ul>
+          </div>
+          <form action="/ticket_add" method="POST">
+            <div class="row py-2 ticket-comment">
+              <div class="col">
+                <div class="row">
+                  <div class="col-6"><b>殿馬一人</b></div>
+                  <div class="col-6 text-end"><small>2024/09/04 18:49</small></div>
+                </div>
+                <div class="row">
+                  <div class="col">たこやきのレシピを見つけました。<br><a href="https://www.otafuku.co.jp/recipe/cook/taco/taco01.html" target="_blank">https://www.otafuku.co.jp/recipe/cook/taco/taco01.html</a></div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="row py-2 ticket-comment">
-            <div class="col">
-              <div class="row">
-                <div class="col-6"><b>山田太郎</b></div>
-                <div class="col-6 text-end"><a href=""><img class="icon" src="../../static/ionicons/create-outline2.svg"
-                      title="編集"></a>&nbsp;<a href=""><img class="icon" src="../../static/ionicons/trash-outline.svg"
-                      title="削除"></a>&nbsp;&nbsp;<small>2024/09/05 16:23</small></div>
-              </div>
-              <div class="row">
-                <div class="col-9">
-                  <textarea class="form-control ticket-comment" id="message" rows="3" name="message">ありがとう！😍👍
+            <div class="row py-2 ticket-comment">
+              <div class="col">
+                <div class="row">
+                  <div class="col-6"><b>山田太郎</b></div>
+                  <div class="col-6 text-end"><small>2024/09/05 16:23</small></div>
+                </div>
+                <div class="row">
+                  <div class="col-9">
+                    <textarea class="form-control ticket-comment" id="message" rows="3" name="message">ありがとう！😍👍
 チケットのノートに追加しました。</textarea>
-                </div>
-                <div class="col-3 text-end">
-                  <button class="btn btn-primary" type="submit"><img class="icon"
-                      src="../../static/ionicons/save-outline.svg">&nbsp;更新</button>&nbsp;&nbsp;
-                  <button class="btn btn-secondary" type="submit">キャンセル</button>
+                  </div>
+                  <div class="col-3 text-end">
+                    <div class="row">
+                      <div class="col d-flex justify-content-end px-1 pt-2">
+                        <button class="btn btn-primary btn-sm" type="submit">更新</button>&nbsp;&nbsp;
+                        <button class="btn btn-secondary btn-sm" type="submit">キャンセル</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row py-2 ticket-comment">
-            <div class="col">
-              <div class="row">
-                <div class="col-6"><b>里中智</b></div>
-                <div class="col-6 text-end"><small>2024/09/05 17:05</small></div>
-              </div>
-              <div class="row">
-                <div class="col">「薄力粉」って知りませんでした。</div>
+            <div class="row py-2 ticket-comment">
+              <div class="col">
+                <div class="row">
+                  <div class="col-6"><b>里中智</b></div>
+                  <div class="col-6 text-end"><small>2024/09/05 17:05</small></div>
+                </div>
+                <div class="row">
+                  <div class="col">「薄力粉」って知りませんでした。</div>
+                </div>
               </div>
             </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </main>
-  <footer class="py-1 mt-3 bg-dark text-light">
-    <div class="container text-center pt-1">
-      <ul class="nav justify-content-center">
-        <li class="nav-item"><a class="nav-link" href="/">ホーム</a></li>
-        <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/yuimarl/"
-            target="_blank">製品ホームページ</a></li>
-        <li class="nav-item"><a class="nav-link" href="#about">利用規約</a></li>
-        <li class="nav-item"><a class="nav-link" href="/contact">お問い合わせ</a></li>
-        <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/" target="_blank">新田システム事務所</a></li>
-      </ul>
-      <p style="color: #a0a0a0"><small>Yuimarl version 0.0.12&nbsp;&nbsp;&nbsp;Copyright &copy; 2024 Masahiro
-          Nitta</small></p>
-    </div>
-    <hr>
-    <div class="container">
-      <div class="row align-items-end">
-        <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step10.html">← prev</a></div>
-        <div class="col-md-8">
-          <div class="alert alert-danger text-start" role="alert">チケット更新 step11.<br>自分のコメントの編集アイコンをクリックすると、コメントを編集できる。
-          </div>
+          </form>
         </div>
-        <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step12.html">next →</a></div>
       </div>
-    </div>
-  </footer>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-    crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-</body>
-
+    </main>
+    <footer class="py-1 mt-3 bg-dark text-light">
+      <div class="container text-center pt-1">
+        <ul class="nav justify-content-center">
+          <li class="nav-item"><a class="nav-link" href="/">ホーム</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/yuimarl/" target="_blank">製品ホームページ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">利用規約</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contact">お問い合わせ</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/" target="_blank">新田システム事務所</a></li>
+        </ul>
+        <p style="color: #a0a0a0"><small>Yuimarl version 0.0.12&nbsp;&nbsp;&nbsp;Copyright &copy; 2024 Masahiro Nitta</small></p>
+      </div>
+      <hr>
+      <div class="container">
+        <div class="row align-items-end">
+          <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step10.html">← prev</a></div>
+          <div class="col-md-8">
+            <div class="alert alert-danger text-start" role="alert">チケット更新 step11.<br>自分のコメントの編集アイコンをクリックすると、コメントを編集できる。</div>
+          </div>
+          <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step12.html">next →</a></div>
+        </div>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </body>
 </html>

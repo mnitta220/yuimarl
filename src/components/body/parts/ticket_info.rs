@@ -531,7 +531,6 @@ impl Component for TicketInfo {
                                                             &deliverable.name,
                                                             buf,
                                                         );
-                                                        //*buf += &deliverable.name;
                                                         *buf += r#"</td>"#;
 
                                                         *buf += r#"<td>"#;
@@ -551,7 +550,6 @@ impl Component for TicketInfo {
                                                                 &deliverable.path,
                                                                 buf,
                                                             );
-                                                            //*buf += &deliverable.path;
                                                         }
                                                         *buf += r#"</td>"#;
 

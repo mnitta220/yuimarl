@@ -12,12 +12,13 @@ impl TicketPage {
         can_update: bool,
         can_delete: bool,
         validation: Option<validation::ticket::TicketValidation>,
+        is_edit: bool,
     ) -> Self {
         // Construct the components of the HTML page.
         let mut page = page::Page::new();
 
         // Construct the components of the HTML body.
-        let body = TicketBody::new(can_update, can_delete, validation);
+        let body = TicketBody::new(can_update, can_delete, validation, is_edit);
         page.body = Some(Box::new(body));
 
         TicketPage { props, page }

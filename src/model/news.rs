@@ -39,7 +39,7 @@ pub enum NewsEvent {
 }
 
 impl News {
-    pub fn event_conv(&self) -> NewsEvent {
+    pub fn num_to_event(&self) -> NewsEvent {
         match self.event {
             1 => NewsEvent::ProjectMemberAdd,
             2 => NewsEvent::ProjectRoleUpdate,

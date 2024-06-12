@@ -189,6 +189,13 @@ impl DbCheckValidation {
             }
         };
 
+        match model::comment::Comment::get_comment_list(&ticket.id, &db).await {
+            Ok(comment) => comment,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e));
+            }
+        };
+
         match model::news::News::get_news_list(&session.uid, db).await {
             Ok(news) => news,
             Err(e) => {

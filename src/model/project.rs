@@ -44,7 +44,7 @@ pub struct ProjectMember {
     pub project_name: Option<String>,     // プロジェクト名
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub enum ProjectRole {
     Owner = 1,
     Administrator = 2,
@@ -969,6 +969,19 @@ impl Project {
 }
 
 impl ProjectMember {
+    pub fn num_to_role(&self) -> ProjectRole {
+        if let Some(r) = self.role {
+            match r {
+                1 => ProjectRole::Owner,
+                2 => ProjectRole::Administrator,
+                3 => ProjectRole::Member,
+                _ => ProjectRole::Viewer,
+            }
+        } else {
+            ProjectRole::Viewer
+        }
+    }
+
     pub fn new(id: &str, project_id: &str, uid: &str) -> Self {
         Self {
             id: id.to_string(),

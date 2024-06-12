@@ -30,7 +30,7 @@ impl Component for News {
 
                                 *buf += r#"<div class="col-md-9">"#;
                                 {
-                                    match news.event_conv() {
+                                    match news.num_to_event() {
                                         news::NewsEvent::ProjectMemberAdd => {
                                             *buf += r#"プロジェクト 「 <a href="/project?id="#;
                                             *buf += &news.project_id;

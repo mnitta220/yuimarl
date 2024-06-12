@@ -75,95 +75,6 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
     };
 
     return show_ticket(session, &id, &tab, &db).await;
-
-    /*
-    let mut props = page::Props::new(&session.id);
-    props.action = crate::Action::Update;
-    props.title = Some("チケット".to_string());
-
-    let (ticket, project, project_member, members, parent, children) =
-        match model::ticket::Ticket::find_ticket_and_project(&id, &session.uid, &db).await {
-            Ok(ticket) => ticket,
-            Err(e) => {
-                return Err(AppError(anyhow::anyhow!(e)));
-            }
-        };
-
-    match tab.as_ref() {
-        "note" => {
-            props.tab = crate::Tab::Note;
-        }
-        "comment" => {
-            props.tab = crate::Tab::Comment;
-            let comments = match model::comment::Comment::get_comment_list(&id, &db).await {
-                Ok(comments) => comments,
-                Err(e) => {
-                    return Err(AppError(anyhow::anyhow!(e)));
-                }
-            };
-            props.ticket_comments = comments;
-        }
-        "history" => {
-            props.tab = crate::Tab::History;
-        }
-        _ => {
-            props.tab = crate::Tab::Info;
-        }
-    }
-
-    let mut can_update = false;
-    let mut can_delete = false;
-
-    // チケットを更新できるのは、作成者、担当者、オーナー、管理者
-    // チケットを削除できるのは、作成者、オーナー、管理者
-    if let Some(pmem) = project_member {
-        if let Some(r) = pmem.role {
-            if props.tab == crate::Tab::Comment {
-                if r == model::project::ProjectRole::Owner as i32
-                    || r == model::project::ProjectRole::Administrator as i32
-                    || r == model::project::ProjectRole::Member as i32
-                {
-                    can_update = true;
-                }
-            } else {
-                if r == model::project::ProjectRole::Owner as i32
-                    || r == model::project::ProjectRole::Administrator as i32
-                {
-                    can_update = true;
-                    can_delete = true;
-                }
-            }
-        }
-    } else {
-        return Ok(Html(LoginPage::write()));
-    }
-
-    if can_delete == false {
-        if let Some(t) = &ticket {
-            if let Some(o) = &t.owner {
-                if o == &session.uid {
-                    can_update = true;
-                    can_delete = true;
-                }
-            }
-            let member = members.iter().find(|m| m.uid == session.uid);
-            if member.is_some() {
-                can_update = true;
-            }
-        }
-    }
-
-    props.ticket = ticket;
-    props.project = project;
-    props.ticket_members = members;
-    props.ticket_parent = parent;
-    props.ticket_children = children;
-    props.session = Some(session);
-
-    let mut page = TicketPage::new(props, can_update, can_delete, None);
-
-    Ok(Html(page.write()))
-    */
 }
 
 pub async fn show_ticket(
@@ -172,24 +83,6 @@ pub async fn show_ticket(
     tab: &str,
     db: &FirestoreDb,
 ) -> Result<Html<String>, AppError> {
-    /*
-    let id = params.id.unwrap_or_default();
-    let tab = params.tab.unwrap_or_default();
-    tracing::debug!("GET /ticket id={} tab={}", id, tab);
-
-    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
-        Ok(db) => db,
-        Err(e) => {
-            return Err(AppError(anyhow::anyhow!(e)));
-        }
-    };
-
-    let session = match super::get_session_info(cookies, true, &db).await {
-        Ok(session_id) => session_id,
-        Err(_) => return Ok(Html(LoginPage::write())),
-    };
-    */
-
     let mut props = page::Props::new(&session.id);
     props.action = crate::Action::Update;
     props.title = Some("チケット".to_string());
@@ -231,7 +124,6 @@ pub async fn show_ticket(
     // チケットを削除できるのは、作成者、オーナー、管理者
     if let Some(pmem) = project_member {
         let r = pmem.num_to_role();
-        //if let Some(r) = pmem.role {
         if props.tab == crate::Tab::Comment {
             if r == model::project::ProjectRole::Owner
                 || r == model::project::ProjectRole::Administrator
@@ -247,7 +139,6 @@ pub async fn show_ticket(
                 can_delete = true;
             }
         }
-        //}
     } else {
         return Ok(Html(LoginPage::write()));
     }
@@ -595,7 +486,7 @@ pub struct CommentInput {
     pub ticket_id: String,
     pub comment_id: String,
     pub action: String,
-    pub markdown2: String,
+    pub comment: String,
 }
 
 pub async fn post_comment(
@@ -607,7 +498,7 @@ pub async fn post_comment(
         input.ticket_id,
         input.comment_id,
         input.action,
-        input.markdown2
+        input.comment
     );
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
@@ -670,17 +561,35 @@ pub async fn post_comment(
                 &input.ticket_id,
                 &session.uid,
                 &session.name,
-                &input.markdown2,
+                &input.comment,
             );
 
-            if let Err(e) = model::comment::Comment::insert(comment, &db).await {
-                return Err(AppError(anyhow::anyhow!(e)));
-            };
+            if let Some(t) = &ticket {
+                if let Err(e) = model::comment::Comment::insert(&comment, t, &db).await {
+                    return Err(AppError(anyhow::anyhow!(e)));
+                };
+            }
+
+            /*
+            let members =
+                match model::ticket::TicketMember::members_of_ticket(&comment.ticket_id, &db).await
+                {
+                    Ok(m) => m,
+                    Err(e) => {
+                        return Err(AppError(anyhow::anyhow!(e)));
+                    }
+                };
+            for member in members {
+                if member.uid == session.uid {
+                    continue;
+                }
+            }
+            */
         }
         crate::Action::Update => {
             // コメント更新
             if let Some(mut c) = comment {
-                c.comment = input.markdown2;
+                c.comment = input.comment;
                 c.updated = true;
                 if let Err(e) = model::comment::Comment::update(&c, &db).await {
                     return Err(AppError(anyhow::anyhow!(e)));

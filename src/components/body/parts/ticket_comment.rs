@@ -64,7 +64,7 @@ impl Component for TicketComment {
                                 *buf += r#"<div class="row">"#;
                                 {
                                     *buf +=
-                                        r#"<div class="col px-2 mx-3 bg-light preview2" id="pre"#;
+                                        r#"<div class="col px-2 mx-2 bg-light preview2" id="pre"#;
                                     *buf += &i.to_string();
                                     *buf += r#"" name="pre"#;
                                     *buf += &i.to_string();
@@ -120,7 +120,7 @@ impl Component for TicketComment {
 
                     *buf += r#"<input type="hidden" id="comment_id" name="comment_id" value="">"#;
                     *buf += r#"<input type="hidden" id="action" name="action" value="">"#;
-                    *buf += r#"<input type="hidden" id="markdown2" name="markdown2" value="">"#;
+                    *buf += r#"<input type="hidden" id="comment" name="comment" value="">"#;
                 }
                 *buf += r#"</form>"#;
 

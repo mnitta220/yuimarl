@@ -26,7 +26,7 @@ pub struct NewsTicket {
     pub name: String,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub enum NewsEvent {
     ProjectMemberAdd = 1,    // プロジェクトメンバーに追加された
     ProjectRoleUpdate = 2,   // プロジェクトメンバーのロールを更新した
@@ -35,6 +35,7 @@ pub enum NewsEvent {
     TicketMemberDelete = 5,  // チケットメンバーから削除された
     TicketUpdate = 6,        // チケットが更新された
     ProjectDelete = 7,       // プロジェクトが削除された
+    TicketCommentAdd = 8,    // チケットのコメントが追加された
     None = 0,
 }
 
@@ -48,6 +49,7 @@ impl News {
             5 => NewsEvent::TicketMemberDelete,
             6 => NewsEvent::TicketUpdate,
             7 => NewsEvent::ProjectDelete,
+            8 => NewsEvent::TicketCommentAdd,
             _ => NewsEvent::None,
         }
     }
@@ -142,6 +144,7 @@ impl News {
         let object_stream: BoxStream<FirestoreResult<News>> = match db
             .fluent()
             .select()
+            .fields(paths!(News::{id, timestamp, uid, event, project_id, project_name, ticket}))
             .from(COLLECTION_NAME)
             .filter(|q| q.for_all([q.field(path!(News::uid)).eq(uid)]))
             .order_by([(path!(News::timestamp), FirestoreQueryDirection::Ascending)])

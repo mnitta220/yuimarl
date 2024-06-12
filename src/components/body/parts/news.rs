@@ -76,6 +76,17 @@ impl Component for News {
                                             );
                                             *buf += r#" 」 が削除されました。"#;
                                         }
+                                        news::NewsEvent::TicketCommentAdd => {
+                                            if let Some(t) = &news.ticket {
+                                                *buf += r#"チケット 「 <a href="/ticket?id="#;
+                                                *buf += &t.id;
+                                                *buf += r#"&tab=comment">"#;
+                                                *buf += &t.id_disp;
+                                                *buf += r#" : "#;
+                                                super::super::super::escape_html(&t.name, buf);
+                                                *buf += r#"</a> 」 にコメントが追加されました。"#;
+                                            }
+                                        }
                                         _ => {}
                                     }
                                 }

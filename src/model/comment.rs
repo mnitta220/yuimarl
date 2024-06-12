@@ -1,3 +1,4 @@
+use super::ticket::Ticket;
 use anyhow::Result;
 use chrono::{DateTime, Utc};
 use firestore::*;
@@ -53,13 +54,13 @@ impl Comment {
         Ok(obj_by_id)
     }
 
-    pub async fn insert(comment: Comment, db: &FirestoreDb) -> Result<()> {
+    pub async fn insert(comment: &Comment, ticket: &Ticket, db: &FirestoreDb) -> Result<()> {
         match db
             .fluent()
             .insert()
             .into(&COLLECTION_NAME)
             .document_id(comment.id.clone())
-            .object(&comment)
+            .object(comment)
             .execute::<Comment>()
             .await
         {
@@ -68,6 +69,38 @@ impl Comment {
                 return Err(anyhow::anyhow!(e.to_string()));
             }
         };
+
+        let members =
+            match super::ticket::TicketMember::members_of_ticket(&comment.ticket_id, &db).await {
+                Ok(m) => m,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+        for member in members {
+            if member.uid == comment.uid {
+                continue;
+            }
+
+            let news_ticket = super::news::NewsTicket {
+                id: comment.ticket_id.clone(),
+                id_disp: ticket.id_disp.clone().unwrap_or_default(),
+                name: ticket.name.clone().unwrap_or_default(),
+            };
+
+            if let Err(e) = super::news::News::upsert(
+                &member.uid,
+                super::news::NewsEvent::TicketCommentAdd,
+                &ticket.project_id,
+                "",
+                Some(news_ticket),
+                &db,
+            )
+            .await
+            {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        }
 
         Ok(())
     }

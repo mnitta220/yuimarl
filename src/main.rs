@@ -242,6 +242,7 @@ impl IntoResponse for AppError {
                 msg = format!("データベースのインデックスを作成する必要があります。次の URL にアクセスして、インデックスを作成してください。\r\n\r\n{}", &msg2[..f]);
             }
         }
+        println!("{:?}", self.0);
 
         (StatusCode::INTERNAL_SERVER_ERROR, msg).into_response()
     }

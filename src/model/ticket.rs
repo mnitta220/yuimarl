@@ -528,11 +528,13 @@ impl Ticket {
                 continue;
             }
 
+            /*
             let news_ticket = super::news::NewsTicket {
                 id: input.ticket_id.to_string(),
                 id_disp: ticket.id_disp.clone().unwrap_or_default(),
                 name: ticket.name.clone().unwrap_or_default(),
             };
+            */
 
             let mut found = false;
             for cur in &current_members {
@@ -543,6 +545,12 @@ impl Ticket {
             }
 
             if found {
+                let news_ticket = super::news::NewsTicket {
+                    id: input.ticket_id.to_string(),
+                    id_disp: ticket.id_disp.clone().unwrap_or_default(),
+                    name: ticket.name.clone().unwrap_or_default(),
+                };
+
                 if let Err(e) = super::news::News::upsert(
                     &upd.uid,
                     super::news::NewsEvent::TicketUpdate,
@@ -556,6 +564,12 @@ impl Ticket {
                     return Err(anyhow::anyhow!(e.to_string()));
                 }
             } else {
+                let news_ticket = super::news::NewsTicket {
+                    id: input.ticket_id.to_string(),
+                    id_disp: ticket.id_disp.clone().unwrap_or_default(),
+                    name: ticket.name.clone().unwrap_or_default(),
+                };
+
                 if let Err(e) = super::news::News::upsert(
                     &upd.uid,
                     super::news::NewsEvent::TicketMemberAdd,

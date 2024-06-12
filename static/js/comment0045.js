@@ -53,13 +53,13 @@ $(document).ready(function () {
 
 $('#btnAdd').on('click', function () {
     $("#action").val('Create');
-    $('#markdown2').val($('#markdown').val());
+    $('#comment').val($('#markdown').val());
     $('#post_comment').submit();
 });
 
 $('#btnUpdate').on('click', function () {
     $("#action").val('Update');
-    $('#markdown2').val($('#markdown').val());
+    $('#comment').val($('#markdown').val());
     $('#post_comment').submit();
 });
 

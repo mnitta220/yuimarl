@@ -5,7 +5,7 @@ html(lang="ja")
     meta(name="viewport" content="width=device-width, initial-scale=1")
     title チケットを更新 - Yuimarl
     link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous")
-    link(rel="stylesheet" href="../../static/css/style0044.css")
+    link(rel="stylesheet" href="../../static/css/style0045.css")
     link(rel="icon" type="image/x-icon" href="../../static/favicon.ico")
   body
     include ../includes/nav.pug
@@ -33,10 +33,11 @@ html(lang="ja")
                   .col-6.text-end
                     small 2024/09/04 18:49
                 .row
-                  .col
-                    | たこやきのレシピを見つけました。
-                    br
-                    a(href="https://www.otafuku.co.jp/recipe/cook/taco/taco01.html" target="_blank") https://www.otafuku.co.jp/recipe/cook/taco/taco01.html
+                  .col.px-2.mx-3.bg-light.preview2
+                    p
+                      | たこやきのレシピを見つけました。
+                      br
+                      a(href="https://www.otafuku.co.jp/recipe/cook/taco/taco01.html" target="_blank") https://www.otafuku.co.jp/recipe/cook/taco/taco01.html
             .row.py-2.ticket-comment
               .col
                 .row
@@ -51,27 +52,32 @@ html(lang="ja")
                     | &nbsp;&nbsp;
                     small 2024/09/05 16:23
                 .row
-                  .col
-                    | ありがとう！😍
-                    br
-                    | チケットのノートに追加しました。
+                  .col.px-2.mx-3.bg-light.preview2
+                    p 殿馬君、
+                    blockquote
+                      | たこやきのレシピを見つけました。
+                      br
+                      a(href="https://www.otafuku.co.jp/recipe/cook/taco/taco01.html") https://www.otafuku.co.jp/recipe/cook/taco/taco01.html
+                    p 
+                      | ありがとう！😍
+                      br
+                      | チケットのノートに追加しました。
             .row.py-2.ticket-comment
               .col
                 .row
                   .col-6
                     b 里中智
                   .col-6.text-end
-                    small 2024/09/05 17:05
+                    small 2024/09/05 17:05 [更新済]
                 .row
-                  .col 「薄力粉」って知りませんでした。
+                  .col.px-2.mx-3.bg-light.preview2
+                    p 「薄力粉」って知りませんでした。
 
-            .row.py-3.mt-2.bg-light
-              .col-9
-                textarea.form-control.ticket-comment#message(rows="3" name="message")
-              .col-3.text-end
-                button.btn.btn-primary(type="submit")
-                  img.icon(src="../../static/ionicons/add-circle-outline2.svg")
-                  | &nbsp;コメント
+            // コメント追加
+            .row.py-2
+              .col
+                a(href="")
+                  img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="コメントを追加")
 
         .modal.fade#deleteCommentModal(tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true")
           .modal-dialog.modal-md

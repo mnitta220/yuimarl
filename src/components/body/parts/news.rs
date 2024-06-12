@@ -1,5 +1,4 @@
 use crate::{components::Component, model::news, Props};
-use chrono::{DateTime, FixedOffset};
 
 pub struct News {}
 
@@ -19,11 +18,7 @@ impl Component for News {
                                 *buf += r#"<div class="col-md-3">"#;
                                 {
                                     *buf += r#"<small>"#;
-                                    // UTCからJSTに変換
-                                    let jst: DateTime<FixedOffset> = news
-                                        .timestamp
-                                        .with_timezone(&FixedOffset::east_opt(9 * 3600).unwrap());
-                                    *buf += &jst.format("%Y/%m/%d %H:%M").to_string();
+                                    super::super::super::utc_to_jst_time(&news.timestamp, buf);
                                     *buf += r#"</small>"#;
                                 }
                                 *buf += r#"</div>"#;

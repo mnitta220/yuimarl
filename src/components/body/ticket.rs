@@ -169,6 +169,7 @@ impl Component for TicketBody {
                     *buf += r#"<script src="/static/js/markdown0012.js"></script>"#;
                 }
                 Tab::Comment => {
+                    *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;
                     *buf += r#"<script src="/static/js/comment0045.js"></script>"#;
                 }
                 _ => {}

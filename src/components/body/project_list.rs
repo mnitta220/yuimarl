@@ -1,7 +1,6 @@
 use super::super::Component;
 use super::parts::{footer::Footer, nav::Nav};
 use crate::Props;
-use chrono::{DateTime, FixedOffset};
 
 pub struct ProjectListBody {
     pub nav: Box<dyn Component + Send>,
@@ -95,13 +94,7 @@ impl Component for ProjectListBody {
                                                 *buf += r#"<td>"#;
                                                 {
                                                     if let Some(dt) = &prj.last_used {
-                                                        // UTCからJSTに変換
-                                                        let jst: DateTime<FixedOffset> = dt
-                                                            .with_timezone(
-                                                                &FixedOffset::east_opt(9 * 3600)
-                                                                    .unwrap(),
-                                                            );
-                                                        *buf += &jst.format("%Y/%m/%d").to_string();
+                                                        super::super::utc_to_jst_date(dt, buf);
                                                     }
                                                 }
                                                 *buf += r#"</td>"#;

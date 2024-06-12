@@ -16,22 +16,8 @@ pub struct Comment {
     pub uid: String,
     pub user_name: String,
     pub comment: String,
-    //pub ticket: Option<NewsTicket>,
+    pub updated: bool,
 }
-
-/*
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub enum NewsEvent {
-    ProjectMemberAdd = 1,    // プロジェクトメンバーに追加された
-    ProjectRoleUpdate = 2,   // プロジェクトメンバーのロールを更新した
-    ProjectMemberDelete = 3, // プロジェクトメンバーから削除された
-    TicketMemberAdd = 4,     // チケットメンバーに追加された
-    TicketMemberDelete = 5,  // チケットメンバーから削除された
-    TicketUpdate = 6,        // チケットが更新された
-    ProjectDelete = 7,       // プロジェクトが削除された
-    None = 0,
-}
-*/
 
 impl Comment {
     pub fn new(ticket_id: &str, uid: &str, user_name: &str, comment: &str) -> Comment {
@@ -42,19 +28,32 @@ impl Comment {
             uid: uid.to_string(),
             user_name: user_name.to_string(),
             comment: comment.to_string(),
+            updated: false,
         }
     }
 
-    pub async fn insert(
-        comment: Comment,
-        //event: NewsEvent,
-        //project_id: &str,
-        //project_name: &str,
-        //ticket: Option<NewsTicket>,
-        db: &FirestoreDb,
-    ) -> Result<()> {
-        //let ev = event as i32;
-        //let now = Utc::now();
+    pub async fn find(id: &str, db: &FirestoreDb) -> Result<Option<Self>> {
+        let obj_by_id: Option<Comment> = match db
+            .fluent()
+            .select()
+            .by_id_in(COLLECTION_NAME)
+            .obj()
+            .one(id)
+            .await
+        {
+            Ok(ret) => ret,
+            Err(e) => {
+                tracing::error!("failed to connect firestore: {:?}", e);
+                std::process::exit(0x0100);
+            }
+        };
+
+        tracing::debug!("Get by id {:?}", obj_by_id);
+
+        Ok(obj_by_id)
+    }
+
+    pub async fn insert(comment: Comment, db: &FirestoreDb) -> Result<()> {
         match db
             .fluent()
             .insert()
@@ -103,34 +102,29 @@ impl Comment {
         Ok(comments)
     }
 
-    /*
-    pub async fn delete(news_id: &str, uid: &str, db: &FirestoreDb) -> Result<()> {
-        let news: Option<News> = match db
+    pub async fn update(comment: &Comment, db: &FirestoreDb) -> Result<()> {
+        if let Err(e) = db
             .fluent()
-            .select()
-            .by_id_in(COLLECTION_NAME)
-            .obj()
-            .one(news_id)
+            .update()
+            .fields(paths!(Comment::{comment, updated}))
+            .in_col(&COLLECTION_NAME)
+            .document_id(&comment.id)
+            .object(comment)
+            .execute::<Comment>()
             .await
         {
-            Ok(ret) => ret,
-            Err(e) => {
-                tracing::error!("failed to connect firestore: {:?}", e);
-                std::process::exit(0x0100);
-            }
-        };
-
-        if let Some(news) = news {
-            if news.uid != uid {
-                return Err(anyhow::anyhow!("not allowed"));
-            }
+            return Err(anyhow::anyhow!(e.to_string()));
         }
 
+        Ok(())
+    }
+
+    pub async fn delete(comment_id: &str, db: &FirestoreDb) -> Result<()> {
         if let Err(e) = db
             .fluent()
             .delete()
             .from(&COLLECTION_NAME)
-            .document_id(news_id)
+            .document_id(comment_id)
             .execute()
             .await
         {
@@ -139,5 +133,4 @@ impl Comment {
 
         Ok(())
     }
-    */
 }

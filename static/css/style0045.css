@@ -35,35 +35,52 @@
   padding-top: 3px;
 }
 
-.preview > table {
+.preview2 {
+  width: 100%;
+  max-height: 240px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: auto;
+  padding-top: 3px;
+}
+
+.preview > table,
+.preview2 > table {
   border-collapse: collapse;
   border: solid 1px #aaa;
 }
 .preview > table th,
-.preview > table td {
+.preview > table td,
+.preview2 > table th,
+.preview2 > table td {
   padding: 2px 5px;
 }
-.preview > table th {
+.preview > table th,
+.preview2 > table th {
   border: solid 1px #aaa;
   background-color: #efefef;
 }
-.preview > table td {
+.preview > table td,
+.preview2 > table td {
   border: solid 1px #aaa;
 }
-.preview p code{
+.preview p code,
+.preview2 p code {
     background-color: #efefef;
     border-radius: 4px;
     padding: 2px 4px;
 }
-.preview pre{
+.preview pre,
+.preview2 pre {
   color: #fff;
   background-color: #333;
   border-radius: 4px;
   padding: 16px;
 }
-.preview blockquote{
+.preview blockquote,
+.preview2 blockquote {
   padding: 0.1em 0.7em;
-  border-left: 6px solid #dddddd;
+  border-left: 6px solid #cccccc;
 }
 
 .ticket-comment {

@@ -1,5 +1,4 @@
 use crate::{components::Component, model, Props};
-use chrono::{DateTime, FixedOffset};
 
 pub struct ProjectHistory {}
 
@@ -40,12 +39,10 @@ impl Component for ProjectHistory {
                                             *buf += r#"<tr>"#;
                                             {
                                                 *buf += r#"<td>"#;
-                                                // UTCからJSTに変換
-                                                let jst: DateTime<FixedOffset> =
-                                                    history.timestamp.with_timezone(
-                                                        &FixedOffset::east_opt(9 * 3600).unwrap(),
-                                                    );
-                                                *buf += &jst.format("%Y/%m/%d %H:%M").to_string();
+                                                super::super::super::utc_to_jst_time(
+                                                    &history.timestamp,
+                                                    buf,
+                                                );
                                                 *buf += r#"</td>"#;
                                                 *buf += r#"<td>"#;
                                                 *buf += &history.user_name;

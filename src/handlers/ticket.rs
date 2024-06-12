@@ -593,14 +593,22 @@ pub async fn post_note(
 pub struct CommentInput {
     pub project_id: String,
     pub ticket_id: String,
-    pub comment: String,
+    pub comment_id: String,
+    pub action: String,
+    pub markdown2: String,
 }
 
 pub async fn post_comment(
     cookies: Cookies,
     Form(input): Form<CommentInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::info!("POST /post_comment {}, {}", input.ticket_id, input.comment);
+    tracing::debug!(
+        "POST /post_comment {}, {}, {}, {}",
+        input.ticket_id,
+        input.comment_id,
+        input.action,
+        input.markdown2
+    );
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
@@ -614,9 +622,26 @@ pub async fn post_comment(
         Err(_) => return Ok(Html(LoginPage::write())),
     };
 
-    let (validation, project, _project_member, ticket) =
-        match validation::ticket::TicketValidation::validate_post_comment(&input, &session, &db)
-            .await
+    let action = match input.action.as_ref() {
+        "Create" => crate::Action::Create,
+        "Update" => crate::Action::Update,
+        "Delete" => crate::Action::Delete,
+        _ => {
+            return Err(AppError(anyhow::anyhow!(format!(
+                "invalid action: {}",
+                input.action
+            ))));
+        }
+    };
+
+    let (validation, project, project_member, ticket, comment) =
+        match validation::ticket::TicketValidation::validate_post_comment(
+            &input,
+            &session,
+            action.clone(),
+            &db,
+        )
+        .await
         {
             Ok(v) => v,
             Err(e) => {
@@ -629,27 +654,47 @@ pub async fn post_comment(
     if let Some(v) = validation {
         props.tab = crate::Tab::Comment;
         props.session = Some(session);
-        props.action = crate::Action::Update;
+        props.action = action;
         props.project = project;
+        props.project_member = project_member;
         props.ticket = ticket;
 
         let mut page = TicketPage::new(props, true, false, Some(v), false);
         return Ok(Html(page.write()));
     }
 
-    let comment = model::comment::Comment::new(
-        &input.ticket_id,
-        &session.uid,
-        &session.name,
-        &input.comment,
-    );
+    match action {
+        crate::Action::Create => {
+            // コメント作成
+            let comment = model::comment::Comment::new(
+                &input.ticket_id,
+                &session.uid,
+                &session.name,
+                &input.markdown2,
+            );
 
-    match model::comment::Comment::insert(comment, &db).await {
-        Ok(t) => t,
-        Err(e) => {
-            return Err(AppError(anyhow::anyhow!(e)));
+            if let Err(e) = model::comment::Comment::insert(comment, &db).await {
+                return Err(AppError(anyhow::anyhow!(e)));
+            };
         }
-    };
+        crate::Action::Update => {
+            // コメント更新
+            if let Some(mut c) = comment {
+                c.comment = input.markdown2;
+                c.updated = true;
+                if let Err(e) = model::comment::Comment::update(&c, &db).await {
+                    return Err(AppError(anyhow::anyhow!(e)));
+                }
+            }
+        }
+        crate::Action::Delete => {
+            // コメント削除
+            if let Err(e) = model::comment::Comment::delete(&input.comment_id, &db).await {
+                return Err(AppError(anyhow::anyhow!(e)));
+            }
+        }
+        _ => {}
+    }
 
     return show_ticket(session, &input.ticket_id, "comment", &db).await;
 }

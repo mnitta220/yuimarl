@@ -64,11 +64,13 @@
 .preview2 > table td {
   border: solid 1px #aaa;
 }
-.preview p code,
-.preview2 p code {
-    background-color: #efefef;
-    border-radius: 4px;
-    padding: 2px 4px;
+.preview code,
+.preview2 code {
+  background-color: #ebebeb;
+  border-radius: 4px;
+  font-size: .88em;
+  padding: 2px 4px;
+  color: black;
 }
 .preview pre,
 .preview2 pre {

@@ -49,7 +49,7 @@ impl Component for TicketInfo {
                             *buf += r#" is-invalid"#;
                         }
                     }
-                    *buf += r#"" id="name" name="name" type="text" maxlength="40" value=""#;
+                    *buf += r#"" id="name" name="name" type="text" maxlength="100" value=""#;
                     if let Some(t) = &props.ticket {
                         if let Some(n) = &t.name {
                             *buf += n;

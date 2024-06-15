@@ -51,7 +51,7 @@ impl Component for TicketListBody {
                                         *buf += &p.id;
                                         *buf += r#"">"#;
                                         {
-                                            *buf += n;
+                                            super::super::escape_html(n, buf);
                                         }
                                         *buf += r#"</a>"#;
 

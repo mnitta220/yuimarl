@@ -21,7 +21,7 @@ impl Component for TicketInfo {
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 if let Some(p) = &props.project {
                     if let Some(name) = &p.project_name {
-                        *buf += &name;
+                        super::super::super::escape_html(&name, buf);
                     }
                     if let Some(t) = &props.ticket {
                         if let Some(id) = &t.id_disp {

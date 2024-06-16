@@ -24,7 +24,7 @@ impl Component for ProjectInfo {
                             *buf += r#" is-invalid"#;
                         }
                     }
-                    *buf += r#"" id="project_name" name="project_name" type="text" maxlength="40" value=""#;
+                    *buf += r#"" id="project_name" name="project_name" type="text" maxlength="80" value=""#;
                     if let Some(p) = &props.project {
                         if let Some(n) = &p.project_name {
                             *buf += n;

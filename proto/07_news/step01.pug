@@ -95,6 +95,18 @@ html(lang="ja")
                           td.text-right
                             a(href="step02.html" title="閉じる")
                               img.icon(src="../../static/ionicons/close-outline.svg")
+                        tr
+                          td
+                            .row
+                              .col-md-3
+                                small 2024/09/13 10:57
+                              .col-md-9
+                                | 微笑三太郎 さんが、プロジェクト 「&nbsp;
+                                a(href="") 文化祭実行プロジェクト
+                                | &nbsp;」 から離脱しました。
+                          td.text-right
+                            a(href="step02.html" title="閉じる")
+                              img.icon(src="../../static/ionicons/close-outline.svg")
 
       form(action="/ticket/add" method="POST")
         // プロジェクト
@@ -170,6 +182,8 @@ html(lang="ja")
               | 5. 他のユーザーによって、自分が担当になっているチケットにコメントが追加された時。
               br
               | 6. 他のユーザーによって、自分がメンバーになっているプロジェクトが削除された時。
+              br
+              | 7. 自分がオーナーまたは管理者のプロジェクトから、メンバーが離脱した時。
           .col-md-2.text-start.py-1
             //- a.nav-link.px-2.px-md-0(href="step02.html") next →
 

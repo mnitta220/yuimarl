@@ -36,6 +36,8 @@ html(lang="ja")
                           a(href="#prjupd") プロジェクトを更新する
                         li
                           a(href="#prjdel") プロジェクトを削除する
+                        li
+                          a(href="#withdraw") プロジェクトから離脱する
                     li
                       a(href="#tkt") チケット
                       ol.pb-2
@@ -251,6 +253,19 @@ html(lang="ja")
                       | 削除確認メッセージが表示されるので、「削除」を選択します。
                     a(href="images/screen68.png")
                       img.border.border-info.border-1.img-fluid(src="images/screen68.png")
+                    hr
+                  section.pb-2
+                    h4#withdraw プロジェクトから離脱する
+                    p
+                      | プロジェクトの 管理者 / メンバー / 閲覧者 は、プロジェクトから離脱することができます。
+                      br
+                      | プロジェクトから離脱するには、プロジェクト情報画面で「プロジェクトから離脱」を選択します。
+                      br
+                      | 離脱確認メッセージが表示されるので、「離脱」を選択します。
+                      br
+                      | 離脱すると、プロジェクトのメンバーから削除されます。
+                    a(href="images/screen84.png")
+                      img.border.border-info.border-1.img-fluid(src="images/screen84.png")
                     hr
                 section.pb-2
                   h3#tkt チケット
@@ -493,6 +508,7 @@ html(lang="ja")
                     li 他のユーザーによって、自分が担当になっているチケットが更新された時。
                     li 他のユーザーによって、自分が担当になっているチケットにコメントが追加された時。
                     li 他のユーザーによって、自分がメンバーになっているプロジェクトが削除された時。
+                    li 自分がオーナーまたは管理者のプロジェクトから、メンバーが離脱した時。
                   p
                     | お知らせを削除するには、
                     img.icon3(src="images/ionicons/close-outline.svg")

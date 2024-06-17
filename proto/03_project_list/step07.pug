@@ -17,66 +17,88 @@ html(lang="ja")
           .pb-2
             ul.nav.nav-tabs
               li.nav-item
-                a.nav-link(href="#") 基本情報
+                a.nav-link.active(href="#") 基本情報
               li.nav-item
-                a.nav-link.active(href="#") ノート
+                a.nav-link(href="#") ノート
               li.nav-item
                 a.nav-link(href="#") 更新履歴
-          form(action="/project/add" method="POST")
-            // 編集スイッチ
+          form
+            // プロジェクト名
             .row.py-2
-              .col
-                .form-check.form-switch
-                  input.form-check-input#edit(type="checkbox" role="switch")
-                  label.form-check-label(for="edit") 編集
-            // ノート
-            .row.py-2.d-none#note1
-              .col-lg-6
-                small ［マークダウン］
-                textarea.form-control#markdown(rows="10")
-                  | ## 文化祭実行プロジェクト
-                  | ### 実行委員会
-                  | ### レシピ
-                  | * [クックパッド](https://cookpad.com/search/%E3%81%9F%E3%81%93%E7%84%BC%E3%81%8D)
-                  | * [小麦粉から作るたこ焼き](https://www.otafuku.co.jp/recipe/cook/taco/taco01.html)
-                  | ### 食材
-                  | * 薄力粉
-                  | * 卵
-                  | * 牛乳
-                  | * タコ
-                  | * 天かす
-                  | * ソース
-                  | * 青のり
-                  | * かつお節
-                  | * 紅しょうが
-                  | * マヨネーズ
-                  | * サラダ油
-                  | ### 店舗設営
-                  | * たこ焼き器レンタル
-                  | * フードパック
-                  | * 割りばし
-                  | * 輪ゴム
-                  | * のれん
-                  | ### 収益計画
-                  | 過去の事例を調べる。  
-                  | 8個入りパックの値段をいくらに設定するか？
-
-              .col-lg-6
-                small ［プレビュー］
-                .px-2.bg-light.preview#preview1
-            .row.py-2#note2
-              .col
-                .px-2.bg-light.preview#preview2
-
+              label.col-md-3.col-form-label.bg-light.mb-1(for="name") プロジェクト名
+              .col-md-9.mb-1
+                input.form-control#name(type="text" maxlength="40" value="文化祭実行プロジェクト" disabled)
+                //- span 文化祭実行プロジェクト
+            // チケットID接頭辞
+            .row.py-2
+              label.col-md-3.col-form-label.bg-light.mb-1(for="prefix") チケットID接頭辞
+              .col-md-9.mb-1
+                input.form-control#prefix(type="text" maxlength="10" value="BN" disabled)
+                //- span BN
+            // メンバー
+            .row.py-2
+              label.col-md-3.col-form-label.bg-light.mb-1(for="member") メンバー
+              .col-md-9.mb-1
+                .form-floating
+                  table.table.table-hover
+                    thead
+                      tr
+                        th(scope="col") ロール
+                        th(scope="col") メールアドレス
+                        th(scope="col") 名前
+                        //- th(scope="col")
+                    tbody
+                      tr
+                        td オーナー
+                        td taro.yamada@mail.com
+                        td 山田太郎
+                        //- td
+                      tr
+                        td 管理者
+                        td kazuto.tonoma@mail.com
+                        td 殿馬一人
+                        //- td
+                          img.icon(src="../../static/ionicons/settings-outline.svg" title="設定")
+                          | &nbsp;
+                          img.icon(src="../../static/ionicons/remove-circle-outline.svg" title="削除")
+                      tr
+                        td メンバー
+                        td masami.iwaki@mail.com
+                        td 岩鬼正美
+                        //- td
+                          img.icon(src="../../static/ionicons/settings-outline.svg" title="設定")
+                          | &nbsp;
+                          img.icon(src="../../static/ionicons/remove-circle-outline.svg" title="削除")
+                      tr
+                        td 閲覧者
+                        td satoru.satonaka@mail.com
+                        td 里中智
+                        //- td
+                          img.icon(src="../../static/ionicons/settings-outline.svg" title="設定")
+                          | &nbsp;
+                          img.icon(src="../../static/ionicons/remove-circle-outline.svg" title="削除")
             .row.py-3.mt-2.bg-light
-              .col
-                button.btn.btn-primary(type="submit")
-                  img.icon(src="../../static/ionicons/save-outline.svg")
-                  | &nbsp;更新
-                | &nbsp;&nbsp;
-                button.btn.btn-primary(type="submit")
-                  img.icon(src="../../static/ionicons/refresh-outline.svg")
-                  | &nbsp;再読み込み
+              .col-9
+              .col-3.text-end
+                button.btn.btn-secondary(type="button" data-bs-toggle="modal" data-bs-target="#withdrawModal")
+                  img.icon(src="../../static/ionicons/exit-outline.svg")
+                  | &nbsp;プロジェクトから離脱
+          .modal.fade#withdrawModal(tabindex="-1" aria-labelledby="withdrawModalLabel" aria-hidden="true")
+            .modal-dialog
+              .modal-content
+                .modal-header
+                  h1.modal-title.fs-5#withdrawModalLabel プロジェクトから離脱
+                  button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
+                .modal-body
+                  p
+                    | プロジェクトから離脱すると、このプロジェクトの情報にアクセスできなくなります。
+                    br 
+                    | 離脱しますか？
+                .modal-footer
+                  button.btn.btn-secondary(type="button" data-bs-dismiss="modal") キャンセル
+                  button.btn.btn-danger(type="button")
+                    img.icon(src="../../static/ionicons/exit-outline.svg")
+                    | &nbsp;離脱
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light
@@ -91,7 +113,7 @@ html(lang="ja")
             .alert.alert-danger.text-start(role="alert")
               | プロジェクト一覧 step07.
               br
-              | ノートタブをクリック。
+              | 「プロジェクトから離脱」ボタンを押すと、離脱確認ダイアログが表示される。
           .col-md-2.text-start.py-1
             a.nav-link.px-2.px-md-0(href="step08.html") next →
 
@@ -99,24 +121,7 @@ html(lang="ja")
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous")
     script(src="https://code.jquery.com/jquery-3.7.1.min.js")
-    script(src="https://cdn.jsdelivr.net/npm/marked/marked.min.js")
     script.
-      $('#markdown').keyup(function () {
-        var html = marked.parse($(this).val());
-        $('#preview1').html(html);
-        $('#preview2').html(html);
-      });
-      $('#edit').change(function () {
-        if ($(this).prop('checked')) {
-          $('#note1').removeClass('d-none');
-          $('#note2').addClass('d-none');
-        } else {
-          $('#note2').removeClass('d-none');
-          $('#note1').addClass('d-none');
-        }
-      });
       $(document).ready(function() {
-        var html = marked.parse($('#markdown').val());
-        $('#preview1').html(html);
-        $('#preview2').html(html);
+        new bootstrap.Modal("#withdrawModal").show();
       });

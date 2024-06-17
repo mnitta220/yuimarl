@@ -94,6 +94,7 @@ impl Comment {
                 &ticket.project_id,
                 "",
                 Some(news_ticket),
+                None,
                 &db,
             )
             .await

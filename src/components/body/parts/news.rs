@@ -87,6 +87,20 @@ impl Component for News {
                                                 *buf += r#"</a> 」 にコメントが追加されました。"#;
                                             }
                                         }
+                                        news::NewsEvent::ProjectMemberWithdraw => {
+                                            if let Some(m) = &news.member_name {
+                                                super::super::super::escape_html(m, buf);
+                                            }
+                                            *buf +=
+                                                r#" さんが、プロジェクト 「 <a href="/project?id="#;
+                                            *buf += &news.project_id;
+                                            *buf += r#"">"#;
+                                            super::super::super::escape_html(
+                                                &news.project_name,
+                                                buf,
+                                            );
+                                            *buf += r#"</a> 」 から離脱しました。"#;
+                                        }
                                         _ => {}
                                     }
                                 }

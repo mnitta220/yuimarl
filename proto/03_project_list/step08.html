@@ -39,13 +39,13 @@
             <div class="row py-2">
               <div class="col">
                 <div class="form-check form-switch">
-                  <input class="form-check-input" id="edit" type="checkbox" role="switch" checked>
+                  <input class="form-check-input" id="edit" type="checkbox" role="switch">
                   <label class="form-check-label" for="edit">編集</label>
                 </div>
               </div>
             </div>
             <!-- ノート-->
-            <div class="row py-2" id="note1">
+            <div class="row py-2 d-none" id="note1">
               <div class="col-lg-6"><small>［マークダウン］</small>
                 <textarea class="form-control" id="markdown" rows="10">## 文化祭実行プロジェクト
 ### 実行委員会
@@ -78,7 +78,7 @@
                 <div class="px-2 bg-light preview" id="preview1"></div>
               </div>
             </div>
-            <div class="row py-2 d-none" id="note2">
+            <div class="row py-2" id="note2">
               <div class="col">
                 <div class="px-2 bg-light preview" id="preview2"></div>
               </div>
@@ -109,7 +109,7 @@
         <div class="row align-items-end">
           <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step07.html">← prev</a></div>
           <div class="col-md-8">
-            <div class="alert alert-danger text-start" role="alert">プロジェクト一覧 step08.<br>編集スイッチをONにすると、マークダウンエディタで編集できるようになる。</div>
+            <div class="alert alert-danger text-start" role="alert">プロジェクト一覧 step08.<br>ノートタブをクリック。</div>
           </div>
           <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step09.html">next →</a></div>
         </div>
@@ -125,7 +125,6 @@
         $('#preview2').html(html);
       });
       $('#edit').change(function () {
-        console.log($(this).prop('checked'));
         if ($(this).prop('checked')) {
           $('#note1').removeClass('d-none');
           $('#note2').addClass('d-none');

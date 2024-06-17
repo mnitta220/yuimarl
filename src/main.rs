@@ -212,6 +212,7 @@ pub enum Action {
     Create,
     Update,
     Delete,
+    Withdraw,
 }
 
 impl Action {
@@ -221,6 +222,7 @@ impl Action {
             Action::Create => "Create".to_string(),
             Action::Update => "Update".to_string(),
             Action::Delete => "Delete".to_string(),
+            Action::Withdraw => "Withdraw".to_string(),
         }
     }
 }

@@ -17,6 +17,7 @@ pub enum HistoryEvent {
     UpdateInfo = 2,
     UpdateNote = 3,
     TicketCreate = 4,
+    ProjectDelete = 5,
 }
 
 impl History {
@@ -26,6 +27,7 @@ impl History {
             2 => "基本情報更新".to_string(),
             3 => "ノート更新".to_string(),
             4 => "チケット作成".to_string(),
+            5 => "プロジェクト削除".to_string(),
             _ => "Unknown".to_string(),
         }
     }

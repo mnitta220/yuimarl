@@ -17,6 +17,7 @@ pub struct News {
     pub project_id: String,
     pub project_name: String,
     pub ticket: Option<NewsTicket>,
+    pub member_name: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -28,14 +29,15 @@ pub struct NewsTicket {
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub enum NewsEvent {
-    ProjectMemberAdd = 1,    // プロジェクトメンバーに追加された
-    ProjectRoleUpdate = 2,   // プロジェクトメンバーのロールを更新した
-    ProjectMemberDelete = 3, // プロジェクトメンバーから削除された
-    TicketMemberAdd = 4,     // チケットメンバーに追加された
-    TicketMemberDelete = 5,  // チケットメンバーから削除された
-    TicketUpdate = 6,        // チケットが更新された
-    ProjectDelete = 7,       // プロジェクトが削除された
-    TicketCommentAdd = 8,    // チケットのコメントが追加された
+    ProjectMemberAdd = 1,      // プロジェクトメンバーに追加された
+    ProjectRoleUpdate = 2,     // プロジェクトメンバーのロールを更新した
+    ProjectMemberDelete = 3,   // プロジェクトメンバーから削除された
+    TicketMemberAdd = 4,       // チケットメンバーに追加された
+    TicketMemberDelete = 5,    // チケットメンバーから削除された
+    TicketUpdate = 6,          // チケットが更新された
+    ProjectDelete = 7,         // プロジェクトが削除された
+    TicketCommentAdd = 8,      // チケットのコメントが追加された
+    ProjectMemberWithdraw = 9, // プロジェクトメンバーが離脱した
     None = 0,
 }
 
@@ -50,6 +52,7 @@ impl News {
             6 => NewsEvent::TicketUpdate,
             7 => NewsEvent::ProjectDelete,
             8 => NewsEvent::TicketCommentAdd,
+            9 => NewsEvent::ProjectMemberWithdraw,
             _ => NewsEvent::None,
         }
     }
@@ -60,6 +63,7 @@ impl News {
         project_id: &str,
         project_name: &str,
         ticket: Option<NewsTicket>,
+        member_name: Option<String>,
         db: &FirestoreDb,
     ) -> Result<()> {
         let ev = event as i32;
@@ -123,6 +127,7 @@ impl News {
             project_id: project_id.to_string(),
             project_name: project_name.to_string(),
             ticket,
+            member_name,
         };
 
         if let Err(e) = db
@@ -144,7 +149,7 @@ impl News {
         let object_stream: BoxStream<FirestoreResult<News>> = match db
             .fluent()
             .select()
-            .fields(paths!(News::{id, timestamp, uid, event, project_id, project_name, ticket}))
+            .fields(paths!(News::{id, timestamp, uid, event, project_id, project_name, ticket, member_name}))
             .from(COLLECTION_NAME)
             .filter(|q| q.for_all([q.field(path!(News::uid)).eq(uid)]))
             .order_by([(path!(News::timestamp), FirestoreQueryDirection::Ascending)])

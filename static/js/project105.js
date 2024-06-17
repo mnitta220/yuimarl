@@ -215,3 +215,8 @@ $('#btnProjectDel').on('click', function () {
     $("#action").val('Delete');
     $('#post_project').submit();
 });
+
+$('#btnWithdraw').on('click', function () {
+    $("#action").val('Withdraw');
+    $('#post_project').submit();
+});

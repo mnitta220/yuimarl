@@ -18,30 +18,44 @@ impl Component for ProjectInfo {
 
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 {
-                    *buf += r#"<input class="form-control"#;
-                    if let Some(v) = &self.validation {
-                        if v.project_name.is_some() {
-                            *buf += r#" is-invalid"#;
+                    if self.can_update {
+                        *buf += r#"<input class="form-control"#;
+                        if let Some(v) = &self.validation {
+                            if v.project_name.is_some() {
+                                *buf += r#" is-invalid"#;
+                            }
                         }
-                    }
-                    *buf += r#"" id="project_name" name="project_name" type="text" maxlength="80" value=""#;
-                    if let Some(p) = &props.project {
-                        if let Some(n) = &p.project_name {
-                            *buf += n;
+                        *buf += r#"" id="project_name" name="project_name" type="text" maxlength="80" value=""#;
+                        if let Some(p) = &props.project {
+                            if let Some(n) = &p.project_name {
+                                *buf += n;
+                            }
                         }
-                    }
-                    *buf += r#"" required"#;
-                    if !self.can_update {
-                        *buf += r#" disabled"#;
-                    }
-                    *buf += r#">"#;
+                        *buf += r#"" required>"#;
 
-                    if let Some(v) = &self.validation {
-                        if let Some(e) = &v.project_name {
-                            *buf += r#"<div class="invalid-feedback">"#;
-                            *buf += e;
-                            *buf += r#"</div>"#;
+                        if let Some(v) = &self.validation {
+                            if let Some(e) = &v.project_name {
+                                *buf += r#"<div class="invalid-feedback">"#;
+                                *buf += e;
+                                *buf += r#"</div>"#;
+                            }
                         }
+                    } else {
+                        *buf += r#"<input class="form-control" type="text" value=""#;
+                        if let Some(p) = &props.project {
+                            if let Some(n) = &p.project_name {
+                                *buf += n;
+                            }
+                        }
+                        *buf += r#"" disabled>"#;
+                        *buf +=
+                            r#"<input id="project_name" name="project_name" type="hidden" value=""#;
+                        if let Some(p) = &props.project {
+                            if let Some(n) = &p.project_name {
+                                *buf += n;
+                            }
+                        }
+                        *buf += r#"">"#;
                     }
                 }
                 *buf += r#"</div>"#;
@@ -56,17 +70,30 @@ impl Component for ProjectInfo {
 
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 {
-                    *buf += r#"<input class="form-control" id="prefix" name="prefix" type="text" maxlength="10" value=""#;
-                    if let Some(p) = &props.project {
-                        if let Some(p) = &p.prefix {
-                            *buf += p;
+                    if self.can_update {
+                        *buf += r#"<input class="form-control" id="prefix" name="prefix" type="text" maxlength="10" value=""#;
+                        if let Some(p) = &props.project {
+                            if let Some(p) = &p.prefix {
+                                *buf += p;
+                            }
                         }
+                        *buf += r#"" required>"#;
+                    } else {
+                        *buf += r#"<input class="form-control" type="text" value=""#;
+                        if let Some(p) = &props.project {
+                            if let Some(p) = &p.prefix {
+                                *buf += p;
+                            }
+                        }
+                        *buf += r#"" disabled>"#;
+                        *buf += r#"<input id="prefix" name="prefix" type="hidden" value=""#;
+                        if let Some(p) = &props.project {
+                            if let Some(p) = &p.prefix {
+                                *buf += p;
+                            }
+                        }
+                        *buf += r#"">"#;
                     }
-                    *buf += r#"" required"#;
-                    if !self.can_update {
-                        *buf += r#" disabled"#;
-                    }
-                    *buf += r#">"#;
                 }
                 *buf += r#"</div>"#;
             }
@@ -226,7 +253,38 @@ impl Component for ProjectInfo {
                                         *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
                                     }
                                     *buf += r#"</button>"#;
+                                } else {
+                                    *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#withdrawModal">"##;
+                                    {
+                                        *buf += r#"<img class="icon" src="/static/ionicons/exit-outline.svg">&nbsp;プロジェクトから離脱"#;
+                                    }
+                                    *buf += r#"</button>"#;
                                 }
+                            }
+                            *buf += r#"</div>"#;
+
+                            *buf += r#"<input type="hidden" name="project_id" value=""#;
+                            *buf += &p.id;
+                            *buf += r#"">"#;
+                            *buf += r#"<input type="hidden" name="timestamp" value=""#;
+                            if let Some(up) = &p.updated_at {
+                                *buf += &up.timestamp_micros().to_string();
+                            }
+                            *buf += r#"">"#;
+                        }
+                    }
+                    *buf += r#"</div>"#;
+                } else {
+                    *buf += r#"<div class="row py-3 mt-2 bg-light">"#;
+                    {
+                        if let Some(p) = &props.project {
+                            *buf += r#"<div class="col text-end">"#;
+                            {
+                                *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#withdrawModal">"##;
+                                {
+                                    *buf += r#"<img class="icon" src="/static/ionicons/exit-outline.svg">&nbsp;プロジェクトから離脱"#;
+                                }
+                                *buf += r#"</button>"#;
                             }
                             *buf += r#"</div>"#;
 
@@ -396,6 +454,43 @@ impl Component for ProjectInfo {
                             r#"<button id="btnProjectDel" class="btn btn-danger" type="button">"#;
                         {
                             *buf += r#"<img class="icon" src="/static/ionicons/trash-outline2.svg">&nbsp;削除"#;
+                        }
+                        *buf += r#"</button>"#;
+                    }
+                    *buf += r#"</div>"#;
+                }
+                *buf += r#"</div>"#;
+            }
+            *buf += r#"</div>"#;
+        }
+        *buf += r#"</div>"#;
+
+        // プロジェクト離脱ダイアログ
+        *buf += r#"<div class="modal fade" id="withdrawModal" tabindex="-1" aria-labelledby="withdrawModalLabel" aria-hidden="true">"#;
+        {
+            *buf += r#"<div class="modal-dialog">"#;
+            {
+                *buf += r#"<div class="modal-content">"#;
+                {
+                    *buf += r#"<div class="modal-header">"#;
+                    {
+                        *buf += r#"<h1 class="modal-title fs-5" id="withdrawModalLabel">プロジェクトから離脱</h1>"#;
+                        *buf += r#"<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="modal-body">"#;
+                    {
+                        *buf += r#"<p>プロジェクトから離脱すると、このプロジェクトの情報にアクセスできなくなります。<br>離脱しますか？</p>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="modal-footer">"#;
+                    {
+                        *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
+                        *buf += r#"<button id="btnWithdraw" class="btn btn-danger" type="button">"#;
+                        {
+                            *buf += r#"<img class="icon" src="/static/ionicons/exit-outline.svg">&nbsp;離脱"#;
                         }
                         *buf += r#"</button>"#;
                     }

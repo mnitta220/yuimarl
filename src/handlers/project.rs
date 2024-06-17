@@ -219,6 +219,7 @@ pub async fn post(
         "Create" => crate::Action::Create,
         "Update" => crate::Action::Update,
         "Delete" => crate::Action::Delete,
+        "Withdraw" => crate::Action::Withdraw,
         _ => {
             return Err(AppError(anyhow::anyhow!(format!(
                 "invalid action: {}",
@@ -281,7 +282,6 @@ pub async fn post(
         props.action = action;
         props.session = Some(session);
         props.project = Some(project);
-        //props.project_validation = Some(v);
         props.project_members = project_members;
         let mut page = ProjectPage::new(props, can_update, can_delete, Some(v));
         return Ok(Html(page.write()));
@@ -320,6 +320,16 @@ pub async fn post(
         crate::Action::Delete => {
             // プロジェクト削除
             match model::project::Project::delete(&input, &session, &db).await {
+                Ok(p) => p,
+                Err(e) => {
+                    return Err(AppError(anyhow::anyhow!(e)));
+                }
+            };
+        }
+
+        crate::Action::Withdraw => {
+            // プロジェクト離脱
+            match model::project::Project::withdraw(&input, &session, &db).await {
                 Ok(p) => p,
                 Err(e) => {
                     return Err(AppError(anyhow::anyhow!(e)));

@@ -27,7 +27,7 @@ pub async fn get_home(cookies: Cookies) -> Result<Html<String>, AppError> {
 }
 
 pub async fn show_home(
-    session: model::session::Session,
+    mut session: model::session::Session,
     db: &FirestoreDb,
 ) -> Result<Html<String>, AppError> {
     let mut props = page::Props::new(&session.id);
@@ -40,9 +40,20 @@ pub async fn show_home(
     };
 
     if let Some(user) = user {
+        if user.status != model::user::UserStatus::Approved as i32 {
+            return Err(AppError(anyhow::anyhow!("このシステムを使用できません。")));
+        }
+
         if user.name.trim().len() == 0 {
             let mut page = UserNamePage::new(props);
             return Ok(Html(page.write()));
+        }
+
+        if session.name.is_empty() {
+            session.name = user.name.clone();
+            if let Err(e) = model::session::Session::upsert(&session, &db).await {
+                return Err(AppError(anyhow::anyhow!(e)));
+            };
         }
     } else {
         return Ok(Html(LoginPage::write()));

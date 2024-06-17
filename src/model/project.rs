@@ -362,6 +362,7 @@ impl Project {
                     &id,
                     &input.project_name,
                     None,
+                    None,
                     &db,
                 )
                 .await
@@ -494,6 +495,7 @@ impl Project {
                                         &input.project_id,
                                         &input.project_name,
                                         None,
+                                        None,
                                         &db,
                                     )
                                     .await
@@ -525,6 +527,7 @@ impl Project {
                                     super::news::NewsEvent::ProjectMemberDelete,
                                     &input.project_id,
                                     &input.project_name,
+                                    None,
                                     None,
                                     &db,
                                 )
@@ -595,6 +598,7 @@ impl Project {
                             &input.project_id,
                             &input.project_name,
                             None,
+                            None,
                             &db,
                         )
                         .await
@@ -625,6 +629,7 @@ impl Project {
                             super::news::NewsEvent::ProjectMemberDelete,
                             &input.project_id,
                             &input.project_name,
+                            None,
                             None,
                             &db,
                         )
@@ -714,6 +719,7 @@ impl Project {
         Ok(prj)
     }
 
+    /// プロジェクトを削除する
     pub async fn delete(
         input: &crate::handlers::project::ProjectInput,
         session: &Session,
@@ -743,7 +749,7 @@ impl Project {
             timestamp: now,
             uid: session.uid.clone(),
             user_name: session.name.clone(),
-            event: HistoryEvent::UpdateInfo as i32,
+            event: HistoryEvent::ProjectDelete as i32,
         };
 
         let mut histories = Vec::new();
@@ -790,23 +796,94 @@ impl Project {
         };
 
         for member in members {
-            if member.uid != session.uid {
-                if let Err(e) = super::news::News::upsert(
-                    &member.uid,
-                    super::news::NewsEvent::ProjectDelete,
-                    &input.project_id,
-                    &input.project_name,
-                    None,
-                    &db,
-                )
-                .await
-                {
-                    return Err(anyhow::anyhow!(e.to_string()));
-                }
+            if member.uid == session.uid {
+                continue;
+            }
+
+            if let Err(e) = super::news::News::upsert(
+                &member.uid,
+                super::news::NewsEvent::ProjectDelete,
+                &input.project_id,
+                &input.project_name,
+                None,
+                None,
+                &db,
+            )
+            .await
+            {
+                return Err(anyhow::anyhow!(e.to_string()));
             }
         }
 
         tracing::debug!("Project deleted {:?}", prj);
+
+        Ok(())
+    }
+
+    /// プロジェクトから離脱する
+    pub async fn withdraw(
+        input: &crate::handlers::project::ProjectInput,
+        session: &Session,
+        db: &FirestoreDb,
+    ) -> Result<()> {
+        let mut transaction = match db.begin_transaction().await {
+            Ok(t) => t,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let members = match ProjectMember::members_of_project(&input.project_id, true, &db).await {
+            Ok(m) => m,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let mut deleted = false;
+        for member in members {
+            if member.uid == session.uid {
+                if let Err(e) = db
+                    .fluent()
+                    .delete()
+                    .from(COLLECTION_MEMBER)
+                    .document_id(&member.id)
+                    .add_to_transaction(&mut transaction)
+                {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+                deleted = true;
+            } else {
+                if let Some(r) = member.role {
+                    if r == ProjectRole::Owner as i32 || r == ProjectRole::Administrator as i32 {
+                        // オーナーか管理者にメンバー離脱のお知らせを表示する
+                        if let Err(e) = super::news::News::upsert(
+                            &member.uid,
+                            super::news::NewsEvent::ProjectMemberWithdraw,
+                            &input.project_id,
+                            &input.project_name,
+                            None,
+                            Some(session.name.clone()),
+                            &db,
+                        )
+                        .await
+                        {
+                            return Err(anyhow::anyhow!(e.to_string()));
+                        }
+                    }
+                }
+            }
+        }
+
+        if !deleted {
+            return Err(anyhow::anyhow!(
+                "プロジェクトからの離脱ができませんでした。"
+            ));
+        }
+
+        if let Err(e) = transaction.commit().await {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
 
         Ok(())
     }

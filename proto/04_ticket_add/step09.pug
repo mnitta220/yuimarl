@@ -222,6 +222,35 @@ html(lang="ja")
                   img.icon(src="../../static/ionicons/create-outline.svg")
                   | &nbsp;作成
 
+            // 背景色
+            .row.pt-3
+              label.col-md-3.col-form-label.bg-light.mb-1(for="category") 背景色
+              .col-md-9.mb-1.flexbox
+                a(href="javascript:clickColor('info');")
+                  .box-info.color-box
+                    img.icon.d-none(src="../../static/ionicons/checkmark-outline.svg")
+                a(href="javascript:clickColor('primary');")
+                  .box-primary.color-box
+                    img.icon.d-none(src="../../static/ionicons/checkmark-outline.svg")
+                a(href="javascript:clickColor('warning');")
+                  .box-warning.color-box
+                    img.icon.d-none(src="../../static/ionicons/checkmark-outline.svg")
+                a(href="javascript:clickColor('success');")
+                  .box-success.color-box
+                    img.icon.d-none(src="../../static/ionicons/checkmark-outline.svg")
+                a(href="javascript:clickColor('danger');")
+                  .box-danger.color-box
+                    img.icon.d-none(src="../../static/ionicons/checkmark-outline.svg")
+                a(href="javascript:clickColor('secondary');")
+                  .box-secondary.color-box
+                    img.icon.d-none(src="../../static/ionicons/checkmark-outline.svg")
+                a(href="javascript:clickColor('dark');")
+                  .box-dark.color-box
+                    img.icon.d-none(src="../../static/ionicons/checkmark-outline.svg")
+                a(href="javascript:clickColor('light');")
+                  .box-light.color-box(style="border: solid 1px #aaa;")
+                    img.icon(src="../../static/ionicons/checkmark-outline.svg")
+
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light
       include ../includes/footer2.pug

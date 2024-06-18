@@ -44,20 +44,23 @@ html(lang="ja")
                 .col-md-3
                   h3 チケット
                 .col-md-9
-                  p.mb-0
-                    a(href="#") BN10
-                    | &nbsp;:&nbsp;
-                    | たこやき模擬店
-                  p.mb-0
-                    a(href="#") BN5
-                    | &nbsp;:&nbsp;
-                    | 文化祭出し物
-                  p.mt-2
-                    a(href="/ticket/add" title="チケット一覧") 
-                      img.icon3(src="../../static/ionicons/list-outline.svg")
-                    | &nbsp;&nbsp;&nbsp;
-                    a(href="step01.html")
-                      img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="チケットを追加")
+                  .row.mb-0
+                    .col.box-warning
+                      a(href="#") BN10
+                      | &nbsp;:&nbsp;
+                      | たこやき模擬店
+                  .row.mb-0
+                    .col.box-light
+                      a(href="#") BN5
+                      | &nbsp;:&nbsp;
+                      | 文化祭出し物
+                  .row.mt-2
+                    .col
+                      a(href="/ticket/add" title="チケット一覧") 
+                        img.icon3(src="../../static/ionicons/list-outline.svg")
+                      | &nbsp;&nbsp;&nbsp;
+                      a(href="step01.html")
+                        img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="チケットを追加")
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light

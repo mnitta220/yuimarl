@@ -89,7 +89,7 @@ impl Component for TicketListBody {
                                 }
                                 *buf += r#"</div>"#;
 
-                                *buf += r#"<div class="col-md-5 pb-1">"#;
+                                *buf += r#"<div class="col-md-4 pb-1">"#;
                                 {
                                     *buf += r#"<label class="form-label" for="ticketname">チケット名&nbsp;&nbsp;<small>(部分一致)</small></label>"#;
                                     *buf += r#"<input class="form-control" id="ticketname" name="ticketname" type="text" maxlength="100" value=""#;
@@ -107,7 +107,55 @@ impl Component for TicketListBody {
                                 }
                                 *buf += r#"</div>"#;
 
-                                *buf += r#"<div class="col-md-3 pb-1">"#;
+                                *buf += r#"<div class="col-md-2 pb-1">"#;
+                                {
+                                    *buf += r#"<div class="row">"#;
+                                    {
+                                        *buf += r#"<div class="col">"#;
+                                        {
+                                            *buf += r#"<input class="form-check-input" id="finished" name="finished" type="checkbox""#;
+                                            if let Some(f) = &self.input.finished {
+                                                if f == "on" || f == "true" {
+                                                    *buf += r#" checked="checked""#;
+                                                }
+                                            }
+                                            *buf += r#">"#;
+                                            *buf += r#"<label class="form-check-label" for="finished">完了済を表示</label>"#;
+                                        }
+                                        *buf += r#"</div>"#;
+                                    }
+                                    *buf += r#"</div>"#;
+
+                                    *buf += r#"<div class="row">"#;
+                                    {
+                                        *buf += r#"<div class="col">"#;
+                                        {
+                                            *buf += r#"<input class="form-check-input" id="priorityorder" name="priorityorder" type="checkbox""#;
+                                            if let Some(f) = &self.input.priorityorder {
+                                                if f == "on" || f == "true" {
+                                                    *buf += r#" checked="checked""#;
+                                                }
+                                            }
+                                            *buf += r#">"#;
+                                            *buf += r#"<label class="form-check-label" for="priorityorder">優先度順に表示</label>"#;
+                                        }
+                                        *buf += r#"</div>"#;
+                                    }
+                                    *buf += r#"</div>"#;
+                                }
+                                *buf += r#"</div>"#;
+
+                                *buf += r#"<div class="col-md-2 pb-1 d-flex align-items-end justify-content-end">"#;
+                                {
+                                    *buf += r#"<button id="btnFilter" class="btn btn-sm btn-primary" type="button">"#;
+                                    {
+                                        *buf += r#"<img class="icon" src="/static/ionicons/funnel-outline.svg">&nbsp;フィルター"#;
+                                    }
+                                    *buf += r#"</button>"#;
+                                }
+                                *buf += r#"</div>"#;
+                                /*
+                                *buf += r#"<div class="col-md-2 pb-1">"#;
                                 {
                                     *buf += r#"<div class="pb-2">"#;
                                     {
@@ -133,6 +181,7 @@ impl Component for TicketListBody {
                                     *buf += r#"</div>"#;
                                 }
                                 *buf += r#"</div>"#;
+                                */
                                 *buf += r#"<input type="hidden" id="page" name="page" value=""#;
                                 *buf += &self.input.page.to_string();
                                 *buf += r#"">"#;

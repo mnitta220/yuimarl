@@ -26,7 +26,7 @@ html(lang="ja")
             .col-md-2.pb-1
               label.form-label(for="ticketid") チケットID
               input.form-control#ticketid(type="text" maxlength="10")
-            .col-md-5.pb-1
+            .col-md-4.pb-1
               label.form-label(for="ticketname")
                 | チケット名&nbsp;&nbsp;
                 small (部分一致)
@@ -34,14 +34,19 @@ html(lang="ja")
             .col-md-2.pb-1
               label.form-label(for="parentid") 親チケットID
               input.form-control#parentid(type="text" maxlength="10")
-            .col-md-3.pb-1
-              .pb-2
-                input.form-check-input#finished(type="checkbox")
-                label.form-check-label(for="finished") 完了済を表示
-              .text-end
-                button.btn.btn-sm.btn-primary(type="button")
-                  img.icon(src="../../static/ionicons/funnel-outline.svg")
-                  | &nbsp;フィルター
+            .col-md-2.pb-1
+              .row
+                .col
+                  input.form-check-input#finished(type="checkbox")
+                  label.form-check-label(for="finished") 完了済を表示
+              .row
+                .col
+                  input.form-check-input#priorityorder(type="checkbox")
+                  label.form-check-label(for="priorityorder") 優先度順に表示
+            .col-md-2.pb-1.d-flex.align-items-end.justify-content-end
+              button.btn.btn-sm.btn-primary(type="button")
+                img.icon(src="../../static/ionicons/funnel-outline.svg")
+                | &nbsp;フィルター
 
           //- .row.pt-2
             .col-md-9

@@ -975,6 +975,21 @@ impl Ticket {
         input: &super::super::handlers::ticket_list::TicketListInput,
         db: &FirestoreDb,
     ) -> Result<Vec<Ticket>> {
+        let mut priority = false;
+        if let Some(p) = &input.priorityorder {
+            if p == "on" || p == "true" {
+                priority = true;
+            }
+        }
+
+        let order = match priority {
+            true => vec![
+                (path!(Ticket::priority), FirestoreQueryDirection::Descending),
+                (path!(Ticket::id), FirestoreQueryDirection::Ascending),
+            ],
+            false => vec![(path!(Ticket::id), FirestoreQueryDirection::Ascending)],
+        };
+
         let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
             .fluent()
             .select()
@@ -985,9 +1000,7 @@ impl Ticket {
                     q.field(path!(Ticket::project_id)).eq(&project_id)
                 ])
             })
-            .order_by([
-                (path!(Ticket::id), FirestoreQueryDirection::Ascending),
-            ])
+            .order_by(order)
             .obj()
             .stream_query_with_errors()
             .await

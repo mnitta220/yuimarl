@@ -180,6 +180,23 @@ impl DbCheckValidation {
             ticketname: String::from(""),
             parentid: String::from(""),
             finished: None,
+            priorityorder: None,
+            page: 1,
+        };
+
+        match model::ticket::Ticket::search_list(&prj.id, &input, &db).await {
+            Ok(tickets) => tickets,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e));
+            }
+        };
+
+        let input = super::super::ticket_list::TicketListInput {
+            ticketid: String::from(""),
+            ticketname: String::from(""),
+            parentid: String::from(""),
+            finished: None,
+            priorityorder: Some("on".to_string()),
             page: 1,
         };
 

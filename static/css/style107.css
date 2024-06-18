@@ -64,8 +64,10 @@
 .preview2 > table td {
   border: solid 1px #aaa;
 }
-.preview code,
-.preview2 code {
+.preview > p code,
+.preview2 > p code,
+.preview > blockquote code,
+.preview2 > blockquote code {
   background-color: #ebebeb;
   border-radius: 4px;
   font-size: .88em;
@@ -79,6 +81,7 @@
   border-radius: 4px;
   padding: 16px;
 }
+
 .preview blockquote,
 .preview2 blockquote {
   padding: 0.1em 0.7em;

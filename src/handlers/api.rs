@@ -2,6 +2,7 @@ use crate::model;
 use axum::extract::Form;
 use firestore::*;
 use serde::{Deserialize, Serialize};
+use tower_cookies::Cookies;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FirebaseConfig {
@@ -244,7 +245,7 @@ pub struct TicketByIdDispResult {
 /// チケットをid_dispで検索する
 pub async fn ticket_by_id_disp(Form(input): Form<TicketByIdDispInput>) -> String {
     tracing::debug!(
-        "GET /ticket_by_id_disp: {}, {}",
+        "POST /ticket_by_id_disp: {}, {}",
         &input.project_id,
         &input.id_disp
     );
@@ -304,17 +305,89 @@ pub async fn ticket_by_id_disp(Form(input): Form<TicketByIdDispInput>) -> String
         },
     };
 
-    /*
-    let result = TicketByIdDispResult {
-        result: true,
-        ticket: ticket,
-        message: "".to_string(),
-    };
-    */
-
     let buf = match serde_json::to_string(&result) {
         Ok(r) => r,
         Err(e) => format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
+    };
+
+    buf
+}
+
+#[derive(Deserialize, Debug)]
+pub struct TicketColorInput {
+    pub ticket_id: String,
+    pub color: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct TicketColorResult {
+    pub result: bool,
+    pub message: String,
+}
+
+/// チケットの背景色を設定する
+pub async fn ticket_color(cookies: Cookies, Form(input): Form<TicketColorInput>) -> String {
+    tracing::debug!("POST /ticket_color: {}, {}", &input.ticket_id, &input.color);
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            let result = TicketColorResult {
+                result: false,
+                message: format!("背景色の設定に失敗しました。 [{}]", e.to_string()),
+            };
+
+            let buf = match serde_json::to_string(&result) {
+                Ok(r) => r,
+                Err(_) => format!("背景色の設定に失敗しました。 [{}]", e.to_string()),
+            };
+
+            return buf;
+        }
+    };
+
+    let session = match super::get_session_info(cookies, true, &db).await {
+        Ok(session_id) => session_id,
+        Err(e) => {
+            let result = TicketColorResult {
+                result: false,
+                message: format!("背景色の設定に失敗しました。 [{}]", e.to_string()),
+            };
+
+            let buf = match serde_json::to_string(&result) {
+                Ok(r) => r,
+                Err(_) => format!("背景色の設定に失敗しました。 [{}]", e.to_string()),
+            };
+
+            return buf;
+        }
+    };
+
+    if let Err(e) =
+        model::ticket::TicketMember::update_color(&input.ticket_id, &input.color, &session, &db)
+            .await
+    {
+        let result = TicketColorResult {
+            result: false,
+            message: format!("背景色の設定に失敗しました。 [{}]", e.to_string()),
+        };
+
+        let buf = match serde_json::to_string(&result) {
+            Ok(r) => r,
+            Err(_) => format!("背景色の設定に失敗しました。 [{}]", e.to_string()),
+        };
+
+        return buf;
+    }
+
+    let result = TicketColorResult {
+        result: true,
+        message: "".to_string(),
+    };
+
+    let buf = match serde_json::to_string(&result) {
+        Ok(r) => r,
+        Err(e) => format!("背景色の設定に失敗しました。 [{}]", e.to_string()),
     };
 
     buf

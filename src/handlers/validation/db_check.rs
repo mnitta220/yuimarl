@@ -90,6 +90,7 @@ impl DbCheckValidation {
             project_id: String::from(&prj.id),
             ticket_id: String::from(""),
             timestamp: String::from(""),
+            color: String::from(""),
         };
 
         let mut ticket_members = Vec::new();

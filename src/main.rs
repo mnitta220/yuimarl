@@ -91,6 +91,7 @@ async fn main() {
             "/api/ticketByIdDisp",
             post(handlers::api::ticket_by_id_disp),
         )
+        .route("/api/ticketColor", post(handlers::api::ticket_color))
         .route(
             "/db_check",
             get(handlers::db_check::get).post(handlers::db_check::post),

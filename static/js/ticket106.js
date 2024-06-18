@@ -134,6 +134,7 @@ function chargeSeqDown(idx) {
 
 function setChargeTable() {
     var buf = '';
+    var exist = false;
     if (members.length > 0) {
         buf += '<table class="table table-hover">';
         buf += '<thead><tr>';
@@ -143,6 +144,7 @@ function setChargeTable() {
         buf += '</tr></thead>';
         buf += '<tbody>';
         for (var i in members) {
+            console.log('i=' + i + ', uid=' + members[i].uid + ', name=' + members[i].name);
             buf += '<tr><td>';
             buf += members[i].email;
             buf += '</td><td>';
@@ -159,9 +161,20 @@ function setChargeTable() {
                 buf += '<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動"></a>';
             }
             buf += '</td></tr>';
+
+            if (members[i].uid == $("#session_uid").val()) {
+                exist = true;
+            }
         }
         buf += '</tbody></table>';
     }
+
+    if (exist) {
+        $('#back_color').removeClass('d-none');
+    } else {
+        $('#back_color').addClass('d-none');
+    }
+
     $("div#chargeTbl").html(buf);
 }
 
@@ -339,4 +352,71 @@ function escape_html(string) {
             '>': '&gt;',
         }[match]
     });
+}
+
+function clickColor(color) {
+    $.ajax({
+        type: "POST",
+        url: "/api/ticketColor",
+        data: {
+            ticket_id: $("input#ticket_id").val(),
+            color: color,
+        },
+        success: function (result) {
+        }
+    });
+
+    switch ($("#color").val()) {
+        case 'info':
+            $('#img-info').addClass('d-none');
+            break;
+        case 'primary':
+            $('#img-primary').addClass('d-none');
+            break;
+        case 'warning':
+            $('#img-warning').addClass('d-none');
+            break;
+        case 'success':
+            $('#img-success').addClass('d-none');
+            break;
+        case 'danger':
+            $('#img-danger').addClass('d-none');
+            break;
+        case 'secondary':
+            $('#img-secondary').addClass('d-none');
+            break;
+        case 'dark':
+            $('#img-dark').addClass('d-none');
+            break;
+        case 'light':
+            $('#img-light').addClass('d-none');
+            break;
+    }
+    $("#color").val(color);
+    switch (color) {
+        case 'info':
+            $('#img-info').removeClass('d-none');
+            break;
+        case 'primary':
+            $('#img-primary').removeClass('d-none');
+            break;
+        case 'warning':
+            $('#img-warning').removeClass('d-none');
+            break;
+        case 'success':
+            $('#img-success').removeClass('d-none');
+            break;
+        case 'danger':
+            $('#img-danger').removeClass('d-none');
+            break;
+        case 'secondary':
+            $('#img-secondary').removeClass('d-none');
+            break;
+        case 'dark':
+            $('#img-dark').removeClass('d-none');
+            break;
+        case 'light':
+            $('#img-light').removeClass('d-none');
+            break;
+    }
 }

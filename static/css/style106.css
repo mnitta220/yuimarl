@@ -93,3 +93,63 @@
 .text-right {
   text-align: right;
 }
+
+.box-info {
+  background-color: #cff4fc;
+  border: solid 1px #9eeaf9;
+  margin: 0 4px;
+}
+
+.box-primary {
+  background-color: #cfe2ff;
+  border: solid 1px #9ec5fe;
+  margin: 0 4px;
+}
+
+.box-warning {
+  background-color: #fff3cd;
+  border: solid 1px #ffe69c;
+  margin: 0 4px;
+}
+
+.box-success {
+  background-color: #d1e7dd;
+  border: solid 1px #a3cfbb;
+  margin: 0 4px;
+}
+
+.box-danger {
+  background-color: #f8d7da;
+  border: solid 1px #f1aeb5;
+  margin: 0 4px;
+}
+
+.box-secondary {
+  background-color: #e2e3e5;
+  border: solid 1px #c4c8cb;
+  margin: 0 4px;
+}
+
+.box-dark {
+  background-color: #ced4da;
+  border: solid 1px #adb5bd;
+  margin: 0 4px;
+}
+
+.box-light {
+  background-color: white;
+  border: solid 1px white;
+  margin: 0 4px;
+}
+
+.color-box {
+  display: flex;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+.flexbox {
+  display: flex;
+  padding: 10px;
+}

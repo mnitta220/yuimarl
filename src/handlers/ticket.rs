@@ -185,6 +185,7 @@ pub struct TicketInput {
     pub project_id: String,
     pub ticket_id: String,
     pub timestamp: String,
+    pub color: String,
 }
 
 pub async fn post(
@@ -192,7 +193,7 @@ pub async fn post(
     Form(input): Form<TicketInput>,
 ) -> Result<Html<String>, AppError> {
     tracing::debug!(
-        "POST /ticket {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
+        "POST /ticket {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
         input.action,
         input.name,
         input.description,
@@ -205,7 +206,8 @@ pub async fn post(
         input.deliverables,
         input.project_id,
         input.ticket_id,
-        input.timestamp
+        input.timestamp,
+        input.color
     );
 
     let members = format!(r#"{{"members":{}}}"#, input.members);
@@ -569,22 +571,6 @@ pub async fn post_comment(
                     return Err(AppError(anyhow::anyhow!(e)));
                 };
             }
-
-            /*
-            let members =
-                match model::ticket::TicketMember::members_of_ticket(&comment.ticket_id, &db).await
-                {
-                    Ok(m) => m,
-                    Err(e) => {
-                        return Err(AppError(anyhow::anyhow!(e)));
-                    }
-                };
-            for member in members {
-                if member.uid == session.uid {
-                    continue;
-                }
-            }
-            */
         }
         crate::Action::Update => {
             // コメント更新

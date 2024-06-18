@@ -33,6 +33,7 @@ pub struct Ticket {
     pub history: Option<String>,           // 更新履歴 (JSON)
     pub created_at: Option<DateTime<Utc>>, // 作成日時
     pub updated_at: Option<DateTime<Utc>>, // 更新日時
+    pub color: Option<String>,             // 背景色
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -45,6 +46,7 @@ pub struct TicketMember {
     pub name: Option<String>,             // メンバーの名前
     pub email: Option<String>,            // メンバーのメールアドレス
     pub last_used: Option<DateTime<Utc>>, // 最終使用日時
+    pub color: Option<String>,            // 背景色
 }
 
 impl Ticket {
@@ -68,6 +70,7 @@ impl Ticket {
             history: None,
             created_at: None,
             updated_at: None,
+            color: None,
         }
     }
 
@@ -209,6 +212,9 @@ impl Ticket {
             let mut member_new = TicketMember::new(&mid, &id, &project.id, &member.uid);
             member_new.seq = seq;
             member_new.last_used = Some(now);
+            if member.uid == session.uid {
+                member_new.color = Some(input.color.clone());
+            }
 
             match db
                 .fluent()
@@ -405,6 +411,9 @@ impl Ticket {
                                 up.project_id = input.project_id.clone();
                                 up.ticket_id = input.ticket_id.clone();
                                 up.last_used = Some(now);
+                                if up.uid == session.uid {
+                                    up.color = Some(input.color.clone());
+                                }
 
                                 if let Err(e) = db
                                     .fluent()
@@ -444,10 +453,13 @@ impl Ticket {
                                 if cur.uid == session.uid {
                                     let mut cur = cur.clone();
                                     cur.last_used = Some(now);
+                                    if cur.uid == session.uid {
+                                        cur.color = Some(input.color.clone());
+                                    }
                                     if let Err(e) = db
                                         .fluent()
                                         .update()
-                                        .fields(paths!(TicketMember::last_used))
+                                        .fields(paths!(TicketMember::{last_used, color}))
                                         .in_col(&COLLECTION_MEMBER)
                                         .document_id(&cur.id)
                                         .object(&cur)
@@ -460,10 +472,13 @@ impl Ticket {
                             } else {
                                 let mut cur = cur.clone();
                                 cur.uid = up.uid.clone();
+                                if cur.uid == session.uid {
+                                    cur.color = Some(input.color.clone());
+                                }
                                 if let Err(e) = db
                                     .fluent()
                                     .update()
-                                    .fields(paths!(TicketMember::uid))
+                                    .fields(paths!(TicketMember::{uid, color}))
                                     .in_col(&COLLECTION_MEMBER)
                                     .document_id(&cur.id)
                                     .object(&cur)
@@ -487,6 +502,9 @@ impl Ticket {
                     up.project_id = input.project_id.clone();
                     up.ticket_id = input.ticket_id.clone();
                     up.last_used = Some(now);
+                    if up.uid == session.uid {
+                        up.color = Some(input.color.clone());
+                    }
 
                     if let Err(e) = db
                         .fluent()
@@ -528,14 +546,6 @@ impl Ticket {
             if upd.uid == session.uid {
                 continue;
             }
-
-            /*
-            let news_ticket = super::news::NewsTicket {
-                id: input.ticket_id.to_string(),
-                id_disp: ticket.id_disp.clone().unwrap_or_default(),
-                name: ticket.name.clone().unwrap_or_default(),
-            };
-            */
 
             let mut found = false;
             for cur in &current_members {
@@ -724,7 +734,7 @@ impl Ticket {
         let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
             .fluent()
             .select()
-            .fields(paths!(TicketMember::{id, project_id, uid, ticket_id, seq}))
+            .fields(paths!(TicketMember::{id, project_id, uid, ticket_id, seq, color}))
             .from(COLLECTION_MEMBER)
             .filter(|q| {
                 q.for_all([
@@ -765,7 +775,8 @@ impl Ticket {
                 .await
             {
                 Ok(t) => match t {
-                    Some(t) => {
+                    Some(mut t) => {
+                        t.color = member.color;
                         if t.progress != 100 {
                             tickets.push(t);
                         }
@@ -832,7 +843,7 @@ impl Ticket {
             let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
                 .fluent()
                 .select()
-                .fields(paths!(TicketMember::{id, project_id, uid, ticket_id, seq}))
+                .fields(paths!(TicketMember::{id, project_id, uid, ticket_id, seq, color}))
                 .from(COLLECTION_MEMBER)
                 .filter(|q| q.for_all([q.field(path!(TicketMember::ticket_id)).eq(&t.id)]))
                 .order_by([(path!(TicketMember::seq), FirestoreQueryDirection::Ascending)])
@@ -1128,6 +1139,7 @@ impl TicketMember {
             name: None,
             email: None,
             last_used: None,
+            color: None,
         }
     }
 
@@ -1197,5 +1209,63 @@ impl TicketMember {
         };
 
         Ok(ticket_members)
+    }
+
+    pub async fn update_color(
+        ticket_id: &str,
+        color: &str,
+        session: &Session,
+        db: &FirestoreDb,
+    ) -> Result<()> {
+        let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(TicketMember::{id, project_id, uid, ticket_id, seq, color}))
+            .from(COLLECTION_MEMBER)
+            .filter(|q| q.for_all([q.field(path!(TicketMember::ticket_id)).eq(&ticket_id)]))
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let ticket_members: Vec<TicketMember> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let member = match ticket_members.get(0) {
+            Some(m) => m,
+            None => {
+                return Err(anyhow::anyhow!("更新対象のデータが存在しません。"));
+            }
+        };
+        if member.uid != session.uid {
+            return Err(anyhow::anyhow!("更新対象のデータが存在しません。"));
+        }
+
+        let mut member = member.clone();
+        member.color = Some(color.to_string());
+
+        if let Err(e) = db
+            .fluent()
+            .update()
+            .fields(paths!(TicketMember::color))
+            .in_col(&COLLECTION_MEMBER)
+            .document_id(&member.id)
+            .object(&member)
+            .execute::<TicketMember>()
+            .await
+        {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+
+        Ok(())
     }
 }

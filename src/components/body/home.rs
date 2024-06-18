@@ -97,7 +97,6 @@ impl Component for HomeBody {
                                                         *buf += r#"">"#;
                                                         {
                                                             super::super::escape_html(n, buf);
-                                                            //*buf += n;
                                                         }
                                                         *buf += r#"</a>"#;
 
@@ -179,37 +178,52 @@ impl Component for HomeBody {
                                             if let Some(m) = &props.project_member {
                                                 if let Some(role) = m.role {
                                                     for ticket in props.tickets.iter() {
-                                                        *buf += r#"<p class="mb-0">"#;
+                                                        *buf += r#"<div class="row mb-0">"#;
                                                         {
-                                                            *buf += r#"<a href="/ticket?id="#;
-                                                            *buf += &ticket.id;
+                                                            *buf += r#"<div class="col box-"#;
+                                                            match &ticket.color {
+                                                                Some(c) => {
+                                                                    *buf += c;
+                                                                }
+                                                                None => {
+                                                                    *buf += "light";
+                                                                }
+                                                            };
                                                             *buf += r#"">"#;
                                                             {
-                                                                *buf += &ticket
-                                                                    .id_disp
-                                                                    .clone()
-                                                                    .unwrap();
-                                                            }
-                                                            *buf += r#"</a>&nbsp;:&nbsp;"#;
+                                                                *buf += r#"<a href="/ticket?id="#;
+                                                                *buf += &ticket.id;
+                                                                *buf += r#"">"#;
+                                                                {
+                                                                    *buf += &ticket
+                                                                        .id_disp
+                                                                        .clone()
+                                                                        .unwrap();
+                                                                }
+                                                                *buf += r#"</a>&nbsp;:&nbsp;"#;
 
-                                                            if let Some(name) = &ticket.name {
-                                                                super::super::escape_html(
-                                                                    name, buf,
-                                                                );
+                                                                if let Some(name) = &ticket.name {
+                                                                    super::super::escape_html(
+                                                                        name, buf,
+                                                                    );
+                                                                }
                                                             }
+                                                            *buf += r#"</div>"#;
                                                         }
-                                                        *buf += r#"</p>"#;
+                                                        *buf += r#"</div>"#;
                                                     }
 
-                                                    *buf += r#"<p class="mt-2">"#;
+                                                    *buf += r#"<div class="row mt-2">"#;
                                                     {
-                                                        *buf += r#"<a href="/ticket_list">"#;
+                                                        *buf += r#"<div class="col">"#;
                                                         {
-                                                            *buf += r#"<img class="icon3" src="/static/ionicons/list-outline.svg" title="チケット一覧">"#;
-                                                        }
-                                                        *buf += r#"</a>"#;
+                                                            *buf += r#"<a href="/ticket_list">"#;
+                                                            {
+                                                                *buf += r#"<img class="icon3" src="/static/ionicons/list-outline.svg" title="チケット一覧">"#;
+                                                            }
+                                                            *buf += r#"</a>"#;
 
-                                                        if role == model::project::ProjectRole::Owner as i32
+                                                            if role == model::project::ProjectRole::Owner as i32
                                                             || role == model::project::ProjectRole::Administrator as i32
                                                             || role == model::project::ProjectRole::Member as i32
                                                         {
@@ -223,8 +237,10 @@ impl Component for HomeBody {
                                                                 *buf += r#"</a>"#;
                                                             }
                                                         }
+                                                        }
+                                                        *buf += r#"</div>"#;
                                                     }
-                                                    *buf += r#"</p>"#;
+                                                    *buf += r#"</div>"#;
                                                 }
                                             }
                                         }

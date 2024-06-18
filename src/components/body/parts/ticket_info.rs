@@ -674,6 +674,159 @@ impl Component for TicketInfo {
                 }
             }
 
+            // 背景色
+            let mut color: Option<String> = None;
+            let mut exist = false;
+            let mut session_uid = "".to_string();
+            if let Some(s) = &props.session {
+                session_uid = s.uid.clone();
+                for member in &props.ticket_members {
+                    if member.uid == s.uid {
+                        color = member.color.clone();
+                        exist = true;
+                        break;
+                    }
+                }
+            }
+            let color = match color {
+                Some(c) => c,
+                None => String::from("light"),
+            };
+
+            *buf += r#"<div id="back_color" class="row pt-3"#;
+            if !exist {
+                *buf += r#" d-none"#;
+            }
+            *buf += r#"">"#;
+            {
+                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="category">背景色</label>"#;
+                *buf += r#"<div class="col-md-9 mb-1 flexbox">"#;
+                {
+                    *buf += r#"<a href="javascript:clickColor('info');">"#;
+                    {
+                        *buf += r#"<div class="box-info color-box">"#;
+                        {
+                            *buf += r#"<img id="img-info" class="icon"#;
+                            if color != "info" {
+                                *buf += r#" d-none"#;
+                            }
+                            *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</a>"#;
+
+                    *buf += r#"<a href="javascript:clickColor('primary');">"#;
+                    {
+                        *buf += r#"<div class="box-primary color-box">"#;
+                        {
+                            *buf += r#"<img id="img-primary" class="icon"#;
+                            if color != "primary" {
+                                *buf += r#" d-none"#;
+                            }
+                            *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</a>"#;
+
+                    *buf += r#"<a href="javascript:clickColor('warning');">"#;
+                    {
+                        *buf += r#"<div class="box-warning color-box">"#;
+                        {
+                            *buf += r#"<img id="img-warning" class="icon"#;
+                            if color != "warning" {
+                                *buf += r#" d-none"#;
+                            }
+                            *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</a>"#;
+
+                    *buf += r#"<a href="javascript:clickColor('success');">"#;
+                    {
+                        *buf += r#"<div class="box-success color-box">"#;
+                        {
+                            *buf += r#"<img id="img-success" class="icon"#;
+                            if color != "success" {
+                                *buf += r#" d-none"#;
+                            }
+                            *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</a>"#;
+
+                    *buf += r#"<a href="javascript:clickColor('danger');">"#;
+                    {
+                        *buf += r#"<div class="box-danger color-box">"#;
+                        {
+                            *buf += r#"<img id="img-danger" class="icon"#;
+                            if color != "danger" {
+                                *buf += r#" d-none"#;
+                            }
+                            *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</a>"#;
+
+                    *buf += r#"<a href="javascript:clickColor('secondary');">"#;
+                    {
+                        *buf += r#"<div class="box-secondary color-box">"#;
+                        {
+                            *buf += r#"<img id="img-secondary" class="icon"#;
+                            if color != "secondary" {
+                                *buf += r#" d-none"#;
+                            }
+                            *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</a>"#;
+
+                    *buf += r#"<a href="javascript:clickColor('dark');">"#;
+                    {
+                        *buf += r#"<div class="box-dark color-box">"#;
+                        {
+                            *buf += r#"<img id="img-dark" class="icon"#;
+                            if color != "dark" {
+                                *buf += r#" d-none"#;
+                            }
+                            *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</a>"#;
+
+                    *buf += r#"<a href="javascript:clickColor('light');">"#;
+                    {
+                        *buf +=
+                            r#"<div class="box-light color-box" style="border: solid 1px #aaa;">"#;
+                        {
+                            *buf += r#"<img id="img-light" class="icon"#;
+                            if color != "light" {
+                                *buf += r#" d-none"#;
+                            }
+                            *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</a>"#;
+                }
+                *buf += r#"</div>"#;
+            }
+            *buf += r#"</div>"#;
+
+            *buf += r#"<input type="hidden" name="color" id="color" value=""#;
+            *buf += &color;
+            *buf += r#"">"#;
+
+            *buf += r#"<input type="hidden" name="session_uid" id="session_uid" value=""#;
+            *buf += &session_uid;
+            *buf += r#"">"#;
+
             *buf += r#"<input type="hidden" name="action" id="action" value=""#;
             *buf += &props.action.to_string();
             *buf += r#"">"#;

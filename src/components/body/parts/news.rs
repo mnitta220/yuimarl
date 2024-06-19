@@ -101,6 +101,11 @@ impl Component for News {
                                             );
                                             *buf += r#"</a> 」 から離脱しました。"#;
                                         }
+                                        news::NewsEvent::OperationNotice => {
+                                            if let Some(m) = &news.message {
+                                                *buf += m;
+                                            }
+                                        }
                                         _ => {}
                                     }
                                 }

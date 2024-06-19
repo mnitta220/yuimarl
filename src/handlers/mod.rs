@@ -11,6 +11,7 @@ pub mod db_check;
 pub mod home;
 pub mod login;
 pub mod news;
+pub mod notice;
 pub mod project;
 pub mod ticket;
 pub mod ticket_list;

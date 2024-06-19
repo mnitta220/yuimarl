@@ -6,7 +6,7 @@ use futures::stream::BoxStream;
 use futures::TryStreamExt;
 use serde::{Deserialize, Serialize};
 
-const COLLECTION_NAME: &'static str = "user";
+pub const COLLECTION_NAME: &'static str = "user";
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct User {

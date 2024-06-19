@@ -24,19 +24,19 @@ impl DbCheckValidation {
         session: &model::session::Session,
         db: &FirestoreDb,
     ) -> Result<Option<Self>> {
+        let mut validation = Self::new();
+
         let db_check_password = match crate::DB_CHECK_PASSWORD.get() {
             Some(password) => password.to_string(),
             None => "".to_string(),
         };
 
         if db_check_password.len() == 0 {
-            let mut validation = Self::new();
             validation.info = Some("DB_CHECK_PASSWORD 環境変数が設定されていません".to_string());
             return Ok(Some(validation));
         }
 
         if input.db_check_password != db_check_password {
-            let mut validation = Self::new();
             validation.db_check_password =
                 Some("DB_CHECK_PASSWORD が正しくありません。".to_string());
             return Ok(Some(validation));
@@ -221,11 +221,17 @@ impl DbCheckValidation {
             }
         };
 
+        match model::news::News::del_operation_notice("aaa", db).await {
+            Ok(news) => news,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e));
+            }
+        };
+
         if let Err(e) = model::project::Project::delete_db_check(&db).await {
             return Err(anyhow::anyhow!(e));
         }
 
-        let mut validation = Self::new();
         validation.result = true;
         Ok(Some(validation))
     }

@@ -1,160 +1,143 @@
 <!DOCTYPE html>
 <html lang="ja">
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>プロジェクト - Yuimarl</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-  <link rel="stylesheet" href="../../static/css/style108.css">
-  <link rel="icon" type="image/x-icon" href="../../static/favicon.ico">
-</head>
-
-<body>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
-    <div class="container"><a class="navbar-brand" href="/"><img class="mw-100" src="../../static/images/logo2.png"
-          alt="Yuimarl"></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content"
-        aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation"><span
-          class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="navbar-content">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item active"><a class="nav-link" href="/">ホーム<span class="visually-hidden">(current)</span></a>
-          </li>
-          <li class="nav-item"><a class="nav-link" href="#about">プロジェクト</a></li>
-          <li class="nav-item"><a class="nav-link" href="#items">チケット</a></li>
-          <li class="nav-item"><a class="nav-link" href="#items">利用ガイド</a></li>
-          <li class="nav-item"><a class="nav-link" href="#items">ログアウト</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <main>
-    <div class="py-3">
-      <div class="container">
-        <h3 class="mb-3">プロジェクト</h3>
-        <div class="pb-2">
-          <ul class="nav nav-tabs">
-            <li class="nav-item"><a class="nav-link active" href="#">基本情報</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">ノート</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">更新履歴</a></li>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>プロジェクト - Yuimarl</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style108.css">
+    <link rel="icon" type="image/x-icon" href="../../static/favicon.ico">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+      <div class="container"><a class="navbar-brand" href="/"><img class="mw-100" src="../../static/images/logo2.png" alt="Yuimarl"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbar-content">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item active"><a class="nav-link" href="/">ホーム<span class="visually-hidden">(current)</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#about">プロジェクト</a></li>
+            <li class="nav-item"><a class="nav-link" href="#items">チケット</a></li>
+            <li class="nav-item"><a class="nav-link" href="#items">利用ガイド</a></li>
+            <li class="nav-item"><a class="nav-link" href="#items">ログアウト</a></li>
           </ul>
         </div>
-        <form>
-          <!-- プロジェクト名-->
-          <div class="row py-2">
-            <label class="col-md-3 col-form-label bg-light mb-1" for="name">プロジェクト名</label>
-            <div class="col-md-9 mb-1">
-              <input class="form-control" id="name" type="text" maxlength="40" value="文化祭実行プロジェクト" disabled>
-            </div>
+      </div>
+    </nav>
+    <main>
+      <div class="py-3">
+        <div class="container">
+          <h3 class="mb-3">プロジェクト</h3>
+          <div class="pb-2">
+            <ul class="nav nav-tabs">
+              <li class="nav-item"><a class="nav-link active" href="#">基本情報</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">ノート</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">更新履歴</a></li>
+            </ul>
           </div>
-          <!-- チケットID接頭辞-->
-          <div class="row py-2">
-            <label class="col-md-3 col-form-label bg-light mb-1" for="prefix">チケットID接頭辞</label>
-            <div class="col-md-9 mb-1">
-              <input class="form-control" id="prefix" type="text" maxlength="10" value="BN" disabled>
-            </div>
-          </div>
-          <!-- メンバー-->
-          <div class="row py-2">
-            <label class="col-md-3 col-form-label bg-light mb-1" for="member">メンバー</label>
-            <div class="col-md-9 mb-1">
-              <div class="form-floating">
-                <table class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th scope="col">ロール</th>
-                      <th scope="col">メールアドレス</th>
-                      <th scope="col">名前</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>オーナー</td>
-                      <td>taro.yamada@mail.com</td>
-                      <td>山田太郎</td>
-                    </tr>
-                    <tr>
-                      <td>管理者</td>
-                      <td>kazuto.tonoma@mail.com</td>
-                      <td>殿馬一人</td>
-                    </tr>
-                    <tr>
-                      <td>メンバー</td>
-                      <td>masami.iwaki@mail.com</td>
-                      <td>岩鬼正美</td>
-                    </tr>
-                    <tr>
-                      <td>閲覧者</td>
-                      <td>satoru.satonaka@mail.com</td>
-                      <td>里中智</td>
-                    </tr>
-                  </tbody>
-                </table>
+          <form>
+            <!-- プロジェクト名-->
+            <div class="row py-2">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="name">プロジェクト名</label>
+              <div class="col-md-9 mb-1">
+                <input class="form-control" id="name" type="text" maxlength="40" value="文化祭実行プロジェクト" disabled>
               </div>
             </div>
-          </div>
-          <div class="row py-3 mt-2 bg-light">
-            <div class="col-9"></div>
-            <div class="col-3 text-end">
-              <button class="btn btn-secondary" type="button" data-bs-toggle="modal"
-                data-bs-target="#withdrawModal"><img class="icon"
-                  src="../../static/ionicons/exit-outline.svg">&nbsp;プロジェクトから離脱</button>
+            <!-- チケットID接頭辞-->
+            <div class="row py-2">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="prefix">チケットID接頭辞</label>
+              <div class="col-md-9 mb-1">
+                <input class="form-control" id="prefix" type="text" maxlength="10" value="BN" disabled>
+              </div>
             </div>
-          </div>
-        </form>
-        <div class="modal fade" id="withdrawModal" tabindex="-1" aria-labelledby="withdrawModalLabel"
-          aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="withdrawModalLabel">プロジェクトから離脱</h1>
-                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            <!-- メンバー-->
+            <div class="row py-2">
+              <label class="col-md-3 col-form-label bg-light mb-1" for="member">メンバー</label>
+              <div class="col-md-9 mb-1">
+                <div class="form-floating">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">ロール</th>
+                        <th scope="col">メールアドレス</th>
+                        <th scope="col">名前</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>オーナー</td>
+                        <td>taro.yamada@mail.com</td>
+                        <td>山田太郎</td>
+                      </tr>
+                      <tr>
+                        <td>管理者</td>
+                        <td>kazuto.tonoma@mail.com</td>
+                        <td>殿馬一人</td>
+                      </tr>
+                      <tr>
+                        <td>メンバー</td>
+                        <td>masami.iwaki@mail.com</td>
+                        <td>岩鬼正美</td>
+                      </tr>
+                      <tr>
+                        <td>閲覧者</td>
+                        <td>satoru.satonaka@mail.com</td>
+                        <td>里中智</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <div class="modal-body">
-                <p>プロジェクトから離脱すると、このプロジェクトの情報にアクセスできなくなります。<br>離脱しますか？</p>
+            </div>
+            <div class="row py-3 mt-2 bg-light">
+              <div class="col-9"></div>
+              <div class="col-3 text-end">
+                <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#withdrawModal"><img class="icon" src="../../static/ionicons/exit-outline.svg">&nbsp;プロジェクトから離脱</button>
               </div>
-              <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>
-                <button class="btn btn-danger" type="button"><img class="icon"
-                    src="../../static/ionicons/exit-outline.svg">&nbsp;離脱</button>
+            </div>
+          </form>
+          <div class="modal fade" id="withdrawModal" tabindex="-1" aria-labelledby="withdrawModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="withdrawModalLabel">プロジェクトから離脱</h1>
+                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p>プロジェクトから離脱すると、このプロジェクトの情報にアクセスできなくなります。<br>離脱しますか？</p>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>
+                  <button class="btn btn-danger" type="button"><img class="icon" src="../../static/ionicons/exit-outline.svg">&nbsp;離脱</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </main>
-  <footer class="py-1 mt-3 bg-dark text-light">
-    <div class="container text-center pt-1">
-      <ul class="nav justify-content-center">
-        <li class="nav-item"><a class="nav-link" href="/">ホーム</a></li>
-        <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/yuimarl/"
-            target="_blank">製品ホームページ</a></li>
-        <li class="nav-item"><a class="nav-link" href="#about">利用規約</a></li>
-        <li class="nav-item"><a class="nav-link" href="/contact">お問い合わせ</a></li>
-        <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/" target="_blank">新田システム事務所</a></li>
-      </ul>
-      <p style="color: #a0a0a0"><small>Yuimarl version 0.0.12&nbsp;&nbsp;&nbsp;Copyright &copy; 2024 Masahiro
-          Nitta</small></p>
-    </div>
-    <hr>
-    <div class="container">
-      <div class="row align-items-end">
-        <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step05.html">← prev</a></div>
-        <div class="col-md-8">
-          <div class="alert alert-danger text-start" role="alert">プロジェクト一覧
-            step06.<br>ログインユーザーのロールがメンバーまたは閲覧者の場合は、プロジェクトを更新できない画面になる。<br>プロジェクトのオーナー以外は、「プロジェクトから離脱」ボタンが表示される。</div>
-        </div>
-        <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step07.html">next →</a></div>
+    </main>
+    <footer class="py-1 mt-3 bg-dark text-light">
+      <div class="container text-center pt-1">
+        <ul class="nav justify-content-center">
+          <li class="nav-item"><a class="nav-link" href="/">ホーム</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/yuimarl/" target="_blank">製品ホームページ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">利用規約</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contact">お問い合わせ</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://mnitta220.github.io/" target="_blank">新田システム事務所</a></li>
+        </ul>
+        <p style="color: #a0a0a0"><small>Yuimarl version 1.0.0&nbsp;&nbsp;&nbsp;Copyright &copy; 2024 Masahiro Nitta</small></p>
       </div>
-    </div>
-  </footer>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-    crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-</body>
-
+      <hr>
+      <div class="container">
+        <div class="row align-items-end">
+          <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step05.html">← prev</a></div>
+          <div class="col-md-8">
+            <div class="alert alert-danger text-start" role="alert">プロジェクト一覧 step06.<br>ログインユーザーのロールがメンバーまたは閲覧者の場合は、プロジェクトを更新できない画面になる。<br>プロジェクトのオーナー以外は、「プロジェクトから離脱」ボタンが表示される。</div>
+          </div>
+          <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step07.html">next →</a></div>
+        </div>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  </body>
 </html>

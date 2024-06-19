@@ -2,6 +2,8 @@ pub mod agreement;
 pub mod contact;
 pub mod db_check;
 pub mod home;
+pub mod notice_add;
+pub mod notice_del;
 pub mod parts;
 pub mod project;
 pub mod project_list;

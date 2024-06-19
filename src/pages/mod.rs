@@ -3,6 +3,8 @@ pub mod contact_page;
 pub mod db_check;
 pub mod home_page;
 pub mod login_page;
+pub mod notice_add;
+pub mod notice_del;
 pub mod page;
 pub mod project_list_page;
 pub mod project_page;

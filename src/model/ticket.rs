@@ -243,6 +243,8 @@ impl Ticket {
                     &project.project_name.clone().unwrap_or_default(),
                     Some(news_ticket),
                     None,
+                    None,
+                    None,
                     &db,
                 )
                 .await
@@ -569,6 +571,8 @@ impl Ticket {
                     "",
                     Some(news_ticket),
                     None,
+                    None,
+                    None,
                     &db,
                 )
                 .await
@@ -588,6 +592,8 @@ impl Ticket {
                     &ticket.project_id,
                     "",
                     Some(news_ticket),
+                    None,
+                    None,
                     None,
                     &db,
                 )
@@ -714,6 +720,8 @@ impl Ticket {
                 &ticket.project_id,
                 "",
                 Some(news_ticket),
+                None,
+                None,
                 None,
                 &db,
             )

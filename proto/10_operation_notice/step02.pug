@@ -1,0 +1,63 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title 運用からのお知らせ - Yuimarl
+    link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous")
+    link(rel="stylesheet" href="../../static/css/style108.css")
+    link(rel="icon" type="image/x-icon" href="../../static/favicon.ico")
+  body
+    include ../includes/nav.pug
+
+    main
+      .py-3
+        .container
+          h3.mb-3 運用からのお知らせ
+          p
+            | システムの運用担当者から、利用者全員への通知を行います。
+            br
+            | 通知メッセージを入力し、システム環境変数に設定した「NOTICE_PASSWORD」の値を入力して、「通知」をクリックしてください。
+          form
+            // 通知メッセージ
+            .row.pt-1.pb-2
+              label.col-md-3.col-form-label.bg-light.mb-1(for="message") 通知メッセージ (HTML タグ)
+              .col-md-9.mb-1
+                textarea.form-control#message(rows="3" name="message" required)
+                  | <b>[運用からのお知らせ]</b> Yuimarl の新バージョンがリリースされました。<br>
+                  | チケットに背景色をつけることができるようになりました。詳細は「<a href="https://mnitta220.github.io/yuimarl/howtouse.html" target="_blank">使い方</a>」をご参照ください。
+                // .invalid-feedback 入力してください。
+            // NOTICE_PASSWORD
+            .row.pt-1.pb-2
+              label.col-md-3.col-form-label.bg-light.mb-1(for="password") NOTICE_PASSWORD
+              .col-md-9.mb-1
+                input.form-control.is-invalid#password(type="password" maxlength="40" value="password" required)
+                .invalid-feedback NOTICE_PASSWORD が正しくありません。
+            .row.py-3.mt-2.bg-light
+              .col
+                button.btn.btn-primary(type="submit") 通知
+          //- .alert.alert-primary.mt-3
+            | 通知が行われました。
+            br
+            | 通知IDは 「 01900793-d5f6-72b2-a1b2-db31cedc7a04 」 です。
+
+    //- include ../includes/footer.pug
+    footer.py-1.mt-3.bg-dark.text-light
+      include ../includes/footer2.pug
+
+      hr
+      .container
+        .row.align-items-end
+          .col-md-2.text-end.py-1
+            a.nav-link.px-2.px-md-0(href="step01.html") ← prev
+          .col-md-8
+            .alert.alert-danger.text-start(role="alert")
+              | 運用からのお知らせ step02.
+              br
+              | 入力された「NOTICE_PASSWORD」の値が正しくなければ、エラーメッセージが表示される。
+          .col-md-2.text-start.py-1
+            a.nav-link.px-2.px-md-0(href="step03.html") next →
+
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous")

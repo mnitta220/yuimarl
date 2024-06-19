@@ -363,6 +363,8 @@ impl Project {
                     &input.project_name,
                     None,
                     None,
+                    None,
+                    None,
                     &db,
                 )
                 .await
@@ -496,6 +498,8 @@ impl Project {
                                         &input.project_name,
                                         None,
                                         None,
+                                        None,
+                                        None,
                                         &db,
                                     )
                                     .await
@@ -527,6 +531,8 @@ impl Project {
                                     super::news::NewsEvent::ProjectMemberDelete,
                                     &input.project_id,
                                     &input.project_name,
+                                    None,
+                                    None,
                                     None,
                                     None,
                                     &db,
@@ -599,6 +605,8 @@ impl Project {
                             &input.project_name,
                             None,
                             None,
+                            None,
+                            None,
                             &db,
                         )
                         .await
@@ -629,6 +637,8 @@ impl Project {
                             super::news::NewsEvent::ProjectMemberDelete,
                             &input.project_id,
                             &input.project_name,
+                            None,
+                            None,
                             None,
                             None,
                             &db,
@@ -807,6 +817,8 @@ impl Project {
                 &input.project_name,
                 None,
                 None,
+                None,
+                None,
                 &db,
             )
             .await
@@ -864,6 +876,8 @@ impl Project {
                             &input.project_name,
                             None,
                             Some(session.name.clone()),
+                            None,
+                            None,
                             &db,
                         )
                         .await

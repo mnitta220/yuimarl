@@ -18,6 +18,8 @@ pub struct News {
     pub project_name: String,
     pub ticket: Option<NewsTicket>,
     pub member_name: Option<String>,
+    pub notice_id: Option<String>,
+    pub message: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -38,6 +40,7 @@ pub enum NewsEvent {
     ProjectDelete = 7,         // プロジェクトが削除された
     TicketCommentAdd = 8,      // チケットのコメントが追加された
     ProjectMemberWithdraw = 9, // プロジェクトメンバーが離脱した
+    OperationNotice = 10,      // 運用からのお知らせ
     None = 0,
 }
 
@@ -53,6 +56,7 @@ impl News {
             7 => NewsEvent::ProjectDelete,
             8 => NewsEvent::TicketCommentAdd,
             9 => NewsEvent::ProjectMemberWithdraw,
+            10 => NewsEvent::OperationNotice,
             _ => NewsEvent::None,
         }
     }
@@ -64,6 +68,8 @@ impl News {
         project_name: &str,
         ticket: Option<NewsTicket>,
         member_name: Option<String>,
+        notice_id: Option<String>,
+        message: Option<String>,
         db: &FirestoreDb,
     ) -> Result<()> {
         let ev = event as i32;
@@ -128,6 +134,8 @@ impl News {
             project_name: project_name.to_string(),
             ticket,
             member_name,
+            notice_id,
+            message,
         };
 
         if let Err(e) = db
@@ -149,7 +157,7 @@ impl News {
         let object_stream: BoxStream<FirestoreResult<News>> = match db
             .fluent()
             .select()
-            .fields(paths!(News::{id, timestamp, uid, event, project_id, project_name, ticket, member_name}))
+            .fields(paths!(News::{id, timestamp, uid, event, project_id, project_name, ticket, member_name, notice_id, message}))
             .from(COLLECTION_NAME)
             .filter(|q| q.for_all([q.field(path!(News::uid)).eq(uid)]))
             .order_by([(path!(News::timestamp), FirestoreQueryDirection::Ascending)])
@@ -204,6 +212,109 @@ impl News {
             .await
         {
             return Err(anyhow::anyhow!(e.to_string()));
+        }
+
+        Ok(())
+    }
+
+    pub async fn add_operation_notice(message: &str, db: &FirestoreDb) -> Result<String> {
+        let notice_id = Uuid::now_v7().to_string();
+        let now = Utc::now();
+
+        let object_stream: BoxStream<FirestoreResult<super::user::User>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(super::user::User::{uid, email, name, status, created_at, last_login}))
+            .from(super::user::COLLECTION_NAME)
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let mut news = News {
+            id: Uuid::now_v7().to_string(),
+            timestamp: now,
+            uid: "".to_string(),
+            event: NewsEvent::OperationNotice as i32,
+            project_id: "".to_string(),
+            project_name: "".to_string(),
+            ticket: None,
+            member_name: None,
+            notice_id: Some(notice_id.clone()),
+            message: Some(message.to_string()),
+        };
+
+        let users: Vec<super::user::User> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        for user in users {
+            if user.status != super::user::UserStatus::Approved as i32 {
+                continue;
+            }
+            news.uid = user.uid;
+
+            if let Err(e) = db
+                .fluent()
+                .insert()
+                .into(&COLLECTION_NAME)
+                .document_id(&news.id)
+                .object(&news)
+                .execute::<News>()
+                .await
+            {
+                return Err(anyhow::anyhow!(e.to_string()));
+            };
+
+            news.id = Uuid::now_v7().to_string();
+        }
+
+        Ok(notice_id)
+    }
+
+    pub async fn del_operation_notice(notice_id: &str, db: &FirestoreDb) -> Result<()> {
+        let object_stream: BoxStream<FirestoreResult<News>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(News::{id, timestamp, uid, event, project_id, project_name}))
+            .from(COLLECTION_NAME)
+            .filter(|q| q.for_all([q.field(path!(News::notice_id)).eq(notice_id)]))
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let news_list: Vec<News> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        for news in news_list {
+            if let Err(e) = db
+                .fluent()
+                .delete()
+                .from(&COLLECTION_NAME)
+                .document_id(news.id)
+                .execute()
+                .await
+            {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
         }
 
         Ok(())

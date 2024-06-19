@@ -95,6 +95,8 @@ impl Comment {
                 "",
                 Some(news_ticket),
                 None,
+                None,
+                None,
                 &db,
             )
             .await

@@ -28,6 +28,7 @@ static STORAGE_BUCKET: OnceCell<String> = OnceCell::new();
 static MESSAGING_SENDER_ID: OnceCell<String> = OnceCell::new();
 static APP_ID: OnceCell<String> = OnceCell::new();
 static DB_CHECK_PASSWORD: OnceCell<String> = OnceCell::new();
+static NOTICE_PASSWORD: OnceCell<String> = OnceCell::new();
 
 #[tokio::main]
 async fn main() {
@@ -95,6 +96,14 @@ async fn main() {
         .route(
             "/db_check",
             get(handlers::db_check::get).post(handlers::db_check::post),
+        )
+        .route(
+            "/notice_add",
+            get(handlers::notice::get_add).post(handlers::notice::post_add),
+        )
+        .route(
+            "/notice_del",
+            get(handlers::notice::get_del).post(handlers::notice::post_del),
         )
         .route("/health", get(handlers::health))
         .nest_service("/static", ServeDir::new("static"))
@@ -202,6 +211,16 @@ fn get_environment_values() -> Result<()> {
     // set DB_CHECK_PASSWORD static
     if let Err(_) = DB_CHECK_PASSWORD.set(db_check_password) {
         return Err(anyhow::anyhow!("Failed to set DB_CHECK_PASSWORD"));
+    }
+
+    // get NOTICE_PASSWORD env
+    let notice_password = match std::env::var("NOTICE_PASSWORD") {
+        Ok(notice_password) => notice_password,
+        Err(_) => "".to_string(),
+    };
+    // set DB_CHECK_PASSWORD static
+    if let Err(_) = NOTICE_PASSWORD.set(notice_password) {
+        return Err(anyhow::anyhow!("Failed to set NOTICE_PASSWORD"));
     }
 
     Ok(())

@@ -42,6 +42,8 @@ html(lang="ja")
                         a(href="#step03") Cloud Run を設定する
                       li
                         a(href="#step04") 新バージョンのデプロイ
+                      li
+                        a(href="#step05") 運用からのお知らせ
                     hr
                     section.pb-2
                       h3#step01 Google Cloud プロジェクトを作成する
@@ -252,6 +254,9 @@ html(lang="ja")
                             td DB_CHECK_PASSWORD
                             td データベースチェック(後述)を行う際に使用するパスワードを設定する。
                           tr
+                            td NOTICE_PASSWORD
+                            td 運用からのお知らせ(後述)を行う際に使用するパスワードを設定する。
+                          tr
                             td RUST_LIB_BACKTRACE
                             td 1
                       p
@@ -320,6 +325,31 @@ html(lang="ja")
                         br
                         | 定期的に最新バージョンのチェックを行われることをお勧めいたします。
                       p 新バージョンをデプロイしたら、「/db_check」にアクセスして、データベースチェックを実行してください。
+                    hr
+                    section.pb-2
+                      h3#step05 運用からのお知らせ
+                      p
+                        | システムの運用担当者から、利用者全員への通知を行います。
+                        br
+                        | ブラウザでアクセス中の URL の最後を「 /notice_add 」に置き換えると、運用からのお知らせ画面に遷移します。
+                        br
+                        | 通知メッセージを HTML タグで入力し、システム環境変数に設定した「NOTICE_PASSWORD」の値を入力して、「通知」をクリックしてください。
+                        a(href="images/screen86.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen86.png")
+                      p
+                        | 通知が行われたら、通知ID が表示されます。この通知ID は、通知を削除する時に必要となります。
+                        a(href="images/screen87.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen87.png")
+                      p
+                        | 通知は、すべての利用者のホーム画面に表示されます。
+                        a(href="images/screen88.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen88.png")
+                      p
+                        | 通知済みの運用からのお知らせを削除するには、ブラウザでアクセス中の URL の最後を「 /notice_del 」に置き換えると、運用からのお知らせ削除画面に遷移します。
+                        br
+                        | 通知の際に表示された通知メッセージID と、システム環境変数に設定した「NOTICE_PASSWORD」の値を入力して、「削除」をクリックすると、通知が削除されます。
+                        a(href="images/screen89.png")
+                          img.border.border-info.border-1.img-fluid(src="images/screen89.png")
 
               .col-md-3
                 .submenu.mt-3

@@ -41,6 +41,7 @@ pub enum NewsEvent {
     TicketCommentAdd = 8,      // チケットのコメントが追加された
     ProjectMemberWithdraw = 9, // プロジェクトメンバーが離脱した
     OperationNotice = 10,      // 運用からのお知らせ
+    TicketNoteUpdate = 11,     // チケットのノートが更新された
     None = 0,
 }
 
@@ -57,6 +58,7 @@ impl News {
             8 => NewsEvent::TicketCommentAdd,
             9 => NewsEvent::ProjectMemberWithdraw,
             10 => NewsEvent::OperationNotice,
+            11 => NewsEvent::TicketNoteUpdate,
             _ => NewsEvent::None,
         }
     }

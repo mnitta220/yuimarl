@@ -716,7 +716,7 @@ impl Ticket {
 
             if let Err(e) = super::news::News::upsert(
                 &member.uid,
-                super::news::NewsEvent::TicketUpdate,
+                super::news::NewsEvent::TicketNoteUpdate,
                 &ticket.project_id,
                 "",
                 Some(news_ticket),
@@ -1261,30 +1261,31 @@ impl TicketMember {
             }
         };
 
-        let member = match ticket_members.get(0) {
-            Some(m) => m,
-            None => {
-                return Err(anyhow::anyhow!("更新対象のデータが存在しません。"));
+        let mut found = false;
+        for mut member in ticket_members {
+            if member.uid != session.uid {
+                continue;
             }
-        };
-        if member.uid != session.uid {
-            return Err(anyhow::anyhow!("更新対象のデータが存在しません。"));
+            found = true;
+            member.color = Some(color.to_string());
+
+            if let Err(e) = db
+                .fluent()
+                .update()
+                .fields(paths!(TicketMember::color))
+                .in_col(&COLLECTION_MEMBER)
+                .document_id(&member.id)
+                .object(&member)
+                .execute::<TicketMember>()
+                .await
+            {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+            break;
         }
 
-        let mut member = member.clone();
-        member.color = Some(color.to_string());
-
-        if let Err(e) = db
-            .fluent()
-            .update()
-            .fields(paths!(TicketMember::color))
-            .in_col(&COLLECTION_MEMBER)
-            .document_id(&member.id)
-            .object(&member)
-            .execute::<TicketMember>()
-            .await
-        {
-            return Err(anyhow::anyhow!(e.to_string()));
+        if !found {
+            return Err(anyhow::anyhow!("更新対象のデータが存在しません。"));
         }
 
         Ok(())

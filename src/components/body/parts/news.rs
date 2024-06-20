@@ -106,6 +106,17 @@ impl Component for News {
                                                 *buf += m;
                                             }
                                         }
+                                        news::NewsEvent::TicketNoteUpdate => {
+                                            if let Some(t) = &news.ticket {
+                                                *buf += r#"チケット 「 <a href="/ticket?id="#;
+                                                *buf += &t.id;
+                                                *buf += r#"&tab=note">"#;
+                                                *buf += &t.id_disp;
+                                                *buf += r#" : "#;
+                                                super::super::super::escape_html(&t.name, buf);
+                                                *buf += r#"</a> 」 のノートが更新されました。"#;
+                                            }
+                                        }
                                         _ => {}
                                     }
                                 }

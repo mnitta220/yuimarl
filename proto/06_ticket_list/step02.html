@@ -33,34 +33,51 @@
             <h3>チケット一覧</h3>
           </div>
           <div class="row py-2 mx-1 border bg-light">
-            <div class="col-md-2 pb-1">
-              <label class="form-label" for="ticketid">チケットID</label>
-              <input class="form-control" id="ticketid" type="text" maxlength="10">
+            <div class="col-lg-3">
+              <div class="row pb-1">
+                <label class="col-lg-6 col-form-label" for="ticketid">チケットID</label>
+                <div class="col-lg-6">
+                  <input class="form-control" id="ticketid" type="text" maxlength="10">
+                </div>
+              </div>
+              <div class="row pb-1">
+                <label class="col-lg-6 form-label" for="parentid">親チケットID</label>
+                <div class="col-lg-6">
+                  <input class="form-control" id="parentid" type="text" maxlength="10">
+                </div>
+              </div>
             </div>
-            <div class="col-md-4 pb-1">
-              <label class="form-label" for="ticketname">チケット名&nbsp;&nbsp;<small>(部分一致)</small></label>
-              <input class="form-control" id="ticketname" type="text" maxlength="100">
+            <div class="col-lg-7">
+              <div class="row pb-1">
+                <label class="col-lg-4 col-form-label" for="ticketname">チケット名&nbsp;&nbsp;<small>(部分一致)</small></label>
+                <div class="col-lg-8">
+                  <input class="form-control" id="ticketname" type="text" maxlength="100">
+                </div>
+              </div>
+              <div class="row pb-1">
+                <label class="col-lg-4 col-form-label" for="parentid">担当者</label>
+                <div class="col-lg-8" id="charge1"><a href="javascript:clickSelectCharge()" title="担当者を選択"><img class="icon2" src="../../static/ionicons/person-circle-outline.svg"></a></div>
+                <div class="col-lg-8 d-none" id="charge2"><span id="charge-sel"><small>[taro.yamada@mail.com]</small> 山田太郎 </span><a href="javascript:clickRemoveCharge()"><img class="icon" src="../../static/ionicons/remove-circle-outline.svg" title="削除"></a></div>
+              </div>
             </div>
-            <div class="col-md-2 pb-1">
-              <label class="form-label" for="parentid">親チケットID</label>
-              <input class="form-control" id="parentid" type="text" maxlength="10">
-            </div>
-            <div class="col-md-2 pb-1">
+            <div class="col-lg-2 pb-1">
               <div class="row">
                 <div class="col">
                   <input class="form-check-input" id="finished" type="checkbox">
                   <label class="form-check-label" for="finished">完了済を表示</label>
                 </div>
               </div>
-              <div class="row">
+              <div class="row pb-2">
                 <div class="col">
                   <input class="form-check-input" id="priorityorder" type="checkbox">
                   <label class="form-check-label" for="priorityorder">優先度順に表示</label>
                 </div>
               </div>
-            </div>
-            <div class="col-md-2 pb-1 d-flex align-items-end justify-content-end">
-              <button class="btn btn-sm btn-primary" type="button"><img class="icon" src="../../static/ionicons/funnel-outline.svg">&nbsp;フィルター</button>
+              <div class="row">
+                <div class="col d-flex align-items-end justify-content-end">
+                  <button class="btn btn-sm btn-primary" type="button"><img class="icon" src="../../static/ionicons/funnel-outline.svg">&nbsp;フィルター</button>
+                </div>
+              </div>
             </div>
           </div>
           <div class="row pt-2">
@@ -200,6 +217,70 @@
         </div>
       </div>
     </main>
+    <div class="modal fade" id="inChargeModal" tabindex="-1" aria-labelledby="chargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="addMemberModalLabel">担当者を選択</h1>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="キャンセル"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row py-3">
+              <div class="col">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">選択</th>
+                      <th scope="col">ロール</th>
+                      <th scope="col">メールアドレス</th>
+                      <th scope="col">名前</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <input class="form-check-input" id="charge" type="radio" name="charge" value="1" checked>
+                      </td>
+                      <td>オーナー</td>
+                      <td>taro.yamada@mail.com</td>
+                      <td>山田太郎</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <input class="form-check-input" id="charge" type="radio" name="charge" value="2">
+                      </td>
+                      <td>管理者</td>
+                      <td>kazuto.tonoma@mail.com</td>
+                      <td>殿馬一人</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <input class="form-check-input" id="charge" type="radio" name="charge" value="3">
+                      </td>
+                      <td>メンバー</td>
+                      <td>masami.iwaki@mail.com</td>
+                      <td>岩鬼正美</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <input class="form-check-input" id="charge" type="radio" name="charge" value="4">
+                      </td>
+                      <td>閲覧者</td>
+                      <td>satoru.satonaka@mail.com</td>
+                      <td>里中智</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>
+            <button class="btn btn-primary" type="button">選択</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <footer class="py-1 mt-3 bg-dark text-light">
       <div class="container text-center pt-1">
         <ul class="nav justify-content-center">
@@ -223,5 +304,14 @@
       </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+      function clickSelectCharge() {
+        new bootstrap.Modal("#inChargeModal").show();
+      }
+      //$(document).ready(function() {
+      //  new bootstrap.Modal("#addParentModal").show();
+      //});
+    </script>
   </body>
 </html>

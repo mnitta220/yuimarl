@@ -998,6 +998,37 @@ impl Ticket {
             false => vec![(path!(Ticket::id), FirestoreQueryDirection::Ascending)],
         };
 
+        let mut ticket_members: Vec<TicketMember> = Vec::new();
+        if !input.chargeuid.is_empty() {
+            let member_stream: BoxStream<FirestoreResult<TicketMember>> = match db
+                .fluent()
+                .select()
+                .fields(paths!(TicketMember::{id, project_id, uid, ticket_id, seq, color}))
+                .from(COLLECTION_MEMBER)
+                .filter(|q| {
+                    q.for_all([
+                        q.field(path!(TicketMember::project_id)).eq(&project_id),
+                        q.field(path!(TicketMember::uid)).eq(&input.chargeuid),
+                    ])
+                })
+                .obj()
+                .stream_query_with_errors()
+                .await
+            {
+                Ok(s) => s,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+
+            ticket_members = match member_stream.try_collect().await {
+                Ok(s) => s,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+        }
+
         let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
             .fluent()
             .select()
@@ -1051,6 +1082,13 @@ impl Ticket {
                 }
             } else {
                 if ticket.progress == 100 {
+                    continue;
+                }
+            }
+
+            if !input.chargeuid.is_empty() {
+                let m = ticket_members.iter().find(|m| m.ticket_id == ticket.id);
+                if m.is_none() {
                     continue;
                 }
             }

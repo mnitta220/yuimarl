@@ -51,7 +51,7 @@
               <div class="row pb-1">
                 <label class="col-lg-4 col-form-label" for="ticketname">チケット名&nbsp;&nbsp;<small>(部分一致)</small></label>
                 <div class="col-lg-8">
-                  <input class="form-control" id="ticketname" type="text" maxlength="100" value="模擬">
+                  <input class="form-control" id="ticketname" type="text" maxlength="100">
                 </div>
               </div>
               <div class="row pb-1">
@@ -111,6 +111,46 @@
                   </thead>
                   <tbody>
                     <tr>
+                      <td><a href="">BN1</a>&nbsp;実行委員会</td>
+                      <td> </td>
+                      <td>2024/09/02</td>
+                      <td> </td>
+                      <td>最優先</td>
+                      <td class="text-right">30%</td>
+                    </tr>
+                    <tr>
+                      <td><a href="">BN5</a>&nbsp;文化祭出し物</td>
+                      <td> </td>
+                      <td>2024/09/02</td>
+                      <td> </td>
+                      <td>高</td>
+                      <td class="text-right">10%</td>
+                    </tr>
+                    <tr>
+                      <td><a href="">BN6</a>&nbsp;ダンス</td>
+                      <td><a href="">BN5</a>&nbsp;文化祭出し物</td>
+                      <td>2024/09/02</td>
+                      <td> </td>
+                      <td>中</td>
+                      <td class="text-right">30%</td>
+                    </tr>
+                    <tr>
+                      <td><a href="">BN7</a>&nbsp;バンド</td>
+                      <td><a href="">BN5</a>&nbsp;文化祭出し物</td>
+                      <td>2024/09/02</td>
+                      <td> </td>
+                      <td>低</td>
+                      <td class="text-right">30%</td>
+                    </tr>
+                    <tr>
+                      <td><a href="">BN8</a>&nbsp;スタンプラリー</td>
+                      <td><a href="">BN5</a>&nbsp;文化祭出し物</td>
+                      <td>2024/09/02</td>
+                      <td> </td>
+                      <td> </td>
+                      <td class="text-right">30%</td>
+                    </tr>
+                    <tr>
                       <td><a href="">BN9</a>&nbsp;焼きそば模擬店</td>
                       <td><a href="">BN5</a>&nbsp;文化祭出し物</td>
                       <td>2024/09/02</td>
@@ -125,6 +165,46 @@
                       <td> </td>
                       <td>高</td>
                       <td class="text-right">25%</td>
+                    </tr>
+                    <tr>
+                      <td><a href="">BN11</a>&nbsp;動画コーナー</td>
+                      <td><a href="">BN5</a>&nbsp;文化祭出し物</td>
+                      <td>2024/09/02</td>
+                      <td> </td>
+                      <td>中</td>
+                      <td class="text-right">30%</td>
+                    </tr>
+                    <tr>
+                      <td><a href="">BN12</a>&nbsp;演劇部</td>
+                      <td><a href="">BN5</a>&nbsp;文化祭出し物</td>
+                      <td>2024/09/02</td>
+                      <td> </td>
+                      <td>低</td>
+                      <td class="text-right">30%</td>
+                    </tr>
+                    <tr>
+                      <td><a href="">BN13</a>&nbsp;備品準備</td>
+                      <td><a href="">BN10</a>&nbsp;たこやき模擬店</td>
+                      <td>2024/09/02</td>
+                      <td> </td>
+                      <td> </td>
+                      <td class="text-right">0%</td>
+                    </tr>
+                    <tr>
+                      <td><a href="">BN14</a>&nbsp;食材購入</td>
+                      <td><a href="">BN10</a>&nbsp;たこやき模擬店</td>
+                      <td>2024/09/02</td>
+                      <td> </td>
+                      <td>最優先</td>
+                      <td class="text-right">0%</td>
+                    </tr>
+                    <tr>
+                      <td><a href="">BN15</a>&nbsp;絵画・書道・写真展示</td>
+                      <td><a href="">BN5</a>&nbsp;文化祭出し物</td>
+                      <td>2024/09/02</td>
+                      <td> </td>
+                      <td>高</td>
+                      <td class="text-right">30%</td>
                     </tr>
                   </tbody>
                 </table>
@@ -215,11 +295,11 @@
       <hr>
       <div class="container">
         <div class="row align-items-end">
-          <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step02.html">← prev</a></div>
+          <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step03.html">← prev</a></div>
           <div class="col-md-8">
-            <div class="alert alert-danger text-start" role="alert">チケット一覧 step03.<br>チケット名に入力してフィルターボタンを押すと、フィルターされる。</div>
+            <div class="alert alert-danger text-start" role="alert">チケット一覧 step04.<br>担当者アイコンをクリックすると、担当者選択ダイアログが表示される。</div>
           </div>
-          <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step04.html">next →</a></div>
+          <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step05.html">next →</a></div>
         </div>
       </div>
     </footer>
@@ -229,9 +309,9 @@
       function clickSelectCharge() {
         new bootstrap.Modal("#inChargeModal").show();
       }
-      //$(document).ready(function() {
-      //  new bootstrap.Modal("#addParentModal").show();
-      //});
+      $(document).ready(function() {
+        new bootstrap.Modal("#inChargeModal").show();
+      });
     </script>
   </body>
 </html>

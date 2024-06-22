@@ -51,13 +51,13 @@
               <div class="row pb-1">
                 <label class="col-lg-4 col-form-label" for="ticketname">チケット名&nbsp;&nbsp;<small>(部分一致)</small></label>
                 <div class="col-lg-8">
-                  <input class="form-control" id="ticketname" type="text" maxlength="100" value="模擬">
+                  <input class="form-control" id="ticketname" type="text" maxlength="100">
                 </div>
               </div>
               <div class="row pb-1">
                 <label class="col-lg-4 col-form-label" for="parentid">担当者</label>
-                <div class="col-lg-8" id="charge1"><a href="javascript:clickSelectCharge()" title="担当者を選択"><img class="icon2" src="../../static/ionicons/person-circle-outline.svg"></a></div>
-                <div class="col-lg-8 d-none" id="charge2"><span id="charge-sel"><small>[taro.yamada@mail.com]</small> 山田太郎 </span><a href="javascript:clickRemoveCharge()"><img class="icon" src="../../static/ionicons/remove-circle-outline.svg" title="削除"></a></div>
+                <div class="col-lg-8 d-none" id="charge1"><a href="javascript:clickSelectCharge()" title="担当者を選択"><img class="icon2" src="../../static/ionicons/person-circle-outline.svg"></a></div>
+                <div class="col-lg-8" id="charge2"><span id="charge-sel"><small>[taro.yamada@mail.com]</small> 山田太郎 </span><a href="javascript:clickRemoveCharge()"><img class="icon" src="../../static/ionicons/remove-circle-outline.svg" title="削除"></a></div>
               </div>
             </div>
             <div class="col-lg-2 pb-1">
@@ -111,12 +111,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td><a href="">BN9</a>&nbsp;焼きそば模擬店</td>
                       <td><a href="">BN5</a>&nbsp;文化祭出し物</td>
+                      <td> </td>
                       <td>2024/09/02</td>
                       <td> </td>
-                      <td>最優先</td>
-                      <td class="text-right">30%</td>
+                      <td>高</td>
+                      <td class="text-right">10%</td>
                     </tr>
                     <tr>
                       <td><a href="">BN10</a>&nbsp;たこやき模擬店</td>
@@ -215,11 +215,11 @@
       <hr>
       <div class="container">
         <div class="row align-items-end">
-          <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step02.html">← prev</a></div>
+          <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step04.html">← prev</a></div>
           <div class="col-md-8">
-            <div class="alert alert-danger text-start" role="alert">チケット一覧 step03.<br>チケット名に入力してフィルターボタンを押すと、フィルターされる。</div>
+            <div class="alert alert-danger text-start" role="alert">チケット一覧 step05.<br>担当者を選択すると、その人が担当者となっているチケットが一覧表示される。</div>
           </div>
-          <div class="col-md-2 text-start py-1"><a class="nav-link px-2 px-md-0" href="step04.html">next →</a></div>
+          <div class="col-md-2 text-start py-1"></div>
         </div>
       </div>
     </footer>

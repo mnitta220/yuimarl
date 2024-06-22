@@ -18,6 +18,9 @@ pub struct TicketListInput {
     pub ticketid: String,
     pub ticketname: String,
     pub parentid: String,
+    pub chargeuid: String,
+    pub chargemail: String,
+    pub chargename: String,
     pub finished: Option<String>,
     pub priorityorder: Option<String>,
     pub page: usize,
@@ -36,6 +39,9 @@ pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
         ticketid: String::from(""),
         ticketname: String::from(""),
         parentid: String::from(""),
+        chargeuid: String::from(""),
+        chargemail: String::from(""),
+        chargename: String::from(""),
         finished: None,
         priorityorder: None,
         page: 1,
@@ -48,13 +54,14 @@ pub async fn post_list(
     cookies: Cookies,
     Form(input): Form<TicketListInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::debug!(
-        "POST /post_list {:?}, {:?}, {:?}, {:?}, {:?}, {}",
+    tracing::info!(
+        "POST /post_list {:?}, {:?}, {:?}, {:?}, {:?}, {}, {}",
         input.ticketid,
         input.ticketname,
         input.parentid,
         input.finished,
         input.priorityorder,
+        input.chargeuid,
         input.page
     );
 

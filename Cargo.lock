@@ -396,9 +396,9 @@ checksum = "5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5"
 
 [[package]]
 name = "firestore"
-version = "0.41.0"
+version = "0.42.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c7f05a7e6b28684cd49b44357083c58b7a0ac5d59a36d6e710a91043d1714cf0"
+checksum = "00bd798d0f3ed4d311c032374fbed2010f99eea98c49efff12252653a73eef23"
 dependencies = [
  "async-trait",
  "backoff",
@@ -407,6 +407,7 @@ dependencies = [
  "gcloud-sdk",
  "hex",
  "hyper 0.14.28",
+ "rand",
  "rsb_derive",
  "rvstruct",
  "serde",
@@ -2469,7 +2470,7 @@ dependencies = [
 
 [[package]]
 name = "yuimarl"
-version = "1.0.11"
+version = "1.0.12"
 dependencies = [
  "anyhow",
  "axum 0.7.5",

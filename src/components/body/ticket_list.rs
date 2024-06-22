@@ -67,6 +67,10 @@ impl Component for TicketListBody {
                                             *buf += r#"</small>"#;
                                         }
                                     }
+
+                                    *buf += r#"<input type="hidden" id="project_id" name="project_id" value=""#;
+                                    *buf += &p.id;
+                                    *buf += r#"">"#;
                                 }
                                 *buf += r#"</div>"#;
                             }
@@ -78,37 +82,110 @@ impl Component for TicketListBody {
                             }
                             *buf += r#"</div>"#;
 
+                            // フィルターフォーム
                             *buf += r#"<form class="row py-2 mx-1 border bg-light" name="form_filter" id="form_filter" action="/ticket_list" method="POST">"#;
                             {
-                                *buf += r#"<div class="col-md-2 pb-1">"#;
+                                *buf += r#"<div class="col-lg-3">"#;
                                 {
-                                    *buf += r#"<label class="form-label" for="ticketid">チケットID</label>"#;
-                                    *buf += r#"<input class="form-control" id="ticketid" name="ticketid" type="text" maxlength="20" value=""#;
-                                    *buf += &self.input.ticketid;
-                                    *buf += r#"">"#;
+                                    // チケットID
+                                    *buf += r#"<div class="row pb-1">"#;
+                                    {
+                                        *buf += r#"<label class="col-lg-6 col-form-label" for="ticketid">チケットID</label>"#;
+                                        *buf += r#"<div class="col-lg-6">"#;
+                                        {
+                                            *buf += r#"<input class="form-control" id="ticketid" name="ticketid" type="text" maxlength="20" value=""#;
+                                            *buf += &self.input.ticketid;
+                                            *buf += r#"">"#;
+                                        }
+                                        *buf += r#"</div>"#;
+                                    }
+                                    *buf += r#"</div>"#;
+
+                                    // 親チケットID
+                                    *buf += r#"<div class="row pb-1">"#;
+                                    {
+                                        *buf += r#"<label class="col-lg-6 form-label" for="parentid">親チケットID</label>"#;
+                                        *buf += r#"<div class="col-lg-6">"#;
+                                        {
+                                            *buf += r#"<input class="form-control" id="parentid" name="parentid" type="text" maxlength="20" value=""#;
+                                            *buf += &self.input.parentid;
+                                            *buf += r#"">"#;
+                                        }
+                                        *buf += r#"</div>"#;
+                                    }
+                                    *buf += r#"</div>"#;
                                 }
                                 *buf += r#"</div>"#;
 
-                                *buf += r#"<div class="col-md-4 pb-1">"#;
+                                *buf += r#"<div class="col-lg-7">"#;
                                 {
-                                    *buf += r#"<label class="form-label" for="ticketname">チケット名&nbsp;&nbsp;<small>(部分一致)</small></label>"#;
-                                    *buf += r#"<input class="form-control" id="ticketname" name="ticketname" type="text" maxlength="100" value=""#;
-                                    *buf += &self.input.ticketname;
-                                    *buf += r#"">"#;
+                                    // チケット名
+                                    *buf += r#"<div class="row pb-1">"#;
+                                    {
+                                        *buf += r#"<label class="col-lg-4 col-form-label" for="ticketname">チケット名&nbsp;&nbsp;"#;
+                                        {
+                                            *buf += r#"<small>(部分一致)</small>"#;
+                                        }
+                                        *buf += r#"</label>"#;
+                                        *buf += r#"<div class="col-lg-8">"#;
+                                        {
+                                            *buf += r#"<input class="form-control" id="ticketname" name="ticketname" type="text" maxlength="100" value=""#;
+                                            *buf += &self.input.ticketname;
+                                            *buf += r#"">"#;
+                                        }
+                                        *buf += r#"</div>"#;
+                                    }
+                                    *buf += r#"</div>"#;
+
+                                    // 担当者
+                                    *buf += r#"<div class="row pb-1">"#;
+                                    {
+                                        *buf += r#"<label class="col-lg-4 col-form-label" for="parentid">担当者</label>"#;
+
+                                        *buf += r#"<div id="charge1" class="col-lg-8"#;
+                                        if !self.input.chargemail.is_empty() {
+                                            *buf += r#" d-none"#;
+                                        }
+                                        *buf += r#"">"#;
+                                        {
+                                            *buf += r#"<a href="javascript:clickSelectCharge()" title="担当者を選択">"#;
+                                            {
+                                                *buf += r#"<img class="icon2" src="/static/ionicons/person-circle-outline.svg">"#;
+                                            }
+                                            *buf += r#"</a>"#;
+                                        }
+                                        *buf += r#"</div>"#;
+
+                                        *buf += r#"<div id="charge2" class="col-lg-8"#;
+                                        if self.input.chargemail.is_empty() {
+                                            *buf += r#" d-none"#;
+                                        }
+                                        *buf += r#"">"#;
+                                        {
+                                            *buf += r#"<span id="charge-sel">"#;
+                                            {
+                                                *buf += r#"<small>["#;
+                                                *buf += &self.input.chargemail;
+                                                *buf += r#"]</small> "#;
+                                                *buf += &self.input.chargename;
+                                            }
+                                            *buf += r#"</span>"#;
+                                            *buf += r#" "#;
+                                            *buf += r#"<a href="javascript:clickRemoveCharge()">"#;
+                                            {
+                                                *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                                            }
+                                            *buf += r#"</a>"#;
+                                        }
+                                        *buf += r#"</div>"#;
+                                    }
+                                    *buf += r#"</div>"#;
                                 }
                                 *buf += r#"</div>"#;
 
-                                *buf += r#"<div class="col-md-2 pb-1">"#;
+                                *buf += r#"<div class="col-lg-2 pb-1">"#;
                                 {
-                                    *buf += r#"<label class="form-label" for="parentid">親チケットID</label>"#;
-                                    *buf += r#"<input class="form-control" id="parentid" name="parentid" type="text" maxlength="20" value=""#;
-                                    *buf += &self.input.parentid;
-                                    *buf += r#"">"#;
-                                }
-                                *buf += r#"</div>"#;
-
-                                *buf += r#"<div class="col-md-2 pb-1">"#;
-                                {
+                                    // 完了済を表示
                                     *buf += r#"<div class="row">"#;
                                     {
                                         *buf += r#"<div class="col">"#;
@@ -126,7 +203,8 @@ impl Component for TicketListBody {
                                     }
                                     *buf += r#"</div>"#;
 
-                                    *buf += r#"<div class="row">"#;
+                                    // 優先度順に表示
+                                    *buf += r#"<div class="row pb-2">"#;
                                     {
                                         *buf += r#"<div class="col">"#;
                                         {
@@ -142,52 +220,40 @@ impl Component for TicketListBody {
                                         *buf += r#"</div>"#;
                                     }
                                     *buf += r#"</div>"#;
-                                }
-                                *buf += r#"</div>"#;
 
-                                *buf += r#"<div class="col-md-2 pb-1 d-flex align-items-end justify-content-end">"#;
-                                {
-                                    *buf += r#"<button id="btnFilter" class="btn btn-sm btn-primary" type="button">"#;
+                                    // フィルターボタン
+                                    *buf += r#"<div class="row">"#;
                                     {
-                                        *buf += r#"<img class="icon" src="/static/ionicons/funnel-outline.svg">&nbsp;フィルター"#;
-                                    }
-                                    *buf += r#"</button>"#;
-                                }
-                                *buf += r#"</div>"#;
-                                /*
-                                *buf += r#"<div class="col-md-2 pb-1">"#;
-                                {
-                                    *buf += r#"<div class="pb-2">"#;
-                                    {
-                                        *buf += r#"<input class="form-check-input" id="finished" name="finished" type="checkbox""#;
-                                        if let Some(f) = &self.input.finished {
-                                            if f == "on" || f == "true" {
-                                                *buf += r#" checked="checked""#;
-                                            }
-                                        }
-                                        *buf += r#">"#;
-                                        *buf += r#"<label class="form-check-label" for="finished">完了済を表示</label>"#;
-                                    }
-                                    *buf += r#"</div>"#;
-
-                                    *buf += r#"<div class="text-end">"#;
-                                    {
-                                        *buf += r#"<button id="btnFilter" class="btn btn-sm btn-primary" type="button">"#;
+                                        *buf += r#"<div class="col d-flex align-items-end justify-content-end">"#;
                                         {
-                                            *buf += r#"<img class="icon" src="/static/ionicons/funnel-outline.svg">&nbsp;フィルター"#;
+                                            *buf += r#"<button id="btnFilter" class="btn btn-sm btn-primary" type="button">"#;
+                                            {
+                                                *buf += r#"<img class="icon" src="/static/ionicons/funnel-outline.svg">&nbsp;フィルター"#;
+                                            }
+                                            *buf += r#"</button>"#;
                                         }
-                                        *buf += r#"</button>"#;
+                                        *buf += r#"</div>"#;
                                     }
                                     *buf += r#"</div>"#;
                                 }
                                 *buf += r#"</div>"#;
-                                */
+
+                                *buf += r#"<input type="hidden" id="chargeuid" name="chargeuid" value=""#;
+                                *buf += &self.input.chargeuid;
+                                *buf += r#"">"#;
+                                *buf += r#"<input type="hidden" id="chargemail" name="chargemail" value=""#;
+                                *buf += &self.input.chargemail;
+                                *buf += r#"">"#;
+                                *buf += r#"<input type="hidden" id="chargename" name="chargename" value=""#;
+                                *buf += &self.input.chargename;
+                                *buf += r#"">"#;
                                 *buf += r#"<input type="hidden" id="page" name="page" value=""#;
                                 *buf += &self.input.page.to_string();
                                 *buf += r#"">"#;
                             }
                             *buf += r#"</form>"#;
 
+                            // ページング
                             if self.list_props.total_page > 1 {
                                 *buf += r#"<div class="row pt-2">"#;
                                 {
@@ -472,6 +538,47 @@ impl Component for TicketListBody {
                                     }
                                 }
                             }
+
+                            // 担当者選択ダイアログ
+                            *buf += r#"<div class="modal fade" id="inChargeModal" tabindex="-1" aria-labelledby="chargeModalLabel" aria-hidden="true">"#;
+                            {
+                                *buf += r#"<div class="modal-dialog modal-lg">"#;
+                                {
+                                    *buf += r#"<div class="modal-content">"#;
+                                    {
+                                        *buf += r#"<div class="modal-header">"#;
+                                        {
+                                            *buf += r#"<h1 class="modal-title fs-5" id="addMemberModalLabel">担当者を選択</h1>"#;
+                                            *buf += r#"<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="キャンセル"></button>"#;
+                                        }
+                                        *buf += r#"</div>"#;
+
+                                        *buf += r#"<div class="modal-body">"#;
+                                        {
+                                            *buf += r#"<div class="row py-3">"#;
+                                            {
+                                                *buf += r#"<div class="col">"#;
+                                                {
+                                                    *buf += r#"<div id="searched"></div>"#;
+                                                }
+                                                *buf += r#"</div>"#;
+                                            }
+                                            *buf += r#"</div>"#;
+                                        }
+                                        *buf += r#"</div>"#;
+
+                                        *buf += r#"<div class="modal-footer">"#;
+                                        {
+                                            *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
+                                            *buf += r#"<button class="btn btn-primary" id="btnSelectMember" type="button">選択</button>"#;
+                                        }
+                                        *buf += r#"</div>"#;
+                                    }
+                                    *buf += r#"</div>"#;
+                                }
+                                *buf += r#"</div>"#;
+                            }
+                            *buf += r#"</div>"#;
                         } else {
                             *buf += r#"<p>プロジェクトが登録されていません。</p>"#;
                         }
@@ -482,10 +589,10 @@ impl Component for TicketListBody {
             }
             *buf += r#"</main>"#;
 
-            *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
-            *buf += r#"<script src="/static/js/ticket_list0040.js"></script>"#;
-
             self.footer.write(props, buf);
+
+            *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
+            *buf += r#"<script src="/static/js/ticket_list1012.js"></script>"#;
         }
         *buf += r#"</body>"#;
     }

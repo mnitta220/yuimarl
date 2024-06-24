@@ -1,0 +1,102 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title Yuimarl
+    link(rel="stylesheet" href="css/bootstrap.min.css")
+    link(rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css")
+    link(rel="stylesheet" href="css/style4.css")
+    link(rel="icon" type="image/x-icon" href="static/favicon.ico")
+  body
+    main
+      .container
+        .row
+          .col-md-1
+          .col.col-md-10
+            include includes/logo.pug
+            include includes/nav.pug
+
+            .row
+              .col-md-9
+                section.pt-3
+                  h2.pb-1 更新履歴
+                  section
+                    hr
+                    h6 2024/06/13 : version 1.0.0
+                    ul
+                      li 初回リリース。
+
+                    h6 2024/06/14 : version 1.0.1
+                    ul
+                      li マークダウンプレビューの CSS を修正。
+
+                    h6 2024/06/16 : version 1.0.2
+                    ul
+                      li チケット名文字数制限を緩和。
+
+                    h6 2024/06/16 : version 1.0.3
+                    ul
+                      li HTMLエスケープの不具合を修正。
+
+                    h6 2024/06/16 : version 1.0.4
+                    ul
+                      li 利用規約に迷惑行為の禁止を追加。
+                      li プロジェクト名文字数制限を緩和。
+
+                    h6 2024/06/17 : version 1.0.5
+                    ul
+                      li プロジェクトからの離脱機能を追加。
+
+                    h6 2024/06/18 : version 1.0.6
+                    ul
+                      li チケットに背景色をつける機能を追加。
+
+                    h6 2024/06/18 : version 1.0.7
+                    ul
+                      li マークダウンプレビューの CSS を修正。
+
+                    h6 2024/06/18 : version 1.0.8
+                    ul
+                      li マークダウンプレビューの CSS を修正。
+
+                    h6 2024/06/19 : version 1.0.9
+                    ul
+                      li チケット一覧画面に、優先度順表示機能を追加。
+
+                    h6 2024/06/20 : version 1.0.10
+                    ul
+                      li 運用からのお知らせ通知機能を追加。
+
+                    h6 2024/06/21 : version 1.0.11
+                    ul
+                      li チケットのノートが更新されたお知らせ機能を追加。
+
+                    h6 2024/06/23 : version 1.0.12
+                    ul
+                      li チケット一覧画面に、担当者フィルター機能を追加。
+
+              .col-md-3
+                .submenu.mt-3
+                  h3 CONTENTS
+                  ul
+                    li
+                      a(href="https://mnitta220.github.io/") 新田システム事務所
+                    li
+                      a(href="index.html") ホーム
+                      ul
+                        li
+                          a(href="howtouse.html") 使い方
+                        li
+                          a(href="deploy.html") 運用環境構築
+                        li
+                          a(href="devsetup.html") 開発環境構築
+                        li
+                          a(href="develop.html") 開発情報
+                        li
+                          a(href="agreement.html") 利用規約
+
+            include includes/footer.pug
+          .col-md-1
+
+    script(src="js/bootstrap.bundle.min.js")

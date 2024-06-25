@@ -145,6 +145,7 @@ impl Component for TicketBody {
                             Tab::History => {
                                 self.ticket_history.write(props, buf);
                             }
+                            _ => {}
                         }
                     }
                     *buf += r#"</div>"#;

@@ -238,19 +238,33 @@ function draw(scr_h, scr_v) {
     ctx.restore();
 }
 
-$('#cnvs').on('mousedown touchstart', function (e) {
+$('#cnvs').on('mousedown', function (e) {
+    e.preventDefault();
     var $element = $(this);
-    var x = e.clientX - $element.offset().left;
-    var y = e.clientY - $element.offset().top;
-    selected = null;
+    var x = e.pageX - $element.offset().left;
+    var y = e.pageY - $element.offset().top;
+    clickDown(x, y, $element.width(), $element.height());
+});
 
-    if (y > ($element.height() - 16)) {
+$('#cnvs').on('touchstart', function (e) {
+    e.preventDefault();
+    var $element = $(this);
+    var x = e.touches[0].pageX - $element.offset().left;
+    var y = e.touches[0].pageY - $element.offset().top;
+    clickDown(x, y, $element.width(), $element.height());
+});
+
+function clickDown(x, y, width, height) {
+    selected = null;
+    //$("#log").val("dn: x:" + x + ",y:" + y);
+
+    if (y > (height - 16)) {
         // 横スクロールバー
         if (x > scroll_h_x1 && x < scroll_h_x2) {
             moving_h = true;
             start_x = x;
         }
-    } else if (x > ($element.width() - 16)) {
+    } else if (x > (width - 16)) {
         // 縦スクロールバー
         if (y > scroll_v_y1 && y < scroll_v_y2) {
             moving_v = true;
@@ -272,13 +286,27 @@ $('#cnvs').on('mousedown touchstart', function (e) {
             start_y = y;
         }
     }
+}
+
+$('#cnvs').on('mousemove', function (e) {
+    e.preventDefault();
+    var $element = $(this);
+    var x = e.pageX - $element.offset().left;
+    var y = e.pageY - $element.offset().top;
+    clickMove($element, x, y);
 });
 
-$('#cnvs').on('mousemove touchmove', function (e) {
+$('#cnvs').on('touchmove', function (e) {
+    e.preventDefault();
     var $element = $(this);
-    var x = e.clientX - $element.offset().left;
-    var y = e.clientY - $element.offset().top;
+    var x = e.touches[0].pageX - $element.offset().left;
+    var y = e.touches[0].pageY - $element.offset().top;
+    clickMove($element, x, y);
+});
+
+function clickMove($element, x, y) {
     var pointer = false;
+    //$("#log").val("mv: x:" + x + ",y:" + y);
 
     if (y > ($element.height() - 16)) {
         // 横スクロールバー
@@ -336,9 +364,10 @@ $('#cnvs').on('mousemove touchmove', function (e) {
         }
         draw(false, false);
     }
-});
+}
 
 $('#cnvs').on('mouseup mouseleave touchend', function (e) {
+    e.preventDefault();
     var $element = $(this);
     selected = null;
     moving_h = false;

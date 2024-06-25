@@ -162,25 +162,6 @@
   overflow: auto;
   padding: 0 !important;
 }
-/*
-.mapinner {
-  width: 2000px;
-  height: 2000px;
-}
-
-.mapticket {
-  display: inline-block;
-  padding: 0 4px;
-  font-size: 10pt;
-  max-width: 200px !important;
-  max-height: 40px;
-  overflow: hidden;
-}
-
-.mapticket > a {
-  font-size: 9pt;
-}
-*/
 
 .cursor-pointer {
   cursor: pointer;

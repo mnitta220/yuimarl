@@ -50,10 +50,11 @@ impl Props {
 /// プロジェクト画面のタブ
 #[derive(Clone, Copy, PartialEq)]
 pub enum Tab {
-    Info = 1,    // 基本情報
-    Note = 2,    // ノート
-    History = 3, // 更新履歴
-    Comment = 4, // コメント
+    Info = 1,      // 基本情報
+    Note = 2,      // ノート
+    History = 3,   // 更新履歴
+    Comment = 4,   // コメント
+    TicketMap = 5, // チケットマップ
 }
 
 pub struct Page {

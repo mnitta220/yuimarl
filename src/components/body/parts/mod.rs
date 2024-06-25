@@ -7,4 +7,5 @@ pub mod project_note;
 pub mod ticket_comment;
 pub mod ticket_history;
 pub mod ticket_info;
+pub mod ticket_map;
 pub mod ticket_note;

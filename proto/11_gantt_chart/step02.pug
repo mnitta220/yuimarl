@@ -21,22 +21,14 @@ html(lang="ja")
               li.nav-item
                 a.nav-link(href="#") ノート
               li.nav-item
-                a.nav-link.active(href="#") チケットマップ
+                a.nav-link.active(href="#") ガントチャート
               li.nav-item
                 a.nav-link(href="#") 更新履歴
           form(action="/project/add" method="POST")
-            // チケットマップ
+            // ガントチャート
             .row.py-2
               .col
-                .px-2.ticketmap
-                  canvas#cnvs(width="2000" height="2000")
-                  //.mapinner
-                    .mapticket.box-warning#box1(style="position:relative; top:10px; right:-10px;")
-                      a(href="") YU65
-                      span  チケットマップ
-                    .mapticket.box-primary#box2(style="position:relative; top:110px; right:-210px; max-width: 300px;")
-                      a(href="") YU65
-                      span  チケットマップチケットマップチケットマップチケットマップチケットマップチケットマップ
+                canvas.px-2.ganttchart#cnvs
 
             .row.py-3.mt-2.bg-light
               .col
@@ -59,7 +51,7 @@ html(lang="ja")
             a.nav-link.px-2.px-md-0(href="step07.html") ← prev
           .col-md-8
             .alert.alert-danger.text-start(role="alert")
-              | チケットマップ step01.
+              | ガントチャート step01.
               br
               | ノートタブをクリック。
           .col-md-2.text-start.py-1
@@ -69,4 +61,4 @@ html(lang="ja")
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous")
     script(src="https://code.jquery.com/jquery-3.7.1.min.js")
-    script(src="../../static/js/ticket_map1013.js")
+    script(src="../../static/js/gantt_chart1013.js")

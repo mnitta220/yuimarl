@@ -1,7 +1,7 @@
 use super::super::Component;
 use super::parts::{
-    footer::Footer, nav::Nav, project_history::ProjectHistory, project_info::ProjectInfo,
-    project_note::ProjectNote, ticket_map::TicketMap,
+    footer::Footer, gantt_chart::GanttChart, nav::Nav, project_history::ProjectHistory,
+    project_info::ProjectInfo, project_note::ProjectNote,
 };
 use crate::{handlers::validation, Props, Tab};
 
@@ -9,7 +9,7 @@ pub struct ProjectBody {
     pub nav: Box<dyn Component + Send>,
     pub project_info: Box<dyn Component + Send>,
     pub project_note: Box<dyn Component + Send>,
-    pub ticket_map: Box<dyn Component + Send>,
+    pub gantt_chart: Box<dyn Component + Send>,
     pub project_history: Box<dyn Component + Send>,
     pub footer: Box<dyn Component + Send>,
     pub validation: Option<validation::project::ProjectValidation>,
@@ -29,7 +29,7 @@ impl ProjectBody {
                 validation: validation.clone(),
             }),
             project_note: Box::new(ProjectNote { can_update }),
-            ticket_map: Box::new(TicketMap { can_update }),
+            gantt_chart: Box::new(GanttChart { can_update }),
             project_history: Box::new(ProjectHistory {}),
             footer: Box::new(Footer {}),
             validation,
@@ -100,12 +100,12 @@ impl Component for ProjectBody {
                                         *buf += r#"<li class="nav-item">"#;
                                         {
                                             *buf += r#"<a class="nav-link"#;
-                                            if props.tab == Tab::TicketMap {
+                                            if props.tab == Tab::GanttChart {
                                                 *buf += r#" active"#;
                                             }
                                             *buf += r#"" href="/project?id="#;
                                             *buf += &p.id;
-                                            *buf += r#"&tab=map">チケットマップ</a>"#;
+                                            *buf += r#"&tab=gantt">ガントチャート</a>"#;
                                         }
                                         *buf += r#"</li>"#;
 
@@ -134,8 +134,8 @@ impl Component for ProjectBody {
                             Tab::Note => {
                                 self.project_note.write(props, buf);
                             }
-                            Tab::TicketMap => {
-                                self.ticket_map.write(props, buf);
+                            Tab::GanttChart => {
+                                self.gantt_chart.write(props, buf);
                             }
                             Tab::History => {
                                 self.project_history.write(props, buf);
@@ -150,18 +150,21 @@ impl Component for ProjectBody {
             *buf += r#"</main>"#;
 
             self.footer.write(props, buf);
-            *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
             match &props.tab {
                 Tab::Info => {
+                    *buf +=
+                        r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
                     *buf += r#"<script src="/static/js/project105.js"></script>"#;
                 }
                 Tab::Note => {
+                    *buf +=
+                        r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
                     *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;
                     *buf += r#"<script src="/static/js/markdown0012.js"></script>"#;
                 }
-                Tab::TicketMap => {
-                    *buf += r#"<script src="/static/js/ticket_map1013.js"></script>"#;
-                }
+                //Tab::GanttChart => {
+                //    *buf += r#"<script src="/static/js/ticket_map1013.js"></script>"#;
+                //}
                 _ => {}
             }
         }

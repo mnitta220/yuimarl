@@ -1,4 +1,5 @@
 pub mod footer;
+pub mod gantt_chart;
 pub mod nav;
 pub mod news;
 pub mod project_history;
@@ -7,5 +8,4 @@ pub mod project_note;
 pub mod ticket_comment;
 pub mod ticket_history;
 pub mod ticket_info;
-pub mod ticket_map;
 pub mod ticket_note;

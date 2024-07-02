@@ -1,4 +1,4 @@
-use crate::{components::Component, Props};
+use crate::{components::Component, Props, Tab};
 
 pub struct Head {}
 
@@ -20,6 +20,14 @@ impl Component for Head {
             *buf += r#"crossorigin="anonymous">"#;
             *buf += r#"<link rel="stylesheet" href="/static/css/style1013.css">"#;
             *buf += r#"<link rel="icon" type="image/x-icon" href="/static/favicon2.ico">"#;
+
+            match &props.tab {
+                Tab::GanttChart => {
+                    *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-BvD7z854.js"></script>"#;
+                    *buf += r#"<link rel="stylesheet" crossorigin href="/static/js/gantt-chart/index-SlZ4YSCL.css">"#;
+                }
+                _ => {}
+            }
         }
         *buf += r#"</head>"#;
     }

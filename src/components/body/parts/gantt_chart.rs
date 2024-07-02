@@ -1,20 +1,20 @@
 use crate::{components::Component, Props};
 
-pub struct TicketMap {
+pub struct GanttChart {
     pub can_update: bool,
 }
 
-impl Component for TicketMap {
+impl Component for GanttChart {
     fn write(&self, props: &Props, buf: &mut String) {
         if let Some(p) = &props.project {
             *buf += r#"<form action="/project_note" method="POST">"#;
             {
-                // チケットマップ
+                // ガントチャート
                 *buf += r#"<div class="row py-2">"#;
                 {
                     *buf += r#"<div class="col">"#;
                     {
-                        *buf += r#"<canvas class="px-2 ticketmap" id="cnvs"></canvas>"#;
+                        *buf += r#"<canvas class="px-2 ganttchart" id="cnvs"></canvas>"#;
                     }
                     *buf += r#"</div>"#;
                 }

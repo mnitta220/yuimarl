@@ -3,13 +3,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>プロジェクト - Yuimarl</title>
+    <title>ガントチャート - Yuimarl</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link rel="stylesheet" href="../../static/css/style1013.css">
+    <link rel="stylesheet" href="gantt_chart.css">
     <!--link(rel="stylesheet" crossorigin href="../../gantt-chart/dist/assets/index-Ci4a0e8a.css")-->
     <!--link(rel="stylesheet" href="../../gantt-chart/dist/assets/index-Ci4a0e8a.css")-->
     <link rel="icon" type="image/x-icon" href="../../static/favicon.ico">
-    <script type="module" crossorigin src="../../gantt-chart/dist/assets/index-CrfBs0mQ.js"></script>
+    <!--script(type="module" crossorigin src="../../gantt-chart/dist/assets/index-CrfBs0mQ.js")-->
     <!--script(type="module" src="../../gantt-chart/dist/assets/index-CrfBs0mQ.js")-->
   </head>
   <body>
@@ -30,21 +31,12 @@
     <main>
       <div class="py-3">
         <div class="container">
-          <h3 class="mb-3">プロジェクト</h3>
-          <div class="pb-2">
-            <ul class="nav nav-tabs">
-              <li class="nav-item"><a class="nav-link" href="#">基本情報</a></li>
-              <li class="nav-item"><a class="nav-link" href="#">ノート</a></li>
-              <li class="nav-item"><a class="nav-link active" href="#">ガントチャート</a></li>
-              <li class="nav-item"><a class="nav-link" href="#">更新履歴</a></li>
-            </ul>
-          </div>
+          <h3 class="mb-3">ガントチャート</h3>
           <form action="/project/add" method="POST">
             <!-- ガントチャート-->
             <div class="row py-2">
               <div class="col">
-                <div id="app"></div>
-                <!-- canvas.px-2.ganttchart#cnvs-->
+                <div class="px-2 ganttchart" id="chart"></div>
               </div>
             </div>
             <div class="row py-3 mt-2 bg-light">
@@ -81,6 +73,6 @@
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <!--script(src="https://code.jquery.com/jquery-3.7.1.min.js")-->
-    <!--script(src="../../static/js/gantt_chart1013.js")-->
+    <script src="gantt_chart.js"></script>
   </body>
 </html>

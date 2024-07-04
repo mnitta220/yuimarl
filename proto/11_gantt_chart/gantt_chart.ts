@@ -29,9 +29,10 @@ let cols = [
 ] as Column[];
 
 const SCROLL_BAR_WIDTH = 16;
-const HEADER_LABEL_Y = 46;
-const LINE_HEIGHT = 22;
-const HEADER_HEIGHT = 66;
+const HEADER_LABEL_Y = 42;
+const LINE_HEIGHT = 21;
+const HEADER_HEIGHT = 63;
+const DAY_WIDTH = 22;
 
 // カラムヘッダー
 class ColumnHeader {
@@ -79,7 +80,6 @@ class ColumnHeader {
 
     // カレンダー境界線
     x += 2;
-    //let calendarX = x;
     line = document.createElement("div");
     line.className = "line";
     line.style.top = "0px";
@@ -144,28 +144,32 @@ class ColumnScroll {
 
 // カレンダーヘッダー
 class CalendarHeader {
-  x1 = 0;
+  width = 0;
+  pos = 0;
+  dtStart = 0;
+  dtEnd = 0;
 
   // カレンダーヘッダーを表示する
   render(frame: GanttFrame, frag: DocumentFragment) {
     const cv = document.createElement("canvas");
-    const width = frame.width - frame.calendarLeft;
+    this.width = frame.width - frame.calendarLeft;
     cv.id = "calhead";
     cv.className = "header";
     cv.style.top = `0px`;
     cv.style.left = `${frame.calendarLeft}px`;
-    cv.style.width = `${width}px`;
+    cv.style.width = `${this.width}px`;
     cv.style.height = `${HEADER_HEIGHT + 1}px`;
     frag.append(cv);
+    this.dtStart = frame.calendarStart.getTime();
+    this.dtEnd = frame.calendarEnd.getTime();
   }
 
   // 描画する
-  draw(frame: GanttFrame) {
+  draw() {
     const cnvs = document.querySelector<HTMLCanvasElement>("#calhead");
     if (cnvs) {
-      const width = cnvs.offsetWidth;
       const height = cnvs.offsetHeight;
-      cnvs.width = width;
+      cnvs.width = this.width;
       cnvs.height = height;
       const dtTop = LINE_HEIGHT + LINE_HEIGHT;
       const ctx = cnvs.getContext("2d");
@@ -174,20 +178,20 @@ class CalendarHeader {
         ctx.save();
         // カレンダーヘッダー横線
         ctx.fillStyle = "#82a4c1";
-        ctx.fillRect(0, LINE_HEIGHT, width, 1);
+        ctx.fillRect(0, LINE_HEIGHT, this.width, 1);
         ctx.fill();
-        ctx.fillRect(0, LINE_HEIGHT + LINE_HEIGHT, width, 1);
+        ctx.fillRect(0, LINE_HEIGHT + LINE_HEIGHT, this.width, 1);
         ctx.fill();
-        ctx.fillRect(0, HEADER_HEIGHT, width, 1);
+        ctx.fillRect(0, HEADER_HEIGHT, this.width, 1);
         ctx.fill();
 
-        let dt = new Date(frame.calendarStart.getTime());
+        let dt = new Date(this.dtStart);
         let x = 0;
         ctx.font = font2;
         ctx.textBaseline = "bottom";
         ctx.textAlign = "left";
 
-        while (dt.getTime() <= frame.calendarEnd.getTime()) {
+        while (dt.getTime() <= this.dtEnd) {
           switch (dt.getDay()) {
             case 0: // Sunday
               ctx.fillStyle = "#f00";
@@ -199,13 +203,13 @@ class CalendarHeader {
               ctx.fillStyle = "#000";
               break;
           }
-          ctx.fillText(`${dt.getDate()}`, x + 3, HEADER_HEIGHT - 2);
-          x += 22;
-          if (x > width) break;
+          ctx.fillText(`${dt.getDate()}`, x + 3 - this.pos, HEADER_HEIGHT - 3);
+          x += DAY_WIDTH;
+          if (x > this.width + this.pos) break;
           dt.setDate(dt.getDate() + 1);
           // 日付区切り線
           ctx.fillStyle = "#bdcede";
-          ctx.fillRect(x, dtTop, 1, LINE_HEIGHT);
+          ctx.fillRect(x - this.pos, dtTop, 1, LINE_HEIGHT);
           ctx.fill();
         }
 
@@ -213,25 +217,42 @@ class CalendarHeader {
       }
     }
   }
+
+  scroll(frame: GanttFrame, x: number) {
+    this.pos =
+      (x * frame.calendarTotalWidth) /
+      (this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH);
+    this.draw();
+    frame.calendarBody.pos = this.pos;
+    frame.calendarBody.draw();
+  }
 }
 
 // カレンダーボディ
 class CalendarBody {
+  width = 0;
+  pos = 0;
+  dtStart = 0;
+  dtEnd = 0;
+
   // カレンダーボディを表示する
   render(frame: GanttFrame, frag: DocumentFragment) {
     const cv = document.createElement("canvas");
+    this.width = frame.width - frame.calendarLeft;
     const height = frame.height - HEADER_HEIGHT - SCROLL_BAR_WIDTH;
     cv.id = "calbody";
     cv.className = "gantt-body";
     cv.style.top = `${HEADER_HEIGHT}px`;
     cv.style.left = `${frame.calendarLeft}px`;
-    cv.style.width = `${frame.width - frame.calendarLeft}px`;
+    cv.style.width = `${this.width}px`;
     cv.style.height = `${height}px`;
     frag.append(cv);
+    this.dtStart = frame.calendarStart.getTime();
+    this.dtEnd = frame.calendarEnd.getTime();
   }
 
   // 描画する
-  draw(frame: GanttFrame) {
+  draw() {
     const cnvs = document.querySelector<HTMLCanvasElement>("#calbody");
     if (cnvs) {
       const width = cnvs.offsetWidth;
@@ -242,14 +263,14 @@ class CalendarBody {
       if (ctx) {
         ctx.save();
         ctx.fillStyle = "#bdcede";
-        let dt = new Date(frame.calendarStart.getTime());
+        let dt = new Date(this.dtStart);
         let x = 0;
-        while (dt.getTime() <= frame.calendarEnd.getTime()) {
+        while (dt.getTime() <= this.dtEnd) {
           dt.setDate(dt.getDate() + 1);
-          x += 22;
-          if (x > width) break;
+          x += DAY_WIDTH;
+          if (x > width + this.pos) break;
           // 日付区切り線
-          ctx.fillRect(x, 0, 1, height);
+          ctx.fillRect(x - this.pos, 0, 1, height);
           ctx.fill();
         }
 
@@ -262,14 +283,18 @@ class CalendarBody {
 // カレンダースクロールバー
 class CalendarScroll {
   width = 0;
-  totalWidth = 0;
+  barWidth = 0;
   height = SCROLL_BAR_WIDTH;
   moving = false;
   startX = 0;
+  pos = 0;
+  startPos = 0;
+  calendarTotalWidth = 0;
 
   // スクロールバーを表示する
   render(frame: GanttFrame, frag: DocumentFragment) {
     this.width = frame.width - frame.calendarLeft;
+    this.calendarTotalWidth = frame.calendarTotalWidth;
     const cv = document.createElement("canvas");
     cv.id = "calscroll";
     cv.className = "scroll-bar";
@@ -281,7 +306,7 @@ class CalendarScroll {
   }
 
   // 描画する
-  draw(frame: GanttFrame) {
+  draw() {
     const cnvs = document.querySelector<HTMLCanvasElement>("#calscroll");
     if (cnvs) {
       cnvs.width = this.width;
@@ -289,15 +314,18 @@ class CalendarScroll {
       const ctx = cnvs.getContext("2d");
       if (ctx) {
         ctx.save();
+
         //ctx.fillStyle = scroll_h ? "#505050" : "#a3a3a3";
         ctx.lineJoin = "miter";
         ctx.fillStyle = "#505050";
+        // 左ボタン
         ctx.beginPath();
         ctx.moveTo(5, 8);
         ctx.lineTo(9, 12);
         ctx.lineTo(9, 4);
         ctx.closePath();
         ctx.fill();
+        // 右ボタン
         ctx.beginPath();
         ctx.moveTo(this.width - 10, 4);
         ctx.lineTo(this.width - 10, 12);
@@ -306,7 +334,11 @@ class CalendarScroll {
         ctx.fill();
         //ctx.fillStyle = scr_h ? "#a8a8a8" : "#c1c1c1";
         ctx.fillStyle = "#c1c1c1";
-        ctx.fillRect(16, 2, this.width - 32, 13);
+        // バー
+        this.barWidth =
+          ((this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH) * this.width) /
+          frame.calendarTotalWidth;
+        ctx.fillRect(SCROLL_BAR_WIDTH + this.pos, 2, this.barWidth, 13);
 
         ctx.restore();
       }
@@ -314,19 +346,31 @@ class CalendarScroll {
   }
 
   mouseDownCalScroll(x: number) {
+    if (
+      x < SCROLL_BAR_WIDTH + this.pos ||
+      SCROLL_BAR_WIDTH + this.pos + this.barWidth < x
+    ) {
+      return;
+    }
     this.moving = true;
-    this.startX = x;
-    console.log(`mouseDownCalScroll: ${x}`);
+    this.startX = x - SCROLL_BAR_WIDTH;
+    this.startPos = this.pos;
   }
 
-  mouseMoveCalScroll(x: number) {
+  mouseMoveCalScroll(frame: GanttFrame, x: number) {
     if (!this.moving) return;
-    console.log(`mouseMoveCalScroll: ${x}`);
+    this.pos = x - SCROLL_BAR_WIDTH - this.startX + this.startPos;
+    if (this.pos < 0) this.pos = 0;
+    const w = this.width - this.barWidth - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH;
+    if (this.pos > w) {
+      this.pos = w;
+    }
+    frame.calendarHeader.scroll(frame, this.pos);
+    this.draw();
   }
 
   mouseUpCalScroll() {
     this.moving = false;
-    console.log(`mouseUpCalScroll`);
   }
 }
 
@@ -344,6 +388,7 @@ class GanttFrame {
   calendarLeft = 0;
   calendarStart = new Date(2024, 5, 30);
   calendarEnd = new Date(2024, 7, 31);
+  calendarTotalWidth = 0;
 
   // ガントチャートを表示する
   render() {
@@ -364,13 +409,19 @@ class GanttFrame {
     this.calendarHeader.render(this, frag);
     this.calendarScroll.render(this, frag);
 
+    // カレンダーの開始日と終了日の差分から全体の幅を求める。
+    const diff =
+      (this.calendarEnd.getTime() - this.calendarStart.getTime()) /
+      (1000 * 60 * 60 * 24);
+    this.calendarTotalWidth = (diff + 1) * DAY_WIDTH;
+
     frame.append(frag);
   }
 
   draw() {
-    this.calendarHeader.draw(this);
-    this.calendarBody.draw(this);
-    this.calendarScroll.draw(this);
+    this.calendarHeader.draw();
+    this.calendarBody.draw();
+    this.calendarScroll.draw();
   }
 
   columnWidth(): number {
@@ -386,7 +437,7 @@ class GanttFrame {
   }
 
   mouseMoveCalScroll(x: number) {
-    this.calendarScroll.mouseMoveCalScroll(x);
+    this.calendarScroll.mouseMoveCalScroll(this, x);
   }
 
   mouseUpCalScroll() {
@@ -491,6 +542,13 @@ document
 document
   .querySelector<HTMLCanvasElement>("#calscroll")
   ?.addEventListener("mouseup", function (e) {
+    e.preventDefault();
+    frame.mouseUpCalScroll();
+  });
+
+document
+  .querySelector<HTMLCanvasElement>("#calscroll")
+  ?.addEventListener("mouseleave", function (e) {
     e.preventDefault();
     frame.mouseUpCalScroll();
   });

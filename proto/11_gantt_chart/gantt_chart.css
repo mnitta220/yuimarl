@@ -1,25 +1,30 @@
 
-.ganttframe {
+.ganttframeBk {
   width: 100%;
   height: 500px;
-  border: 1px solid #ddd;
+  /*border: 1px solid #ddd;*/
   overflow-x: scroll;
   padding: 0 !important;
+  background-color: #82a4c1;
 }
 
 .ganttchart {
   min-width: 1000px;
   height: 100%;
   position: relative;
+  background-color: #bdcede;
 }
 
+/*
 .cursor-pointer {
   cursor: pointer;
 }
+*/
 
 .header {
   background-color: #f7f5ed;
   position: absolute;
+  overflow: hidden;
 }
 
 .line {
@@ -52,4 +57,72 @@
 .scroll-corner {
   background-color: #dcdcdc;
   position: absolute;
+}
+
+.gantt-body {
+  background-color: white;
+  position: absolute;
+  overflow: hidden;
+}
+
+.flexbox {
+  display: flex;
+  height: 500px;
+  border: 1px solid #ddd;
+  padding: 0 !important;
+  /*display: -ms-flexbox;
+  padding: 10px;
+  border: 1px solid #999;
+  background-color: #ddd;*/
+}
+/*.boxA, .boxB, .boxC {
+  border: 1px solid #999;
+  text-align: center;
+}*/
+.ganttbase {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+}
+.scrollV {
+  /*border: 1px solid #999;
+  text-align: center;*/
+  width: 16px;
+  /*background-color: #ccf;*/
+  display: flex;
+  flex-direction: column;
+}
+.scrollH {
+  /*border: 1px solid #999;
+  text-align: center;*/
+  height: 16px;
+  /*background-color: #ccf;*/
+  flex-direction: column;
+  background-color: #f1f1f1;
+  border-top: solid 1px #dcdcdc;
+}
+
+.ganttframe {
+  flex: auto;
+  padding: 0 !important;
+  position: relative;
+  overflow: hidden;
+}
+.title { width: 400px; background-color: #cfc; }
+.calendar { flex: auto; background-color: #ccf; }
+.flex-column {
+  -webkit-flex-direction: column;
+          flex-direction: column;
+}
+.sv1 {
+  height: 66px;
+  background-color: #dcdcdc;
+}
+.sv2 {
+  flex: auto;
+  background-color: #f1f1f1;
+}
+.sv3 {
+  height: 32px;
+  background-color: #dcdcdc;
 }

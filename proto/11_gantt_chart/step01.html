@@ -43,9 +43,15 @@
           <form action="/project/add" method="POST">
             <!-- ガントチャート-->
             <div class="row py-2">
-              <div class="col">
-                <div class="px-2 ganttframe">
-                  <div class="ganttchart" id="chart"></div>
+              <div class="col flexbox">
+                <div class="ganttbase">
+                  <div class="ganttframe" id="ganttframe"></div>
+                  <div class="scrollH"></div>
+                </div>
+                <div class="scrollV">
+                  <div class="sv1"></div>
+                  <div class="sv2"></div>
+                  <div class="sv3"></div>
                 </div>
               </div>
             </div>

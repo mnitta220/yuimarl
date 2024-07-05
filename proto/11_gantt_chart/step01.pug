@@ -7,11 +7,7 @@ html(lang="ja")
     link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous")
     link(rel="stylesheet" href="../../static/css/style1013.css")
     link(rel="stylesheet" href="gantt_chart.css")
-    //link(rel="stylesheet" crossorigin href="../../gantt-chart/dist/assets/index-Ci4a0e8a.css")
-    //link(rel="stylesheet" href="../../gantt-chart/dist/assets/index-Ci4a0e8a.css")
     link(rel="icon" type="image/x-icon" href="../../static/favicon.ico")
-    //script(type="module" crossorigin src="../../gantt-chart/dist/assets/index-CrfBs0mQ.js")
-    //script(type="module" src="../../gantt-chart/dist/assets/index-CrfBs0mQ.js")
   body
     include ../includes/nav.pug
 
@@ -31,40 +27,15 @@ html(lang="ja")
                 a.nav-link(href="#") 更新履歴
           form(action="/project/add" method="POST")
             // ガントチャート
-            //- .row.py-2
-              .col
-                canvas.px-2.ganttchart#cnvs
             .row.py-2
               .col.flexbox
                 .ganttbase
                   .ganttframe#ganttframe
-                    //- .header(style="top: 0px; left: 0px; width: 100%; height: 78px;")
                   canvas.scrollH#scrollh
-                //- .ganttframe
-                  .title
-                  .calendar
-                  .ganttchart#chart
                 .scrollV
                   .sv1
                   canvas.sv2#scrollv
                   .sv3
-            //- .row.py-2
-              .col
-                .px-2.ganttframe
-                //- .px-2.ganttframe
-                  .ganttchart#chart
-                //- .px-2.ganttchart#chart
-                  .header(style="top: 0px; left: 0px; width: 100%; height: 78px;")
-                    span.label(style="top: 55px; left: 30px;") ID
-                    span.label(style="top: 55px; left: 200px;") チケット名
-                    span.label(style="top: 55px; left: 398px;") 開始日
-                    span.label(style="top: 55px; left: 497px;") 終了日
-                  .line(style="top: 78px; left: 0px; width: 100%; height: 1px;")
-                  .line(style="top: 0px; left: 70px; width: 1px; height: 100%;")
-                  .line(style="top: 0px; left: 370px; width: 1px; height: 100%;")
-                  .line(style="top: 0px; left: 470px; width: 1px; height: 100%;")
-                  .line(style="top: 0px; left: 570px; width: 1px; height: 100%;")
-                  .line(style="top: 0px; left: 572px; width: 1px; height: 100%;")
 
             .row.py-3.mt-2.bg-light
               .col
@@ -96,5 +67,4 @@ html(lang="ja")
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous")
-    script(src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js")
     script(src="gantt_chart.js")

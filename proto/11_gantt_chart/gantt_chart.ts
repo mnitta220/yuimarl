@@ -38,8 +38,8 @@ const DAY_WIDTH = 22;
 class ColumnHeader {
   x1 = 0;
 
-  // カラムヘッダーを表示する
-  render(frame: GanttFrame, frag: DocumentFragment) {
+  // カラムヘッダーを構築する
+  build(frag: DocumentFragment) {
     const hd = document.createElement("div");
     hd.className = "header";
     hd.style.top = `0px`;
@@ -92,8 +92,8 @@ class ColumnHeader {
 
 // カラムボディ
 class ColumnBody {
-  // カラムボディを表示する
-  render(frame: GanttFrame, frag: DocumentFragment) {
+  // カラムボディを構築する
+  build(frag: DocumentFragment) {
     const bar = document.createElement("div");
     const height = frame.height - HEADER_HEIGHT - SCROLL_BAR_WIDTH;
     bar.className = "gantt-body";
@@ -130,8 +130,8 @@ class ColumnBody {
 
 // カラムスクロールバー
 class ColumnScroll {
-  // スクロールバーを表示する
-  render(frame: GanttFrame, frag: DocumentFragment) {
+  // スクロールバーを構築する
+  build(frag: DocumentFragment) {
     const bar = document.createElement("div");
     bar.className = "scroll-corner";
     bar.style.top = `${frame.height - SCROLL_BAR_WIDTH}px`;
@@ -149,8 +149,8 @@ class CalendarHeader {
   dtStart = 0;
   dtEnd = 0;
 
-  // カレンダーヘッダーを表示する
-  render(frame: GanttFrame, frag: DocumentFragment) {
+  // カレンダーヘッダーを構築する
+  build(frag: DocumentFragment) {
     const cv = document.createElement("canvas");
     this.width = frame.width - frame.calendarLeft;
     cv.id = "calhead";
@@ -173,7 +173,7 @@ class CalendarHeader {
       cnvs.height = height;
       const dtTop = LINE_HEIGHT + LINE_HEIGHT;
       const ctx = cnvs.getContext("2d");
-      const font2 = "9.5pt sans-serif";
+      const font = "9.5pt sans-serif";
       if (ctx) {
         ctx.save();
         // カレンダーヘッダー横線
@@ -187,7 +187,7 @@ class CalendarHeader {
 
         let dt = new Date(this.dtStart);
         let x = 0;
-        ctx.font = font2;
+        ctx.font = font;
         ctx.textBaseline = "bottom";
         ctx.textAlign = "left";
 
@@ -218,7 +218,7 @@ class CalendarHeader {
     }
   }
 
-  scroll(frame: GanttFrame, x: number) {
+  scroll(x: number) {
     this.pos =
       (x * frame.calendarTotalWidth) /
       (this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH);
@@ -235,8 +235,8 @@ class CalendarBody {
   dtStart = 0;
   dtEnd = 0;
 
-  // カレンダーボディを表示する
-  render(frame: GanttFrame, frag: DocumentFragment) {
+  // カレンダーボディを構築する
+  build(frag: DocumentFragment) {
     const cv = document.createElement("canvas");
     this.width = frame.width - frame.calendarLeft;
     const height = frame.height - HEADER_HEIGHT - SCROLL_BAR_WIDTH;
@@ -289,12 +289,10 @@ class CalendarScroll {
   startX = 0;
   pos = 0;
   startPos = 0;
-  //totalWidth = 0;
 
-  // スクロールバーを表示する
-  render(frame: GanttFrame, frag: DocumentFragment) {
+  // スクロールバーを構築する
+  build(frag: DocumentFragment) {
     this.width = frame.width - frame.calendarLeft;
-    //this.totalWidth = frame.calendarTotalWidth;
     const cv = document.createElement("canvas");
     cv.id = "calscroll";
     cv.className = "scroll-bar";
@@ -303,6 +301,29 @@ class CalendarScroll {
     cv.style.width = `${this.width}px`;
     cv.style.height = `${this.height}px`;
     frag.append(cv);
+  }
+
+  // イベントハンドラを登録する
+  handler() {
+    const calscroll = document.querySelector<HTMLCanvasElement>("#calscroll");
+    if (calscroll) {
+      calscroll.addEventListener("mousedown", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.mouseDownCalScroll(e.layerX);
+      });
+      calscroll.addEventListener("mousemove", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.mouseMoveCalScroll(e.layerX);
+      });
+      calscroll.addEventListener("mouseup", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.mouseUpCalScroll();
+      });
+      calscroll.addEventListener("mouseleave", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.mouseUpCalScroll();
+      });
+    }
   }
 
   // 描画する
@@ -350,7 +371,7 @@ class CalendarScroll {
     }
   }
 
-  mouseDownCalScroll(frame: GanttFrame, x: number) {
+  mouseDownCalScroll(x: number) {
     if (
       SCROLL_BAR_WIDTH + this.pos < x &&
       x < SCROLL_BAR_WIDTH + this.pos + this.barWidth
@@ -382,12 +403,12 @@ class CalendarScroll {
       this.pos =
         this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH - this.barWidth;
     }
-    frame.calendarHeader.scroll(frame, this.pos);
+    frame.calendarHeader.scroll(this.pos);
     this.draw();
     this.moving = false;
   }
 
-  mouseMoveCalScroll(frame: GanttFrame, x: number) {
+  mouseMoveCalScroll(x: number) {
     if (!this.moving) return;
     this.pos = x - SCROLL_BAR_WIDTH - this.startX + this.startPos;
     if (this.pos < 0) this.pos = 0;
@@ -395,7 +416,7 @@ class CalendarScroll {
     if (this.pos > w) {
       this.pos = w;
     }
-    frame.calendarHeader.scroll(frame, this.pos);
+    frame.calendarHeader.scroll(this.pos);
     this.draw();
   }
 
@@ -413,9 +434,31 @@ class ScrollH {
   startX = 0;
   pos = 0;
   startPos = 0;
-  //totalWidth = 0;
 
-  draw(frame: GanttFrame) {
+  // イベントハンドラを登録する
+  handler() {
+    const scrollh = document.querySelector<HTMLCanvasElement>("#scrollh");
+    if (scrollh) {
+      scrollh.addEventListener("mousedown", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.mouseDownScrollH(e.layerX);
+      });
+      scrollh.addEventListener("mousemove", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.mouseMoveScrollH(e.layerX);
+      });
+      scrollh.addEventListener("mouseup", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.mouseUpScrollH();
+      });
+      scrollh.addEventListener("mouseleave", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.mouseUpScrollH();
+      });
+    }
+  }
+
+  draw() {
     const cnvs = document.querySelector<HTMLCanvasElement>("#scrollh");
     if (cnvs) {
       this.width = cnvs.offsetWidth;
@@ -463,7 +506,7 @@ class ScrollH {
     }
   }
 
-  mouseDownScrollH(frame: GanttFrame, x: number) {
+  mouseDownScrollH(x: number) {
     if (
       SCROLL_BAR_WIDTH + this.pos < x &&
       x < SCROLL_BAR_WIDTH + this.pos + this.barWidth
@@ -496,11 +539,11 @@ class ScrollH {
         this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH - this.barWidth;
     }
     //frame.calendarHeader.scroll(frame, this.pos);
-    this.draw(frame);
+    this.draw();
     this.moving = false;
   }
 
-  mouseMoveScrollH(frame: GanttFrame, x: number) {
+  mouseMoveScrollH(x: number) {
     if (!this.moving) return;
     this.pos = x - SCROLL_BAR_WIDTH - this.startX + this.startPos;
     if (this.pos < 0) this.pos = 0;
@@ -509,7 +552,7 @@ class ScrollH {
       this.pos = w;
     }
     //frame.calendarHeader.scroll(frame, this.pos);
-    this.draw(frame);
+    this.draw();
   }
 
   mouseUpScrollH() {
@@ -572,8 +615,8 @@ class GanttFrame {
   calendarTotalWidth = 0;
   schThreshold = 0; // 横スクロールバーを表示するしきい値
 
-  // ガントチャートを表示する
-  render() {
+  // ガントチャートを構築する
+  build() {
     const frame = document.querySelector<HTMLDivElement>("#ganttframe");
     if (!frame) {
       console.error("Failed to get #ganttframe!");
@@ -584,13 +627,13 @@ class GanttFrame {
     this.colW = this.columnWidth();
     this.calendarLeft = this.colW + 1;
     this.schThreshold = this.calendarLeft + DAY_WIDTH * 10; // フレームの幅がこれよりも小さければ横スクロールバーを表示する
-    let frag = document.createDocumentFragment();
-    this.columnBody.render(this, frag);
-    this.columnHeader.render(this, frag);
-    this.columnScroll.render(this, frag);
-    this.calendarBody.render(this, frag);
-    this.calendarHeader.render(this, frag);
-    this.calendarScroll.render(this, frag);
+    const frag = document.createDocumentFragment();
+    this.columnBody.build(frag);
+    this.columnHeader.build(frag);
+    this.columnScroll.build(frag);
+    this.calendarBody.build(frag);
+    this.calendarHeader.build(frag);
+    this.calendarScroll.build(frag);
 
     // カレンダーの開始日と終了日の差分から全体の幅を求める。
     const diff =
@@ -601,11 +644,18 @@ class GanttFrame {
     frame.append(frag);
   }
 
+  // イベントハンドラを登録する
+  handler() {
+    this.calendarScroll.handler();
+    this.sch.handler();
+  }
+
+  // ガントチャートを表示する
   draw() {
     this.calendarHeader.draw();
     this.calendarBody.draw();
     this.calendarScroll.draw();
-    this.sch.draw(this);
+    this.sch.draw();
     this.scv.draw();
   }
 
@@ -618,11 +668,11 @@ class GanttFrame {
   }
 
   mouseDownCalScroll(x: number) {
-    this.calendarScroll.mouseDownCalScroll(this, x);
+    this.calendarScroll.mouseDownCalScroll(x);
   }
 
   mouseMoveCalScroll(x: number) {
-    this.calendarScroll.mouseMoveCalScroll(this, x);
+    this.calendarScroll.mouseMoveCalScroll(x);
   }
 
   mouseUpCalScroll() {
@@ -630,11 +680,11 @@ class GanttFrame {
   }
 
   mouseDownScrollH(x: number) {
-    this.sch.mouseDownScrollH(this, x);
+    this.sch.mouseDownScrollH(x);
   }
 
   mouseMoveScrollH(x: number) {
-    this.sch.mouseMoveScrollH(this, x);
+    this.sch.mouseMoveScrollH(x);
   }
 
   mouseUpScrollH() {
@@ -643,47 +693,6 @@ class GanttFrame {
 }
 
 const frame = new GanttFrame();
-frame.render();
+frame.build();
+frame.handler();
 frame.draw();
-
-// カレンダースクロールバー イベントハンドラ
-const calscroll = document.querySelector<HTMLCanvasElement>("#calscroll");
-if (calscroll) {
-  calscroll.addEventListener("mousedown", function (e) {
-    e.preventDefault();
-    frame.mouseDownCalScroll(e.layerX);
-  });
-  calscroll.addEventListener("mousemove", function (e) {
-    e.preventDefault();
-    frame.mouseMoveCalScroll(e.layerX);
-  });
-  calscroll.addEventListener("mouseup", function (e) {
-    e.preventDefault();
-    frame.mouseUpCalScroll();
-  });
-  calscroll.addEventListener("mouseleave", function (e) {
-    e.preventDefault();
-    frame.mouseUpCalScroll();
-  });
-}
-
-// 横スクロールバー イベントハンドラ
-const scrollh = document.querySelector<HTMLCanvasElement>("#scrollh");
-if (scrollh) {
-  scrollh.addEventListener("mousedown", function (e) {
-    e.preventDefault();
-    frame.mouseDownScrollH(e.layerX);
-  });
-  scrollh.addEventListener("mousemove", function (e) {
-    e.preventDefault();
-    frame.mouseMoveScrollH(e.layerX);
-  });
-  scrollh.addEventListener("mouseup", function (e) {
-    e.preventDefault();
-    frame.mouseUpScrollH();
-  });
-  scrollh.addEventListener("mouseleave", function (e) {
-    e.preventDefault();
-    frame.mouseUpScrollH();
-  });
-}

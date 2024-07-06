@@ -33,6 +33,8 @@ const HEADER_LABEL_Y = 42;
 const LINE_HEIGHT = 21;
 const HEADER_HEIGHT = 63;
 const DAY_WIDTH = 22;
+const CALENDAR_MIN = DAY_WIDTH * 10;
+const DAY_MILISEC = 1000 * 60 * 60 * 24;
 
 // カラムヘッダー
 class ColumnHeader {
@@ -46,7 +48,7 @@ class ColumnHeader {
     hd.className = "header";
     hd.style.top = `0px`;
     hd.style.left = `${this.pos}px`;
-    hd.style.width = `${frame.colW}px`;
+    hd.style.width = `${frame.calendarLeft}px`;
     hd.style.height = `${HEADER_HEIGHT}px`;
     frag.append(hd);
 
@@ -152,15 +154,27 @@ class ColumnBody {
 
 // カラムスクロールバー
 class ColumnScroll {
+  id = "colscr";
+  pos = 0;
+
   // スクロールバーを構築する
   build(frag: DocumentFragment) {
     const bar = document.createElement("div");
+    bar.id = this.id;
     bar.className = "scroll-corner";
     bar.style.top = `${frame.height - SCROLL_BAR_WIDTH}px`;
-    bar.style.left = `0px`;
+    bar.style.left = `${this.pos}px`;
     bar.style.width = `${frame.calendarLeft}px`;
     bar.style.height = `${SCROLL_BAR_WIDTH}px`;
     frag.append(bar);
+  }
+
+  scrollH(x: number) {
+    this.pos = -x;
+    const colscr = document.querySelector<HTMLDivElement>(`#${this.id}`);
+    if (colscr) {
+      colscr.style.left = `${this.pos}px`;
+    }
   }
 }
 
@@ -169,6 +183,7 @@ class CalendarHeader {
   id = "calhead";
   width = 0;
   pos = 0;
+  dtpos = 0;
   dtStart = 0;
   dtEnd = 0;
 
@@ -176,10 +191,13 @@ class CalendarHeader {
   build(frag: DocumentFragment) {
     const cv = document.createElement("canvas");
     this.width = frame.width - frame.calendarLeft;
+    if (this.width < CALENDAR_MIN) {
+      this.width = CALENDAR_MIN;
+    }
     cv.id = this.id;
     cv.className = "header";
     cv.style.top = `0px`;
-    cv.style.left = `${frame.calendarLeft}px`;
+    cv.style.left = `${this.pos + frame.calendarLeft}px`;
     cv.style.width = `${this.width}px`;
     cv.style.height = `${HEADER_HEIGHT + 1}px`;
     frag.append(cv);
@@ -210,11 +228,33 @@ class CalendarHeader {
 
         let dt = new Date(this.dtStart);
         let x = 0;
+        let first = true;
         ctx.font = font;
         ctx.textBaseline = "bottom";
         ctx.textAlign = "left";
 
         while (dt.getTime() <= this.dtEnd) {
+          if (x < this.dtpos - DAY_WIDTH) {
+            x += DAY_WIDTH;
+            dt.setDate(dt.getDate() + 1);
+            first = false;
+            continue;
+          }
+          if (x > this.width + this.dtpos) break;
+
+          const date = dt.getDate();
+          if (date == 1 || (first && date < 25)) {
+            ctx.fillStyle = "#000";
+            ctx.fillText(
+              `${dt.getFullYear()}/${dt.getMonth() + 1}`,
+              x + 3 - this.dtpos,
+              LINE_HEIGHT + LINE_HEIGHT - 3
+            );
+            ctx.fillStyle = "#bdcede";
+            ctx.fillRect(x - this.dtpos, LINE_HEIGHT, 1, LINE_HEIGHT);
+            ctx.fill();
+          }
+          first = false;
           switch (dt.getDay()) {
             case 0: // Sunday
               ctx.fillStyle = "#f00";
@@ -226,13 +266,12 @@ class CalendarHeader {
               ctx.fillStyle = "#000";
               break;
           }
-          ctx.fillText(`${dt.getDate()}`, x + 3 - this.pos, HEADER_HEIGHT - 3);
+          ctx.fillText(`${date}`, x + 3 - this.dtpos, HEADER_HEIGHT - 3);
           x += DAY_WIDTH;
-          if (x > this.width + this.pos) break;
-          dt.setDate(dt.getDate() + 1);
+          dt.setTime(dt.getTime() + DAY_MILISEC);
           // 日付区切り線
           ctx.fillStyle = "#bdcede";
-          ctx.fillRect(x - this.pos, dtTop, 1, LINE_HEIGHT);
+          ctx.fillRect(x - this.dtpos, dtTop, 1, LINE_HEIGHT);
           ctx.fill();
         }
 
@@ -241,12 +280,21 @@ class CalendarHeader {
     }
   }
 
+  scrollH(x: number) {
+    this.pos = -x;
+    const calhead = document.querySelector<HTMLCanvasElement>(`#${this.id}`);
+    if (calhead) {
+      calhead.style.left = `${this.pos + frame.calendarLeft}px`;
+    }
+  }
+
   scroll(x: number) {
-    this.pos =
+    this.dtpos =
       (x * frame.calendarTotalWidth) /
       (this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH);
+    //console.log(`scroll ${x} ${this.dtpos}`);
     this.draw();
-    frame.calendarBody.pos = this.pos;
+    frame.calendarBody.dtpos = this.dtpos;
     frame.calendarBody.draw();
   }
 }
@@ -256,6 +304,7 @@ class CalendarBody {
   id = "calbody";
   width = 0;
   pos = 0;
+  dtpos = 0;
   dtStart = 0;
   dtEnd = 0;
 
@@ -263,11 +312,14 @@ class CalendarBody {
   build(frag: DocumentFragment) {
     const cv = document.createElement("canvas");
     this.width = frame.width - frame.calendarLeft;
+    if (this.width < CALENDAR_MIN) {
+      this.width = CALENDAR_MIN;
+    }
     const height = frame.height - HEADER_HEIGHT - SCROLL_BAR_WIDTH;
     cv.id = this.id;
     cv.className = "gantt-body";
     cv.style.top = `${HEADER_HEIGHT}px`;
-    cv.style.left = `${frame.calendarLeft}px`;
+    cv.style.left = `${this.pos + frame.calendarLeft}px`;
     cv.style.width = `${this.width}px`;
     cv.style.height = `${height}px`;
     frag.append(cv);
@@ -290,16 +342,31 @@ class CalendarBody {
         let dt = new Date(this.dtStart);
         let x = 0;
         while (dt.getTime() <= this.dtEnd) {
+          if (x < this.dtpos - DAY_WIDTH) {
+            x += DAY_WIDTH;
+            dt.setDate(dt.getDate() + 1);
+            continue;
+          }
+          if (x > this.width + this.dtpos) break;
+
           dt.setDate(dt.getDate() + 1);
           x += DAY_WIDTH;
-          if (x > width + this.pos) break;
+          if (x > width + this.dtpos) break;
           // 日付区切り線
-          ctx.fillRect(x - this.pos, 0, 1, height);
+          ctx.fillRect(x - this.dtpos, 0, 1, height);
           ctx.fill();
         }
 
         ctx.restore();
       }
+    }
+  }
+
+  scrollH(x: number) {
+    this.pos = -x;
+    const calbody = document.querySelector<HTMLCanvasElement>(`#${this.id}`);
+    if (calbody) {
+      calbody.style.left = `${this.pos + frame.calendarLeft}px`;
     }
   }
 }
@@ -308,21 +375,25 @@ class CalendarBody {
 class CalendarScroll {
   id = "calscroll";
   width = 0;
+  pos = 0;
   barWidth = 0;
   height = SCROLL_BAR_WIDTH;
   moving = false;
   startX = 0;
-  pos = 0;
+  barpos = 0;
   startPos = 0;
 
   // スクロールバーを構築する
   build(frag: DocumentFragment) {
     this.width = frame.width - frame.calendarLeft;
+    if (this.width < CALENDAR_MIN) {
+      this.width = CALENDAR_MIN;
+    }
     const cv = document.createElement("canvas");
     cv.id = this.id;
     cv.className = "scroll-bar";
     cv.style.top = `${frame.height - SCROLL_BAR_WIDTH}px`;
-    cv.style.left = `${frame.calendarLeft}px`;
+    cv.style.left = `${this.pos + frame.calendarLeft}px`;
     cv.style.width = `${this.width}px`;
     cv.style.height = `${this.height}px`;
     frag.append(cv);
@@ -385,7 +456,7 @@ class CalendarScroll {
           ((this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH) * this.width) /
           frame.calendarTotalWidth;
         ctx.fillRect(
-          SCROLL_BAR_WIDTH + this.pos,
+          SCROLL_BAR_WIDTH + this.barpos,
           2,
           this.barWidth < 4 ? 4 : this.barWidth,
           13
@@ -396,52 +467,63 @@ class CalendarScroll {
     }
   }
 
+  scrollH(x: number) {
+    this.pos = -x;
+    const calscroll = document.querySelector<HTMLCanvasElement>(`#${this.id}`);
+    if (calscroll) {
+      calscroll.style.left = `${this.pos + frame.calendarLeft}px`;
+    }
+  }
+
   mouseDownCalScroll(x: number) {
+    //debugger;
     if (
-      SCROLL_BAR_WIDTH + this.pos < x &&
-      x < SCROLL_BAR_WIDTH + this.pos + this.barWidth
+      SCROLL_BAR_WIDTH + this.barpos < x &&
+      x < SCROLL_BAR_WIDTH + this.barpos + this.barWidth
     ) {
       this.moving = true;
       this.startX = x - SCROLL_BAR_WIDTH;
-      this.startPos = this.pos;
+      this.startPos = this.barpos;
       return;
     }
 
     if (x < SCROLL_BAR_WIDTH) {
       // 左ボタン
-      this.pos -= SCROLL_BAR_WIDTH;
-    } else if (x < SCROLL_BAR_WIDTH + this.pos) {
+      this.barpos -= SCROLL_BAR_WIDTH;
+    } else if (x < SCROLL_BAR_WIDTH + this.barpos) {
       // バーの左側
-      this.pos -= this.barWidth;
+      this.barpos -= this.barWidth;
     } else if (this.width - SCROLL_BAR_WIDTH < x) {
       // 右ボタン
-      this.pos += SCROLL_BAR_WIDTH;
+      this.barpos += SCROLL_BAR_WIDTH;
     } else {
       // バーの右側
-      this.pos += this.barWidth;
+      this.barpos += this.barWidth;
     }
-    if (this.pos < 0) this.pos = 0;
+
+    if (this.barpos < 0) this.barpos = 0;
     if (
       this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH - this.barWidth <
-      this.pos
+      this.barpos
     ) {
-      this.pos =
+      this.barpos =
         this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH - this.barWidth;
     }
-    frame.calendarHeader.scroll(this.pos);
+
+    frame.calendarHeader.scroll(this.barpos);
     this.draw();
     this.moving = false;
   }
 
   mouseMoveCalScroll(x: number) {
     if (!this.moving) return;
-    this.pos = x - SCROLL_BAR_WIDTH - this.startX + this.startPos;
-    if (this.pos < 0) this.pos = 0;
+    this.barpos = x - SCROLL_BAR_WIDTH - this.startX + this.startPos;
+    if (this.barpos < 0) this.barpos = 0;
     const w = this.width - this.barWidth - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH;
-    if (this.pos > w) {
-      this.pos = w;
+    if (this.barpos > w) {
+      this.barpos = w;
     }
-    frame.calendarHeader.scroll(this.pos);
+    frame.calendarHeader.scroll(this.barpos);
     this.draw();
   }
 
@@ -533,19 +615,17 @@ class ScrollH {
   }
 
   mouseDownScrollH(x: number) {
-    console.log(`mouseDownScrollH: ${x} ${this.pos} ${this.barWidth}`);
+    //console.log(`mouseDownScrollH: ${x} ${this.pos} ${this.barWidth}`);
     if (
       SCROLL_BAR_WIDTH + this.pos < x &&
       x < SCROLL_BAR_WIDTH + this.pos + this.barWidth
     ) {
-      console.log(`mouseDownScrollH: A`);
       this.moving = true;
       this.startX = x - SCROLL_BAR_WIDTH;
       this.startPos = this.pos;
       return;
     }
 
-    console.log(`mouseDownScrollH: B`);
     if (x < SCROLL_BAR_WIDTH) {
       // 左ボタン
       this.pos -= SCROLL_BAR_WIDTH;
@@ -567,7 +647,7 @@ class ScrollH {
       this.pos =
         this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH - this.barWidth;
     }
-    //frame.calendarHeader.scroll(frame, this.pos);
+    frame.scrollH(this.pos);
     this.draw();
     this.moving = false;
   }
@@ -642,7 +722,7 @@ class GanttFrame {
   scv = new ScrollV();
   colW = 0;
   calendarLeft = 0;
-  calendarStart = new Date(2024, 5, 30);
+  calendarStart = new Date(2024, 5, 24);
   calendarEnd = new Date(2024, 7, 31);
   calendarTotalWidth = 0;
   schThreshold = 0; // 横スクロールバーを表示するしきい値
@@ -659,7 +739,7 @@ class GanttFrame {
     this.height = frame.offsetHeight;
     this.colW = this.columnWidth();
     this.calendarLeft = this.colW + 1;
-    this.schThreshold = this.calendarLeft + DAY_WIDTH * 10; // フレームの幅がこれよりも小さければ横スクロールバーを表示する
+    this.schThreshold = this.calendarLeft + CALENDAR_MIN; // フレームの幅がこれよりも小さければ横スクロールバーを表示する
     const frag = document.createDocumentFragment();
     this.columnBody.build(frag);
     this.columnHeader.build(frag);
@@ -668,10 +748,9 @@ class GanttFrame {
     this.calendarHeader.build(frag);
     this.calendarScroll.build(frag);
 
-    // カレンダーの開始日と終了日の差分から全体の幅を求める。
+    // カレンダーの開始日と終了日の差分から全体の幅を求める
     const diff =
-      (this.calendarEnd.getTime() - this.calendarStart.getTime()) /
-      (1000 * 60 * 60 * 24);
+      (this.calendarEnd.getTime() - this.calendarStart.getTime()) / DAY_MILISEC;
     this.calendarTotalWidth = (diff + 1) * DAY_WIDTH;
 
     frame.append(frag);
@@ -698,6 +777,10 @@ class GanttFrame {
       (this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH);
     this.columnBody.scrollH(this.posX);
     this.columnHeader.scrollH(this.posX);
+    this.columnScroll.scrollH(this.posX);
+    this.calendarHeader.scrollH(this.posX);
+    this.calendarBody.scrollH(this.posX);
+    this.calendarScroll.scrollH(this.posX);
   }
 
   columnWidth(): number {

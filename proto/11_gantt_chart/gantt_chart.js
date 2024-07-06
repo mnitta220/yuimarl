@@ -34,6 +34,8 @@ var HEADER_LABEL_Y = 42;
 var LINE_HEIGHT = 21;
 var HEADER_HEIGHT = 63;
 var DAY_WIDTH = 22;
+var CALENDAR_MIN = DAY_WIDTH * 10;
+var DAY_MILISEC = 1000 * 60 * 60 * 24;
 // カラムヘッダー
 var ColumnHeader = /** @class */ (function () {
     function ColumnHeader() {
@@ -47,7 +49,7 @@ var ColumnHeader = /** @class */ (function () {
         hd.className = "header";
         hd.style.top = "0px";
         hd.style.left = "".concat(this.pos, "px");
-        hd.style.width = "".concat(frame.colW, "px");
+        hd.style.width = "".concat(frame.calendarLeft, "px");
         hd.style.height = "".concat(HEADER_HEIGHT, "px");
         frag.append(hd);
         var line = document.createElement("div");
@@ -149,16 +151,26 @@ var ColumnBody = /** @class */ (function () {
 // カラムスクロールバー
 var ColumnScroll = /** @class */ (function () {
     function ColumnScroll() {
+        this.id = "colscr";
+        this.pos = 0;
     }
     // スクロールバーを構築する
     ColumnScroll.prototype.build = function (frag) {
         var bar = document.createElement("div");
+        bar.id = this.id;
         bar.className = "scroll-corner";
         bar.style.top = "".concat(frame.height - SCROLL_BAR_WIDTH, "px");
-        bar.style.left = "0px";
+        bar.style.left = "".concat(this.pos, "px");
         bar.style.width = "".concat(frame.calendarLeft, "px");
         bar.style.height = "".concat(SCROLL_BAR_WIDTH, "px");
         frag.append(bar);
+    };
+    ColumnScroll.prototype.scrollH = function (x) {
+        this.pos = -x;
+        var colscr = document.querySelector("#".concat(this.id));
+        if (colscr) {
+            colscr.style.left = "".concat(this.pos, "px");
+        }
     };
     return ColumnScroll;
 }());
@@ -168,6 +180,7 @@ var CalendarHeader = /** @class */ (function () {
         this.id = "calhead";
         this.width = 0;
         this.pos = 0;
+        this.dtpos = 0;
         this.dtStart = 0;
         this.dtEnd = 0;
     }
@@ -175,10 +188,13 @@ var CalendarHeader = /** @class */ (function () {
     CalendarHeader.prototype.build = function (frag) {
         var cv = document.createElement("canvas");
         this.width = frame.width - frame.calendarLeft;
+        if (this.width < CALENDAR_MIN) {
+            this.width = CALENDAR_MIN;
+        }
         cv.id = this.id;
         cv.className = "header";
         cv.style.top = "0px";
-        cv.style.left = "".concat(frame.calendarLeft, "px");
+        cv.style.left = "".concat(this.pos + frame.calendarLeft, "px");
         cv.style.width = "".concat(this.width, "px");
         cv.style.height = "".concat(HEADER_HEIGHT + 1, "px");
         frag.append(cv);
@@ -207,10 +223,28 @@ var CalendarHeader = /** @class */ (function () {
                 ctx.fill();
                 var dt = new Date(this.dtStart);
                 var x = 0;
+                var first = true;
                 ctx.font = font;
                 ctx.textBaseline = "bottom";
                 ctx.textAlign = "left";
                 while (dt.getTime() <= this.dtEnd) {
+                    if (x < this.dtpos - DAY_WIDTH) {
+                        x += DAY_WIDTH;
+                        dt.setDate(dt.getDate() + 1);
+                        first = false;
+                        continue;
+                    }
+                    if (x > this.width + this.dtpos)
+                        break;
+                    var date = dt.getDate();
+                    if (date == 1 || (first && date < 25)) {
+                        ctx.fillStyle = "#000";
+                        ctx.fillText("".concat(dt.getFullYear(), "/").concat(dt.getMonth() + 1), x + 3 - this.dtpos, LINE_HEIGHT + LINE_HEIGHT - 3);
+                        ctx.fillStyle = "#bdcede";
+                        ctx.fillRect(x - this.dtpos, LINE_HEIGHT, 1, LINE_HEIGHT);
+                        ctx.fill();
+                    }
+                    first = false;
                     switch (dt.getDay()) {
                         case 0: // Sunday
                             ctx.fillStyle = "#f00";
@@ -222,26 +256,32 @@ var CalendarHeader = /** @class */ (function () {
                             ctx.fillStyle = "#000";
                             break;
                     }
-                    ctx.fillText("".concat(dt.getDate()), x + 3 - this.pos, HEADER_HEIGHT - 3);
+                    ctx.fillText("".concat(date), x + 3 - this.dtpos, HEADER_HEIGHT - 3);
                     x += DAY_WIDTH;
-                    if (x > this.width + this.pos)
-                        break;
-                    dt.setDate(dt.getDate() + 1);
+                    dt.setTime(dt.getTime() + DAY_MILISEC);
                     // 日付区切り線
                     ctx.fillStyle = "#bdcede";
-                    ctx.fillRect(x - this.pos, dtTop, 1, LINE_HEIGHT);
+                    ctx.fillRect(x - this.dtpos, dtTop, 1, LINE_HEIGHT);
                     ctx.fill();
                 }
                 ctx.restore();
             }
         }
     };
+    CalendarHeader.prototype.scrollH = function (x) {
+        this.pos = -x;
+        var calhead = document.querySelector("#".concat(this.id));
+        if (calhead) {
+            calhead.style.left = "".concat(this.pos + frame.calendarLeft, "px");
+        }
+    };
     CalendarHeader.prototype.scroll = function (x) {
-        this.pos =
+        this.dtpos =
             (x * frame.calendarTotalWidth) /
                 (this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH);
+        //console.log(`scroll ${x} ${this.dtpos}`);
         this.draw();
-        frame.calendarBody.pos = this.pos;
+        frame.calendarBody.dtpos = this.dtpos;
         frame.calendarBody.draw();
     };
     return CalendarHeader;
@@ -252,6 +292,7 @@ var CalendarBody = /** @class */ (function () {
         this.id = "calbody";
         this.width = 0;
         this.pos = 0;
+        this.dtpos = 0;
         this.dtStart = 0;
         this.dtEnd = 0;
     }
@@ -259,11 +300,14 @@ var CalendarBody = /** @class */ (function () {
     CalendarBody.prototype.build = function (frag) {
         var cv = document.createElement("canvas");
         this.width = frame.width - frame.calendarLeft;
+        if (this.width < CALENDAR_MIN) {
+            this.width = CALENDAR_MIN;
+        }
         var height = frame.height - HEADER_HEIGHT - SCROLL_BAR_WIDTH;
         cv.id = this.id;
         cv.className = "gantt-body";
         cv.style.top = "".concat(HEADER_HEIGHT, "px");
-        cv.style.left = "".concat(frame.calendarLeft, "px");
+        cv.style.left = "".concat(this.pos + frame.calendarLeft, "px");
         cv.style.width = "".concat(this.width, "px");
         cv.style.height = "".concat(height, "px");
         frag.append(cv);
@@ -285,16 +329,30 @@ var CalendarBody = /** @class */ (function () {
                 var dt = new Date(this.dtStart);
                 var x = 0;
                 while (dt.getTime() <= this.dtEnd) {
+                    if (x < this.dtpos - DAY_WIDTH) {
+                        x += DAY_WIDTH;
+                        dt.setDate(dt.getDate() + 1);
+                        continue;
+                    }
+                    if (x > this.width + this.dtpos)
+                        break;
                     dt.setDate(dt.getDate() + 1);
                     x += DAY_WIDTH;
-                    if (x > width + this.pos)
+                    if (x > width + this.dtpos)
                         break;
                     // 日付区切り線
-                    ctx.fillRect(x - this.pos, 0, 1, height);
+                    ctx.fillRect(x - this.dtpos, 0, 1, height);
                     ctx.fill();
                 }
                 ctx.restore();
             }
+        }
+    };
+    CalendarBody.prototype.scrollH = function (x) {
+        this.pos = -x;
+        var calbody = document.querySelector("#".concat(this.id));
+        if (calbody) {
+            calbody.style.left = "".concat(this.pos + frame.calendarLeft, "px");
         }
     };
     return CalendarBody;
@@ -304,21 +362,25 @@ var CalendarScroll = /** @class */ (function () {
     function CalendarScroll() {
         this.id = "calscroll";
         this.width = 0;
+        this.pos = 0;
         this.barWidth = 0;
         this.height = SCROLL_BAR_WIDTH;
         this.moving = false;
         this.startX = 0;
-        this.pos = 0;
+        this.barpos = 0;
         this.startPos = 0;
     }
     // スクロールバーを構築する
     CalendarScroll.prototype.build = function (frag) {
         this.width = frame.width - frame.calendarLeft;
+        if (this.width < CALENDAR_MIN) {
+            this.width = CALENDAR_MIN;
+        }
         var cv = document.createElement("canvas");
         cv.id = this.id;
         cv.className = "scroll-bar";
         cv.style.top = "".concat(frame.height - SCROLL_BAR_WIDTH, "px");
-        cv.style.left = "".concat(frame.calendarLeft, "px");
+        cv.style.left = "".concat(this.pos + frame.calendarLeft, "px");
         cv.style.width = "".concat(this.width, "px");
         cv.style.height = "".concat(this.height, "px");
         frag.append(cv);
@@ -377,57 +439,65 @@ var CalendarScroll = /** @class */ (function () {
                 this.barWidth =
                     ((this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH) * this.width) /
                         frame.calendarTotalWidth;
-                ctx.fillRect(SCROLL_BAR_WIDTH + this.pos, 2, this.barWidth < 4 ? 4 : this.barWidth, 13);
+                ctx.fillRect(SCROLL_BAR_WIDTH + this.barpos, 2, this.barWidth < 4 ? 4 : this.barWidth, 13);
                 ctx.restore();
             }
         }
     };
+    CalendarScroll.prototype.scrollH = function (x) {
+        this.pos = -x;
+        var calscroll = document.querySelector("#".concat(this.id));
+        if (calscroll) {
+            calscroll.style.left = "".concat(this.pos + frame.calendarLeft, "px");
+        }
+    };
     CalendarScroll.prototype.mouseDownCalScroll = function (x) {
-        if (SCROLL_BAR_WIDTH + this.pos < x &&
-            x < SCROLL_BAR_WIDTH + this.pos + this.barWidth) {
+        //debugger;
+        if (SCROLL_BAR_WIDTH + this.barpos < x &&
+            x < SCROLL_BAR_WIDTH + this.barpos + this.barWidth) {
             this.moving = true;
             this.startX = x - SCROLL_BAR_WIDTH;
-            this.startPos = this.pos;
+            this.startPos = this.barpos;
             return;
         }
         if (x < SCROLL_BAR_WIDTH) {
             // 左ボタン
-            this.pos -= SCROLL_BAR_WIDTH;
+            this.barpos -= SCROLL_BAR_WIDTH;
         }
-        else if (x < SCROLL_BAR_WIDTH + this.pos) {
+        else if (x < SCROLL_BAR_WIDTH + this.barpos) {
             // バーの左側
-            this.pos -= this.barWidth;
+            this.barpos -= this.barWidth;
         }
         else if (this.width - SCROLL_BAR_WIDTH < x) {
             // 右ボタン
-            this.pos += SCROLL_BAR_WIDTH;
+            this.barpos += SCROLL_BAR_WIDTH;
         }
         else {
             // バーの右側
-            this.pos += this.barWidth;
+            this.barpos += this.barWidth;
         }
-        if (this.pos < 0)
-            this.pos = 0;
+        if (this.barpos < 0)
+            this.barpos = 0;
         if (this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH - this.barWidth <
-            this.pos) {
-            this.pos =
+            this.barpos) {
+            this.barpos =
                 this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH - this.barWidth;
         }
-        frame.calendarHeader.scroll(this.pos);
+        frame.calendarHeader.scroll(this.barpos);
         this.draw();
         this.moving = false;
     };
     CalendarScroll.prototype.mouseMoveCalScroll = function (x) {
         if (!this.moving)
             return;
-        this.pos = x - SCROLL_BAR_WIDTH - this.startX + this.startPos;
-        if (this.pos < 0)
-            this.pos = 0;
+        this.barpos = x - SCROLL_BAR_WIDTH - this.startX + this.startPos;
+        if (this.barpos < 0)
+            this.barpos = 0;
         var w = this.width - this.barWidth - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH;
-        if (this.pos > w) {
-            this.pos = w;
+        if (this.barpos > w) {
+            this.barpos = w;
         }
-        frame.calendarHeader.scroll(this.pos);
+        frame.calendarHeader.scroll(this.barpos);
         this.draw();
     };
     CalendarScroll.prototype.mouseUpCalScroll = function () {
@@ -453,7 +523,6 @@ var ScrollH = /** @class */ (function () {
         if (scrollh) {
             scrollh.addEventListener("mousedown", function (e) {
                 e.preventDefault();
-                //frame.mouseDownScrollH(e.layerX);
                 frame.mouseDownScrollH(e.pageX - scrollh.offsetLeft);
             });
             scrollh.addEventListener("mousemove", function (e) {
@@ -512,16 +581,14 @@ var ScrollH = /** @class */ (function () {
         }
     };
     ScrollH.prototype.mouseDownScrollH = function (x) {
-        console.log("mouseDownScrollH: ".concat(x, " ").concat(this.pos, " ").concat(this.barWidth));
+        //console.log(`mouseDownScrollH: ${x} ${this.pos} ${this.barWidth}`);
         if (SCROLL_BAR_WIDTH + this.pos < x &&
             x < SCROLL_BAR_WIDTH + this.pos + this.barWidth) {
-            console.log("mouseDownScrollH: A");
             this.moving = true;
             this.startX = x - SCROLL_BAR_WIDTH;
             this.startPos = this.pos;
             return;
         }
-        console.log("mouseDownScrollH: B");
         if (x < SCROLL_BAR_WIDTH) {
             // 左ボタン
             this.pos -= SCROLL_BAR_WIDTH;
@@ -545,7 +612,7 @@ var ScrollH = /** @class */ (function () {
             this.pos =
                 this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH - this.barWidth;
         }
-        //frame.calendarHeader.scroll(frame, this.pos);
+        frame.scrollH(this.pos);
         this.draw();
         this.moving = false;
     };
@@ -622,7 +689,7 @@ var GanttFrame = /** @class */ (function () {
         this.scv = new ScrollV();
         this.colW = 0;
         this.calendarLeft = 0;
-        this.calendarStart = new Date(2024, 5, 30);
+        this.calendarStart = new Date(2024, 5, 24);
         this.calendarEnd = new Date(2024, 7, 31);
         this.calendarTotalWidth = 0;
         this.schThreshold = 0; // 横スクロールバーを表示するしきい値
@@ -639,7 +706,7 @@ var GanttFrame = /** @class */ (function () {
         this.height = frame.offsetHeight;
         this.colW = this.columnWidth();
         this.calendarLeft = this.colW + 1;
-        this.schThreshold = this.calendarLeft + DAY_WIDTH * 10; // フレームの幅がこれよりも小さければ横スクロールバーを表示する
+        this.schThreshold = this.calendarLeft + CALENDAR_MIN; // フレームの幅がこれよりも小さければ横スクロールバーを表示する
         var frag = document.createDocumentFragment();
         this.columnBody.build(frag);
         this.columnHeader.build(frag);
@@ -647,9 +714,8 @@ var GanttFrame = /** @class */ (function () {
         this.calendarBody.build(frag);
         this.calendarHeader.build(frag);
         this.calendarScroll.build(frag);
-        // カレンダーの開始日と終了日の差分から全体の幅を求める。
-        var diff = (this.calendarEnd.getTime() - this.calendarStart.getTime()) /
-            (1000 * 60 * 60 * 24);
+        // カレンダーの開始日と終了日の差分から全体の幅を求める
+        var diff = (this.calendarEnd.getTime() - this.calendarStart.getTime()) / DAY_MILISEC;
         this.calendarTotalWidth = (diff + 1) * DAY_WIDTH;
         frame.append(frag);
     };
@@ -672,6 +738,10 @@ var GanttFrame = /** @class */ (function () {
                 (this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH);
         this.columnBody.scrollH(this.posX);
         this.columnHeader.scrollH(this.posX);
+        this.columnScroll.scrollH(this.posX);
+        this.calendarHeader.scrollH(this.posX);
+        this.calendarBody.scrollH(this.posX);
+        this.calendarScroll.scrollH(this.posX);
     };
     GanttFrame.prototype.columnWidth = function () {
         var w = 2;

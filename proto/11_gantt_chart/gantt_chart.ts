@@ -5,7 +5,7 @@ class Column {
 }
 
 // カラム定義
-let cols = [
+const cols = [
   {
     name: "ID",
     width: 70,
@@ -27,6 +27,50 @@ let cols = [
     width: 70,
   },
 ] as Column[];
+
+class Ticket {
+  id: string = "";
+  idDisp: string = "";
+  name: string = "";
+  start: Date | null = null;
+  end: Date | null = null;
+  progress: number = 0;
+  children: Ticket[] = [];
+}
+
+const tickets = [
+  {
+    id: "YU1",
+    idDisp: "YU1",
+    name: "チケットYU1",
+    start: new Date(2024, 6, 1),
+    end: new Date(2024, 6, 31),
+    progress: 100,
+    children: [
+      {
+        id: "YU11",
+        idDisp: "YU11",
+        name: "チケットYU11",
+        start: new Date(2024, 6, 1),
+        end: new Date(2024, 6, 31),
+        progress: 100,
+        children: [],
+      },
+    ],
+  },
+  {
+    id: "YU2",
+    idDisp: "YU2",
+    name: "チケットYU2",
+    start: new Date(2024, 6, 1),
+    end: null,
+    progress: 100,
+    children: [],
+  },
+] as Ticket[];
+
+// 日本の祝日
+const holidays = [new Date(2024, 6, 15), new Date(2024, 7, 12)];
 
 const SCROLL_BAR_WIDTH = 16;
 const HEADER_LABEL_Y = 42;
@@ -56,7 +100,7 @@ class ColumnHeader {
     line.className = "line";
     line.style.top = `${HEADER_HEIGHT}px`;
     line.style.left = "0px";
-    line.style.width = "100%";
+    line.style.width = `${frame.calendarLeft}px`;
     line.style.height = "1px";
     frag.append(line);
 
@@ -117,7 +161,6 @@ class ColumnBody {
     body.style.left = `${this.pos}px`;
     body.style.width = `${frame.calendarLeft}px`;
     body.style.height = `${height}px`;
-    frag.append(body);
 
     let x = 0;
     for (let col of cols) {
@@ -141,6 +184,7 @@ class ColumnBody {
     line.style.width = "1px";
     line.style.height = `${height}px`;
     body.append(line);
+    frag.append(body);
   }
 
   scrollH(x: number) {
@@ -236,7 +280,7 @@ class CalendarHeader {
         while (dt.getTime() <= this.dtEnd) {
           if (x < this.dtpos - DAY_WIDTH) {
             x += DAY_WIDTH;
-            dt.setDate(dt.getDate() + 1);
+            dt.setTime(dt.getTime() + DAY_MILISEC);
             first = false;
             continue;
           }
@@ -255,16 +299,21 @@ class CalendarHeader {
             ctx.fill();
           }
           first = false;
-          switch (dt.getDay()) {
-            case 0: // Sunday
-              ctx.fillStyle = "#f00";
-              break;
-            case 6: // Saturday
-              ctx.fillStyle = "#00f";
-              break;
-            default:
-              ctx.fillStyle = "#000";
-              break;
+          let holiday = holidays.filter((d) => d.getTime() === dt.getTime());
+          if (holiday.length > 0) {
+            ctx.fillStyle = "#f00";
+          } else {
+            switch (dt.getDay()) {
+              case 0: // Sunday
+                ctx.fillStyle = "#f00";
+                break;
+              case 6: // Saturday
+                ctx.fillStyle = "#00f";
+                break;
+              default:
+                ctx.fillStyle = "#000";
+                break;
+            }
           }
           ctx.fillText(`${date}`, x + 3 - this.dtpos, HEADER_HEIGHT - 3);
           x += DAY_WIDTH;
@@ -292,7 +341,6 @@ class CalendarHeader {
     this.dtpos =
       (x * frame.calendarTotalWidth) /
       (this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH);
-    //console.log(`scroll ${x} ${this.dtpos}`);
     this.draw();
     frame.calendarBody.dtpos = this.dtpos;
     frame.calendarBody.draw();
@@ -344,12 +392,12 @@ class CalendarBody {
         while (dt.getTime() <= this.dtEnd) {
           if (x < this.dtpos - DAY_WIDTH) {
             x += DAY_WIDTH;
-            dt.setDate(dt.getDate() + 1);
+            dt.setTime(dt.getTime() + DAY_MILISEC);
             continue;
           }
           if (x > this.width + this.dtpos) break;
 
-          dt.setDate(dt.getDate() + 1);
+          dt.setTime(dt.getTime() + DAY_MILISEC);
           x += DAY_WIDTH;
           if (x > width + this.dtpos) break;
           // 日付区切り線
@@ -476,7 +524,6 @@ class CalendarScroll {
   }
 
   mouseDownCalScroll(x: number) {
-    //debugger;
     if (
       SCROLL_BAR_WIDTH + this.barpos < x &&
       x < SCROLL_BAR_WIDTH + this.barpos + this.barWidth
@@ -570,7 +617,6 @@ class ScrollH {
     const cnvs = document.querySelector<HTMLCanvasElement>(`#${this.id}`);
     if (cnvs) {
       this.width = cnvs.offsetWidth;
-      //const height = cnvs.offsetHeight;
       cnvs.width = this.width;
       cnvs.height = this.height;
       if (this.width > frame.schThreshold) return;
@@ -598,7 +644,6 @@ class ScrollH {
         //ctx.fillStyle = scr_h ? "#a8a8a8" : "#c1c1c1";
         ctx.fillStyle = "#c1c1c1";
         // バー
-        //ctx.fillRect(16, 2, this.width - 32, 13);
         this.barWidth =
           ((this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH) * this.width) /
           frame.schThreshold;
@@ -615,7 +660,6 @@ class ScrollH {
   }
 
   mouseDownScrollH(x: number) {
-    //console.log(`mouseDownScrollH: ${x} ${this.pos} ${this.barWidth}`);
     if (
       SCROLL_BAR_WIDTH + this.pos < x &&
       x < SCROLL_BAR_WIDTH + this.pos + this.barWidth

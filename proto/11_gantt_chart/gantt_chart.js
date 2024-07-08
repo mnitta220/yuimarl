@@ -29,6 +29,50 @@ var cols = [
         width: 70,
     },
 ];
+var Ticket = /** @class */ (function () {
+    function Ticket() {
+        this.id = "";
+        this.idDisp = "";
+        this.name = "";
+        this.start = null;
+        this.end = null;
+        this.progress = 0;
+        this.children = [];
+    }
+    return Ticket;
+}());
+var tickets = [
+    {
+        id: "YU1",
+        idDisp: "YU1",
+        name: "チケットYU1",
+        start: new Date(2024, 6, 1),
+        end: new Date(2024, 6, 31),
+        progress: 100,
+        children: [
+            {
+                id: "YU11",
+                idDisp: "YU11",
+                name: "チケットYU11",
+                start: new Date(2024, 6, 1),
+                end: new Date(2024, 6, 31),
+                progress: 100,
+                children: [],
+            },
+        ],
+    },
+    {
+        id: "YU2",
+        idDisp: "YU2",
+        name: "チケットYU2",
+        start: new Date(2024, 6, 1),
+        end: null,
+        progress: 100,
+        children: [],
+    },
+];
+// 日本の祝日
+var holidays = [new Date(2024, 6, 15), new Date(2024, 7, 12)];
 var SCROLL_BAR_WIDTH = 16;
 var HEADER_LABEL_Y = 42;
 var LINE_HEIGHT = 21;
@@ -56,7 +100,7 @@ var ColumnHeader = /** @class */ (function () {
         line.className = "line";
         line.style.top = "".concat(HEADER_HEIGHT, "px");
         line.style.left = "0px";
-        line.style.width = "100%";
+        line.style.width = "".concat(frame.calendarLeft, "px");
         line.style.height = "1px";
         frag.append(line);
         var x = 0;
@@ -115,7 +159,6 @@ var ColumnBody = /** @class */ (function () {
         body.style.left = "".concat(this.pos, "px");
         body.style.width = "".concat(frame.calendarLeft, "px");
         body.style.height = "".concat(height, "px");
-        frag.append(body);
         var x = 0;
         for (var _i = 0, cols_2 = cols; _i < cols_2.length; _i++) {
             var col = cols_2[_i];
@@ -138,6 +181,7 @@ var ColumnBody = /** @class */ (function () {
         line.style.width = "1px";
         line.style.height = "".concat(height, "px");
         body.append(line);
+        frag.append(body);
     };
     ColumnBody.prototype.scrollH = function (x) {
         this.pos = -x;
@@ -221,44 +265,50 @@ var CalendarHeader = /** @class */ (function () {
                 ctx.fill();
                 ctx.fillRect(0, HEADER_HEIGHT, this.width, 1);
                 ctx.fill();
-                var dt = new Date(this.dtStart);
+                var dt_1 = new Date(this.dtStart);
                 var x = 0;
                 var first = true;
                 ctx.font = font;
                 ctx.textBaseline = "bottom";
                 ctx.textAlign = "left";
-                while (dt.getTime() <= this.dtEnd) {
+                while (dt_1.getTime() <= this.dtEnd) {
                     if (x < this.dtpos - DAY_WIDTH) {
                         x += DAY_WIDTH;
-                        dt.setDate(dt.getDate() + 1);
+                        dt_1.setTime(dt_1.getTime() + DAY_MILISEC);
                         first = false;
                         continue;
                     }
                     if (x > this.width + this.dtpos)
                         break;
-                    var date = dt.getDate();
+                    var date = dt_1.getDate();
                     if (date == 1 || (first && date < 25)) {
                         ctx.fillStyle = "#000";
-                        ctx.fillText("".concat(dt.getFullYear(), "/").concat(dt.getMonth() + 1), x + 3 - this.dtpos, LINE_HEIGHT + LINE_HEIGHT - 3);
+                        ctx.fillText("".concat(dt_1.getFullYear(), "/").concat(dt_1.getMonth() + 1), x + 3 - this.dtpos, LINE_HEIGHT + LINE_HEIGHT - 3);
                         ctx.fillStyle = "#bdcede";
                         ctx.fillRect(x - this.dtpos, LINE_HEIGHT, 1, LINE_HEIGHT);
                         ctx.fill();
                     }
                     first = false;
-                    switch (dt.getDay()) {
-                        case 0: // Sunday
-                            ctx.fillStyle = "#f00";
-                            break;
-                        case 6: // Saturday
-                            ctx.fillStyle = "#00f";
-                            break;
-                        default:
-                            ctx.fillStyle = "#000";
-                            break;
+                    var holiday = holidays.filter(function (d) { return d.getTime() === dt_1.getTime(); });
+                    if (holiday.length > 0) {
+                        ctx.fillStyle = "#f00";
+                    }
+                    else {
+                        switch (dt_1.getDay()) {
+                            case 0: // Sunday
+                                ctx.fillStyle = "#f00";
+                                break;
+                            case 6: // Saturday
+                                ctx.fillStyle = "#00f";
+                                break;
+                            default:
+                                ctx.fillStyle = "#000";
+                                break;
+                        }
                     }
                     ctx.fillText("".concat(date), x + 3 - this.dtpos, HEADER_HEIGHT - 3);
                     x += DAY_WIDTH;
-                    dt.setTime(dt.getTime() + DAY_MILISEC);
+                    dt_1.setTime(dt_1.getTime() + DAY_MILISEC);
                     // 日付区切り線
                     ctx.fillStyle = "#bdcede";
                     ctx.fillRect(x - this.dtpos, dtTop, 1, LINE_HEIGHT);
@@ -279,7 +329,6 @@ var CalendarHeader = /** @class */ (function () {
         this.dtpos =
             (x * frame.calendarTotalWidth) /
                 (this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH);
-        //console.log(`scroll ${x} ${this.dtpos}`);
         this.draw();
         frame.calendarBody.dtpos = this.dtpos;
         frame.calendarBody.draw();
@@ -331,12 +380,12 @@ var CalendarBody = /** @class */ (function () {
                 while (dt.getTime() <= this.dtEnd) {
                     if (x < this.dtpos - DAY_WIDTH) {
                         x += DAY_WIDTH;
-                        dt.setDate(dt.getDate() + 1);
+                        dt.setTime(dt.getTime() + DAY_MILISEC);
                         continue;
                     }
                     if (x > this.width + this.dtpos)
                         break;
-                    dt.setDate(dt.getDate() + 1);
+                    dt.setTime(dt.getTime() + DAY_MILISEC);
                     x += DAY_WIDTH;
                     if (x > width + this.dtpos)
                         break;
@@ -452,7 +501,6 @@ var CalendarScroll = /** @class */ (function () {
         }
     };
     CalendarScroll.prototype.mouseDownCalScroll = function (x) {
-        //debugger;
         if (SCROLL_BAR_WIDTH + this.barpos < x &&
             x < SCROLL_BAR_WIDTH + this.barpos + this.barWidth) {
             this.moving = true;
@@ -543,7 +591,6 @@ var ScrollH = /** @class */ (function () {
         var cnvs = document.querySelector("#".concat(this.id));
         if (cnvs) {
             this.width = cnvs.offsetWidth;
-            //const height = cnvs.offsetHeight;
             cnvs.width = this.width;
             cnvs.height = this.height;
             if (this.width > frame.schThreshold)
@@ -571,7 +618,6 @@ var ScrollH = /** @class */ (function () {
                 //ctx.fillStyle = scr_h ? "#a8a8a8" : "#c1c1c1";
                 ctx.fillStyle = "#c1c1c1";
                 // バー
-                //ctx.fillRect(16, 2, this.width - 32, 13);
                 this.barWidth =
                     ((this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH) * this.width) /
                         frame.schThreshold;
@@ -581,7 +627,6 @@ var ScrollH = /** @class */ (function () {
         }
     };
     ScrollH.prototype.mouseDownScrollH = function (x) {
-        //console.log(`mouseDownScrollH: ${x} ${this.pos} ${this.barWidth}`);
         if (SCROLL_BAR_WIDTH + this.pos < x &&
             x < SCROLL_BAR_WIDTH + this.pos + this.barWidth) {
             this.moving = true;

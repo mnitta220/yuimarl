@@ -10,7 +10,7 @@ var Column = /** @class */ (function () {
 var cols = [
     {
         name: "ID",
-        width: 70,
+        width: 50,
     },
     {
         name: "チケット名",
@@ -18,15 +18,15 @@ var cols = [
     },
     {
         name: "開始日",
-        width: 100,
+        width: 72,
     },
     {
         name: "終了日",
-        width: 100,
+        width: 72,
     },
     {
-        name: "進捗率",
-        width: 70,
+        name: "進捗",
+        width: 42,
     },
 ];
 var Ticket = /** @class */ (function () {
@@ -37,6 +37,7 @@ var Ticket = /** @class */ (function () {
         this.start = null;
         this.end = null;
         this.progress = 0;
+        this.open = false;
         this.children = [];
     }
     return Ticket;
@@ -49,6 +50,7 @@ var tickets = [
         start: new Date(2024, 6, 1),
         end: new Date(2024, 6, 31),
         progress: 100,
+        open: true,
         children: [
             {
                 id: "YU11",
@@ -57,6 +59,7 @@ var tickets = [
                 start: new Date(2024, 6, 1),
                 end: new Date(2024, 6, 31),
                 progress: 100,
+                open: true,
                 children: [],
             },
         ],
@@ -68,6 +71,7 @@ var tickets = [
         start: new Date(2024, 6, 1),
         end: null,
         progress: 100,
+        open: true,
         children: [],
     },
 ];
@@ -77,6 +81,7 @@ var SCROLL_BAR_WIDTH = 16;
 var HEADER_LABEL_Y = 42;
 var LINE_HEIGHT = 21;
 var HEADER_HEIGHT = 63;
+var TICKET_HEIGHT = 22;
 var DAY_WIDTH = 22;
 var CALENDAR_MIN = DAY_WIDTH * 10;
 var DAY_MILISEC = 1000 * 60 * 60 * 24;
@@ -147,41 +152,111 @@ var ColumnHeader = /** @class */ (function () {
 var ColumnBody = /** @class */ (function () {
     function ColumnBody() {
         this.id = "colbody";
+        this.width = 0;
         this.pos = 0;
     }
     // カラムボディを構築する
     ColumnBody.prototype.build = function (frag) {
-        var body = document.createElement("div");
+        var body = document.createElement("canvas");
         var height = frame.height - HEADER_HEIGHT - SCROLL_BAR_WIDTH;
         body.id = this.id;
+        this.width = frame.calendarLeft;
         body.className = "gantt-body";
         body.style.top = "".concat(HEADER_HEIGHT, "px");
         body.style.left = "".concat(this.pos, "px");
-        body.style.width = "".concat(frame.calendarLeft, "px");
+        body.style.width = "".concat(this.width, "px");
         body.style.height = "".concat(height, "px");
-        var x = 0;
-        for (var _i = 0, cols_2 = cols; _i < cols_2.length; _i++) {
-            var col = cols_2[_i];
-            x += col.width;
-            // カラム区切り線
-            var line_1 = document.createElement("div");
-            line_1.className = "line";
-            line_1.style.top = "0px";
-            line_1.style.left = "".concat(x, "px");
-            line_1.style.width = "1px";
-            line_1.style.height = "".concat(height, "px");
-            body.append(line_1);
-        }
-        // カレンダー境界線
-        x += 2;
-        var line = document.createElement("div");
-        line.className = "line";
-        line.style.top = "0px";
-        line.style.left = "".concat(x, "px");
-        line.style.width = "1px";
-        line.style.height = "".concat(height, "px");
-        body.append(line);
         frag.append(body);
+    };
+    // 描画する
+    ColumnBody.prototype.draw = function () {
+        var cnvs = document.querySelector("#".concat(this.id));
+        if (cnvs) {
+            var width = cnvs.offsetWidth;
+            var height = cnvs.offsetHeight;
+            cnvs.width = width;
+            cnvs.height = height;
+            var ctx = cnvs.getContext("2d");
+            if (ctx) {
+                ctx.save();
+                this.drawTickets(ctx, tickets, 0, 0);
+                ctx.fillStyle = "#82a4c1";
+                var x = 0;
+                for (var _i = 0, cols_2 = cols; _i < cols_2.length; _i++) {
+                    var col = cols_2[_i];
+                    x += col.width;
+                    // カラム区切り線
+                    ctx.fillRect(x, 0, 1, height);
+                    ctx.fill();
+                }
+                // カレンダー境界線
+                x += 2;
+                ctx.fillRect(x, 0, 1, height);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+    };
+    ColumnBody.prototype.drawTickets = function (ctx, ts, level, y) {
+        var y1 = y;
+        for (var _i = 0, ts_1 = ts; _i < ts_1.length; _i++) {
+            var t = ts_1[_i];
+            //t.draw(level);
+            console.log("".concat(level, ",").concat(t.name, ",").concat(y1));
+            this.drawTicket(ctx, t, level, y1);
+            y1 += TICKET_HEIGHT;
+            y1 = this.drawTickets(ctx, t.children, level + 1, y1);
+        }
+        return y1;
+    };
+    // チケットを描画する
+    ColumnBody.prototype.drawTicket = function (ctx, ticket, level, y) {
+        ctx.font = "9.5pt sans-serif";
+        ctx.textBaseline = "bottom";
+        ctx.fillStyle = "#00f";
+        // ID
+        ctx.fillText(ticket.idDisp, 3, y + 17);
+        ctx.fillStyle = "#808080";
+        // チケット□
+        var x = cols[0].width + level * 12 + 6;
+        ctx.fillRect(x, y + 6, 1, 8);
+        ctx.fill();
+        ctx.fillRect(x, y + 6, 8, 1);
+        ctx.fill();
+        ctx.fillRect(x, y + 14, 8, 1);
+        ctx.fill();
+        ctx.fillRect(x + 8, y + 6, 1, 9);
+        ctx.fill();
+        ctx.fillStyle = "#000";
+        // チケット名
+        ctx.fillText(ticket.name, x + 14, y + 17);
+        x = cols[0].width + cols[1].width + 3;
+        // 開始日
+        if (ticket.start) {
+            ctx.fillText(this.dtDisp(ticket.start), x, y + 17);
+        }
+        x += cols[2].width;
+        // 終了日
+        if (ticket.end) {
+            ctx.fillText(this.dtDisp(ticket.end), x, y + 17);
+        }
+        x += cols[3].width + cols[4].width - 6;
+        //ctx.textAlign = "right";
+        var t1 = "".concat(ticket.progress);
+        var m1 = ctx.measureText(t1).width;
+        ctx.fillText(t1, x - m1, y + 17);
+        //ctx.textAlign = "left";
+        //ctx.fillStyle = "#808080";
+        ctx.fillStyle = "#e5ebf2";
+        // 区切り線
+        ctx.fillRect(0, y + TICKET_HEIGHT, this.width, 1);
+        ctx.fill();
+    };
+    ColumnBody.prototype.dtDisp = function (dt) {
+        var y = "".concat(dt.getFullYear()).slice(-2);
+        var m = "0".concat(dt.getMonth() + 1).slice(-2);
+        var d = "0".concat(dt.getDate()).slice(-2);
+        return "".concat(y, "/").concat(m, "/").concat(d);
     };
     ColumnBody.prototype.scrollH = function (x) {
         this.pos = -x;
@@ -281,14 +356,20 @@ var CalendarHeader = /** @class */ (function () {
                     if (x > this.width + this.dtpos)
                         break;
                     var date = dt_1.getDate();
-                    if (date == 1 || (first && date < 25)) {
+                    if (first) {
+                        first = false;
+                        if (date == 1 || date < 25) {
+                            ctx.fillStyle = "#000";
+                            ctx.fillText("".concat(dt_1.getFullYear(), "/").concat(dt_1.getMonth() + 1), x + 3 - this.dtpos, LINE_HEIGHT + LINE_HEIGHT - 3);
+                        }
+                    }
+                    else if (date == 1) {
                         ctx.fillStyle = "#000";
                         ctx.fillText("".concat(dt_1.getFullYear(), "/").concat(dt_1.getMonth() + 1), x + 3 - this.dtpos, LINE_HEIGHT + LINE_HEIGHT - 3);
                         ctx.fillStyle = "#bdcede";
                         ctx.fillRect(x - this.dtpos, LINE_HEIGHT, 1, LINE_HEIGHT);
                         ctx.fill();
                     }
-                    first = false;
                     var holiday = holidays.filter(function (d) { return d.getTime() === dt_1.getTime(); });
                     if (holiday.length > 0) {
                         ctx.fillStyle = "#f00";
@@ -374,6 +455,7 @@ var CalendarBody = /** @class */ (function () {
             var ctx = cnvs.getContext("2d");
             if (ctx) {
                 ctx.save();
+                this.drawTickets(ctx, tickets, 0, 0);
                 ctx.fillStyle = "#bdcede";
                 var dt = new Date(this.dtStart);
                 var x = 0;
@@ -396,6 +478,25 @@ var CalendarBody = /** @class */ (function () {
                 ctx.restore();
             }
         }
+    };
+    CalendarBody.prototype.drawTickets = function (ctx, ts, level, y) {
+        var y1 = y;
+        for (var _i = 0, ts_2 = ts; _i < ts_2.length; _i++) {
+            var t = ts_2[_i];
+            //t.draw(level);
+            console.log("".concat(level, ",").concat(t.name, ",").concat(y1));
+            this.drawTicket(ctx, t, level, y1);
+            y1 += TICKET_HEIGHT;
+            y1 = this.drawTickets(ctx, t.children, level + 1, y1);
+        }
+        return y1;
+    };
+    // チケットを描画する
+    CalendarBody.prototype.drawTicket = function (ctx, ticket, level, y) {
+        ctx.fillStyle = "#e5ebf2";
+        // 区切り線
+        ctx.fillRect(0, y + TICKET_HEIGHT, this.width, 1);
+        ctx.fill();
     };
     CalendarBody.prototype.scrollH = function (x) {
         this.pos = -x;
@@ -771,12 +872,27 @@ var GanttFrame = /** @class */ (function () {
     };
     // ガントチャートを表示する
     GanttFrame.prototype.draw = function () {
+        this.columnBody.draw();
         this.calendarHeader.draw();
         this.calendarBody.draw();
         this.calendarScroll.draw();
         this.sch.draw();
         this.scv.draw();
+        //this.drawTickets(tickets, 0, 0);
     };
+    /*
+    drawTickets(ts: Ticket[], level: number, y: number): number {
+      let y1 = y;
+      for (let t of ts) {
+        //t.draw(level);
+        console.log(`${level},${t.name},${y1}`);
+        this.columnBody.drawTicket(t, level, y1);
+        y1 += TICKET_HEIGHT;
+        y1 = this.drawTickets(t.children, level + 1, y1);
+      }
+      return y1;
+    }
+    */
     GanttFrame.prototype.scrollH = function (x) {
         this.posX =
             (x * this.schThreshold) /

@@ -64,7 +64,7 @@ const tickets = [
             name: "チケットYU111あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 1),
             end: new Date(2024, 6, 2),
-            progress: 100,
+            progress: 0,
             open: true,
             children: [],
           },
@@ -89,6 +89,16 @@ const tickets = [
     start: null,
     end: new Date(2024, 6, 1),
     progress: 25,
+    open: true,
+    children: [],
+  },
+  {
+    id: "YU4",
+    idDisp: "YU4",
+    name: "チケットYU4あいうえおかきくけこさしすせそたちつてと",
+    start: new Date(2024, 6, 1),
+    end: new Date(2024, 6, 3),
+    progress: 90,
     open: true,
     children: [],
   },
@@ -484,7 +494,7 @@ class CalendarHeader {
                 LINE_HEIGHT + LINE_HEIGHT - 3
               );
             }
-          } else if (date == 1) {
+          } else if (date === 1) {
             ctx.fillStyle = "#000";
             ctx.fillText(
               `${dt.getFullYear()}/${dt.getMonth() + 1}`,
@@ -584,7 +594,6 @@ class CalendarBody {
       if (ctx) {
         ctx.save();
 
-        //ctx.fillStyle = "#bdcede";
         let dt = new Date(this.dtStart);
         let x = 0;
         while (dt.getTime() <= this.dtEnd) {
@@ -654,16 +663,27 @@ class CalendarBody {
     // チケット開始日/終了日
     if (ticket.start) {
       if (ticket.end) {
-        ctx.fillStyle = "#68f";
-        const x1 = (ticket.start.getTime() - this.dtStart) / DAY_MILISEC;
-        const x2 = (ticket.end.getTime() - this.dtStart) / DAY_MILISEC;
-        ctx.fillRect(
-          x1 * DAY_WIDTH - this.dtpos,
-          y + 8,
-          (x2 - x1 + 1) * DAY_WIDTH,
-          6
-        );
-        ctx.fill();
+        let x1 = (ticket.start.getTime() - this.dtStart) / DAY_MILISEC;
+        x1 = x1 * DAY_WIDTH - this.dtpos;
+        let x2 = (ticket.end.getTime() - this.dtStart) / DAY_MILISEC;
+        x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
+        if (ticket.progress === 0) {
+          ctx.fillStyle = "#9bf";
+          ctx.fillRect(x1, y + 8, x2 - x1, 6);
+          ctx.fill();
+        } else if (ticket.progress === 100) {
+          ctx.fillStyle = "#68f";
+          ctx.fillRect(x1, y + 8, x2 - x1, 6);
+          ctx.fill();
+        } else {
+          ctx.fillStyle = "#9bf";
+          ctx.fillRect(x1, y + 8, x2 - x1, 6);
+          ctx.fill();
+          const x3 = ((x2 - x1) * ticket.progress) / 100;
+          ctx.fillStyle = "#68f";
+          ctx.fillRect(x1, y + 8, x3, 6);
+          ctx.fill();
+        }
       } else {
         ctx.fillStyle = "#68f";
         let x1 = (ticket.start.getTime() - this.dtStart) / DAY_MILISEC;
@@ -1117,22 +1137,7 @@ class GanttFrame {
     this.calendarScroll.draw();
     this.sch.draw();
     this.scv.draw();
-    //this.drawTickets(tickets, 0, 0);
   }
-
-  /*
-  drawTickets(ts: Ticket[], level: number, y: number): number {
-    let y1 = y;
-    for (let t of ts) {
-      //t.draw(level);
-      console.log(`${level},${t.name},${y1}`);
-      this.columnBody.drawTicket(t, level, y1);
-      y1 += TICKET_HEIGHT;
-      y1 = this.drawTickets(t.children, level + 1, y1);
-    }
-    return y1;
-  }
-  */
 
   scrollH(x: number) {
     this.posX =

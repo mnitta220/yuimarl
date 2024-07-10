@@ -67,7 +67,7 @@ var tickets = [
                         name: "チケットYU111あいうえおかきくけこさしすせそたちつてと",
                         start: new Date(2024, 6, 1),
                         end: new Date(2024, 6, 2),
-                        progress: 100,
+                        progress: 0,
                         open: true,
                         children: [],
                     },
@@ -92,6 +92,16 @@ var tickets = [
         start: null,
         end: new Date(2024, 6, 1),
         progress: 25,
+        open: true,
+        children: [],
+    },
+    {
+        id: "YU4",
+        idDisp: "YU4",
+        name: "チケットYU4あいうえおかきくけこさしすせそたちつてと",
+        start: new Date(2024, 6, 1),
+        end: new Date(2024, 6, 3),
+        progress: 90,
         open: true,
         children: [],
     },
@@ -440,7 +450,7 @@ var CalendarHeader = /** @class */ (function () {
                             ctx.fillText("".concat(dt_1.getFullYear(), "/").concat(dt_1.getMonth() + 1), x + 3 - this.dtpos, LINE_HEIGHT + LINE_HEIGHT - 3);
                         }
                     }
-                    else if (date == 1) {
+                    else if (date === 1) {
                         ctx.fillStyle = "#000";
                         ctx.fillText("".concat(dt_1.getFullYear(), "/").concat(dt_1.getMonth() + 1), x + 3 - this.dtpos, LINE_HEIGHT + LINE_HEIGHT - 3);
                         ctx.fillStyle = "#bdcede";
@@ -532,7 +542,6 @@ var CalendarBody = /** @class */ (function () {
             var ctx = cnvs.getContext("2d");
             if (ctx) {
                 ctx.save();
-                //ctx.fillStyle = "#bdcede";
                 var dt_2 = new Date(this.dtStart);
                 var x = 0;
                 while (dt_2.getTime() <= this.dtEnd) {
@@ -599,11 +608,29 @@ var CalendarBody = /** @class */ (function () {
         // チケット開始日/終了日
         if (ticket.start) {
             if (ticket.end) {
-                ctx.fillStyle = "#68f";
                 var x1 = (ticket.start.getTime() - this.dtStart) / DAY_MILISEC;
+                x1 = x1 * DAY_WIDTH - this.dtpos;
                 var x2 = (ticket.end.getTime() - this.dtStart) / DAY_MILISEC;
-                ctx.fillRect(x1 * DAY_WIDTH - this.dtpos, y + 8, (x2 - x1 + 1) * DAY_WIDTH, 6);
-                ctx.fill();
+                x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
+                if (ticket.progress === 0) {
+                    ctx.fillStyle = "#9bf";
+                    ctx.fillRect(x1, y + 8, x2 - x1, 6);
+                    ctx.fill();
+                }
+                else if (ticket.progress === 100) {
+                    ctx.fillStyle = "#68f";
+                    ctx.fillRect(x1, y + 8, x2 - x1, 6);
+                    ctx.fill();
+                }
+                else {
+                    ctx.fillStyle = "#9bf";
+                    ctx.fillRect(x1, y + 8, x2 - x1, 6);
+                    ctx.fill();
+                    var x3 = ((x2 - x1) * ticket.progress) / 100;
+                    ctx.fillStyle = "#68f";
+                    ctx.fillRect(x1, y + 8, x3, 6);
+                    ctx.fill();
+                }
             }
             else {
                 ctx.fillStyle = "#68f";
@@ -1033,21 +1060,7 @@ var GanttFrame = /** @class */ (function () {
         this.calendarScroll.draw();
         this.sch.draw();
         this.scv.draw();
-        //this.drawTickets(tickets, 0, 0);
     };
-    /*
-    drawTickets(ts: Ticket[], level: number, y: number): number {
-      let y1 = y;
-      for (let t of ts) {
-        //t.draw(level);
-        console.log(`${level},${t.name},${y1}`);
-        this.columnBody.drawTicket(t, level, y1);
-        y1 += TICKET_HEIGHT;
-        y1 = this.drawTickets(t.children, level + 1, y1);
-      }
-      return y1;
-    }
-    */
     GanttFrame.prototype.scrollH = function (x) {
         this.posX =
             (x * this.schThreshold) /

@@ -10,23 +10,23 @@ var Column = /** @class */ (function () {
 var cols = [
     {
         name: "ID",
-        width: 50,
+        width: 54,
     },
     {
         name: "チケット名",
-        width: 300,
+        width: 320,
     },
     {
         name: "開始日",
-        width: 72,
+        width: 67,
     },
     {
         name: "終了日",
-        width: 72,
+        width: 67,
     },
     {
         name: "進捗",
-        width: 42,
+        width: 36,
     },
 ];
 var Ticket = /** @class */ (function () {
@@ -65,9 +65,9 @@ var tickets = [
                         id: "YU111",
                         idDisp: "YU111",
                         name: "チケットYU111あいうえおかきくけこさしすせそたちつてと",
-                        start: new Date(2024, 6, 1),
-                        end: new Date(2024, 6, 2),
-                        progress: 0,
+                        start: new Date(2024, 6, 10),
+                        end: new Date(2024, 6, 16),
+                        progress: 10,
                         open: true,
                         children: [],
                     },
@@ -96,12 +96,12 @@ var tickets = [
         children: [],
     },
     {
-        id: "YU4",
-        idDisp: "YU4",
-        name: "チケットYU4あいうえおかきくけこさしすせそたちつてと",
+        id: "YU9999",
+        idDisp: "YU9999",
+        name: "チケットYU9999あいうえおかきくけこさしすせそたちつてと",
         start: new Date(2024, 6, 1),
         end: new Date(2024, 6, 3),
-        progress: 90,
+        progress: 40,
         open: true,
         children: [],
     },
@@ -618,7 +618,8 @@ var CalendarBody = /** @class */ (function () {
                     ctx.fill();
                 }
                 else if (ticket.progress === 100) {
-                    ctx.fillStyle = "#68f";
+                    //ctx.fillStyle = "#68f";
+                    ctx.fillStyle = "#57f";
                     ctx.fillRect(x1, y + 8, x2 - x1, 6);
                     ctx.fill();
                 }
@@ -627,22 +628,22 @@ var CalendarBody = /** @class */ (function () {
                     ctx.fillRect(x1, y + 8, x2 - x1, 6);
                     ctx.fill();
                     var x3 = ((x2 - x1) * ticket.progress) / 100;
-                    ctx.fillStyle = "#68f";
+                    ctx.fillStyle = "#57f";
                     ctx.fillRect(x1, y + 8, x3, 6);
                     ctx.fill();
                 }
             }
             else {
-                ctx.fillStyle = "#68f";
+                ctx.fillStyle = "#57f";
                 var x1 = (ticket.start.getTime() - this.dtStart) / DAY_MILISEC;
                 x1 = x1 * DAY_WIDTH - this.dtpos;
                 ctx.fillRect(x1, y + 8, 12, 6);
                 ctx.fill();
-                ctx.fillStyle = "#79f";
+                ctx.fillStyle = "#68f";
                 x1 += 12;
                 ctx.fillRect(x1, y + 8, 7, 6);
                 ctx.fill();
-                ctx.fillStyle = "#9bf";
+                ctx.fillStyle = "#8af";
                 x1 += 7;
                 ctx.fillRect(x1, y + 8, 6, 6);
                 ctx.fill();
@@ -654,17 +655,17 @@ var CalendarBody = /** @class */ (function () {
         }
         else {
             if (ticket.end) {
-                ctx.fillStyle = "#68f";
+                ctx.fillStyle = "#57f";
                 var x2 = (ticket.end.getTime() - this.dtStart) / DAY_MILISEC;
                 x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
                 x2 -= 12;
                 ctx.fillRect(x2, y + 8, 12, 6);
                 ctx.fill();
-                ctx.fillStyle = "#79f";
+                ctx.fillStyle = "#68f";
                 x2 -= 7;
                 ctx.fillRect(x2, y + 8, 7, 6);
                 ctx.fill();
-                ctx.fillStyle = "#9bf";
+                ctx.fillStyle = "#8af";
                 x2 -= 6;
                 ctx.fillRect(x2, y + 8, 6, 6);
                 ctx.fill();

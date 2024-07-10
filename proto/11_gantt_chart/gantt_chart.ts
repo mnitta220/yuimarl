@@ -46,7 +46,7 @@ const tickets = [
     name: "チケットYU1",
     start: new Date(2024, 6, 1),
     end: new Date(2024, 6, 31),
-    progress: 100,
+    progress: 50,
     open: true,
     children: [
       {
@@ -54,7 +54,7 @@ const tickets = [
         idDisp: "YU11",
         name: "チケットYU11",
         start: new Date(2024, 6, 1),
-        end: new Date(2024, 6, 31),
+        end: new Date(2024, 6, 2),
         progress: 100,
         open: true,
         children: [],
@@ -67,7 +67,17 @@ const tickets = [
     name: "チケットYU2",
     start: new Date(2024, 6, 1),
     end: null,
-    progress: 100,
+    progress: 0,
+    open: true,
+    children: [],
+  },
+  {
+    id: "YU3",
+    idDisp: "YU3",
+    name: "チケットYU3",
+    start: null,
+    end: new Date(2024, 6, 1),
+    progress: 25,
     open: true,
     children: [],
   },
@@ -213,8 +223,6 @@ class ColumnBody {
   ): number {
     let y1 = y;
     for (let t of ts) {
-      //t.draw(level);
-      console.log(`${level},${t.name},${y1}`);
       this.drawTicket(ctx, t, level, y1);
       y1 += TICKET_HEIGHT;
       y1 = this.drawTickets(ctx, t.children, level + 1, y1);
@@ -231,40 +239,38 @@ class ColumnBody {
   ) {
     ctx.font = "9.5pt sans-serif";
     ctx.textBaseline = "bottom";
+    const y1 = y + 18;
     ctx.fillStyle = "#00f";
     // ID
-    ctx.fillText(ticket.idDisp, 3, y + 17);
+    ctx.fillText(ticket.idDisp, 3, y1);
     ctx.fillStyle = "#808080";
     // チケット□
     let x = cols[0].width + level * 12 + 6;
-    ctx.fillRect(x, y + 6, 1, 8);
+    ctx.fillRect(x, y + 7, 1, 8);
     ctx.fill();
-    ctx.fillRect(x, y + 6, 8, 1);
+    ctx.fillRect(x, y + 7, 8, 1);
     ctx.fill();
-    ctx.fillRect(x, y + 14, 8, 1);
+    ctx.fillRect(x, y + 15, 8, 1);
     ctx.fill();
-    ctx.fillRect(x + 8, y + 6, 1, 9);
+    ctx.fillRect(x + 8, y + 7, 1, 9);
     ctx.fill();
     ctx.fillStyle = "#000";
     // チケット名
-    ctx.fillText(ticket.name, x + 14, y + 17);
+    ctx.fillText(ticket.name, x + 14, y1);
     x = cols[0].width + cols[1].width + 3;
     // 開始日
     if (ticket.start) {
-      ctx.fillText(this.dtDisp(ticket.start), x, y + 17);
+      ctx.fillText(this.dtDisp(ticket.start), x, y1);
     }
     x += cols[2].width;
     // 終了日
     if (ticket.end) {
-      ctx.fillText(this.dtDisp(ticket.end), x, y + 17);
+      ctx.fillText(this.dtDisp(ticket.end), x, y1);
     }
     x += cols[3].width + cols[4].width - 6;
-    //ctx.textAlign = "right";
     const t1 = `${ticket.progress}`;
     let m1 = ctx.measureText(t1).width;
-    ctx.fillText(t1, x - m1, y + 17);
-    //ctx.textAlign = "left";
-    //ctx.fillStyle = "#808080";
+    ctx.fillText(t1, x - m1, y1);
 
     ctx.fillStyle = "#e5ebf2";
     // 区切り線
@@ -490,8 +496,6 @@ class CalendarBody {
       if (ctx) {
         ctx.save();
 
-        this.drawTickets(ctx, tickets, 0, 0);
-
         ctx.fillStyle = "#bdcede";
         let dt = new Date(this.dtStart);
         let x = 0;
@@ -511,35 +515,80 @@ class CalendarBody {
           ctx.fill();
         }
 
+        this.drawTickets(ctx, tickets, 0);
+
         ctx.restore();
       }
     }
   }
 
-  drawTickets(
-    ctx: CanvasRenderingContext2D,
-    ts: Ticket[],
-    level: number,
-    y: number
-  ): number {
+  drawTickets(ctx: CanvasRenderingContext2D, ts: Ticket[], y: number): number {
     let y1 = y;
     for (let t of ts) {
-      //t.draw(level);
-      console.log(`${level},${t.name},${y1}`);
-      this.drawTicket(ctx, t, level, y1);
+      this.drawTicket(ctx, t, y1);
       y1 += TICKET_HEIGHT;
-      y1 = this.drawTickets(ctx, t.children, level + 1, y1);
+      y1 = this.drawTickets(ctx, t.children, y1);
     }
     return y1;
   }
 
   // チケットを描画する
-  drawTicket(
-    ctx: CanvasRenderingContext2D,
-    ticket: Ticket,
-    level: number,
-    y: number
-  ) {
+  drawTicket(ctx: CanvasRenderingContext2D, ticket: Ticket, y: number) {
+    // チケット開始日/終了日
+    if (ticket.start) {
+      if (ticket.end) {
+        ctx.fillStyle = "#68f";
+        let x1 = (ticket.start.getTime() - this.dtStart) / DAY_MILISEC;
+        let x2 = (ticket.end.getTime() - this.dtStart) / DAY_MILISEC;
+        ctx.fillRect(
+          x1 * DAY_WIDTH - this.dtpos,
+          y + 8,
+          (x2 - x1 + 1) * DAY_WIDTH,
+          6
+        );
+        ctx.fill();
+      } else {
+        ctx.fillStyle = "#68f";
+        let x1 = (ticket.start.getTime() - this.dtStart) / DAY_MILISEC;
+        x1 = x1 * DAY_WIDTH - this.dtpos;
+        ctx.fillRect(x1, y + 8, 12, 6);
+        ctx.fill();
+        ctx.fillStyle = "#79f";
+        x1 += 12;
+        ctx.fillRect(x1, y + 8, 7, 6);
+        ctx.fill();
+        ctx.fillStyle = "#9bf";
+        x1 += 7;
+        ctx.fillRect(x1, y + 8, 6, 6);
+        ctx.fill();
+        ctx.fillStyle = "#bdf";
+        x1 += 6;
+        ctx.fillRect(x1, y + 8, 5, 6);
+        ctx.fill();
+      }
+    } else {
+      if (ticket.end) {
+        ctx.fillStyle = "#68f";
+        let x2 = (ticket.end.getTime() - this.dtStart) / DAY_MILISEC;
+        x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
+        x2 -= 12;
+        ctx.fillRect(x2, y + 8, 12, 6);
+        ctx.fill();
+        ctx.fillStyle = "#79f";
+        x2 -= 7;
+        ctx.fillRect(x2, y + 8, 7, 6);
+        ctx.fill();
+        ctx.fillStyle = "#9bf";
+        x2 -= 6;
+        ctx.fillRect(x2, y + 8, 6, 6);
+        ctx.fill();
+        ctx.fillStyle = "#bdf";
+        x2 -= 5;
+        ctx.fillRect(x2, y + 8, 5, 6);
+        ctx.fill();
+      }
+    }
+
     ctx.fillStyle = "#e5ebf2";
     // 区切り線
     ctx.fillRect(0, y + TICKET_HEIGHT, this.width, 1);

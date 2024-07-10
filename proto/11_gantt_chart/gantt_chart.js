@@ -49,7 +49,7 @@ var tickets = [
         name: "チケットYU1",
         start: new Date(2024, 6, 1),
         end: new Date(2024, 6, 31),
-        progress: 100,
+        progress: 50,
         open: true,
         children: [
             {
@@ -57,7 +57,7 @@ var tickets = [
                 idDisp: "YU11",
                 name: "チケットYU11",
                 start: new Date(2024, 6, 1),
-                end: new Date(2024, 6, 31),
+                end: new Date(2024, 6, 2),
                 progress: 100,
                 open: true,
                 children: [],
@@ -70,7 +70,17 @@ var tickets = [
         name: "チケットYU2",
         start: new Date(2024, 6, 1),
         end: null,
-        progress: 100,
+        progress: 0,
+        open: true,
+        children: [],
+    },
+    {
+        id: "YU3",
+        idDisp: "YU3",
+        name: "チケットYU3",
+        start: null,
+        end: new Date(2024, 6, 1),
+        progress: 25,
         open: true,
         children: [],
     },
@@ -201,8 +211,6 @@ var ColumnBody = /** @class */ (function () {
         var y1 = y;
         for (var _i = 0, ts_1 = ts; _i < ts_1.length; _i++) {
             var t = ts_1[_i];
-            //t.draw(level);
-            console.log("".concat(level, ",").concat(t.name, ",").concat(y1));
             this.drawTicket(ctx, t, level, y1);
             y1 += TICKET_HEIGHT;
             y1 = this.drawTickets(ctx, t.children, level + 1, y1);
@@ -213,40 +221,38 @@ var ColumnBody = /** @class */ (function () {
     ColumnBody.prototype.drawTicket = function (ctx, ticket, level, y) {
         ctx.font = "9.5pt sans-serif";
         ctx.textBaseline = "bottom";
+        var y1 = y + 18;
         ctx.fillStyle = "#00f";
         // ID
-        ctx.fillText(ticket.idDisp, 3, y + 17);
+        ctx.fillText(ticket.idDisp, 3, y1);
         ctx.fillStyle = "#808080";
         // チケット□
         var x = cols[0].width + level * 12 + 6;
-        ctx.fillRect(x, y + 6, 1, 8);
+        ctx.fillRect(x, y + 7, 1, 8);
         ctx.fill();
-        ctx.fillRect(x, y + 6, 8, 1);
+        ctx.fillRect(x, y + 7, 8, 1);
         ctx.fill();
-        ctx.fillRect(x, y + 14, 8, 1);
+        ctx.fillRect(x, y + 15, 8, 1);
         ctx.fill();
-        ctx.fillRect(x + 8, y + 6, 1, 9);
+        ctx.fillRect(x + 8, y + 7, 1, 9);
         ctx.fill();
         ctx.fillStyle = "#000";
         // チケット名
-        ctx.fillText(ticket.name, x + 14, y + 17);
+        ctx.fillText(ticket.name, x + 14, y1);
         x = cols[0].width + cols[1].width + 3;
         // 開始日
         if (ticket.start) {
-            ctx.fillText(this.dtDisp(ticket.start), x, y + 17);
+            ctx.fillText(this.dtDisp(ticket.start), x, y1);
         }
         x += cols[2].width;
         // 終了日
         if (ticket.end) {
-            ctx.fillText(this.dtDisp(ticket.end), x, y + 17);
+            ctx.fillText(this.dtDisp(ticket.end), x, y1);
         }
         x += cols[3].width + cols[4].width - 6;
-        //ctx.textAlign = "right";
         var t1 = "".concat(ticket.progress);
         var m1 = ctx.measureText(t1).width;
-        ctx.fillText(t1, x - m1, y + 17);
-        //ctx.textAlign = "left";
-        //ctx.fillStyle = "#808080";
+        ctx.fillText(t1, x - m1, y1);
         ctx.fillStyle = "#e5ebf2";
         // 区切り線
         ctx.fillRect(0, y + TICKET_HEIGHT, this.width, 1);
@@ -455,7 +461,6 @@ var CalendarBody = /** @class */ (function () {
             var ctx = cnvs.getContext("2d");
             if (ctx) {
                 ctx.save();
-                this.drawTickets(ctx, tickets, 0, 0);
                 ctx.fillStyle = "#bdcede";
                 var dt = new Date(this.dtStart);
                 var x = 0;
@@ -475,24 +480,74 @@ var CalendarBody = /** @class */ (function () {
                     ctx.fillRect(x - this.dtpos, 0, 1, height);
                     ctx.fill();
                 }
+                this.drawTickets(ctx, tickets, 0);
                 ctx.restore();
             }
         }
     };
-    CalendarBody.prototype.drawTickets = function (ctx, ts, level, y) {
+    CalendarBody.prototype.drawTickets = function (ctx, ts, y) {
         var y1 = y;
         for (var _i = 0, ts_2 = ts; _i < ts_2.length; _i++) {
             var t = ts_2[_i];
-            //t.draw(level);
-            console.log("".concat(level, ",").concat(t.name, ",").concat(y1));
-            this.drawTicket(ctx, t, level, y1);
+            this.drawTicket(ctx, t, y1);
             y1 += TICKET_HEIGHT;
-            y1 = this.drawTickets(ctx, t.children, level + 1, y1);
+            y1 = this.drawTickets(ctx, t.children, y1);
         }
         return y1;
     };
     // チケットを描画する
-    CalendarBody.prototype.drawTicket = function (ctx, ticket, level, y) {
+    CalendarBody.prototype.drawTicket = function (ctx, ticket, y) {
+        // チケット開始日/終了日
+        if (ticket.start) {
+            if (ticket.end) {
+                ctx.fillStyle = "#68f";
+                var x1 = (ticket.start.getTime() - this.dtStart) / DAY_MILISEC;
+                var x2 = (ticket.end.getTime() - this.dtStart) / DAY_MILISEC;
+                ctx.fillRect(x1 * DAY_WIDTH - this.dtpos, y + 8, (x2 - x1 + 1) * DAY_WIDTH, 6);
+                ctx.fill();
+            }
+            else {
+                ctx.fillStyle = "#68f";
+                var x1 = (ticket.start.getTime() - this.dtStart) / DAY_MILISEC;
+                x1 = x1 * DAY_WIDTH - this.dtpos;
+                ctx.fillRect(x1, y + 8, 12, 6);
+                ctx.fill();
+                ctx.fillStyle = "#79f";
+                x1 += 12;
+                ctx.fillRect(x1, y + 8, 7, 6);
+                ctx.fill();
+                ctx.fillStyle = "#9bf";
+                x1 += 7;
+                ctx.fillRect(x1, y + 8, 6, 6);
+                ctx.fill();
+                ctx.fillStyle = "#bdf";
+                x1 += 6;
+                ctx.fillRect(x1, y + 8, 5, 6);
+                ctx.fill();
+            }
+        }
+        else {
+            if (ticket.end) {
+                ctx.fillStyle = "#68f";
+                var x2 = (ticket.end.getTime() - this.dtStart) / DAY_MILISEC;
+                x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
+                x2 -= 12;
+                ctx.fillRect(x2, y + 8, 12, 6);
+                ctx.fill();
+                ctx.fillStyle = "#79f";
+                x2 -= 7;
+                ctx.fillRect(x2, y + 8, 7, 6);
+                ctx.fill();
+                ctx.fillStyle = "#9bf";
+                x2 -= 6;
+                ctx.fillRect(x2, y + 8, 6, 6);
+                ctx.fill();
+                ctx.fillStyle = "#bdf";
+                x2 -= 5;
+                ctx.fillRect(x2, y + 8, 5, 6);
+                ctx.fill();
+            }
+        }
         ctx.fillStyle = "#e5ebf2";
         // 区切り線
         ctx.fillRect(0, y + TICKET_HEIGHT, this.width, 1);

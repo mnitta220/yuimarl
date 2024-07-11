@@ -265,6 +265,86 @@ const tickets = [
             open: true,
             children: [],
           },
+          {
+            id: "YU311",
+            idDisp: "YU311",
+            name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU311",
+            idDisp: "YU311",
+            name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU311",
+            idDisp: "YU311",
+            name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU311",
+            idDisp: "YU311",
+            name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU311",
+            idDisp: "YU311",
+            name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU311",
+            idDisp: "YU311",
+            name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU311",
+            idDisp: "YU311",
+            name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU311",
+            idDisp: "YU311",
+            name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
         ],
       },
     ],
@@ -364,7 +444,8 @@ class ColumnBody {
   id = "colbody";
   width = 0;
   height = 0;
-  pos = 0;
+  posX = 0;
+  posY = 0;
 
   // カラムボディを構築する
   build(frag: DocumentFragment) {
@@ -375,7 +456,7 @@ class ColumnBody {
     this.width = frame.calendarLeft;
     body.className = "gantt-body";
     body.style.top = `${HEADER_HEIGHT}px`;
-    body.style.left = `${this.pos}px`;
+    body.style.left = `${this.posX}px`;
     body.style.width = `${this.width}px`;
     body.style.height = `${this.height}px`;
     frag.append(body);
@@ -405,9 +486,6 @@ class ColumnBody {
         ctx.save();
 
         frame.ticketsTotalHeight = this.drawTickets(ctx, tickets, 0, 0);
-        //console.log(
-        //  `frame.ticketTotalHeight=${frame.ticketTotalHeight} this.height=${this.height}`
-        //);
 
         ctx.fillStyle = "#82a4c1";
 
@@ -446,6 +524,17 @@ class ColumnBody {
     return y1;
   }
 
+  getFrameHeight(ts: Ticket[], y: number): number {
+    let y1 = y;
+    for (let t of ts) {
+      y1 += TICKET_HEIGHT;
+      if (t.open && t.children.length > 0) {
+        y1 = this.getFrameHeight(t.children, y1);
+      }
+    }
+    return y1;
+  }
+
   // チケットを描画する
   drawTicket(
     ctx: CanvasRenderingContext2D,
@@ -458,25 +547,25 @@ class ColumnBody {
     const y1 = y + 18;
     ctx.fillStyle = "#00f";
     // ID
-    ctx.fillText(ticket.idDisp, 3, y1);
+    ctx.fillText(ticket.idDisp, 3, y1 + this.posY);
     ctx.fillStyle = "#808080";
     // チケット□
     let x = cols[0].width + level * 12 + 6;
-    ctx.fillRect(x, y + 7, 1, 8);
+    ctx.fillRect(x, y + 7 + this.posY, 1, 8);
     ctx.fill();
-    ctx.fillRect(x, y + 7, 8, 1);
+    ctx.fillRect(x, y + 7 + this.posY, 8, 1);
     ctx.fill();
-    ctx.fillRect(x, y + 15, 8, 1);
+    ctx.fillRect(x, y + 15 + this.posY, 8, 1);
     ctx.fill();
-    ctx.fillRect(x + 8, y + 7, 1, 9);
+    ctx.fillRect(x + 8, y + 7 + this.posY, 1, 9);
     ctx.fill();
     ctx.fillStyle = "#000";
 
     if (ticket.children.length > 0) {
-      ctx.fillRect(x + 2, y + 11, 5, 1);
+      ctx.fillRect(x + 2, y + 11 + this.posY, 5, 1);
       ctx.fill();
       if (!ticket.open) {
-        ctx.fillRect(x + 4, y + 9, 1, 5);
+        ctx.fillRect(x + 4, y + 9 + this.posY, 1, 5);
         ctx.fill();
       }
     }
@@ -485,33 +574,34 @@ class ColumnBody {
     let w = cols[0].width + cols[1].width - (x + 14);
     let m = ctx.measureText(ticket.name).width;
     if (m <= w) {
-      ctx.fillText(ticket.name, x + 14, y1);
+      ctx.fillText(ticket.name, x + 14, y1 + this.posY);
     } else {
       let s = ticket.name;
       while (ctx.measureText(`${s}…`).width > w) {
         s = s.slice(0, -1);
       }
-      ctx.fillText(`${s}…`, x + 14, y1);
+      ctx.fillText(`${s}…`, x + 14, y1 + this.posY);
     }
 
     x = cols[0].width + cols[1].width + 3;
     // 開始日
     if (ticket.start) {
-      ctx.fillText(this.dtDisp(ticket.start), x, y1);
+      ctx.fillText(this.dtDisp(ticket.start), x, y1 + this.posY);
     }
     x += cols[2].width;
     // 終了日
     if (ticket.end) {
-      ctx.fillText(this.dtDisp(ticket.end), x, y1);
+      ctx.fillText(this.dtDisp(ticket.end), x, y1 + this.posY);
     }
     x += cols[3].width + cols[4].width - 6;
+    // 進捗率
     const t1 = `${ticket.progress}`;
     const m1 = ctx.measureText(t1).width;
-    ctx.fillText(t1, x - m1, y1);
+    ctx.fillText(t1, x - m1, y1 + this.posY);
 
     ctx.fillStyle = "#e5ebf2";
     // 区切り線
-    ctx.fillRect(0, y + TICKET_HEIGHT, this.width, 1);
+    ctx.fillRect(0, y + TICKET_HEIGHT + this.posY, this.width, 1);
     ctx.fill();
   }
 
@@ -523,11 +613,16 @@ class ColumnBody {
   }
 
   scrollH(x: number) {
-    this.pos = -x;
+    this.posX = -x;
     const colbody = document.querySelector<HTMLDivElement>(`#${this.id}`);
     if (colbody) {
-      colbody.style.left = `${this.pos}px`;
+      colbody.style.left = `${this.posX}px`;
     }
+  }
+
+  scrollV(y: number) {
+    this.posY = -y;
+    this.draw();
   }
 
   mouseDown(x: number, y: number) {
@@ -543,7 +638,9 @@ class ColumnBody {
   ): number {
     let y1 = y;
     for (let t of ts) {
-      this.clickTicket(t, clickx, clicky, level, y1);
+      if (this.clickTicket(t, clickx, clicky, level, y1)) {
+        break;
+      }
       y1 += TICKET_HEIGHT;
       if (t.open && t.children.length > 0) {
         y1 = this.clickTickets(t.children, clickx, clicky, level + 1, y1);
@@ -558,19 +655,34 @@ class ColumnBody {
     clicky: number,
     level: number,
     y: number
-  ) {
-    if (clicky < y || clicky > y + TICKET_HEIGHT) {
-      return;
+  ): boolean {
+    if (clicky < y + this.posY || clicky > y + TICKET_HEIGHT + this.posY) {
+      return false;
     }
     if (clickx > cols[0].width && clickx < cols[0].width + cols[1].width) {
       let x = cols[0].width + level * 12 + 6;
-      if (clickx > x && clickx < x + 8 && clicky > y + 7 && clicky < y + 15) {
+      if (
+        clickx > x - 1 &&
+        clickx < x + 9 &&
+        clicky > y + 6 + this.posY &&
+        clicky < y + 16 + this.posY
+      ) {
         // チケット名の□をクリックした
         ticket.open = !ticket.open;
-        //console.log(`click ${ticket.id}`);
         frame.draw();
+        if (
+          frame.ticketsTotalHeight < frame.ticketsFrameHeight &&
+          this.posY != 0
+        ) {
+          this.posY = 0;
+          frame.calendarBody.posY = 0;
+          frame.scv.pos = 0;
+          frame.draw();
+        }
+        return true;
       }
     }
+    return false;
   }
 }
 
@@ -625,6 +737,18 @@ class CalendarHeader {
     frag.append(cv);
     this.dtStart = frame.calendarStart.getTime();
     this.dtEnd = frame.calendarEnd.getTime();
+  }
+
+  resize() {
+    this.width = frame.width - frame.calendarLeft;
+    if (this.width < CALENDAR_MIN) {
+      this.width = CALENDAR_MIN;
+    }
+    const cv = document.querySelector<HTMLCanvasElement>(`#${this.id}`);
+    if (cv) {
+      cv.style.width = `${this.width}px`;
+    }
+    this.dtpos = 0;
   }
 
   // 描画する
@@ -740,7 +864,8 @@ class CalendarHeader {
 class CalendarBody {
   id = "calbody";
   width = 0;
-  pos = 0;
+  posX = 0;
+  posY = 0;
   dtpos = 0;
   dtStart = 0;
   dtEnd = 0;
@@ -756,12 +881,24 @@ class CalendarBody {
     cv.id = this.id;
     cv.className = "gantt-body";
     cv.style.top = `${HEADER_HEIGHT}px`;
-    cv.style.left = `${this.pos + frame.calendarLeft}px`;
+    cv.style.left = `${this.posX + frame.calendarLeft}px`;
     cv.style.width = `${this.width}px`;
     cv.style.height = `${height}px`;
     frag.append(cv);
     this.dtStart = frame.calendarStart.getTime();
     this.dtEnd = frame.calendarEnd.getTime();
+  }
+
+  resize() {
+    this.width = frame.width - frame.calendarLeft;
+    if (this.width < CALENDAR_MIN) {
+      this.width = CALENDAR_MIN;
+    }
+    const cv = document.querySelector<HTMLCanvasElement>(`#${this.id}`);
+    if (cv) {
+      cv.style.width = `${this.width}px`;
+    }
+    this.dtpos = 0;
   }
 
   // 描画する
@@ -851,39 +988,38 @@ class CalendarBody {
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         if (ticket.progress === 0) {
           ctx.fillStyle = "#9bf";
-          ctx.fillRect(x1, y + 8, x2 - x1, 6);
+          ctx.fillRect(x1, y + 8 + this.posY, x2 - x1, 6);
           ctx.fill();
         } else if (ticket.progress === 100) {
-          //ctx.fillStyle = "#68f";
           ctx.fillStyle = "#57f";
-          ctx.fillRect(x1, y + 8, x2 - x1, 6);
+          ctx.fillRect(x1, y + 8 + this.posY, x2 - x1, 6);
           ctx.fill();
         } else {
           ctx.fillStyle = "#9bf";
-          ctx.fillRect(x1, y + 8, x2 - x1, 6);
+          ctx.fillRect(x1, y + 8 + this.posY, x2 - x1, 6);
           ctx.fill();
           const x3 = ((x2 - x1) * ticket.progress) / 100;
           ctx.fillStyle = "#57f";
-          ctx.fillRect(x1, y + 8, x3, 6);
+          ctx.fillRect(x1, y + 8 + this.posY, x3, 6);
           ctx.fill();
         }
       } else {
         ctx.fillStyle = "#57f";
         let x1 = (ticket.start.getTime() - this.dtStart) / DAY_MILISEC;
         x1 = x1 * DAY_WIDTH - this.dtpos;
-        ctx.fillRect(x1, y + 8, 12, 6);
+        ctx.fillRect(x1, y + 8 + this.posY, 12, 6);
         ctx.fill();
         ctx.fillStyle = "#68f";
         x1 += 12;
-        ctx.fillRect(x1, y + 8, 7, 6);
+        ctx.fillRect(x1, y + 8 + this.posY, 7, 6);
         ctx.fill();
         ctx.fillStyle = "#8af";
         x1 += 7;
-        ctx.fillRect(x1, y + 8, 6, 6);
+        ctx.fillRect(x1, y + 8 + this.posY, 6, 6);
         ctx.fill();
         ctx.fillStyle = "#bdf";
         x1 += 6;
-        ctx.fillRect(x1, y + 8, 5, 6);
+        ctx.fillRect(x1, y + 8 + this.posY, 5, 6);
         ctx.fill();
       }
     } else {
@@ -892,35 +1028,40 @@ class CalendarBody {
         let x2 = (ticket.end.getTime() - this.dtStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         x2 -= 12;
-        ctx.fillRect(x2, y + 8, 12, 6);
+        ctx.fillRect(x2, y + 8 + this.posY, 12, 6);
         ctx.fill();
         ctx.fillStyle = "#68f";
         x2 -= 7;
-        ctx.fillRect(x2, y + 8, 7, 6);
+        ctx.fillRect(x2, y + 8 + this.posY, 7, 6);
         ctx.fill();
         ctx.fillStyle = "#8af";
         x2 -= 6;
-        ctx.fillRect(x2, y + 8, 6, 6);
+        ctx.fillRect(x2, y + 8 + this.posY, 6, 6);
         ctx.fill();
         ctx.fillStyle = "#bdf";
         x2 -= 5;
-        ctx.fillRect(x2, y + 8, 5, 6);
+        ctx.fillRect(x2, y + 8 + this.posY, 5, 6);
         ctx.fill();
       }
     }
 
     ctx.fillStyle = "#e5ebf2";
     // 区切り線
-    ctx.fillRect(0, y + TICKET_HEIGHT, this.width, 1);
+    ctx.fillRect(0, y + TICKET_HEIGHT + this.posY, this.width, 1);
     ctx.fill();
   }
 
   scrollH(x: number) {
-    this.pos = -x;
+    this.posX = -x;
     const calbody = document.querySelector<HTMLCanvasElement>(`#${this.id}`);
     if (calbody) {
-      calbody.style.left = `${this.pos + frame.calendarLeft}px`;
+      calbody.style.left = `${this.posX + frame.calendarLeft}px`;
     }
+  }
+
+  scrollV(y: number) {
+    this.posY = -y;
+    this.draw();
   }
 }
 
@@ -950,6 +1091,19 @@ class CalendarScroll {
     cv.style.width = `${this.width}px`;
     cv.style.height = `${this.height}px`;
     frag.append(cv);
+  }
+
+  resize() {
+    this.width = frame.width - frame.calendarLeft;
+    if (this.width < CALENDAR_MIN) {
+      this.width = CALENDAR_MIN;
+    }
+    const cv = document.querySelector<HTMLCanvasElement>(`#${this.id}`);
+    if (cv) {
+      cv.style.width = `${this.width}px`;
+    }
+    this.scrollH(0);
+    this.barpos = 0;
   }
 
   // イベントハンドラを登録する
@@ -1221,20 +1375,51 @@ class ScrollH {
 // 縦スクロールバー
 class ScrollV {
   id = "scrollv";
+  width = SCROLL_BAR_WIDTH;
+  height = 0;
+  barHeight = 0;
+  moving = false;
+  visible = false;
+  startY = 0;
+  pos = 0;
+  startPos = 0;
+
+  // イベントハンドラを登録する
+  handler() {
+    const scrollv = document.querySelector<HTMLCanvasElement>(`#${this.id}`);
+    if (scrollv) {
+      scrollv.addEventListener("mousedown", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.mouseDownScrollV(e.pageY - scrollv.offsetTop);
+      });
+      scrollv.addEventListener("mousemove", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.mouseMoveScrollV(e.pageY - scrollv.offsetTop);
+      });
+      scrollv.addEventListener("mouseup", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.mouseUpScrollV();
+      });
+      scrollv.addEventListener("mouseleave", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.mouseUpScrollV();
+      });
+    }
+  }
 
   draw() {
+    this.visible = false;
     const cnvs = document.querySelector<HTMLCanvasElement>(`#${this.id}`);
     if (cnvs) {
-      const width = cnvs.offsetWidth;
-      const height = cnvs.offsetHeight;
-      cnvs.width = width;
-      cnvs.height = height;
+      this.height = cnvs.offsetHeight;
+      cnvs.width = this.width;
+      cnvs.height = this.height;
       const ctx = cnvs.getContext("2d");
       if (ctx) {
-        //ctx.save();
         //ctx.fillStyle =
         //  frame.ticketsHeight < frame.ticketTotalHeight ? "#505050" : "#a3a3a3";
         if (frame.ticketsFrameHeight < frame.ticketsTotalHeight) {
+          this.visible = true;
           ctx.save();
           ctx.lineJoin = "miter";
           ctx.fillStyle = "#505050";
@@ -1245,19 +1430,91 @@ class ScrollV {
           ctx.closePath();
           ctx.fill();
           ctx.beginPath();
-          ctx.moveTo(4, height - 10);
-          ctx.lineTo(8, height - 6);
-          ctx.lineTo(12, height - 10);
+          ctx.moveTo(4, this.height - 10);
+          ctx.lineTo(8, this.height - 6);
+          ctx.lineTo(12, this.height - 10);
           ctx.closePath();
           ctx.fill();
           //ctx.fillStyle = scr_h ? "#a8a8a8" : "#c1c1c1";
           ctx.fillStyle = "#c1c1c1";
-          ctx.fillRect(2, 16, 13, height - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH);
+          // バー
+          this.barHeight =
+            ((this.height - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH) *
+              frame.ticketsFrameHeight) /
+            frame.ticketsTotalHeight;
+          ctx.fillRect(
+            2,
+            SCROLL_BAR_WIDTH + this.pos,
+            13,
+            this.barHeight < 4 ? 4 : this.barHeight
+          );
           ctx.restore();
         }
-        //ctx.restore();
       }
     }
+  }
+
+  mouseDownScrollV(y: number) {
+    if (!this.visible) return;
+    if (
+      SCROLL_BAR_WIDTH + this.pos < y &&
+      y < SCROLL_BAR_WIDTH + this.pos + this.barHeight
+    ) {
+      this.moving = true;
+      this.startY = y - SCROLL_BAR_WIDTH;
+      this.startPos = this.pos;
+      return;
+    }
+
+    if (y < SCROLL_BAR_WIDTH) {
+      // 上ボタン
+      this.pos -= SCROLL_BAR_WIDTH;
+    } else if (y < SCROLL_BAR_WIDTH + this.pos) {
+      // バーの上
+      this.pos -= this.barHeight;
+    } else if (this.height - SCROLL_BAR_WIDTH < y) {
+      // 下ボタン
+      this.pos += SCROLL_BAR_WIDTH;
+    } else {
+      // バーの下
+      this.pos += this.barHeight;
+    }
+    if (this.pos < 0) this.pos = 0;
+    let percent =
+      this.pos /
+      (this.height - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH - this.barHeight);
+    if (percent > 1) {
+      percent = 1;
+      this.pos =
+        this.height - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH - this.barHeight;
+    }
+    frame.scrollV(
+      (frame.ticketsTotalHeight - frame.ticketsFrameHeight) * percent
+    );
+    this.draw();
+    this.moving = false;
+  }
+
+  mouseMoveScrollV(y: number) {
+    if (!this.visible || !this.moving) return;
+    this.pos = y - SCROLL_BAR_WIDTH - this.startY + this.startPos;
+    if (this.pos < 0) this.pos = 0;
+    let percent =
+      this.pos /
+      (this.height - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH - this.barHeight);
+    if (percent > 1) {
+      percent = 1;
+      this.pos =
+        this.height - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH - this.barHeight;
+    }
+    frame.scrollV(
+      (frame.ticketsTotalHeight - frame.ticketsFrameHeight) * percent
+    );
+    this.draw();
+  }
+
+  mouseUpScrollV() {
+    this.moving = false;
   }
 }
 
@@ -1317,6 +1574,38 @@ class GanttFrame {
     this.columnBody.handler();
     this.calendarScroll.handler();
     this.sch.handler();
+    this.scv.handler();
+  }
+
+  resize() {
+    const flexbox = document.querySelector<HTMLDivElement>(`#flexbox`);
+    if (!flexbox) {
+      console.error("Failed to get #flexbox!");
+      return;
+    }
+    const ganttbase = document.querySelector<HTMLDivElement>(`#ganttbase`);
+    if (!ganttbase) {
+      console.error("Failed to get #ganttbase!");
+      return;
+    }
+    ganttbase.style.width = `${flexbox.offsetWidth - SCROLL_BAR_WIDTH}px`;
+    const frame = document.querySelector<HTMLDivElement>(`#${this.id}`);
+    if (!frame) {
+      console.error("Failed to get #ganttframe!");
+      return;
+    }
+    //ganttbase.style.width = `${flexbox.offsetWidth - SCROLL_BAR_WIDTH}px`;
+    this.width = frame.offsetWidth;
+    this.height = frame.offsetHeight;
+    this.colW = this.columnWidth();
+    this.calendarLeft = this.colW + 1;
+    this.schThreshold = this.calendarLeft + CALENDAR_MIN;
+    this.sch.pos = 0;
+    this.calendarScroll.pos = 0;
+    this.calendarBody.resize();
+    this.calendarHeader.resize();
+    this.calendarScroll.resize();
+    this.scrollH(0);
   }
 
   // ガントチャートを表示する
@@ -1339,6 +1628,11 @@ class GanttFrame {
     this.calendarHeader.scrollH(this.posX);
     this.calendarBody.scrollH(this.posX);
     this.calendarScroll.scrollH(this.posX);
+  }
+
+  scrollV(y: number) {
+    this.columnBody.scrollV(y);
+    this.calendarBody.scrollV(y);
   }
 
   columnWidth(): number {
@@ -1372,9 +1666,26 @@ class GanttFrame {
   mouseUpScrollH() {
     this.sch.mouseUpScrollH();
   }
+
+  mouseDownScrollV(y: number) {
+    this.scv.mouseDownScrollV(y);
+  }
+
+  mouseMoveScrollV(y: number) {
+    this.scv.mouseMoveScrollV(y);
+  }
+
+  mouseUpScrollV() {
+    this.scv.mouseUpScrollV();
+  }
 }
 
 const frame = new GanttFrame();
 frame.build();
 frame.handler();
 frame.draw();
+
+window.addEventListener("resize", function () {
+  frame.resize();
+  frame.draw();
+});

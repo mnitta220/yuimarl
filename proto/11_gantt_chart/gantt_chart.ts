@@ -80,7 +80,162 @@ const tickets = [
     end: null,
     progress: 0,
     open: true,
-    children: [],
+    children: [
+      {
+        id: "YU21",
+        idDisp: "YU21",
+        name: "チケットYU21",
+        start: new Date(2024, 6, 1),
+        end: new Date(2024, 6, 2),
+        progress: 100,
+        open: true,
+        children: [
+          {
+            id: "YU211",
+            idDisp: "YU211",
+            name: "チケットYU211あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+        ],
+      },
+      {
+        id: "YU22",
+        idDisp: "YU22",
+        name: "チケットYU22",
+        start: new Date(2024, 6, 1),
+        end: new Date(2024, 6, 2),
+        progress: 100,
+        open: true,
+        children: [
+          {
+            id: "YU221",
+            idDisp: "YU221",
+            name: "チケットYU221あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU222",
+            idDisp: "YU222",
+            name: "チケットYU222あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU223",
+            idDisp: "YU223",
+            name: "チケットYU223あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [
+              {
+                id: "YU2231",
+                idDisp: "YU2231",
+                name: "チケットYU2231あいうえおかきくけこさしすせそたちつてと",
+                start: new Date(2024, 6, 10),
+                end: new Date(2024, 6, 16),
+                progress: 10,
+                open: true,
+                children: [
+                  {
+                    id: "YU223a",
+                    idDisp: "YU223a",
+                    name: "チケットYU223aあいうえおかきくけこさしすせそたちつてと",
+                    start: new Date(2024, 6, 10),
+                    end: new Date(2024, 6, 16),
+                    progress: 10,
+                    open: true,
+                    children: [],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: "YU224",
+            idDisp: "YU224",
+            name: "チケットYU224あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU225",
+            idDisp: "YU225",
+            name: "チケットYU225あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU226",
+            idDisp: "YU226",
+            name: "チケットYU226あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU227",
+            idDisp: "YU227",
+            name: "チケットYU227あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU228",
+            idDisp: "YU228",
+            name: "チケットYU228あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU229",
+            idDisp: "YU229",
+            name: "チケットYU229あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU2210",
+            idDisp: "YU2210",
+            name: "チケットYU2210あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+        ],
+      },
+    ],
   },
   {
     id: "YU3",
@@ -90,7 +245,29 @@ const tickets = [
     end: new Date(2024, 6, 1),
     progress: 25,
     open: true,
-    children: [],
+    children: [
+      {
+        id: "YU31",
+        idDisp: "YU31",
+        name: "チケットYU31",
+        start: new Date(2024, 6, 1),
+        end: new Date(2024, 6, 2),
+        progress: 100,
+        open: true,
+        children: [
+          {
+            id: "YU311",
+            idDisp: "YU311",
+            name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
+            start: new Date(2024, 6, 10),
+            end: new Date(2024, 6, 16),
+            progress: 10,
+            open: true,
+            children: [],
+          },
+        ],
+      },
+    ],
   },
   {
     id: "YU9999",
@@ -186,19 +363,21 @@ class ColumnHeader {
 class ColumnBody {
   id = "colbody";
   width = 0;
+  height = 0;
   pos = 0;
 
   // カラムボディを構築する
   build(frag: DocumentFragment) {
     const body = document.createElement("canvas");
-    const height = frame.height - HEADER_HEIGHT - SCROLL_BAR_WIDTH;
+    this.height = frame.height - HEADER_HEIGHT - SCROLL_BAR_WIDTH;
+    frame.ticketsFrameHeight = this.height;
     body.id = this.id;
     this.width = frame.calendarLeft;
     body.className = "gantt-body";
     body.style.top = `${HEADER_HEIGHT}px`;
     body.style.left = `${this.pos}px`;
     body.style.width = `${this.width}px`;
-    body.style.height = `${height}px`;
+    body.style.height = `${this.height}px`;
     frag.append(body);
   }
 
@@ -225,7 +404,10 @@ class ColumnBody {
       if (ctx) {
         ctx.save();
 
-        this.drawTickets(ctx, tickets, 0, 0);
+        frame.ticketsTotalHeight = this.drawTickets(ctx, tickets, 0, 0);
+        //console.log(
+        //  `frame.ticketTotalHeight=${frame.ticketTotalHeight} this.height=${this.height}`
+        //);
 
         ctx.fillStyle = "#82a4c1";
 
@@ -385,7 +567,7 @@ class ColumnBody {
       if (clickx > x && clickx < x + 8 && clicky > y + 7 && clicky < y + 15) {
         // チケット名の□をクリックした
         ticket.open = !ticket.open;
-        console.log(`click ${ticket.id}`);
+        //console.log(`click ${ticket.id}`);
         frame.draw();
       }
     }
@@ -617,7 +799,7 @@ class CalendarBody {
             }
           }
           if (dayoff) {
-            ctx.fillStyle = "#f4fef4";
+            ctx.fillStyle = "#f2fef2";
             ctx.fillRect(x + 1 - this.dtpos, 0, DAY_WIDTH - 1, height);
             ctx.fill();
           }
@@ -1049,26 +1231,31 @@ class ScrollV {
       cnvs.height = height;
       const ctx = cnvs.getContext("2d");
       if (ctx) {
-        ctx.save();
-        //ctx.fillStyle = scroll_h ? "#505050" : "#a3a3a3";
-        ctx.lineJoin = "miter";
-        ctx.fillStyle = "#505050";
-        ctx.beginPath();
-        ctx.moveTo(8, 5);
-        ctx.lineTo(4, 9);
-        ctx.lineTo(12, 9);
-        ctx.closePath();
-        ctx.fill();
-        ctx.beginPath();
-        ctx.moveTo(4, height - 10);
-        ctx.lineTo(8, height - 6);
-        ctx.lineTo(12, height - 10);
-        ctx.closePath();
-        ctx.fill();
-        //ctx.fillStyle = scr_h ? "#a8a8a8" : "#c1c1c1";
-        ctx.fillStyle = "#c1c1c1";
-        ctx.fillRect(2, 16, 13, height - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH);
-        ctx.restore();
+        //ctx.save();
+        //ctx.fillStyle =
+        //  frame.ticketsHeight < frame.ticketTotalHeight ? "#505050" : "#a3a3a3";
+        if (frame.ticketsFrameHeight < frame.ticketsTotalHeight) {
+          ctx.save();
+          ctx.lineJoin = "miter";
+          ctx.fillStyle = "#505050";
+          ctx.beginPath();
+          ctx.moveTo(8, 5);
+          ctx.lineTo(4, 9);
+          ctx.lineTo(12, 9);
+          ctx.closePath();
+          ctx.fill();
+          ctx.beginPath();
+          ctx.moveTo(4, height - 10);
+          ctx.lineTo(8, height - 6);
+          ctx.lineTo(12, height - 10);
+          ctx.closePath();
+          ctx.fill();
+          //ctx.fillStyle = scr_h ? "#a8a8a8" : "#c1c1c1";
+          ctx.fillStyle = "#c1c1c1";
+          ctx.fillRect(2, 16, 13, height - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH);
+          ctx.restore();
+        }
+        //ctx.restore();
       }
     }
   }
@@ -1092,6 +1279,8 @@ class GanttFrame {
   calendarStart = new Date(2024, 5, 24);
   calendarEnd = new Date(2024, 7, 31);
   calendarTotalWidth = 0;
+  ticketsTotalHeight = 0;
+  ticketsFrameHeight = 0;
   schThreshold = 0; // 横スクロールバーを表示するしきい値
   posX = 0;
 

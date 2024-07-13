@@ -123,18 +123,50 @@ html(lang="ja")
             .row.py-2
               label.col-md-3.col-form-label.bg-light.mb-1 ガントチャート
               .col-md-9.mb-1
-                .row.pb-2
+                //- .row.pb-2
                   .col.mb-1
                     .form-check
                       input.form-check-input#ganttchart(type="checkbox" value="")
                       label.form-check-label(for="ganttchart") ガントチャートを使用する
+                //- .row.px-2
+                  hr
+                .row
+                  .col.mb-1
+                    .form-check
+                      input.form-check-input#holiday(type="checkbox" value="" checked="checked")
+                      label.form-check-label(for="holiday") 日本の祝日を赤表示
                 .row.px-2
                   hr
                 .row
                   .col.mb-1
                     .form-check
-                      input.form-check-input#holiday(type="checkbox" value="")
-                      label.form-check-label(for="holiday") 日本の祝日を赤表示
+                      input.form-check-input#showno(type="checkbox" value="" checked="checked")
+                      label.form-check-label(for="showno") イテレーション / スプリント 番号を表示
+                .row
+                  .col-sm-6.mb-2
+                    label.form-label(for="startdate") 開始日
+                    input.form-control#startdate(type="date" value="2024-09-02")
+                  .col-sm-6.mb-1
+                    label.form-label(for="startno") 開始番号
+                    input.form-control#progress(type="number" value="1")
+                .row
+                  .col.mb-2
+                    label.form-label(for="unit") 単位：&nbsp;&nbsp;
+                    .form-check.form-check-inline
+                      input.form-check-input#w1(name="unit" type="radio" value="w1" checked="checked")
+                      label.form-check-label(for="w1") 1週
+                    .form-check.form-check-inline
+                      input.form-check-input#w2(name="unit" type="radio" value="w2")
+                      label.form-check-label(for="w2") 2週
+                    .form-check.form-check-inline
+                      input.form-check-input#w3(name="unit" type="radio" value="w3")
+                      label.form-check-label(for="w3") 3週
+                    .form-check.form-check-inline
+                      input.form-check-input#w4(name="unit" type="radio" value="w4")
+                      label.form-check-label(for="w4") 4週
+                    .form-check.form-check-inline
+                      input.form-check-input#m1(name="unit" type="radio" value="m1")
+                      label.form-check-label(for="m1") 1月
             .row.py-3.mt-2.bg-light
               .col-9
                 button.btn.btn-primary(type="submit")
@@ -175,7 +207,7 @@ html(lang="ja")
             .alert.alert-danger.text-start(role="alert")
               | ガントチャート step01
               br
-              | プロジェクト基本情報タブの「ガントチャートを使用する」チェックボックスをチェックすると、ガントチャートタブが表示される。
+              | プロジェクト基本情報タブの「ガントチャート」欄で、ガントチャートの設定を行う。
           .col-md-2.text-start.py-1
             a.nav-link.px-2.px-md-0(href="step02.html") next →
 

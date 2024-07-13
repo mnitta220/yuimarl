@@ -43,6 +43,167 @@ const tickets = [
   {
     id: "YU1",
     idDisp: "YU1",
+    name: "Yuimarl開発",
+    start: new Date(2024, 3, 8),
+    end: null,
+    progress: 0,
+    open: true,
+    children: [
+      {
+        id: "YU2",
+        idDisp: "YU2",
+        name: "技術調査",
+        start: new Date(2024, 3, 8),
+        end: new Date(2024, 3, 17),
+        progress: 100,
+        open: false,
+        children: [
+          {
+            id: "YU3",
+            idDisp: "YU3",
+            name: "Firestore",
+            start: new Date(2024, 3, 8),
+            end: new Date(2024, 5, 13),
+            progress: 100,
+            open: true,
+            children: [],
+          },
+        ],
+      },
+      {
+        id: "YU8",
+        idDisp: "YU8",
+        name: "version 1.0.0",
+        start: new Date(2024, 3, 18),
+        end: new Date(2024, 5, 13),
+        progress: 100,
+        open: false,
+        children: [
+          {
+            id: "YU8",
+            idDisp: "YU8",
+            name: "version 1.0.0",
+            start: new Date(2024, 3, 18),
+            end: new Date(2024, 5, 13),
+            progress: 100,
+            open: true,
+            children: [],
+          },
+        ],
+      },
+      {
+        id: "YU62",
+        idDisp: "YU62",
+        name: "version 1.0.12",
+        start: new Date(2024, 5, 21),
+        end: new Date(2024, 5, 23),
+        progress: 100,
+        open: false,
+        children: [
+          {
+            id: "YU8",
+            idDisp: "YU8",
+            name: "version 1.0.0",
+            start: new Date(2024, 3, 18),
+            end: new Date(2024, 5, 13),
+            progress: 100,
+            open: true,
+            children: [],
+          },
+        ],
+      },
+      {
+        id: "YU71",
+        idDisp: "YU71",
+        name: "version 1.0.13",
+        start: new Date(2024, 5, 24),
+        end: new Date(2024, 6, 30),
+        progress: 10,
+        open: true,
+        children: [
+          {
+            id: "YU60",
+            idDisp: "YU60",
+            name: "ガントチャート",
+            start: new Date(2024, 5, 24),
+            end: new Date(2024, 6, 30),
+            progress: 10,
+            open: true,
+            children: [
+              {
+                id: "YU72",
+                idDisp: "YU72",
+                name: "画面プロトタイプ作成",
+                start: new Date(2024, 5, 24),
+                end: new Date(2024, 6, 12),
+                progress: 80,
+                open: true,
+                children: [],
+              },
+              {
+                id: "YU73",
+                idDisp: "YU73",
+                name: "実装・テスト",
+                start: new Date(2024, 6, 16),
+                end: new Date(2024, 6, 26),
+                progress: 0,
+                open: true,
+                children: [],
+              },
+              {
+                id: "YU74",
+                idDisp: "YU74",
+                name: "ユーザーガイド更新",
+                start: new Date(2024, 6, 29),
+                end: new Date(2024, 6, 30),
+                progress: 0,
+                open: true,
+                children: [],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: "YU4",
+        idDisp: "YU4",
+        name: "バックログ",
+        start: null,
+        end: null,
+        progress: 0,
+        open: true,
+        children: [
+          {
+            id: "YU46",
+            idDisp: "YU46",
+            name: "ページング改善",
+            start: null,
+            end: null,
+            progress: 0,
+            open: true,
+            children: [],
+          },
+          {
+            id: "YU45",
+            idDisp: "YU45",
+            name: "オーナー変更",
+            start: null,
+            end: null,
+            progress: 0,
+            open: true,
+            children: [],
+          },
+        ],
+      },
+    ],
+  },
+] as Ticket[];
+
+/*
+const tickets = [
+  {
+    id: "YU1",
+    idDisp: "YU1",
     name: "チケットYU1",
     start: new Date(2024, 6, 1),
     end: new Date(2024, 6, 31),
@@ -360,6 +521,7 @@ const tickets = [
     children: [],
   },
 ] as Ticket[];
+*/
 
 // 日本の祝日
 const holidays = [new Date(2024, 6, 15), new Date(2024, 7, 12)];
@@ -778,8 +940,15 @@ class CalendarHeader {
         ctx.font = font;
         ctx.textBaseline = "bottom";
         ctx.textAlign = "left";
+        let iteration = 1;
+        let iter = -1;
 
         while (dt.getTime() <= this.dtEnd) {
+          iter++;
+          if (iter > 13) {
+            iter = 0;
+            iteration++;
+          }
           if (x < this.dtpos - DAY_WIDTH) {
             x += DAY_WIDTH;
             dt.setTime(dt.getTime() + DAY_MILISEC);
@@ -789,6 +958,16 @@ class CalendarHeader {
           if (x > this.width + this.dtpos) break;
 
           const date = dt.getDate();
+
+          if (iter === 0) {
+            ctx.fillStyle = "#000";
+            ctx.fillText(`${iteration}`, x + 3 - this.dtpos, LINE_HEIGHT - 3);
+            if (!first) {
+              ctx.fillStyle = "#bdcede";
+              ctx.fillRect(x - this.dtpos, 0, 1, LINE_HEIGHT);
+              ctx.fill();
+            }
+          }
 
           if (first) {
             first = false;
@@ -1533,7 +1712,7 @@ class GanttFrame {
   scv = new ScrollV();
   colW = 0;
   calendarLeft = 0;
-  calendarStart = new Date(2024, 5, 24);
+  calendarStart = new Date(2024, 3, 8);
   calendarEnd = new Date(2024, 7, 31);
   calendarTotalWidth = 0;
   ticketsTotalHeight = 0;

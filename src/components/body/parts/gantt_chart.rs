@@ -12,9 +12,22 @@ impl Component for GanttChart {
                 // ガントチャート
                 *buf += r#"<div class="row py-2">"#;
                 {
-                    *buf += r#"<div class="col">"#;
+                    *buf += r#"<div class="col flexbox" id="flexbox">"#;
                     {
-                        *buf += r#"<canvas class="px-2 ganttchart" id="cnvs"></canvas>"#;
+                        *buf += r#"<div class="ganttbase" id="ganttbase">"#;
+                        {
+                            *buf += r#"<div class="ganttframe" id="ganttframe"></div>"#;
+                            *buf += r#"<canvas class="scrollH" id="scrollh"></canvas>"#;
+                        }
+                        *buf += r#"</div>"#;
+
+                        *buf += r#"<div class="scrollV">"#;
+                        {
+                            *buf += r#"<div class="sv1"></div>"#;
+                            *buf += r#"<canvas class="sv2" id="scrollv"></canvas>"#;
+                            *buf += r#"<div class="sv3"></div>"#;
+                        }
+                        *buf += r#"</div>"#;
                     }
                     *buf += r#"</div>"#;
                 }

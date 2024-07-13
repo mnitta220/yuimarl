@@ -47,11 +47,11 @@ html(lang="ja")
                   img.icon(src="../../static/ionicons/refresh-outline.svg")
                   | &nbsp;再読み込み
 
-            .modal.fade#deliverablesModal(tabindex="-1" aria-labelledby="deliverablesModalLabel" aria-hidden="true")
+            .modal.fade#ticketModal(tabindex="-1" aria-labelledby="ticketModalLabel" aria-hidden="true")
               .modal-dialog.modal-xl
                 .modal-content
                   .modal-header
-                    h1.modal-title.fs-5#deliverablesModalLabel チケット
+                    h1.modal-title.fs-5#ticketModalLabel チケット
                     button.btn-close(type="button" data-bs-dismiss="modal" aria-label="キャンセル")
                   .modal-body
                     // プロジェクト / チケットID
@@ -234,7 +234,7 @@ html(lang="ja")
             .alert.alert-danger.text-start(role="alert")
               | ガントチャート step04.
               br
-              | ガントチャートタブに表示されているチケットのIDをクリックすると、チケット情報ダイアログが表示される。
+              | ガントチャートタブに表示されているチケットのIDをクリックすると、チケット情報ダイアログが表示される。このダイアログで更新できる情報は制限される。
           .col-md-2.text-start.py-1
             //- a.nav-link.px-2.px-md-0(href="step04.html") next →
 
@@ -245,5 +245,5 @@ html(lang="ja")
     script(src="https://code.jquery.com/jquery-3.7.1.min.js")
     script.
       $(document).ready(function() {
-        new bootstrap.Modal("#deliverablesModal").show();
+        new bootstrap.Modal("#ticketModal").show();
       });

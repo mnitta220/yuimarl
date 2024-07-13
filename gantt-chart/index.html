@@ -47,10 +47,19 @@
         <form action="/project/add" method="POST">
           <!-- ガントチャート-->
           <div class="row py-2">
-            <div class="col">
-              <!-- div class="px-2 ganttchart" id="app"></div -->
+            <!-- div class="col">
               <canvas class="px-2 ganttchart" id="cnvs"></canvas>
-              <!-- canvas.px-2.ganttchart#cnvs-->
+            </div -->
+            <div class="col flexbox" id="flexbox">
+              <div class="ganttbase" id="ganttbase">
+                <div class="ganttframe" id="ganttframe"></div>
+                <canvas class="scrollH" id="scrollh"></canvas>
+              </div>
+              <div class="scrollV">
+                <div class="sv1"></div>
+                <canvas class="sv2" id="scrollv"></canvas>
+                <div class="sv3"></div>
+              </div>
             </div>
           </div>
           <div class="row py-3 mt-2 bg-light">

@@ -57,11 +57,11 @@
                 <button class="btn btn-primary" type="submit"><img class="icon" src="../../static/ionicons/refresh-outline.svg">&nbsp;再読み込み</button>
               </div>
             </div>
-            <div class="modal fade" id="deliverablesModal" tabindex="-1" aria-labelledby="deliverablesModalLabel" aria-hidden="true">
+            <div class="modal fade" id="ticketModal" tabindex="-1" aria-labelledby="ticketModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deliverablesModalLabel">チケット</h1>
+                    <h1 class="modal-title fs-5" id="ticketModalLabel">チケット</h1>
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="キャンセル"></button>
                   </div>
                   <div class="modal-body">
@@ -254,7 +254,7 @@
         <div class="row align-items-end">
           <div class="col-md-2 text-end py-1"><a class="nav-link px-2 px-md-0" href="step03.html">← prev</a></div>
           <div class="col-md-8">
-            <div class="alert alert-danger text-start" role="alert">ガントチャート step04.<br>ガントチャートタブに表示されているチケットのIDをクリックすると、チケット情報ダイアログが表示される。</div>
+            <div class="alert alert-danger text-start" role="alert">ガントチャート step04.<br>ガントチャートタブに表示されているチケットのIDをクリックすると、チケット情報ダイアログが表示される。このダイアログで更新できる情報は制限される。</div>
           </div>
           <div class="col-md-2 text-start py-1"></div>
         </div>
@@ -265,7 +265,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
       $(document).ready(function() {
-        new bootstrap.Modal("#deliverablesModal").show();
+        new bootstrap.Modal("#ticketModal").show();
       });
     </script>
   </body>

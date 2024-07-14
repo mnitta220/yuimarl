@@ -133,9 +133,10 @@ export default class CalendarBody {
     // チケット開始日/終了日
     if (ticket.start) {
       if (ticket.end) {
-        let x1 = ticket.start.diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x1 =
+          dayjs(ticket.start).diff(this.frame.calendarStart) / DAY_MILISEC;
         x1 = x1 * DAY_WIDTH - this.dtpos;
-        let x2 = ticket.end.diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x2 = dayjs(ticket.end).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         if (ticket.progress === 0) {
           ctx.fillStyle = "#9bf";
@@ -156,7 +157,8 @@ export default class CalendarBody {
         }
       } else {
         ctx.fillStyle = "#57f";
-        let x1 = ticket.start.diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x1 =
+          dayjs(ticket.start).diff(this.frame.calendarStart) / DAY_MILISEC;
         x1 = x1 * DAY_WIDTH - this.dtpos;
         ctx.fillRect(x1, y + 8 + this.posY, 12, 6);
         ctx.fill();
@@ -176,7 +178,7 @@ export default class CalendarBody {
     } else {
       if (ticket.end) {
         ctx.fillStyle = "#57f";
-        let x2 = ticket.end.diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x2 = dayjs(ticket.end).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         x2 -= 12;
         ctx.fillRect(x2, y + 8 + this.posY, 12, 6);

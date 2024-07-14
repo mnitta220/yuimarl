@@ -175,7 +175,7 @@ html(lang="ja")
                     .row.pt-1.pb-2
                       label.col-md-3.col-form-label.bg-light.mb-1(for="category") 親チケット
                       .col-md-9
-                        a(href="#") BN5
+                        | BN5
                         | &nbsp;:&nbsp;
                         | 文化祭出し物
                         | &nbsp;
@@ -187,39 +187,19 @@ html(lang="ja")
                       label.col-md-3.col-form-label.bg-light.mb-1(for="category") 子チケット
                       .col-md-9.pb-md-2
                         p.mb-0
-                          a(href="#") BN13
+                          | BN13
                           | &nbsp;:&nbsp;
                           | 備品準備
                         p.mb-0
-                          a(href="#") BN14
+                          | BN14
                           | &nbsp;:&nbsp;
                           | 食材購入
-
-                    // 成果物
-                    .row.pt-1.pb-2
-                      label.col-md-3.col-form-label.bg-light.mb-1(for="category") 成果物
-                      .col-md-9.mb-1
-                        .form-floating
-                          table.table.table-hover
-                            thead
-                              tr
-                                th(scope="col") 成果物名
-                                th(scope="col") ファイルパス / URL
-                                //- th(scope="col")
-                            tbody
-                              tr
-                                td 出店計画表
-                                td //server/文化祭2024/出店/たこやき/出店計画表.xlsx
-                                //- td
-                                  img.icon(src="../../static/ionicons/remove-circle-outline.svg" title="削除")
-                          //- a(href="javascript:clickDeliverables();")
-                            img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="成果物を追加")
 
                   .modal-footer
                     button.btn.btn-secondary(type="button" data-bs-dismiss="modal") キャンセル
                     button.btn.btn-primary(type="button")
-                      img.icon(src="../../static/ionicons/save-outline.svg")
-                      | &nbsp;更新
+                      img.icon(src="../../static/ionicons/exit-outline.svg")
+                      | &nbsp;チケット画面に遷移
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light
@@ -234,7 +214,7 @@ html(lang="ja")
             .alert.alert-danger.text-start(role="alert")
               | ガントチャート step04.
               br
-              | ガントチャートタブに表示されているチケットのIDをクリックすると、チケット情報ダイアログが表示される。このダイアログで更新できる情報は制限される。
+              | ガントチャートタブに表示されているチケットのIDをクリックすると、チケット情報ダイアログが表示される。このダイアログでは情報を更新できない。「チケット画面に遷移」ボタンでチケット情報画面に遷移する。
           .col-md-2.text-start.py-1
             //- a.nav-link.px-2.px-md-0(href="step04.html") next →
 

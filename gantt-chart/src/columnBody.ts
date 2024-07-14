@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import {
   HEADER_HEIGHT,
   SCROLL_BAR_WIDTH,
@@ -169,12 +170,12 @@ export default class ColumnBody {
     x = this.frame.cols[0].width + this.frame.cols[1].width + 3;
     // 開始日
     if (ticket.start) {
-      ctx.fillText(ticket.start.format("YY/MM/DD"), x, y1 + this.posY);
+      ctx.fillText(dayjs(ticket.start).format("YY/MM/DD"), x, y1 + this.posY);
     }
     x += this.frame.cols[2].width;
     // 終了日
     if (ticket.end) {
-      ctx.fillText(ticket.end.format("YY/MM/DD"), x, y1 + this.posY);
+      ctx.fillText(dayjs(ticket.end).format("YY/MM/DD"), x, y1 + this.posY);
     }
     x += this.frame.cols[3].width + this.frame.cols[4].width - 6;
     // 進捗率
@@ -235,10 +236,11 @@ export default class ColumnBody {
     if (clicky < y + this.posY || clicky > y + TICKET_HEIGHT + this.posY) {
       return false;
     }
-    if (
-      clickx > this.frame.cols[0].width &&
-      clickx < this.frame.cols[0].width + this.frame.cols[1].width
-    ) {
+    if (clickx < this.frame.cols[0].width) {
+      this.frame.ticketModal.show();
+      return true;
+    }
+    if (clickx < this.frame.cols[0].width + this.frame.cols[1].width) {
       let x = this.frame.cols[0].width + level * 12;
       if (clickx > x && clickx < x + 13) {
         // チケット名の□をクリックした

@@ -23,7 +23,7 @@ impl Component for Head {
 
             match &props.tab {
                 Tab::GanttChart => {
-                    *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-C__4OS1V.js"></script>"#;
+                    *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-CI1Cpu0W.js"></script>"#;
                     *buf += r#"<link rel="stylesheet" crossorigin href="/static/js/gantt-chart/index-ObCPK6hb.css">"#;
                 }
                 _ => {}

@@ -14,6 +14,7 @@ import CalendarBody from "./calendarBody";
 import CalendarScroll from "./calendarScroll";
 import ScrollH from "./scrollH";
 import ScrollV from "./scrollV";
+import TicketModal from "./ticketModal";
 
 // ガントチャート全体フレーム
 export default class GanttFrame {
@@ -26,12 +27,13 @@ export default class GanttFrame {
   calendarHeader = new CalendarHeader(this);
   calendarBody = new CalendarBody(this);
   calendarScroll = new CalendarScroll(this);
+  ticketModal = new TicketModal();
   sch = new ScrollH(this);
   scv = new ScrollV(this);
   colW = 0;
   calendarLeft = 0;
-  calendarStart = dayjs("2024-04-08");
-  calendarEnd = dayjs("2024-08-31");
+  calendarStart = dayjs();
+  calendarEnd = dayjs();
   calendarTotalWidth = 0;
   ticketsTotalHeight = 0;
   ticketsFrameHeight = 0;
@@ -42,7 +44,24 @@ export default class GanttFrame {
   tickets: Ticket[] = [];
 
   constructor() {
-    this.holidays = [dayjs("2024-07-15"), dayjs("2024-08-12")];
+    const startdate = document.querySelector<HTMLInputElement>(`#startdate`);
+    const enddate = document.querySelector<HTMLInputElement>(`#enddate`);
+    this.calendarStart = dayjs(`${startdate?.value ?? ""}`);
+    this.calendarEnd = dayjs(`${enddate?.value ?? ""}`);
+
+    const holidays = document.querySelector<HTMLInputElement>(`#holidays`);
+    if (holidays?.value) {
+      this.holidays = holidays.value
+        .split(",")
+        .map((v) => dayjs(v))
+        .filter((v) => v.isValid());
+    }
+
+    const ts = document.querySelector<HTMLInputElement>(`#tickets`);
+    if (ts?.value) {
+      this.tickets = JSON.parse(ts.value);
+    }
+
     this.cols = [
       {
         name: "ID",
@@ -65,165 +84,7 @@ export default class GanttFrame {
         width: 36,
       },
     ];
-    this.tickets = [
-      {
-        id: "YU1",
-        idDisp: "YU1",
-        name: "Yuimarl開発",
-        start: dayjs("2024-04-08"),
-        end: null,
-        progress: 0,
-        open: true,
-        children: [
-          {
-            id: "YU2",
-            idDisp: "YU2",
-            name: "技術調査",
-            start: dayjs("2024-04-08"),
-            end: dayjs("2024-04-17"),
-            progress: 100,
-            open: false,
-            children: [
-              {
-                id: "YU3",
-                idDisp: "YU3",
-                name: "Firestore",
-                start: dayjs("2024-04-08"),
-                end: dayjs("2024-06-13"),
-                progress: 100,
-                open: true,
-                children: [],
-              },
-            ],
-          },
-          {
-            id: "YU8",
-            idDisp: "YU8",
-            name: "version 1.0.0",
-            start: dayjs("2024-04-18"),
-            end: dayjs("2024-06-13"),
-            progress: 100,
-            open: false,
-            children: [
-              {
-                id: "YU8",
-                idDisp: "YU8",
-                name: "version 1.0.0",
-                start: dayjs("2024-04-18"),
-                end: dayjs("2024-06-13"),
-                progress: 100,
-                open: true,
-                children: [],
-              },
-            ],
-          },
-          {
-            id: "YU62",
-            idDisp: "YU62",
-            name: "version 1.0.12",
-            start: dayjs("2024-06-21"),
-            end: dayjs("2024-06-23"),
-            progress: 100,
-            open: false,
-            children: [
-              {
-                id: "YU8",
-                idDisp: "YU8",
-                name: "version 1.0.0",
-                start: dayjs("2024-04-18"),
-                end: dayjs("2024-06-13"),
-                progress: 100,
-                open: true,
-                children: [],
-              },
-            ],
-          },
-          {
-            id: "YU71",
-            idDisp: "YU71",
-            name: "version 1.0.13",
-            start: dayjs("2024-06-24"),
-            end: dayjs("2024-07-30"),
-            progress: 10,
-            open: true,
-            children: [
-              {
-                id: "YU60",
-                idDisp: "YU60",
-                name: "ガントチャート",
-                start: dayjs("2024-06-24"),
-                end: dayjs("2024-07-30"),
-                progress: 10,
-                open: true,
-                children: [
-                  {
-                    id: "YU72",
-                    idDisp: "YU72",
-                    name: "画面プロトタイプ作成",
-                    start: dayjs("2024-06-24"),
-                    end: dayjs("2024-07-12"),
-                    progress: 80,
-                    open: true,
-                    children: [],
-                  },
-                  {
-                    id: "YU73",
-                    idDisp: "YU73",
-                    name: "実装・テスト",
-                    start: dayjs("2024-07-16"),
-                    end: dayjs("2024-07-26"),
-                    progress: 0,
-                    open: true,
-                    children: [],
-                  },
-                  {
-                    id: "YU74",
-                    idDisp: "YU74",
-                    name: "ユーザーガイド更新",
-                    start: dayjs("2024-07-29"),
-                    end: dayjs("2024-07-30"),
-                    progress: 0,
-                    open: true,
-                    children: [],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            id: "YU4",
-            idDisp: "YU4",
-            name: "バックログ",
-            start: null,
-            end: null,
-            progress: 0,
-            open: true,
-            children: [
-              {
-                id: "YU46",
-                idDisp: "YU46",
-                name: "ページング改善",
-                start: null,
-                end: null,
-                progress: 0,
-                open: true,
-                children: [],
-              },
-              {
-                id: "YU45",
-                idDisp: "YU45",
-                name: "オーナー変更",
-                start: null,
-                end: null,
-                progress: 0,
-                open: true,
-                children: [],
-              },
-            ],
-          },
-        ],
-      },
-    ];
+
     this.build();
     this.handler();
   }

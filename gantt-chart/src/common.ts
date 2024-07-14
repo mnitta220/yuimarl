@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const SCROLL_BAR_WIDTH = 16;
 export const HEADER_LABEL_Y = 42;
 export const LINE_HEIGHT = 21;
@@ -11,8 +13,8 @@ export class Ticket {
   id: string = "";
   idDisp: string = "";
   name: string = "";
-  start: Date | null = null;
-  end: Date | null = null;
+  start: dayjs.Dayjs | null = null;
+  end: dayjs.Dayjs | null = null;
   progress: number = 0;
   open: boolean = false;
   children: Ticket[] = [];

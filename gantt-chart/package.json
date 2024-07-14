@@ -8,6 +8,9 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
+  "dependencies": {
+    "dayjs": "^1.11.11"
+  },
   "devDependencies": {
     "typescript": "^5.2.2",
     "vite": "^5.3.1"

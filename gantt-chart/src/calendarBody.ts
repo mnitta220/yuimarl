@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import {
   SCROLL_BAR_WIDTH,
   CALENDAR_MIN,
@@ -9,6 +11,8 @@ import {
 } from "./common";
 import GanttFrame from "./ganttFrame";
 
+dayjs.extend(isSameOrAfter);
+
 // カレンダーボディ
 export default class CalendarBody {
   id = "calbody";
@@ -16,8 +20,6 @@ export default class CalendarBody {
   posX = 0;
   posY = 0;
   dtpos = 0;
-  dtStart = 0;
-  dtEnd = 0;
 
   constructor(private frame: GanttFrame) {}
 
@@ -36,8 +38,6 @@ export default class CalendarBody {
     cv.style.width = `${this.width}px`;
     cv.style.height = `${height}px`;
     frag.append(cv);
-    this.dtStart = this.frame.calendarStart.getTime();
-    this.dtEnd = this.frame.calendarEnd.getTime();
   }
 
   resize() {
@@ -64,24 +64,22 @@ export default class CalendarBody {
       if (ctx) {
         ctx.save();
 
-        let dt = new Date(this.dtStart);
+        let dt = this.frame.calendarStart.clone();
         let x = 0;
-        while (dt.getTime() <= this.dtEnd) {
+        while (this.frame.calendarEnd.isSameOrAfter(dt)) {
           if (x < this.dtpos - DAY_WIDTH) {
             x += DAY_WIDTH;
-            dt.setTime(dt.getTime() + DAY_MILISEC);
+            dt = dt.add(1, "day");
             continue;
           }
           if (x > this.width + this.dtpos) break;
 
           let dayoff = false;
-          const holiday = this.frame.holidays.filter(
-            (d) => d.getTime() === dt.getTime()
-          );
+          const holiday = this.frame.holidays.filter((d) => d.isSame(dt));
           if (holiday.length > 0) {
             dayoff = true;
           } else {
-            switch (dt.getDay()) {
+            switch (dt.day()) {
               case 0: // Sunday
               case 6: // Saturday
                 dayoff = true;
@@ -94,7 +92,7 @@ export default class CalendarBody {
             ctx.fill();
           }
 
-          dt.setTime(dt.getTime() + DAY_MILISEC);
+          dt = dt.add(1, "day");
           x += DAY_WIDTH;
           if (x > width + this.dtpos) break;
           // 日付区切り線
@@ -106,7 +104,7 @@ export default class CalendarBody {
         this.drawTickets(ctx, this.frame.tickets, 0);
 
         // 現在線
-        x = ((new Date().getTime() - this.dtStart) / DAY_MILISEC) * DAY_WIDTH;
+        x = (dayjs().diff(this.frame.calendarStart) / DAY_MILISEC) * DAY_WIDTH;
         ctx.fillStyle = "#0a0";
         for (let y = 0; y < height; y += 7) {
           ctx.fillRect(x - this.dtpos, y, 1, 4);
@@ -135,9 +133,9 @@ export default class CalendarBody {
     // チケット開始日/終了日
     if (ticket.start) {
       if (ticket.end) {
-        let x1 = (ticket.start.getTime() - this.dtStart) / DAY_MILISEC;
+        let x1 = ticket.start.diff(this.frame.calendarStart) / DAY_MILISEC;
         x1 = x1 * DAY_WIDTH - this.dtpos;
-        let x2 = (ticket.end.getTime() - this.dtStart) / DAY_MILISEC;
+        let x2 = ticket.end.diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         if (ticket.progress === 0) {
           ctx.fillStyle = "#9bf";
@@ -158,7 +156,7 @@ export default class CalendarBody {
         }
       } else {
         ctx.fillStyle = "#57f";
-        let x1 = (ticket.start.getTime() - this.dtStart) / DAY_MILISEC;
+        let x1 = ticket.start.diff(this.frame.calendarStart) / DAY_MILISEC;
         x1 = x1 * DAY_WIDTH - this.dtpos;
         ctx.fillRect(x1, y + 8 + this.posY, 12, 6);
         ctx.fill();
@@ -178,7 +176,7 @@ export default class CalendarBody {
     } else {
       if (ticket.end) {
         ctx.fillStyle = "#57f";
-        let x2 = (ticket.end.getTime() - this.dtStart) / DAY_MILISEC;
+        let x2 = ticket.end.diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         x2 -= 12;
         ctx.fillRect(x2, y + 8 + this.posY, 12, 6);

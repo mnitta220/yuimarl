@@ -39,44 +39,10 @@ export default class ColumnBody {
     if (ganttframe && colbody) {
       colbody.addEventListener("mousedown", function (e: MouseEvent) {
         e.preventDefault();
-
-        /*
-        // debug start
-        const ctx: CanvasRenderingContext2D | null = colbody.getContext("2d");
-        if (ctx) {
-          ctx.save();
-          ctx.fillStyle = "white";
-          ctx.fillRect(100, 320, 200, 50);
-          ctx.fillStyle = "black";
-          ctx.fillText(`click ${e.layerX} ${e.layerY}`, 100, 350);
-          ctx.restore();
-        }
-        // debug end
-        */
-
         frame.columnBody.mouseDown(e.layerX, e.layerY);
       });
       colbody.addEventListener("touchstart", function (e: TouchEvent) {
         e.preventDefault();
-
-        /*
-        // debug start
-        const ctx: CanvasRenderingContext2D | null = colbody.getContext("2d");
-        if (ctx) {
-          ctx.save();
-          ctx.fillStyle = "white";
-          ctx.fillRect(100, 320, 400, 50);
-          ctx.fillStyle = "black";
-          ctx.fillText(
-            `click ${e.touches[0].clientX}, ${e.touches[0].clientY}, ${e.touches[0].pageX}, ${e.touches[0].pageY}, ${e.touches[0].screenX}, ${e.touches[0].screenY}, ${this.offsetLeft}, ${this.offsetTop}, ${ganttframe.offsetLeft}, ${ganttframe.offsetTop}`,
-            100,
-            350
-          );
-          ctx.restore();
-        }
-        // debug end
-        */
-
         frame.columnBody.mouseDown(
           e.touches[0].pageX - ganttframe.offsetLeft - colbody.offsetLeft,
           e.touches[0].pageY - ganttframe.offsetTop - colbody.offsetTop
@@ -203,12 +169,12 @@ export default class ColumnBody {
     x = this.frame.cols[0].width + this.frame.cols[1].width + 3;
     // 開始日
     if (ticket.start) {
-      ctx.fillText(this.dtDisp(ticket.start), x, y1 + this.posY);
+      ctx.fillText(ticket.start.format("YY/MM/DD"), x, y1 + this.posY);
     }
     x += this.frame.cols[2].width;
     // 終了日
     if (ticket.end) {
-      ctx.fillText(this.dtDisp(ticket.end), x, y1 + this.posY);
+      ctx.fillText(ticket.end.format("YY/MM/DD"), x, y1 + this.posY);
     }
     x += this.frame.cols[3].width + this.frame.cols[4].width - 6;
     // 進捗率
@@ -220,13 +186,6 @@ export default class ColumnBody {
     // 区切り線
     ctx.fillRect(0, y + TICKET_HEIGHT + this.posY, this.width, 1);
     ctx.fill();
-  }
-
-  dtDisp(dt: Date): string {
-    const y = `${dt.getFullYear()}`.slice(-2);
-    const m = `0${dt.getMonth() + 1}`.slice(-2);
-    const d = `0${dt.getDate()}`.slice(-2);
-    return `${y}/${m}/${d}`;
   }
 
   scrollH(x: number) {

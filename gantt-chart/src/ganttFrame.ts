@@ -1,7 +1,7 @@
+import dayjs from "dayjs";
 import {
   SCROLL_BAR_WIDTH,
   CALENDAR_MIN,
-  DAY_MILISEC,
   DAY_WIDTH,
   Column,
   Ticket,
@@ -30,19 +30,19 @@ export default class GanttFrame {
   scv = new ScrollV(this);
   colW = 0;
   calendarLeft = 0;
-  calendarStart = new Date(2024, 3, 8);
-  calendarEnd = new Date(2024, 7, 31);
+  calendarStart = dayjs("2024-04-08");
+  calendarEnd = dayjs("2024-08-31");
   calendarTotalWidth = 0;
   ticketsTotalHeight = 0;
   ticketsFrameHeight = 0;
   schThreshold = 0; // 横スクロールバーを表示するしきい値
   posX = 0;
   cols: Column[] = [];
-  holidays: Date[] = []; // 日本の祝日
+  holidays: dayjs.Dayjs[] = []; // 日本の祝日
   tickets: Ticket[] = [];
 
   constructor() {
-    this.holidays = [new Date(2024, 6, 15), new Date(2024, 7, 12)];
+    this.holidays = [dayjs("2024-07-15"), dayjs("2024-08-12")];
     this.cols = [
       {
         name: "ID",
@@ -70,7 +70,7 @@ export default class GanttFrame {
         id: "YU1",
         idDisp: "YU1",
         name: "Yuimarl開発",
-        start: new Date(2024, 3, 8),
+        start: dayjs("2024-04-08"),
         end: null,
         progress: 0,
         open: true,
@@ -79,8 +79,8 @@ export default class GanttFrame {
             id: "YU2",
             idDisp: "YU2",
             name: "技術調査",
-            start: new Date(2024, 3, 8),
-            end: new Date(2024, 3, 17),
+            start: dayjs("2024-04-08"),
+            end: dayjs("2024-04-17"),
             progress: 100,
             open: false,
             children: [
@@ -88,8 +88,8 @@ export default class GanttFrame {
                 id: "YU3",
                 idDisp: "YU3",
                 name: "Firestore",
-                start: new Date(2024, 3, 8),
-                end: new Date(2024, 5, 13),
+                start: dayjs("2024-04-08"),
+                end: dayjs("2024-06-13"),
                 progress: 100,
                 open: true,
                 children: [],
@@ -100,8 +100,8 @@ export default class GanttFrame {
             id: "YU8",
             idDisp: "YU8",
             name: "version 1.0.0",
-            start: new Date(2024, 3, 18),
-            end: new Date(2024, 5, 13),
+            start: dayjs("2024-04-18"),
+            end: dayjs("2024-06-13"),
             progress: 100,
             open: false,
             children: [
@@ -109,8 +109,8 @@ export default class GanttFrame {
                 id: "YU8",
                 idDisp: "YU8",
                 name: "version 1.0.0",
-                start: new Date(2024, 3, 18),
-                end: new Date(2024, 5, 13),
+                start: dayjs("2024-04-18"),
+                end: dayjs("2024-06-13"),
                 progress: 100,
                 open: true,
                 children: [],
@@ -121,8 +121,8 @@ export default class GanttFrame {
             id: "YU62",
             idDisp: "YU62",
             name: "version 1.0.12",
-            start: new Date(2024, 5, 21),
-            end: new Date(2024, 5, 23),
+            start: dayjs("2024-06-21"),
+            end: dayjs("2024-06-23"),
             progress: 100,
             open: false,
             children: [
@@ -130,8 +130,8 @@ export default class GanttFrame {
                 id: "YU8",
                 idDisp: "YU8",
                 name: "version 1.0.0",
-                start: new Date(2024, 3, 18),
-                end: new Date(2024, 5, 13),
+                start: dayjs("2024-04-18"),
+                end: dayjs("2024-06-13"),
                 progress: 100,
                 open: true,
                 children: [],
@@ -142,8 +142,8 @@ export default class GanttFrame {
             id: "YU71",
             idDisp: "YU71",
             name: "version 1.0.13",
-            start: new Date(2024, 5, 24),
-            end: new Date(2024, 6, 30),
+            start: dayjs("2024-06-24"),
+            end: dayjs("2024-07-30"),
             progress: 10,
             open: true,
             children: [
@@ -151,8 +151,8 @@ export default class GanttFrame {
                 id: "YU60",
                 idDisp: "YU60",
                 name: "ガントチャート",
-                start: new Date(2024, 5, 24),
-                end: new Date(2024, 6, 30),
+                start: dayjs("2024-06-24"),
+                end: dayjs("2024-07-30"),
                 progress: 10,
                 open: true,
                 children: [
@@ -160,8 +160,8 @@ export default class GanttFrame {
                     id: "YU72",
                     idDisp: "YU72",
                     name: "画面プロトタイプ作成",
-                    start: new Date(2024, 5, 24),
-                    end: new Date(2024, 6, 12),
+                    start: dayjs("2024-06-24"),
+                    end: dayjs("2024-07-12"),
                     progress: 80,
                     open: true,
                     children: [],
@@ -170,8 +170,8 @@ export default class GanttFrame {
                     id: "YU73",
                     idDisp: "YU73",
                     name: "実装・テスト",
-                    start: new Date(2024, 6, 16),
-                    end: new Date(2024, 6, 26),
+                    start: dayjs("2024-07-16"),
+                    end: dayjs("2024-07-26"),
                     progress: 0,
                     open: true,
                     children: [],
@@ -180,8 +180,8 @@ export default class GanttFrame {
                     id: "YU74",
                     idDisp: "YU74",
                     name: "ユーザーガイド更新",
-                    start: new Date(2024, 6, 29),
-                    end: new Date(2024, 6, 30),
+                    start: dayjs("2024-07-29"),
+                    end: dayjs("2024-07-30"),
                     progress: 0,
                     open: true,
                     children: [],
@@ -249,8 +249,7 @@ export default class GanttFrame {
     this.calendarScroll.build(frag);
 
     // カレンダーの開始日と終了日の差分から全体の幅を求める
-    const diff =
-      (this.calendarEnd.getTime() - this.calendarStart.getTime()) / DAY_MILISEC;
+    const diff = this.calendarEnd.diff(this.calendarStart, "day");
     this.calendarTotalWidth = (diff + 1) * DAY_WIDTH;
 
     frame.append(frag);

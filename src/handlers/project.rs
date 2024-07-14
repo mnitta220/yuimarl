@@ -179,6 +179,11 @@ pub struct ProjectInput {
     pub project_name: String,
     pub prefix: String,
     pub members: String,
+    pub holiday_jp: Option<String>,
+    pub use_iteration: Option<String>,
+    pub iteration_start: String,
+    pub iteration_no: String,
+    pub iteration_unit: String,
     pub project_id: String,
     pub timestamp: String,
 }
@@ -188,11 +193,17 @@ pub async fn post(
     Form(input): Form<ProjectInput>,
 ) -> Result<Html<String>, AppError> {
     tracing::debug!(
-        "POST /project {}, {}, {}, {}",
+        "POST /project {}, {}, {}, {}, {:?}, {:?}, {}, {}, {}, {}",
         input.action,
         input.project_id,
         input.project_name,
-        input.timestamp
+        input.timestamp,
+        input.holiday_jp,
+        input.use_iteration,
+        input.iteration_start,
+        input.iteration_no,
+        input.iteration_unit,
+        input.members
     );
 
     let project_name = input.project_name.trim().to_string();

@@ -606,6 +606,31 @@ impl Component for TicketInfo {
             }
             *buf += r#"</div>"#;
 
+            // ガントチャート
+            *buf += r#"<div class="row pt-1 pb-2">"#;
+            {
+                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="category">ガントチャート</label>"#;
+                *buf += r#"<div class="col-md-9 mb-1">"#;
+                {
+                    *buf += r#"<div class="form-check">"#;
+                    {
+                        *buf += r#"<input class="form-check-input" id="ganttchart" name="ganttchart" type="checkbox" value="on""#;
+                        if let Some(t) = &props.ticket {
+                            if let Some(g) = &t.ganttchart {
+                                if *g {
+                                    *buf += r#" checked="checked""#;
+                                }
+                            }
+                        }
+                        *buf += r#">"#;
+                        *buf += r#"<label class="form-check-label" for="ganttchart">ガントチャートに表示する</label>"#;
+                    }
+                    *buf += r#"</div>"#;
+                }
+                *buf += r#"</div>"#;
+            }
+            *buf += r#"</div>"#;
+
             if props.action == crate::Action::Create {
                 *buf += r#"<div class="row py-3 mt-2 bg-light">"#;
                 {

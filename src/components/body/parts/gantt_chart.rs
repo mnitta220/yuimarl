@@ -12,7 +12,7 @@ impl Component for GanttChart {
                 // ガントチャート
                 *buf += r#"<div class="row py-2">"#;
                 {
-                    *buf += r#"<div class="col flexbox" id="flexbox">"#;
+                    *buf += r#"<div class="col flexbox2" id="flexbox">"#;
                     {
                         *buf += r#"<div class="ganttbase" id="ganttbase">"#;
                         {

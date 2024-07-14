@@ -241,8 +241,8 @@ export default class ColumnBody {
       return true;
     }
     if (clickx < this.frame.cols[0].width + this.frame.cols[1].width) {
-      let x = this.frame.cols[0].width + level * 12;
-      if (clickx > x && clickx < x + 13) {
+      const x = this.frame.cols[0].width + level * 12 + 2;
+      if (clickx > x && clickx < x + 16) {
         // チケット名の□をクリックした
         ticket.open = !ticket.open;
         this.frame.draw();

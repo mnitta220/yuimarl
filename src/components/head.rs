@@ -18,13 +18,13 @@ impl Component for Head {
             *buf += r#"rel="stylesheet" "#;
             *buf += r#"integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" "#;
             *buf += r#"crossorigin="anonymous">"#;
-            *buf += r#"<link rel="stylesheet" href="/static/css/style1013.css">"#;
+            *buf += r#"<link rel="stylesheet" href="/static/css/style1013a.css">"#;
             *buf += r#"<link rel="icon" type="image/x-icon" href="/static/favicon2.ico">"#;
 
             match &props.tab {
                 Tab::GanttChart => {
-                    *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-CI1Cpu0W.js"></script>"#;
-                    *buf += r#"<link rel="stylesheet" crossorigin href="/static/js/gantt-chart/index-ObCPK6hb.css">"#;
+                    *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-BgtWwCP3.js"></script>"#;
+                    *buf += r#"<link rel="stylesheet" crossorigin href="/static/js/gantt-chart/index-BZzXyAxC.css">"#;
                 }
                 _ => {}
             }

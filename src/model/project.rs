@@ -25,6 +25,11 @@ pub struct Project {
     pub ticket_limit: Option<i32>,         // 最大チケット番号
     pub ticket_number: Option<i32>,        // チケット番号
     pub note: Option<String>,              // ノート（マークダウン）
+    pub holiday_jp: Option<bool>,          // 日本の祝日を赤表示
+    pub use_iteration: Option<bool>,       // イテレーション / スプリント 番号を表示
+    pub iteration_start: Option<String>,   // イテレーション開始日
+    pub iteration_no: Option<i32>,         // イテレーション開始番号
+    pub iteration_unit: Option<String>,    // イテレーション単位
     pub created_at: Option<DateTime<Utc>>, // 作成日時
     pub updated_at: Option<DateTime<Utc>>, // 更新日時
     pub history: Option<String>,           // 更新履歴 (JSON)
@@ -63,6 +68,11 @@ impl Project {
             ticket_limit: None,
             ticket_number: None,
             note: None,
+            holiday_jp: None,
+            use_iteration: None,
+            iteration_start: None,
+            iteration_no: None,
+            iteration_unit: None,
             created_at: None,
             updated_at: None,
             history: None,
@@ -267,6 +277,42 @@ impl Project {
         prj.member_limit = Some(MEMBER_LIMIT_DEFAULT);
         prj.ticket_limit = Some(TICKET_LIMIT_DEFAULT);
         prj.ticket_number = Some(0);
+
+        match &input.holiday_jp {
+            Some(h) => {
+                if h == "on" {
+                    prj.holiday_jp = Some(true);
+                } else {
+                    prj.holiday_jp = None;
+                }
+            }
+            None => prj.holiday_jp = None,
+        }
+
+        match &input.use_iteration {
+            Some(it) => {
+                if it == "on" {
+                    prj.use_iteration = Some(true);
+                } else {
+                    prj.holiday_jp = None;
+                }
+            }
+            None => prj.holiday_jp = None,
+        }
+
+        if input.iteration_start.len() > 0 {
+            prj.iteration_start = Some(input.iteration_start.clone());
+        } else {
+            prj.iteration_start = None;
+        }
+
+        match input.iteration_no.parse::<i32>() {
+            Ok(n) => prj.iteration_no = Some(n),
+            Err(_) => prj.iteration_no = None,
+        };
+
+        prj.iteration_unit = Some(input.iteration_unit.clone());
+
         prj.created_at = Some(now);
         prj.updated_at = Some(now);
         prj.db_check = db_check;
@@ -402,6 +448,41 @@ impl Project {
         let now = Utc::now();
         prj.project_name = Some(input.project_name.trim().to_string());
         prj.prefix = Some(input.prefix.trim().to_string());
+
+        match &input.holiday_jp {
+            Some(h) => {
+                if h == "on" {
+                    prj.holiday_jp = Some(true);
+                } else {
+                    prj.holiday_jp = None;
+                }
+            }
+            None => prj.holiday_jp = None,
+        }
+
+        match &input.use_iteration {
+            Some(it) => {
+                if it == "on" {
+                    prj.use_iteration = Some(true);
+                } else {
+                    prj.use_iteration = None;
+                }
+            }
+            None => prj.use_iteration = None,
+        }
+
+        if input.iteration_start.len() > 0 {
+            prj.iteration_start = Some(input.iteration_start.clone());
+        } else {
+            prj.iteration_start = None;
+        }
+
+        match input.iteration_no.parse::<i32>() {
+            Ok(n) => prj.iteration_no = Some(n),
+            Err(_) => prj.iteration_no = None,
+        };
+
+        prj.iteration_unit = Some(input.iteration_unit.clone());
         prj.updated_at = Some(now);
 
         let history = History {
@@ -437,7 +518,7 @@ impl Project {
         if let Err(e) = db
             .fluent()
             .update()
-            .fields(paths!(Project::{project_name, prefix, updated_at, history}))
+            .fields(paths!(Project::{project_name, prefix, holiday_jp, use_iteration, iteration_start, iteration_no, iteration_unit, updated_at, history}))
             .in_col(&COLLECTION_NAME)
             .document_id(&input.project_id)
             .object(&prj)

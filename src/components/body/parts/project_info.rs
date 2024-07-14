@@ -206,6 +206,181 @@ impl Component for ProjectInfo {
             }
             *buf += r#"</div>"#;
 
+            // ガントチャート
+            *buf += r#"<div class="row py-2">"#;
+            {
+                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1">ガントチャート</label>"#;
+                *buf += r#"<div class="col-md-9 mb-1">"#;
+                {
+                    // 日本の祝日を赤表示
+                    *buf += r#"<div class="row">"#;
+                    {
+                        *buf += r#"<div class="col mb-1">"#;
+                        {
+                            *buf += r#"<div class="form-check">"#;
+                            {
+                                *buf += r#"<input class="form-check-input" id="holiday_jp" name="holiday_jp" type="checkbox" value="on""#;
+                                if let Some(p) = &props.project {
+                                    if let Some(h) = &p.holiday_jp {
+                                        if *h {
+                                            *buf += r#" checked="checked""#;
+                                        }
+                                    }
+                                }
+                                *buf += r#">"#;
+                                *buf += r#"<label class="form-check-label" for="holiday">日本の祝日を赤表示</label>"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="row px-2">"#;
+                    {
+                        *buf += r#"<hr>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    // イテレーション / スプリント 番号を表示
+                    *buf += r#"<div class="row">"#;
+                    {
+                        *buf += r#"<div class="col mb-1">"#;
+                        {
+                            *buf += r#"<div class="form-check">"#;
+                            {
+                                *buf += r#"<input class="form-check-input" id="use_iteration" name="use_iteration" type="checkbox" value="on""#;
+                                if let Some(p) = &props.project {
+                                    if let Some(it) = &p.use_iteration {
+                                        if *it {
+                                            *buf += r#" checked="checked""#;
+                                        }
+                                    }
+                                }
+                                *buf += r#">"#;
+                                *buf += r#"<label class="form-check-label" for="use_iteration">イテレーション / スプリント 番号を表示</label>"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="row">"#;
+                    {
+                        // 開始日
+                        *buf += r#"<div class="col-sm-6 mb-2">"#;
+                        {
+                            *buf +=
+                                r#"<label class="form-label" for="iteration_start">開始日</label>"#;
+                            *buf += r#"<input class="form-control" id="iteration_start" name="iteration_start" type="date" value=""#;
+                            if let Some(p) = &props.project {
+                                if let Some(st) = &p.iteration_start {
+                                    *buf += st;
+                                }
+                            }
+                            *buf += r#"">"#;
+                        }
+                        *buf += r#"</div>"#;
+
+                        // 開始番号
+                        *buf += r#"<div class="col-sm-6 mb-1">"#;
+                        {
+                            *buf +=
+                                r#"<label class="form-label" for="iteration_no">開始番号</label>"#;
+                            *buf += r#"<input class="form-control" id="iteration_no" name="iteration_no" type="number" value=""#;
+                            if let Some(p) = &props.project {
+                                if let Some(no) = &p.iteration_no {
+                                    *buf += &no.to_string();
+                                } else {
+                                    *buf += "1";
+                                }
+                            } else {
+                                *buf += "1";
+                            }
+                            *buf += r#"">"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</div>"#;
+
+                    // 単位
+                    *buf += r#"<div class="row">"#;
+                    {
+                        *buf += r#"<div class="col mb-2">"#;
+                        {
+                            *buf += r#"<label class="form-label" for="iteration_unit">単位：&nbsp;&nbsp;</label>"#;
+
+                            let mut iteration_unit = "w1";
+                            if let Some(p) = &props.project {
+                                if let Some(unit) = &p.iteration_unit {
+                                    iteration_unit = unit;
+                                }
+                            }
+
+                            *buf += r#"<div class="form-check form-check-inline">"#;
+                            {
+                                *buf += r#"<input class="form-check-input" id="w1" name="iteration_unit" type="radio" value="w1""#;
+                                if iteration_unit == "w1" {
+                                    *buf += r#" checked="checked""#;
+                                }
+                                *buf += r#">"#;
+                                *buf += r#"<label class="form-check-label" for="w1">1週</label>"#;
+                            }
+                            *buf += r#"</div>"#;
+
+                            *buf += r#"<div class="form-check form-check-inline">"#;
+                            {
+                                *buf += r#"<input class="form-check-input" id="w2" name="iteration_unit" type="radio" value="w2""#;
+                                if iteration_unit == "w2" {
+                                    *buf += r#" checked="checked""#;
+                                }
+                                *buf += r#">"#;
+                                *buf += r#"<label class="form-check-label" for="w2">2週</label>"#;
+                            }
+                            *buf += r#"</div>"#;
+
+                            *buf += r#"<div class="form-check form-check-inline">"#;
+                            {
+                                *buf += r#"<input class="form-check-input" id="w3" name="iteration_unit" type="radio" value="w3""#;
+                                if iteration_unit == "w3" {
+                                    *buf += r#" checked="checked""#;
+                                }
+                                *buf += r#">"#;
+                                *buf += r#"<label class="form-check-label" for="w3">3週</label>"#;
+                            }
+                            *buf += r#"</div>"#;
+
+                            *buf += r#"<div class="form-check form-check-inline">"#;
+                            {
+                                *buf += r#"<input class="form-check-input" id="w4" name="iteration_unit" type="radio" value="w4""#;
+                                if iteration_unit == "w4" {
+                                    *buf += r#" checked="checked""#;
+                                }
+                                *buf += r#">"#;
+                                *buf += r#"<label class="form-check-label" for="w4">4週</label>"#;
+                            }
+                            *buf += r#"</div>"#;
+
+                            *buf += r#"<div class="form-check form-check-inline">"#;
+                            {
+                                *buf += r#"<input class="form-check-input" id="m1" name="iteration_unit" type="radio" value="m1""#;
+                                if iteration_unit == "m1" {
+                                    *buf += r#" checked="checked""#;
+                                }
+                                *buf += r#">"#;
+                                *buf += r#"<label class="form-check-label" for="m1">1月</label>"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</div>"#;
+                }
+                *buf += r#"</div>"#;
+            }
+            *buf += r#"</div>"#;
+
             if props.action == crate::Action::Create {
                 *buf += r#"<div class="row py-3 mt-2 bg-light">"#;
                 {

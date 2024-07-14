@@ -28,6 +28,8 @@ pub struct Ticket {
     pub parent_id_disp: Option<String>,    // 親チケット表示用チケットID
     pub parent_name: Option<String>,       // 親チケット名
     pub deliverables: Option<String>,      // 成果物(JSON)
+    pub ganttchart: Option<bool>,          // ガントチャートに表示する
+    pub ganttseq: Option<i32>,             // ガントチャート表示順
     pub owner: Option<String>,             // 登録ユーザー
     pub note: Option<String>,              // ノート（マークダウン）
     pub history: Option<String>,           // 更新履歴 (JSON)
@@ -65,6 +67,8 @@ impl Ticket {
             parent_id_disp: None,
             parent_name: None,
             deliverables: None,
+            ganttchart: None,
+            ganttseq: None,
             owner: None,
             note: None,
             history: None,
@@ -155,6 +159,17 @@ impl Ticket {
 
         if input.deliverables.len() > 0 {
             ticket.deliverables = Some(input.deliverables.clone());
+        }
+
+        match &input.ganttchart {
+            Some(g) => {
+                if g == "on" {
+                    ticket.ganttchart = Some(true);
+                } else {
+                    ticket.ganttchart = None;
+                }
+            }
+            None => ticket.ganttchart = None,
         }
 
         ticket.owner = Some(session.uid.clone());
@@ -334,6 +349,17 @@ impl Ticket {
             ticket.deliverables = None;
         }
 
+        match &input.ganttchart {
+            Some(g) => {
+                if g == "on" {
+                    ticket.ganttchart = Some(true);
+                } else {
+                    ticket.ganttchart = None;
+                }
+            }
+            None => ticket.ganttchart = None,
+        }
+
         if input.parent.len() > 0 {
             ticket.parent_id = Some(input.parent.clone());
         } else {
@@ -375,7 +401,7 @@ impl Ticket {
         if let Err(e) = db
             .fluent()
             .update()
-            .fields(paths!(Ticket::{name, description, start_date, end_date, progress, priority, deliverables, parent_id, updated_at, history}))
+            .fields(paths!(Ticket::{name, description, start_date, end_date, progress, priority, deliverables, ganttchart, parent_id, updated_at, history}))
             .in_col(&COLLECTION_NAME)
             .document_id(&input.ticket_id)
             .object(&ticket)

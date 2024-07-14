@@ -148,3 +148,8 @@
   width: 36px;
   height: 36px;
 }
+
+.flexbox {
+  display: flex;
+  padding: 10px;
+}

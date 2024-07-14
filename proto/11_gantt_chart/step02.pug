@@ -5,7 +5,7 @@ html(lang="ja")
     meta(name="viewport" content="width=device-width, initial-scale=1")
     title チケットを更新 - Yuimarl
     link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous")
-    link(rel="stylesheet" href="../../static/css/style1013.css")
+    link(rel="stylesheet" href="../../static/css/style1013a.css")
     link(rel="icon" type="image/x-icon" href="../../static/favicon.ico")
   body
     include ../includes/nav.pug
@@ -166,20 +166,20 @@ html(lang="ja")
                   | &nbsp;:&nbsp;
                   | 食材購入
 
-            // ガントチャート
-            .row.pt-1.pb-2
-              label.col-md-3.col-form-label.bg-light.mb-1(for="category") ガントチャート
-              .col-md-9.mb-1
-                .form-check
-                  input.form-check-input#ganttchart(type="checkbox" value="" checked="checked")
-                  label.form-check-label(for="ganttchart") ガントチャートに表示する
-
             // 成果物
             .row.pt-1.pb-2
               label.col-md-3.col-form-label.bg-light.mb-1(for="category") 成果物
               .col-md-9.mb-1
                 a(href="step01.html")
                   img.icon3(src="../../static/ionicons/add-circle-outline.svg" title="成果物を追加")
+
+            // ガントチャート
+            .row.pt-1.pb-2
+              label.col-md-3.col-form-label.bg-light.mb-1(for="category") ガントチャート
+              .col-md-9.mb-1
+                .form-check
+                  input.form-check-input#ganttchart(type="checkbox" value="on" checked="checked")
+                  label.form-check-label(for="ganttchart") ガントチャートに表示する
 
             .row.py-3.mt-2.bg-light
               .col-9

@@ -182,6 +182,7 @@ pub struct TicketInput {
     pub priority: String,
     pub parent: String,
     pub deliverables: String,
+    pub ganttchart: Option<String>,
     pub project_id: String,
     pub ticket_id: String,
     pub timestamp: String,
@@ -192,8 +193,8 @@ pub async fn post(
     cookies: Cookies,
     Form(input): Form<TicketInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::debug!(
-        "POST /ticket {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}",
+    tracing::info!(
+        "POST /ticket {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {:?}, {}, {}, {}, {}",
         input.action,
         input.name,
         input.description,
@@ -204,6 +205,7 @@ pub async fn post(
         input.priority,
         input.parent,
         input.deliverables,
+        input.ganttchart,
         input.project_id,
         input.ticket_id,
         input.timestamp,

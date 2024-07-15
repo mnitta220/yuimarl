@@ -10,7 +10,7 @@ impl Component for GanttChart {
             *buf += r#"<form action="/project_note" method="POST">"#;
             {
                 // ガントチャート
-                *buf += r#"<div class="row py-2">"#;
+                *buf += r#"<div class="row p-2">"#;
                 {
                     *buf += r#"<div class="col flexbox2" id="flexbox">"#;
                     {
@@ -28,6 +28,144 @@ impl Component for GanttChart {
                             *buf += r#"<div class="sv3"></div>"#;
                         }
                         *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</div>"#;
+                }
+                *buf += r#"</div>"#;
+
+                // 完了済みを表示
+                *buf += r#"<div class="row pt-2">"#;
+                {
+                    *buf += r#"<div class="col">"#;
+                    {
+                        *buf += r#"<div class="form-check form-switch">"#;
+                        {
+                            *buf += r#"<input class="form-check-input" id="showdone" type="checkbox" role="switch">"#;
+                            *buf += r#"<label class="form-check-label" for="showdone">完了済みを表示</label>"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</div>"#;
+                }
+                *buf += r#"</div>"#;
+
+                // 背景色
+                let color = "light";
+                *buf += r#"<div class="row pt-2">"#;
+                {
+                    *buf += r#"<div class="col mb-1 flexbox">"#;
+                    {
+                        *buf += r#"<a href="javascript:clickColor('info');">"#;
+                        {
+                            *buf += r#"<div class="box-info color-box">"#;
+                            {
+                                *buf += r#"<img id="img-info" class="icon"#;
+                                if color != "info" {
+                                    *buf += r#" d-none"#;
+                                }
+                                *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</a>"#;
+
+                        *buf += r#"<a href="javascript:clickColor('primary');">"#;
+                        {
+                            *buf += r#"<div class="box-primary color-box">"#;
+                            {
+                                *buf += r#"<img id="img-primary" class="icon"#;
+                                if color != "primary" {
+                                    *buf += r#" d-none"#;
+                                }
+                                *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</a>"#;
+
+                        *buf += r#"<a href="javascript:clickColor('warning');">"#;
+                        {
+                            *buf += r#"<div class="box-warning color-box">"#;
+                            {
+                                *buf += r#"<img id="img-warning" class="icon"#;
+                                if color != "warning" {
+                                    *buf += r#" d-none"#;
+                                }
+                                *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</a>"#;
+
+                        *buf += r#"<a href="javascript:clickColor('success');">"#;
+                        {
+                            *buf += r#"<div class="box-success color-box">"#;
+                            {
+                                *buf += r#"<img id="img-success" class="icon"#;
+                                if color != "success" {
+                                    *buf += r#" d-none"#;
+                                }
+                                *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</a>"#;
+
+                        *buf += r#"<a href="javascript:clickColor('danger');">"#;
+                        {
+                            *buf += r#"<div class="box-danger color-box">"#;
+                            {
+                                *buf += r#"<img id="img-danger" class="icon"#;
+                                if color != "danger" {
+                                    *buf += r#" d-none"#;
+                                }
+                                *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</a>"#;
+
+                        *buf += r#"<a href="javascript:clickColor('secondary');">"#;
+                        {
+                            *buf += r#"<div class="box-secondary color-box">"#;
+                            {
+                                *buf += r#"<img id="img-secondary" class="icon"#;
+                                if color != "secondary" {
+                                    *buf += r#" d-none"#;
+                                }
+                                *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</a>"#;
+
+                        *buf += r#"<a href="javascript:clickColor('dark');">"#;
+                        {
+                            *buf += r#"<div class="box-dark color-box">"#;
+                            {
+                                *buf += r#"<img id="img-dark" class="icon"#;
+                                if color != "dark" {
+                                    *buf += r#" d-none"#;
+                                }
+                                *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</a>"#;
+
+                        *buf += r#"<a href="javascript:clickColor('light');">"#;
+                        {
+                            *buf += r#"<div class="box-light color-box" style="border: solid 1px #aaa;">"#;
+                            {
+                                *buf += r#"<img id="img-light" class="icon"#;
+                                if color != "light" {
+                                    *buf += r#" d-none"#;
+                                }
+                                *buf += r#"" src="/static/ionicons/checkmark-outline.svg">"#;
+                            }
+                            *buf += r#"</div>"#;
+                        }
+                        *buf += r#"</a>"#;
                     }
                     *buf += r#"</div>"#;
                 }

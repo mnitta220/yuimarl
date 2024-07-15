@@ -4,6 +4,12 @@
 
 https://ja.vitejs.dev/
 
+インストール
+
+```
+npm install
+```
+
 ローカル起動
 
 ```

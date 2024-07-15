@@ -38,8 +38,8 @@
           </div>
           <form action="/project/add" method="POST">
             <!-- ガントチャート-->
-            <div class="row py-2">
-              <div class="col flexbox" id="flexbox">
+            <div class="row p-2">
+              <div class="col flexbox2" id="flexbox">
                 <div class="ganttbase" id="ganttbase">
                   <div class="ganttframe" id="ganttframe"></div>
                   <canvas class="scrollH" id="scrollh"></canvas>
@@ -50,6 +50,27 @@
                   <div class="sv3"></div>
                 </div>
               </div>
+            </div>
+            <!-- 完了済みを表示-->
+            <div class="row pt-2">
+              <div class="col">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" id="showdone" type="checkbox" role="switch">
+                  <label class="form-check-label" for="showdone">完了済みを表示</label>
+                </div>
+              </div>
+            </div>
+            <!-- 背景色-->
+            <div class="row pt-2">
+              <div class="col mb-1 flexbox"><a href="javascript:clickColor('info');">
+                  <div class="box-info color-box"><img class="icon d-none" src="../../static/ionicons/checkmark-outline.svg"></div></a><a href="javascript:clickColor('primary');">
+                  <div class="box-primary color-box"><img class="icon d-none" src="../../static/ionicons/checkmark-outline.svg"></div></a><a href="javascript:clickColor('warning');">
+                  <div class="box-warning color-box"><img class="icon d-none" src="../../static/ionicons/checkmark-outline.svg"></div></a><a href="javascript:clickColor('success');">
+                  <div class="box-success color-box"><img class="icon d-none" src="../../static/ionicons/checkmark-outline.svg"></div></a><a href="javascript:clickColor('danger');">
+                  <div class="box-danger color-box"><img class="icon d-none" src="../../static/ionicons/checkmark-outline.svg"></div></a><a href="javascript:clickColor('secondary');">
+                  <div class="box-secondary color-box"><img class="icon d-none" src="../../static/ionicons/checkmark-outline.svg"></div></a><a href="javascript:clickColor('dark');">
+                  <div class="box-dark color-box"><img class="icon d-none" src="../../static/ionicons/checkmark-outline.svg"></div></a><a href="javascript:clickColor('light');">
+                  <div class="box-light color-box" style="border: solid 1px #aaa;"><img class="icon" src="../../static/ionicons/checkmark-outline.svg"></div></a></div>
             </div>
             <div class="row py-3 mt-2 bg-light">
               <div class="col">

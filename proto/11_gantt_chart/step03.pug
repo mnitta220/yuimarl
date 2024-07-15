@@ -27,8 +27,8 @@ html(lang="ja")
                 a.nav-link(href="#") 更新履歴
           form(action="/project/add" method="POST")
             // ガントチャート
-            .row.py-2
-              .col.flexbox#flexbox
+            .row.p-2
+              .col.flexbox2#flexbox
                 .ganttbase#ganttbase
                   .ganttframe#ganttframe
                   canvas.scrollH#scrollh
@@ -36,6 +36,41 @@ html(lang="ja")
                   .sv1
                   canvas.sv2#scrollv
                   .sv3
+
+            // 完了済みを表示
+            .row.pt-2
+              .col
+                .form-check.form-switch
+                  input.form-check-input#showdone(type="checkbox" role="switch")
+                  label.form-check-label(for="showdone") 完了済みを表示
+
+            // 背景色
+            .row.pt-2
+              .col.mb-1.flexbox
+                a(href="javascript:clickColor('info');")
+                  .box-info.color-box
+                    img.icon.d-none(src="../../static/ionicons/checkmark-outline.svg")
+                a(href="javascript:clickColor('primary');")
+                  .box-primary.color-box
+                    img.icon.d-none(src="../../static/ionicons/checkmark-outline.svg")
+                a(href="javascript:clickColor('warning');")
+                  .box-warning.color-box
+                    img.icon.d-none(src="../../static/ionicons/checkmark-outline.svg")
+                a(href="javascript:clickColor('success');")
+                  .box-success.color-box
+                    img.icon.d-none(src="../../static/ionicons/checkmark-outline.svg")
+                a(href="javascript:clickColor('danger');")
+                  .box-danger.color-box
+                    img.icon.d-none(src="../../static/ionicons/checkmark-outline.svg")
+                a(href="javascript:clickColor('secondary');")
+                  .box-secondary.color-box
+                    img.icon.d-none(src="../../static/ionicons/checkmark-outline.svg")
+                a(href="javascript:clickColor('dark');")
+                  .box-dark.color-box
+                    img.icon.d-none(src="../../static/ionicons/checkmark-outline.svg")
+                a(href="javascript:clickColor('light');")
+                  .box-light.color-box(style="border: solid 1px #aaa;")
+                    img.icon(src="../../static/ionicons/checkmark-outline.svg")
 
             .row.py-3.mt-2.bg-light
               .col

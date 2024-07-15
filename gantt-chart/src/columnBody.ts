@@ -3,7 +3,7 @@ import {
   HEADER_HEIGHT,
   SCROLL_BAR_WIDTH,
   TICKET_HEIGHT,
-  Ticket,
+  GanttTicket,
 } from "./common";
 import GanttFrame from "./ganttFrame";
 
@@ -93,7 +93,7 @@ export default class ColumnBody {
 
   drawTickets(
     ctx: CanvasRenderingContext2D,
-    ts: Ticket[],
+    ts: GanttTicket[],
     level: number,
     y: number
   ): number {
@@ -108,7 +108,7 @@ export default class ColumnBody {
     return y1;
   }
 
-  getFrameHeight(ts: Ticket[], y: number): number {
+  getFrameHeight(ts: GanttTicket[], y: number): number {
     let y1 = y;
     for (let t of ts) {
       y1 += TICKET_HEIGHT;
@@ -122,7 +122,7 @@ export default class ColumnBody {
   // チケットを描画する
   drawTicket(
     ctx: CanvasRenderingContext2D,
-    ticket: Ticket,
+    ticket: GanttTicket,
     level: number,
     y: number
   ) {
@@ -131,7 +131,7 @@ export default class ColumnBody {
     const y1 = y + 18;
     ctx.fillStyle = "#00f";
     // ID
-    ctx.fillText(ticket.idDisp, 3, y1 + this.posY);
+    ctx.fillText(ticket.id_disp, 3, y1 + this.posY);
     ctx.fillStyle = "#808080";
     // チケット□
     let x = this.frame.cols[0].width + level * 12 + 6;
@@ -169,13 +169,21 @@ export default class ColumnBody {
 
     x = this.frame.cols[0].width + this.frame.cols[1].width + 3;
     // 開始日
-    if (ticket.start) {
-      ctx.fillText(dayjs(ticket.start).format("YY/MM/DD"), x, y1 + this.posY);
+    if (ticket.start_date) {
+      ctx.fillText(
+        dayjs(ticket.start_date).format("YY/MM/DD"),
+        x,
+        y1 + this.posY
+      );
     }
     x += this.frame.cols[2].width;
     // 終了日
-    if (ticket.end) {
-      ctx.fillText(dayjs(ticket.end).format("YY/MM/DD"), x, y1 + this.posY);
+    if (ticket.end_date) {
+      ctx.fillText(
+        dayjs(ticket.end_date).format("YY/MM/DD"),
+        x,
+        y1 + this.posY
+      );
     }
     x += this.frame.cols[3].width + this.frame.cols[4].width - 6;
     // 進捗率
@@ -207,7 +215,7 @@ export default class ColumnBody {
   }
 
   clickTickets(
-    ts: Ticket[],
+    ts: GanttTicket[],
     clickx: number,
     clicky: number,
     level: number,
@@ -227,7 +235,7 @@ export default class ColumnBody {
   }
 
   clickTicket(
-    ticket: Ticket,
+    ticket: GanttTicket,
     clickx: number,
     clicky: number,
     level: number,

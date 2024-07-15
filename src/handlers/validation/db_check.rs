@@ -219,6 +219,13 @@ impl DbCheckValidation {
             }
         };
 
+        match model::ticket::GanttTicket::load_gantt(&prj.id, &db).await {
+            Ok(tickets) => tickets,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e));
+            }
+        };
+
         match model::comment::Comment::get_comment_list(&ticket.id, &db).await {
             Ok(comment) => comment,
             Err(e) => {

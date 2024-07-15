@@ -4,7 +4,7 @@ import {
   CALENDAR_MIN,
   DAY_WIDTH,
   Column,
-  Ticket,
+  GanttTicket,
 } from "./common";
 import ColumnHeader from "./columnHeader";
 import ColumnBody from "./columnBody";
@@ -41,7 +41,7 @@ export default class GanttFrame {
   posX = 0;
   cols: Column[] = [];
   holidays: dayjs.Dayjs[] = []; // 日本の祝日
-  tickets: Ticket[] = [];
+  tickets: GanttTicket[] = [];
 
   constructor() {
     const startdate = document.querySelector<HTMLInputElement>(`#startdate`);

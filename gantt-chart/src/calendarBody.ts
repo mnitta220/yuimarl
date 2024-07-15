@@ -7,7 +7,7 @@ import {
   DAY_WIDTH,
   DAY_MILISEC,
   TICKET_HEIGHT,
-  Ticket,
+  GanttTicket,
 } from "./common";
 import GanttFrame from "./ganttFrame";
 
@@ -116,7 +116,11 @@ export default class CalendarBody {
     }
   }
 
-  drawTickets(ctx: CanvasRenderingContext2D, ts: Ticket[], y: number): number {
+  drawTickets(
+    ctx: CanvasRenderingContext2D,
+    ts: GanttTicket[],
+    y: number
+  ): number {
     let y1 = y;
     for (let t of ts) {
       this.drawTicket(ctx, t, y1);
@@ -129,14 +133,15 @@ export default class CalendarBody {
   }
 
   // チケットを描画する
-  drawTicket(ctx: CanvasRenderingContext2D, ticket: Ticket, y: number) {
+  drawTicket(ctx: CanvasRenderingContext2D, ticket: GanttTicket, y: number) {
     // チケット開始日/終了日
-    if (ticket.start) {
-      if (ticket.end) {
+    if (ticket.start_date) {
+      if (ticket.end_date) {
         let x1 =
-          dayjs(ticket.start).diff(this.frame.calendarStart) / DAY_MILISEC;
+          dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x1 = x1 * DAY_WIDTH - this.dtpos;
-        let x2 = dayjs(ticket.end).diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x2 =
+          dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         if (ticket.progress === 0) {
           ctx.fillStyle = "#9bf";
@@ -158,7 +163,7 @@ export default class CalendarBody {
       } else {
         ctx.fillStyle = "#57f";
         let x1 =
-          dayjs(ticket.start).diff(this.frame.calendarStart) / DAY_MILISEC;
+          dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x1 = x1 * DAY_WIDTH - this.dtpos;
         ctx.fillRect(x1, y + 8 + this.posY, 12, 6);
         ctx.fill();
@@ -176,9 +181,10 @@ export default class CalendarBody {
         ctx.fill();
       }
     } else {
-      if (ticket.end) {
+      if (ticket.end_date) {
         ctx.fillStyle = "#57f";
-        let x2 = dayjs(ticket.end).diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x2 =
+          dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         x2 -= 12;
         ctx.fillRect(x2, y + 8 + this.posY, 12, 6);

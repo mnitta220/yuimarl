@@ -39,6 +39,21 @@ pub struct Ticket {
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct GanttTicket {
+    pub id: String,                        // ID(uuid)
+    pub id_disp: Option<String>,           // 表示用チケットID（接頭辞＋連番）
+    pub name: Option<String>,              // チケット名
+    pub start_date: Option<String>,        // 開始日
+    pub end_date: Option<String>,          // 終了日
+    pub progress: i32,                     // 進捗率
+    pub parent_id: Option<String>,         // 親チケットID
+    pub ganttseq: Option<i32>,             // ガントチャート表示順
+    pub updated_at: Option<DateTime<Utc>>, // 更新日時
+    pub children: Vec<GanttTicket>,        // 子チケット
+    pub open: bool,                        //
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct TicketMember {
     pub id: String,                       // ID(uuid)
     pub ticket_id: String,                // チケットID
@@ -1353,5 +1368,121 @@ impl TicketMember {
         }
 
         Ok(())
+    }
+}
+
+impl GanttTicket {
+    pub fn new(ticket: &Ticket) -> Self {
+        Self {
+            id: ticket.id.clone(),
+            id_disp: ticket.id_disp.clone(),
+            name: ticket.name.clone(),
+            start_date: ticket.start_date.clone(),
+            end_date: ticket.end_date.clone(),
+            progress: ticket.progress,
+            parent_id: ticket.parent_id.clone(),
+            ganttseq: ticket.ganttseq,
+            updated_at: ticket.updated_at,
+            children: Vec::new(),
+            open: false,
+        }
+    }
+
+    /// ガントチャートに表示するチケットを取得する
+    pub async fn load_gantt(
+        project_id: &str,
+        db: &FirestoreDb,
+    ) -> Result<(Vec<GanttTicket>, String, String)> {
+        let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority, start_date, end_date, parent_id, ganttseq}))
+            .from(COLLECTION_NAME)
+            .filter(|q| {
+                q.for_all([
+                    q.field(path!(Ticket::project_id)).eq(&project_id),
+                    q.field(path!(Ticket::ganttchart)).eq(&true),
+                ])
+            })
+            .order_by(vec![
+                (path!(Ticket::id), FirestoreQueryDirection::Ascending),
+            ])
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let tickets: Vec<Ticket> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let mut gantts: Vec<GanttTicket> = Vec::new();
+
+        // 親チケットがないチケットを最上位に表示する
+        for ticket in &tickets {
+            if ticket.parent_id.is_none() {
+                let gantt = GanttTicket::new(ticket);
+                gantts.push(gantt);
+            }
+        }
+
+        let (gantts, min, max) = GanttTicket::gantt_sub(gantts, &tickets);
+
+        Ok((gantts, min, max))
+    }
+
+    /// 子チケットを親チケットのchildrenに設定する
+    pub fn gantt_sub(
+        gantts: Vec<GanttTicket>,
+        tickets: &Vec<Ticket>,
+    ) -> (Vec<GanttTicket>, String, String) {
+        let mut newone: Vec<GanttTicket> = Vec::new();
+        let mut min = String::from("");
+        let mut max = String::from("");
+
+        for mut gantt in gantts {
+            let iter = tickets.iter().filter(|x| match &x.parent_id {
+                Some(pid) => pid == &gantt.id,
+                None => false,
+            });
+
+            for it in iter {
+                let child = GanttTicket::new(it);
+                gantt.children.push(child);
+            }
+
+            if let Some(s) = &gantt.start_date {
+                if min.len() == 0 || min > *s {
+                    min = s.clone();
+                }
+            }
+            if let Some(e) = &gantt.end_date {
+                if max.len() == 0 || max < *e {
+                    max = e.clone();
+                }
+            }
+
+            let (ts, mi, ma) = GanttTicket::gantt_sub(gantt.children, tickets);
+
+            gantt.children = ts;
+            if mi.len() > 0 && (min.len() == 0 || min > mi) {
+                min = mi;
+            }
+            if ma.len() > 0 && (max.len() == 0 || max < ma) {
+                max = ma;
+            }
+
+            newone.push(gantt);
+        }
+
+        (newone, min, max)
     }
 }

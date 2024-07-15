@@ -7,15 +7,15 @@ export const DAY_WIDTH = 22;
 export const CALENDAR_MIN = DAY_WIDTH * 10;
 export const DAY_MILISEC = 1000 * 60 * 60 * 24;
 
-export class Ticket {
+export class GanttTicket {
   id: string = "";
-  idDisp: string = "";
+  id_disp: string = "";
   name: string = "";
-  start: string | null = null;
-  end: string | null = null;
+  start_date: string | null = null;
+  end_date: string | null = null;
   progress: number = 0;
   open: boolean = false;
-  children: Ticket[] = [];
+  children: GanttTicket[] = [];
 }
 
 // カラム

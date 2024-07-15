@@ -30,7 +30,7 @@ const cols = [
 
 class Ticket {
   id: string = "";
-  idDisp: string = "";
+  id_disp: string = "";
   name: string = "";
   start: Date | null = null;
   end: Date | null = null;
@@ -42,7 +42,7 @@ class Ticket {
 const tickets = [
   {
     id: "YU1",
-    idDisp: "YU1",
+    id_disp: "YU1",
     name: "Yuimarl開発",
     start: new Date(2024, 3, 8),
     end: null,
@@ -51,7 +51,7 @@ const tickets = [
     children: [
       {
         id: "YU2",
-        idDisp: "YU2",
+        id_disp: "YU2",
         name: "技術調査",
         start: new Date(2024, 3, 8),
         end: new Date(2024, 3, 17),
@@ -60,7 +60,7 @@ const tickets = [
         children: [
           {
             id: "YU3",
-            idDisp: "YU3",
+            id_disp: "YU3",
             name: "Firestore",
             start: new Date(2024, 3, 8),
             end: new Date(2024, 5, 13),
@@ -72,7 +72,7 @@ const tickets = [
       },
       {
         id: "YU8",
-        idDisp: "YU8",
+        id_disp: "YU8",
         name: "version 1.0.0",
         start: new Date(2024, 3, 18),
         end: new Date(2024, 5, 13),
@@ -81,7 +81,7 @@ const tickets = [
         children: [
           {
             id: "YU8",
-            idDisp: "YU8",
+            id_disp: "YU8",
             name: "version 1.0.0",
             start: new Date(2024, 3, 18),
             end: new Date(2024, 5, 13),
@@ -93,7 +93,7 @@ const tickets = [
       },
       {
         id: "YU62",
-        idDisp: "YU62",
+        id_disp: "YU62",
         name: "version 1.0.12",
         start: new Date(2024, 5, 21),
         end: new Date(2024, 5, 23),
@@ -102,7 +102,7 @@ const tickets = [
         children: [
           {
             id: "YU8",
-            idDisp: "YU8",
+            id_disp: "YU8",
             name: "version 1.0.0",
             start: new Date(2024, 3, 18),
             end: new Date(2024, 5, 13),
@@ -114,7 +114,7 @@ const tickets = [
       },
       {
         id: "YU71",
-        idDisp: "YU71",
+        id_disp: "YU71",
         name: "version 1.0.13",
         start: new Date(2024, 5, 24),
         end: new Date(2024, 6, 30),
@@ -123,7 +123,7 @@ const tickets = [
         children: [
           {
             id: "YU60",
-            idDisp: "YU60",
+            id_disp: "YU60",
             name: "ガントチャート",
             start: new Date(2024, 5, 24),
             end: new Date(2024, 6, 30),
@@ -132,7 +132,7 @@ const tickets = [
             children: [
               {
                 id: "YU72",
-                idDisp: "YU72",
+                id_disp: "YU72",
                 name: "画面プロトタイプ作成",
                 start: new Date(2024, 5, 24),
                 end: new Date(2024, 6, 12),
@@ -142,7 +142,7 @@ const tickets = [
               },
               {
                 id: "YU73",
-                idDisp: "YU73",
+                id_disp: "YU73",
                 name: "実装・テスト",
                 start: new Date(2024, 6, 16),
                 end: new Date(2024, 6, 26),
@@ -152,7 +152,7 @@ const tickets = [
               },
               {
                 id: "YU74",
-                idDisp: "YU74",
+                id_disp: "YU74",
                 name: "ユーザーガイド更新",
                 start: new Date(2024, 6, 29),
                 end: new Date(2024, 6, 30),
@@ -166,7 +166,7 @@ const tickets = [
       },
       {
         id: "YU4",
-        idDisp: "YU4",
+        id_disp: "YU4",
         name: "バックログ",
         start: null,
         end: null,
@@ -175,7 +175,7 @@ const tickets = [
         children: [
           {
             id: "YU46",
-            idDisp: "YU46",
+            id_disp: "YU46",
             name: "ページング改善",
             start: null,
             end: null,
@@ -185,7 +185,7 @@ const tickets = [
           },
           {
             id: "YU45",
-            idDisp: "YU45",
+            id_disp: "YU45",
             name: "オーナー変更",
             start: null,
             end: null,
@@ -203,7 +203,7 @@ const tickets = [
 const tickets = [
   {
     id: "YU1",
-    idDisp: "YU1",
+    id_disp: "YU1",
     name: "チケットYU1",
     start: new Date(2024, 6, 1),
     end: new Date(2024, 6, 31),
@@ -212,7 +212,7 @@ const tickets = [
     children: [
       {
         id: "YU11",
-        idDisp: "YU11",
+        id_disp: "YU11",
         name: "チケットYU11",
         start: new Date(2024, 6, 1),
         end: new Date(2024, 6, 2),
@@ -221,7 +221,7 @@ const tickets = [
         children: [
           {
             id: "YU111",
-            idDisp: "YU111",
+            id_disp: "YU111",
             name: "チケットYU111あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -235,7 +235,7 @@ const tickets = [
   },
   {
     id: "YU2",
-    idDisp: "YU2",
+    id_disp: "YU2",
     name: "チケットYU2",
     start: new Date(2024, 6, 1),
     end: null,
@@ -244,7 +244,7 @@ const tickets = [
     children: [
       {
         id: "YU21",
-        idDisp: "YU21",
+        id_disp: "YU21",
         name: "チケットYU21",
         start: new Date(2024, 6, 1),
         end: new Date(2024, 6, 2),
@@ -253,7 +253,7 @@ const tickets = [
         children: [
           {
             id: "YU211",
-            idDisp: "YU211",
+            id_disp: "YU211",
             name: "チケットYU211あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -265,7 +265,7 @@ const tickets = [
       },
       {
         id: "YU22",
-        idDisp: "YU22",
+        id_disp: "YU22",
         name: "チケットYU22",
         start: new Date(2024, 6, 1),
         end: new Date(2024, 6, 2),
@@ -274,7 +274,7 @@ const tickets = [
         children: [
           {
             id: "YU221",
-            idDisp: "YU221",
+            id_disp: "YU221",
             name: "チケットYU221あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -284,7 +284,7 @@ const tickets = [
           },
           {
             id: "YU222",
-            idDisp: "YU222",
+            id_disp: "YU222",
             name: "チケットYU222あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -294,7 +294,7 @@ const tickets = [
           },
           {
             id: "YU223",
-            idDisp: "YU223",
+            id_disp: "YU223",
             name: "チケットYU223あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -303,7 +303,7 @@ const tickets = [
             children: [
               {
                 id: "YU2231",
-                idDisp: "YU2231",
+                id_disp: "YU2231",
                 name: "チケットYU2231あいうえおかきくけこさしすせそたちつてと",
                 start: new Date(2024, 6, 10),
                 end: new Date(2024, 6, 16),
@@ -312,7 +312,7 @@ const tickets = [
                 children: [
                   {
                     id: "YU223a",
-                    idDisp: "YU223a",
+                    id_disp: "YU223a",
                     name: "チケットYU223aあいうえおかきくけこさしすせそたちつてと",
                     start: new Date(2024, 6, 10),
                     end: new Date(2024, 6, 16),
@@ -326,7 +326,7 @@ const tickets = [
           },
           {
             id: "YU224",
-            idDisp: "YU224",
+            id_disp: "YU224",
             name: "チケットYU224あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -336,7 +336,7 @@ const tickets = [
           },
           {
             id: "YU225",
-            idDisp: "YU225",
+            id_disp: "YU225",
             name: "チケットYU225あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -346,7 +346,7 @@ const tickets = [
           },
           {
             id: "YU226",
-            idDisp: "YU226",
+            id_disp: "YU226",
             name: "チケットYU226あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -356,7 +356,7 @@ const tickets = [
           },
           {
             id: "YU227",
-            idDisp: "YU227",
+            id_disp: "YU227",
             name: "チケットYU227あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -366,7 +366,7 @@ const tickets = [
           },
           {
             id: "YU228",
-            idDisp: "YU228",
+            id_disp: "YU228",
             name: "チケットYU228あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -376,7 +376,7 @@ const tickets = [
           },
           {
             id: "YU229",
-            idDisp: "YU229",
+            id_disp: "YU229",
             name: "チケットYU229あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -386,7 +386,7 @@ const tickets = [
           },
           {
             id: "YU2210",
-            idDisp: "YU2210",
+            id_disp: "YU2210",
             name: "チケットYU2210あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -400,7 +400,7 @@ const tickets = [
   },
   {
     id: "YU3",
-    idDisp: "YU3",
+    id_disp: "YU3",
     name: "チケットYU3あいうえおかきくけこさしすせそたa",
     start: null,
     end: new Date(2024, 6, 1),
@@ -409,7 +409,7 @@ const tickets = [
     children: [
       {
         id: "YU31",
-        idDisp: "YU31",
+        id_disp: "YU31",
         name: "チケットYU31",
         start: new Date(2024, 6, 1),
         end: new Date(2024, 6, 2),
@@ -418,7 +418,7 @@ const tickets = [
         children: [
           {
             id: "YU311",
-            idDisp: "YU311",
+            id_disp: "YU311",
             name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -428,7 +428,7 @@ const tickets = [
           },
           {
             id: "YU311",
-            idDisp: "YU311",
+            id_disp: "YU311",
             name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -438,7 +438,7 @@ const tickets = [
           },
           {
             id: "YU311",
-            idDisp: "YU311",
+            id_disp: "YU311",
             name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -448,7 +448,7 @@ const tickets = [
           },
           {
             id: "YU311",
-            idDisp: "YU311",
+            id_disp: "YU311",
             name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -458,7 +458,7 @@ const tickets = [
           },
           {
             id: "YU311",
-            idDisp: "YU311",
+            id_disp: "YU311",
             name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -468,7 +468,7 @@ const tickets = [
           },
           {
             id: "YU311",
-            idDisp: "YU311",
+            id_disp: "YU311",
             name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -478,7 +478,7 @@ const tickets = [
           },
           {
             id: "YU311",
-            idDisp: "YU311",
+            id_disp: "YU311",
             name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -488,7 +488,7 @@ const tickets = [
           },
           {
             id: "YU311",
-            idDisp: "YU311",
+            id_disp: "YU311",
             name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -498,7 +498,7 @@ const tickets = [
           },
           {
             id: "YU311",
-            idDisp: "YU311",
+            id_disp: "YU311",
             name: "チケットYU311あいうえおかきくけこさしすせそたちつてと",
             start: new Date(2024, 6, 10),
             end: new Date(2024, 6, 16),
@@ -512,7 +512,7 @@ const tickets = [
   },
   {
     id: "YU9999",
-    idDisp: "YU9999",
+    id_disp: "YU9999",
     name: "チケットYU9999あいうえおかきくけこさしすせそたちつてと",
     start: new Date(2024, 6, 1),
     end: new Date(2024, 6, 3),
@@ -709,7 +709,7 @@ class ColumnBody {
     const y1 = y + 18;
     ctx.fillStyle = "#00f";
     // ID
-    ctx.fillText(ticket.idDisp, 3, y1 + this.posY);
+    ctx.fillText(ticket.id_disp, 3, y1 + this.posY);
     ctx.fillStyle = "#808080";
     // チケット□
     let x = cols[0].width + level * 12 + 6;

@@ -194,11 +194,23 @@ impl Component for GanttChart {
                     }
                     *buf += r#"</div>"#;
                 }
-                *buf += r#"<input type="hidden" id="startdate" value="2024-04-08">"#;
-                *buf += r#"<input type="hidden" id="enddate" value="2024-08-31">"#;
+
+                *buf += r#"<input type="hidden" id="startdate" value=""#;
+                if let Some(s) = &props.gantt_start {
+                    *buf += &s;
+                }
+                *buf += r#"">"#;
+                *buf += r#"<input type="hidden" id="enddate" value=""#;
+                if let Some(e) = &props.gantt_end {
+                    *buf += &e;
+                }
+                *buf += r#"">"#;
                 *buf += r#"<input type="hidden" id="holidays" value="2024-07-15,2024-08-12">"#;
-                *buf += r#"<input type="hidden" id="tickets""#;
-                *buf += r#"value="[{&quot;id&quot;:&quot;YU1&quot;,&quot;idDisp&quot;:&quot;YU1&quot;,&quot;name&quot;:&quot;Yuimarl開発&quot;,&quot;start&quot;:&quot;2024-04-07T15:00:00.000Z&quot;,&quot;end&quot;:null,&quot;progress&quot;:0,&quot;open&quot;:true,&quot;children&quot;:[{&quot;id&quot;:&quot;YU2&quot;,&quot;idDisp&quot;:&quot;YU2&quot;,&quot;name&quot;:&quot;技術調査&quot;,&quot;start&quot;:&quot;2024-04-07T15:00:00.000Z&quot;,&quot;end&quot;:&quot;2024-04-16T15:00:00.000Z&quot;,&quot;progress&quot;:100,&quot;open&quot;:false,&quot;children&quot;:[{&quot;id&quot;:&quot;YU3&quot;,&quot;idDisp&quot;:&quot;YU3&quot;,&quot;name&quot;:&quot;Firestore&quot;,&quot;start&quot;:&quot;2024-04-07T15:00:00.000Z&quot;,&quot;end&quot;:&quot;2024-06-12T15:00:00.000Z&quot;,&quot;progress&quot;:100,&quot;open&quot;:true,&quot;children&quot;:[]}]},{&quot;id&quot;:&quot;YU8&quot;,&quot;idDisp&quot;:&quot;YU8&quot;,&quot;name&quot;:&quot;version 1.0.0&quot;,&quot;start&quot;:&quot;2024-04-17T15:00:00.000Z&quot;,&quot;end&quot;:&quot;2024-06-12T15:00:00.000Z&quot;,&quot;progress&quot;:100,&quot;open&quot;:false,&quot;children&quot;:[{&quot;id&quot;:&quot;YU8&quot;,&quot;idDisp&quot;:&quot;YU8&quot;,&quot;name&quot;:&quot;version 1.0.0&quot;,&quot;start&quot;:&quot;2024-04-17T15:00:00.000Z&quot;,&quot;end&quot;:&quot;2024-06-12T15:00:00.000Z&quot;,&quot;progress&quot;:100,&quot;open&quot;:true,&quot;children&quot;:[]}]},{&quot;id&quot;:&quot;YU62&quot;,&quot;idDisp&quot;:&quot;YU62&quot;,&quot;name&quot;:&quot;version 1.0.12&quot;,&quot;start&quot;:&quot;2024-06-20T15:00:00.000Z&quot;,&quot;end&quot;:&quot;2024-06-22T15:00:00.000Z&quot;,&quot;progress&quot;:100,&quot;open&quot;:false,&quot;children&quot;:[{&quot;id&quot;:&quot;YU8&quot;,&quot;idDisp&quot;:&quot;YU8&quot;,&quot;name&quot;:&quot;version 1.0.0&quot;,&quot;start&quot;:&quot;2024-04-17T15:00:00.000Z&quot;,&quot;end&quot;:&quot;2024-06-12T15:00:00.000Z&quot;,&quot;progress&quot;:100,&quot;open&quot;:true,&quot;children&quot;:[]}]},{&quot;id&quot;:&quot;YU71&quot;,&quot;idDisp&quot;:&quot;YU71&quot;,&quot;name&quot;:&quot;version 1.0.13&quot;,&quot;start&quot;:&quot;2024-06-23T15:00:00.000Z&quot;,&quot;end&quot;:&quot;2024-07-29T15:00:00.000Z&quot;,&quot;progress&quot;:10,&quot;open&quot;:true,&quot;children&quot;:[{&quot;id&quot;:&quot;YU60&quot;,&quot;idDisp&quot;:&quot;YU60&quot;,&quot;name&quot;:&quot;ガントチャート&quot;,&quot;start&quot;:&quot;2024-06-23T15:00:00.000Z&quot;,&quot;end&quot;:&quot;2024-07-29T15:00:00.000Z&quot;,&quot;progress&quot;:10,&quot;open&quot;:true,&quot;children&quot;:[{&quot;id&quot;:&quot;YU72&quot;,&quot;idDisp&quot;:&quot;YU72&quot;,&quot;name&quot;:&quot;画面プロトタイプ作成&quot;,&quot;start&quot;:&quot;2024-06-23T15:00:00.000Z&quot;,&quot;end&quot;:&quot;2024-07-11T15:00:00.000Z&quot;,&quot;progress&quot;:80,&quot;open&quot;:true,&quot;children&quot;:[]},{&quot;id&quot;:&quot;YU73&quot;,&quot;idDisp&quot;:&quot;YU73&quot;,&quot;name&quot;:&quot;実装・テスト&quot;,&quot;start&quot;:&quot;2024-07-15T15:00:00.000Z&quot;,&quot;end&quot;:&quot;2024-07-25T15:00:00.000Z&quot;,&quot;progress&quot;:0,&quot;open&quot;:true,&quot;children&quot;:[]},{&quot;id&quot;:&quot;YU74&quot;,&quot;idDisp&quot;:&quot;YU74&quot;,&quot;name&quot;:&quot;ユーザーガイド更新&quot;,&quot;start&quot;:&quot;2024-07-28T15:00:00.000Z&quot;,&quot;end&quot;:&quot;2024-07-29T15:00:00.000Z&quot;,&quot;progress&quot;:0,&quot;open&quot;:true,&quot;children&quot;:[]}]}]},{&quot;id&quot;:&quot;YU4&quot;,&quot;idDisp&quot;:&quot;YU4&quot;,&quot;name&quot;:&quot;バックログ&quot;,&quot;start&quot;:null,&quot;end&quot;:null,&quot;progress&quot;:0,&quot;open&quot;:true,&quot;children&quot;:[{&quot;id&quot;:&quot;YU46&quot;,&quot;idDisp&quot;:&quot;YU46&quot;,&quot;name&quot;:&quot;ページング改善&quot;,&quot;start&quot;:null,&quot;end&quot;:null,&quot;progress&quot;:0,&quot;open&quot;:true,&quot;children&quot;:[]},{&quot;id&quot;:&quot;YU45&quot;,&quot;idDisp&quot;:&quot;YU45&quot;,&quot;name&quot;:&quot;オーナー変更&quot;,&quot;start&quot;:null,&quot;end&quot;:null,&quot;progress&quot;:0,&quot;open&quot;:true,&quot;children&quot;:[]}]}]}]">"#;
+                *buf += r#"<input type="hidden" id="tickets" value=""#;
+                if let Ok(g) = serde_json::to_string(&props.gantt_tickets) {
+                    super::super::super::escape_html(&g, buf)
+                }
+                *buf += r#"">"#;
             }
             *buf += r#"</form>"#;
 

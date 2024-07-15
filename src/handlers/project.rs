@@ -12,7 +12,7 @@ use axum::{
     extract::{Form, Path},
     response::Html,
 };
-use chrono::DateTime;
+use chrono::{DateTime, Duration, FixedOffset, Utc};
 use firestore::*;
 use serde::Deserialize;
 use tower_cookies::Cookies;
@@ -131,6 +131,47 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
             return Err(AppError(anyhow::anyhow!(e)));
         }
     };
+
+    if props.tab == crate::Tab::GanttChart {
+        let now = Utc::now();
+        let offset = Duration::days(14);
+        let jst: DateTime<FixedOffset> =
+            now.with_timezone(&FixedOffset::east_opt(9 * 3600).unwrap());
+        let dt = jst - offset;
+        let mut gantt_start = &dt.format("%Y-%m-%d").to_string();
+        let dt = jst + offset;
+        let mut gantt_end = &dt.format("%Y-%m-%d").to_string();
+
+        if let Some(project) = &project {
+            if let Some(start) = &project.iteration_start {
+                gantt_start = start;
+            }
+            let (ts, min, max) =
+                match model::ticket::GanttTicket::load_gantt(&project.id, &db).await {
+                    Ok(tickets) => tickets,
+                    Err(e) => {
+                        return Err(AppError(anyhow::anyhow!(e)));
+                    }
+                };
+            props.gantt_tickets = ts;
+            if min.len() > 0 && min < *gantt_start {
+                gantt_start = &min;
+            }
+            if max.len() > 0 && max > *gantt_end {
+                gantt_end = &max;
+            }
+            /*tracing::info!(
+                "gantt_start={} gantt_end={} min={} max={}",
+                gantt_start,
+                gantt_end,
+                min,
+                max
+            );*/
+            props.gantt_start = Some(gantt_start.clone());
+            props.gantt_end = Some(gantt_end.clone());
+        }
+    }
+
     props.project = project;
 
     let members = match model::project::ProjectMember::members_of_project(&id, false, &db).await {

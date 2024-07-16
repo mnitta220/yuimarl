@@ -1,6 +1,7 @@
 pub mod comment;
 pub mod deliverable;
 pub mod history;
+pub mod horiday;
 pub mod news;
 pub mod project;
 pub mod session;

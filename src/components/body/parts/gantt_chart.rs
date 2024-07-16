@@ -205,7 +205,21 @@ impl Component for GanttChart {
                     *buf += &e;
                 }
                 *buf += r#"">"#;
-                *buf += r#"<input type="hidden" id="holidays" value="2024-07-15,2024-08-12">"#;
+
+                // 日本の祝日
+                *buf += r#"<input type="hidden" id="holidays" value=""#;
+                if let Some(p) = &props.project {
+                    if let Some(h) = p.holiday_jp {
+                        if h {
+                            *buf += &crate::model::horiday::get_holiday(
+                                &props.gantt_start,
+                                &props.gantt_end,
+                            );
+                        }
+                    }
+                }
+                *buf += r#"">"#;
+
                 *buf += r#"<input type="hidden" id="tickets" value=""#;
                 if let Ok(g) = serde_json::to_string(&props.gantt_tickets) {
                     super::super::super::escape_html(&g, buf)

@@ -146,6 +146,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
             if let Some(start) = &project.iteration_start {
                 gantt_start = start;
             }
+
             let (ts, min, max) =
                 match model::ticket::GanttTicket::load_gantt(&project.id, &db).await {
                     Ok(tickets) => tickets,
@@ -153,6 +154,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
                         return Err(AppError(anyhow::anyhow!(e)));
                     }
                 };
+
             props.gantt_tickets = ts;
             if min.len() > 0 && min < *gantt_start {
                 gantt_start = &min;
@@ -160,13 +162,6 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
             if max.len() > 0 && max > *gantt_end {
                 gantt_end = &max;
             }
-            /*tracing::info!(
-                "gantt_start={} gantt_end={} min={} max={}",
-                gantt_start,
-                gantt_end,
-                min,
-                max
-            );*/
             props.gantt_start = Some(gantt_start.clone());
             props.gantt_end = Some(gantt_end.clone());
         }

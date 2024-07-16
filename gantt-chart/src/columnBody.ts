@@ -91,6 +91,19 @@ export default class ColumnBody {
     }
   }
 
+  /*
+  isOpen(t: GanttTicket): boolean {
+    const n = this.frame.treeList.find((i) => i.id === t.id);
+    if (t.id === "YU1") {
+      console.log(`YU1: ${n?.open}`);
+    }
+    if (n) {
+      return n.open;
+    }
+    return false;
+  }
+  */
+
   drawTickets(
     ctx: CanvasRenderingContext2D,
     ts: GanttTicket[],
@@ -253,6 +266,7 @@ export default class ColumnBody {
       if (clickx > x && clickx < x + 16) {
         // チケット名の□をクリックした
         ticket.open = !ticket.open;
+        this.frame.nodeOpenClose(ticket.id, ticket.open);
         this.frame.draw();
         if (
           this.frame.ticketsTotalHeight < this.frame.ticketsFrameHeight &&

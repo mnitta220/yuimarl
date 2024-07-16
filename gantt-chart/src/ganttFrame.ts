@@ -15,6 +15,7 @@ import CalendarScroll from "./calendarScroll";
 import ScrollH from "./scrollH";
 import ScrollV from "./scrollV";
 import TicketModal from "./ticketModal";
+import { AppDatabase, ITree, Tree } from "./idb";
 
 // ガントチャート全体フレーム
 export default class GanttFrame {
@@ -42,8 +43,11 @@ export default class GanttFrame {
   cols: Column[] = [];
   holidays: dayjs.Dayjs[] = []; // 日本の祝日
   tickets: GanttTicket[] = [];
+  treeList: ITree[] = [];
+  private _idb?: AppDatabase;
 
   constructor() {
+    this._idb = new AppDatabase();
     const startdate = document.querySelector<HTMLInputElement>(`#startdate`);
     const enddate = document.querySelector<HTMLInputElement>(`#enddate`);
     this.calendarStart = dayjs(`${startdate?.value ?? ""}`);
@@ -87,6 +91,36 @@ export default class GanttFrame {
 
     this.build();
     this.handler();
+  }
+
+  async readTreeList() {
+    try {
+      this.treeList = [];
+      if (!this._idb) {
+        this._idb = new AppDatabase();
+      }
+      await this._idb.trees.each((t: Tree) => {
+        this.setTreeOpen(t.id, t.open, this.tickets);
+        this.treeList.push(t);
+      });
+    } catch (e) {
+      throw Error(`${e}`);
+    }
+  }
+
+  setTreeOpen(id: string, open: boolean, tickets: GanttTicket[]): boolean {
+    for (const t of tickets) {
+      if (t.id === id) {
+        t.open = open;
+        return true;
+      }
+      const ret = this.setTreeOpen(id, open, t.children);
+      if (ret) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   // ガントチャートを構築する
@@ -223,5 +257,15 @@ export default class GanttFrame {
 
   mouseUpScrollV() {
     this.scv.mouseUpScrollV();
+  }
+
+  async nodeOpenClose(id: string, open: boolean) {
+    try {
+      let tree = new Tree(id, open, "");
+      await this._idb?.trees.put(tree);
+      await this.readTreeList();
+    } catch (e) {
+      throw Error(`${e}`);
+    }
   }
 }

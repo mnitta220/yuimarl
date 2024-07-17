@@ -1,5 +1,5 @@
 use crate::model;
-use axum::extract::Form;
+use axum::extract::{Form, Path};
 use firestore::*;
 use serde::{Deserialize, Serialize};
 use tower_cookies::Cookies;
@@ -388,6 +388,119 @@ pub async fn ticket_color(cookies: Cookies, Form(input): Form<TicketColorInput>)
     let buf = match serde_json::to_string(&result) {
         Ok(r) => r,
         Err(e) => format!("背景色の設定に失敗しました。 [{}]", e.to_string()),
+    };
+
+    buf
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct TicketWithMemberResult {
+    pub result: bool,
+    pub ticket: Option<model::ticket::Ticket>,
+    pub members: Vec<model::ticket::TicketMember>,
+    pub parent: Option<model::ticket::Ticket>,
+    pub children: Vec<model::ticket::Ticket>,
+    pub message: String,
+}
+
+/// ガントチャート画面のチケットダイアログの情報を取得する
+pub async fn ticket(cookies: Cookies, Path(id): Path<String>) -> String {
+    tracing::info!("GET /ticket: {:?}", &id);
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            let result = TicketWithMemberResult {
+                result: false,
+                ticket: None,
+                members: Vec::new(),
+                parent: None,
+                children: Vec::new(),
+                message: format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            let buf = match serde_json::to_string(&result) {
+                Ok(r) => r,
+                Err(_) => format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            return buf;
+        }
+    };
+
+    let session = match super::get_session_info(cookies, true, &db).await {
+        Ok(session_id) => session_id,
+        Err(e) => {
+            let result = TicketWithMemberResult {
+                result: false,
+                ticket: None,
+                members: Vec::new(),
+                parent: None,
+                children: Vec::new(),
+                message: format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            let buf = match serde_json::to_string(&result) {
+                Ok(r) => r,
+                Err(_) => format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
+            };
+
+            return buf;
+        }
+    };
+
+    let (ticket, _project, project_member, members, parent, children) =
+        match model::ticket::Ticket::find_ticket_and_project(&id, &session.uid, &db).await {
+            Ok(ticket) => ticket,
+            Err(e) => {
+                let result = TicketWithMemberResult {
+                    result: false,
+                    ticket: None,
+                    members: Vec::new(),
+                    parent: None,
+                    children: Vec::new(),
+                    message: format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
+                };
+
+                let buf = match serde_json::to_string(&result) {
+                    Ok(r) => r,
+                    Err(_) => format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
+                };
+
+                return buf;
+            }
+        };
+
+    if project_member.is_none() {
+        let result = TicketWithMemberResult {
+            result: false,
+            ticket: None,
+            members: Vec::new(),
+            parent: None,
+            children: Vec::new(),
+            message: "チケットの検索に失敗しました。".to_string(),
+        };
+
+        let buf = match serde_json::to_string(&result) {
+            Ok(r) => r,
+            Err(e) => format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
+        };
+
+        return buf;
+    }
+
+    let result = TicketWithMemberResult {
+        result: true,
+        ticket: ticket,
+        members: members,
+        parent: parent,
+        children: children,
+        message: "".to_string(),
+    };
+
+    let buf = match serde_json::to_string(&result) {
+        Ok(r) => r,
+        Err(e) => format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
     };
 
     buf

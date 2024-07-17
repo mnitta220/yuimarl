@@ -23,3 +23,29 @@ export class Column {
   name: string = "";
   width: number = 0;
 }
+
+export interface TicketModalResult {
+  result: boolean;
+  ticket?: ModalTicket;
+  members?: ModalTicketMember[];
+  parent?: ModalTicket;
+  children?: ModalTicket[];
+  message: string;
+}
+
+export interface ModalTicket {
+  id: string;
+  id_disp: string;
+  name: string;
+  start_date: string | null;
+  end_date: string | null;
+  progress: number;
+}
+
+export interface ModalTicketMember {
+  id: string;
+  uid: string;
+  seq: number;
+  name: string;
+  email: string;
+}

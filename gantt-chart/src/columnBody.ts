@@ -4,6 +4,7 @@ import {
   SCROLL_BAR_WIDTH,
   TICKET_HEIGHT,
   GanttTicket,
+  TicketModalResult,
 } from "./common";
 import GanttFrame from "./ganttFrame";
 
@@ -14,6 +15,7 @@ export default class ColumnBody {
   height = 0;
   posX = 0;
   posY = 0;
+  clicked = "";
 
   constructor(private frame: GanttFrame) {}
 
@@ -90,19 +92,6 @@ export default class ColumnBody {
       }
     }
   }
-
-  /*
-  isOpen(t: GanttTicket): boolean {
-    const n = this.frame.treeList.find((i) => i.id === t.id);
-    if (t.id === "YU1") {
-      console.log(`YU1: ${n?.open}`);
-    }
-    if (n) {
-      return n.open;
-    }
-    return false;
-  }
-  */
 
   drawTickets(
     ctx: CanvasRenderingContext2D,
@@ -224,7 +213,23 @@ export default class ColumnBody {
   }
 
   mouseDown(x: number, y: number) {
+    this.clicked = "";
     this.clickTickets(this.frame.tickets, x, y, 0, 0);
+
+    if (this.clicked) {
+      fetch(`/api/ticket/${this.clicked}`, {
+        method: "GET",
+      })
+        .then((response) => response.json())
+        .then((data: TicketModalResult) => {
+          if (data.result) {
+            this.frame.ticketModal.show(data);
+          } else {
+            window.alert(`エラーが発生しました。 ${data.message}`);
+          }
+        })
+        .catch((e) => window.alert(`エラーが発生しました。 ${e.message}`));
+    }
   }
 
   clickTickets(
@@ -233,18 +238,28 @@ export default class ColumnBody {
     clicky: number,
     level: number,
     y: number
-  ): number {
+  ): [number, boolean] {
     let y1 = y;
     for (let t of ts) {
       if (this.clickTicket(t, clickx, clicky, level, y1)) {
-        break;
+        return [y1, true];
       }
       y1 += TICKET_HEIGHT;
       if (t.open && t.children.length > 0) {
-        y1 = this.clickTickets(t.children, clickx, clicky, level + 1, y1);
+        let [y2, end] = this.clickTickets(
+          t.children,
+          clickx,
+          clicky,
+          level + 1,
+          y1
+        );
+        if (end) {
+          return [y2, true];
+        }
+        y1 = y2;
       }
     }
-    return y1;
+    return [y1, false];
   }
 
   clickTicket(
@@ -258,7 +273,7 @@ export default class ColumnBody {
       return false;
     }
     if (clickx < this.frame.cols[0].width) {
-      this.frame.ticketModal.show();
+      this.clicked = ticket.id;
       return true;
     }
     if (clickx < this.frame.cols[0].width + this.frame.cols[1].width) {

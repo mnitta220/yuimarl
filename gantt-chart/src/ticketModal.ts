@@ -1,5 +1,5 @@
 import * as bootstrap from "bootstrap";
-//import GanttFrame from "./ganttFrame";
+import { TicketModalResult } from "./common";
 
 export default class TicketModal {
   private id = "ticketModal";
@@ -12,8 +12,24 @@ export default class TicketModal {
     }
   }
 
-  show() {
-    if (this.modal) {
+  show(data: TicketModalResult) {
+    if (this.modal && data.ticket) {
+      const ticket_id = document.querySelector("#modal_ticket_id");
+      if (ticket_id) {
+        ticket_id.textContent = data.ticket.id_disp ?? "";
+      }
+      const ticket_name =
+        document.querySelector<HTMLInputElement>("#modal_ticket_name");
+      if (ticket_name) {
+        ticket_name.value = data.ticket.name ?? "";
+      }
+      /*document.querySelector("#modal_ticket_id")!.textContent =
+        data.ticket.id_disp ?? "";
+      document.querySelector("#modal_ticket_name")!.innerHTML =
+        data.ticket.name ?? "";
+      document.querySelector<HTMLInputElement>("#modal_ticket_name")!.value =
+        data.ticket.name ?? "";
+      */
       this.modal.show();
     }
   }

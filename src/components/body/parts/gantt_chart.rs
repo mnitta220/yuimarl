@@ -244,11 +244,11 @@ impl Component for GanttChart {
 
                         *buf += r#"<div class="modal-body">"#;
                         {
-                            // プロジェクト / チケットID
+                            // チケットID
                             *buf += r#"<div class="row py-2">"#;
                             {
-                                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="ticket-id">プロジェクト / チケットID</label>"#;
-                                *buf += r#"<div class="col-md-9 mb-1">文化祭実行プロジェクト / BN8</div>"#;
+                                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="ticket-id">チケットID</label>"#;
+                                *buf += r#"<div class="col-md-9 mb-1" id="modal_ticket_id"></div>"#;
                             }
                             *buf += r#"</div>"#;
 
@@ -258,7 +258,7 @@ impl Component for GanttChart {
                                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="name">チケット名</label>"#;
                                 *buf += r#"<div class="col-md-9 mb-1">"#;
                                 {
-                                    *buf += r#"<input class="form-control" id="name" type="text" maxlength="40" value="たこやき模擬店" required>"#;
+                                    *buf += r#"<input class="form-control" id="modal_ticket_name" type="text" value="">"#;
                                 }
                                 *buf += r#"</div>"#;
                             }

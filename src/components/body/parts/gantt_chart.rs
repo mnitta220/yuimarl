@@ -195,6 +195,11 @@ impl Component for GanttChart {
                     *buf += r#"</div>"#;
                 }
 
+                *buf += r#"<input type="hidden" id="projectId" value=""#;
+                if let Some(p) = &props.project {
+                    *buf += &p.id;
+                }
+                *buf += r#"">"#;
                 *buf += r#"<input type="hidden" id="startdate" value=""#;
                 if let Some(s) = &props.gantt_start {
                     *buf += &s;

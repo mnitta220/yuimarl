@@ -25,7 +25,7 @@ impl Component for Head {
                 Tab::GanttChart => {
                     // 以下の2行は、gantt-chart フォルダでビルドして出力された index-XXXXXXXX.js と index-XXXXXXXX.css を設定する。
                     // (参照) gantt-chart/README.md
-                    *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-C74V6ruQ.js"></script>"#;
+                    *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-BHDSkoiA.js"></script>"#;
                     *buf += r#"<link rel="stylesheet" crossorigin href="/static/js/gantt-chart/index-BZzXyAxC.css">"#;
                 }
                 _ => {}

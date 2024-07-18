@@ -88,6 +88,16 @@ export default class ColumnBody {
         ctx.fillRect(x, 0, 1, height);
         ctx.fill();
 
+        if (this.frame.ganttRow.y1 != -1) {
+          ctx.fillStyle = "#f6f";
+          ctx.fillRect(0, this.frame.ganttRow.y1 + this.posY, width, 1);
+          ctx.fill();
+          ctx.fillRect(0, this.frame.ganttRow.y2 + this.posY, width, 1);
+          ctx.fill();
+          ctx.fillRect(0, this.frame.ganttRow.y1 + this.posY, 1, TICKET_HEIGHT);
+          ctx.fill();
+        }
+
         ctx.restore();
       }
     }
@@ -101,6 +111,10 @@ export default class ColumnBody {
   ): number {
     let y1 = y;
     for (let t of ts) {
+      if (t.progress === 100 && this.frame.showDone === false) {
+        continue;
+      }
+
       this.drawTicket(ctx, t, level, y1);
       y1 += TICKET_HEIGHT;
       if (t.open && t.children.length > 0) {
@@ -213,22 +227,28 @@ export default class ColumnBody {
   }
 
   mouseDown(x: number, y: number) {
-    this.clicked = "";
-    this.clickTickets(this.frame.tickets, x, y, 0, 0);
+    try {
+      this.clicked = "";
+      this.clickTickets(this.frame.tickets, x, y, 0, 0);
 
-    if (this.clicked) {
-      fetch(`/api/ticket/${this.clicked}`, {
-        method: "GET",
-      })
-        .then((response) => response.json())
-        .then((data: TicketModalResult) => {
-          if (data.result) {
-            this.frame.ticketModal.show(data);
-          } else {
-            window.alert(`エラーが発生しました。 ${data.message}`);
-          }
+      if (this.clicked) {
+        fetch(`/api/ticket/${this.clicked}`, {
+          method: "GET",
         })
-        .catch((e) => window.alert(`エラーが発生しました。 ${e.message}`));
+          .then((response) => response.json())
+          .then((data: TicketModalResult) => {
+            if (data.result) {
+              this.frame.ticketModal.show(data);
+            } else {
+              window.alert(`エラーが発生しました。: ${data.message}`);
+            }
+          })
+          .catch((e) => window.alert(`エラーが発生しました。: ${e.message}`));
+      } else {
+        this.frame.draw();
+      }
+    } catch (e) {
+      window.alert(`エラーが発生しました。: ${e}`);
     }
   }
 
@@ -241,6 +261,10 @@ export default class ColumnBody {
   ): number {
     let y1 = y;
     for (let t of ts) {
+      if (t.progress === 100 && this.frame.showDone === false) {
+        continue;
+      }
+
       if (this.clickTicket(t, clickx, clicky, level, y1)) {
         return y1;
       }
@@ -266,7 +290,11 @@ export default class ColumnBody {
     if (clicky < y + this.posY || clicky > y + TICKET_HEIGHT + this.posY) {
       return false;
     }
+    this.frame.ganttRow.y1 = y;
+    this.frame.ganttRow.y2 = y + TICKET_HEIGHT;
+
     if (clickx < this.frame.cols[0].width) {
+      // IDをクリックした
       this.clicked = ticket.id;
       return true;
     }

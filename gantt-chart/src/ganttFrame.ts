@@ -15,7 +15,8 @@ import CalendarScroll from "./calendarScroll";
 import ScrollH from "./scrollH";
 import ScrollV from "./scrollV";
 import TicketModal from "./ticketModal";
-import { AppDatabase, ITree, Tree } from "./idb";
+import GanttRow from "./ganttRow";
+import { AppDatabase, Project, ITree, Tree } from "./idb";
 
 // ガントチャート全体フレーム
 export default class GanttFrame {
@@ -29,6 +30,7 @@ export default class GanttFrame {
   calendarBody = new CalendarBody(this);
   calendarScroll = new CalendarScroll(this);
   ticketModal = new TicketModal();
+  ganttRow = new GanttRow();
   sch = new ScrollH(this);
   scv = new ScrollV(this);
   colW = 0;
@@ -44,12 +46,16 @@ export default class GanttFrame {
   holidays: dayjs.Dayjs[] = []; // 日本の祝日
   tickets: GanttTicket[] = [];
   treeList: ITree[] = [];
+  projectId: string | null = null;
+  showDone = false;
   private _idb?: AppDatabase;
 
   constructor() {
     this._idb = new AppDatabase();
+    const projectid = document.querySelector<HTMLInputElement>(`#projectId`);
     const startdate = document.querySelector<HTMLInputElement>(`#startdate`);
     const enddate = document.querySelector<HTMLInputElement>(`#enddate`);
+    this.projectId = projectid?.value ?? null;
     this.calendarStart = dayjs(`${startdate?.value ?? ""}`);
     this.calendarEnd = dayjs(`${enddate?.value ?? ""}`);
 
@@ -91,6 +97,27 @@ export default class GanttFrame {
 
     this.build();
     this.handler();
+  }
+
+  async readProject() {
+    try {
+      if (!this.projectId) {
+        return;
+      }
+      if (!this._idb) {
+        this._idb = new AppDatabase();
+      }
+      let project = await this._idb.projects.get(this.projectId);
+      if (project) {
+        this.showDone = project.showDone;
+        const showdone = document.querySelector<HTMLInputElement>(`#showdone`);
+        if (showdone) {
+          showdone.checked = this.showDone;
+        }
+      }
+    } catch (e) {
+      throw Error(`${e}`);
+    }
   }
 
   async readTreeList() {
@@ -265,6 +292,18 @@ export default class GanttFrame {
       let tree = new Tree(id, open, "");
       await this._idb?.trees.put(tree);
       await this.readTreeList();
+    } catch (e) {
+      throw Error(`${e}`);
+    }
+  }
+
+  async setShowDone(show: boolean) {
+    this.showDone = show;
+    try {
+      if (!this.projectId) return;
+      let project = new Project(this.projectId, show);
+      await this._idb?.projects.put(project);
+      this.draw();
     } catch (e) {
       throw Error(`${e}`);
     }

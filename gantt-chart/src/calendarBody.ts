@@ -111,6 +111,14 @@ export default class CalendarBody {
           ctx.fill();
         }
 
+        if (this.frame.ganttRow.y1 != -1) {
+          ctx.fillStyle = "#f6f";
+          ctx.fillRect(0, this.frame.ganttRow.y1 + this.posY, width, 1);
+          ctx.fill();
+          ctx.fillRect(0, this.frame.ganttRow.y2 + this.posY, width, 1);
+          ctx.fill();
+        }
+
         ctx.restore();
       }
     }
@@ -123,6 +131,10 @@ export default class CalendarBody {
   ): number {
     let y1 = y;
     for (let t of ts) {
+      if (t.progress === 100 && this.frame.showDone === false) {
+        continue;
+      }
+
       this.drawTicket(ctx, t, y1);
       y1 += TICKET_HEIGHT;
       if (t.open && t.children.length > 0) {

@@ -156,6 +156,7 @@ export default class GanttFrame {
     this.calendarScroll.handler();
     this.sch.handler();
     this.scv.handler();
+    this.ticketModal.handler();
   }
 
   resize() {

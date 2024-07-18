@@ -37,9 +37,11 @@ export interface ModalTicket {
   id: string;
   id_disp: string;
   name: string;
+  description: string | null;
   start_date: string | null;
   end_date: string | null;
   progress: number;
+  priority: number;
 }
 
 export interface ModalTicketMember {

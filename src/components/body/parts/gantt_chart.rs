@@ -255,10 +255,10 @@ impl Component for GanttChart {
                             // チケット名
                             *buf += r#"<div class="row pt-1 pb-2">"#;
                             {
-                                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="name">チケット名</label>"#;
+                                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="ticket_name">チケット名</label>"#;
                                 *buf += r#"<div class="col-md-9 mb-1">"#;
                                 {
-                                    *buf += r#"<input class="form-control" id="modal_ticket_name" type="text" value="">"#;
+                                    *buf += r#"<input class="form-control" id="ticket_name" type="text" value="">"#;
                                 }
                                 *buf += r#"</div>"#;
                             }
@@ -267,11 +267,10 @@ impl Component for GanttChart {
                             // 内容
                             *buf += r#"<div class="row pt-1 pb-2">"#;
                             {
-                                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="message">内容</label>"#;
+                                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="description">内容</label>"#;
                                 *buf += r#"<div class="col-md-9 mb-1">"#;
                                 {
-                                    *buf += r#"<textarea class="form-control" id="message" rows="3" name="message">"#;
-                                    *buf += r#"たこやき模擬店を出店するために、やるべきことを検討する。"#;
+                                    *buf += r#"<textarea class="form-control" id="description" rows="3" name="description">"#;
                                     *buf += r#"</textarea>"#;
                                 }
                                 *buf += r#"</div>"#;
@@ -284,41 +283,7 @@ impl Component for GanttChart {
                                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="member">担当者</label>"#;
                                 *buf += r#"<div class="col-md-9 mb-1">"#;
                                 {
-                                    *buf += r#"<div class="form-floating">"#;
-                                    {
-                                        *buf += r#"<table class="table table-hover">"#;
-                                        {
-                                            *buf += r#"<thead>"#;
-                                            {
-                                                *buf += r#"<tr>"#;
-                                                {
-                                                    *buf +=
-                                                        r#"<th scope="col">メールアドレス</th>"#;
-                                                    *buf += r#"<th scope="col">名前</th>"#;
-                                                }
-                                                *buf += r#"</tr>"#;
-                                            }
-                                            *buf += r#"</thead>"#;
-                                            *buf += r#"<tbody>"#;
-                                            {
-                                                *buf += r#"<tr>"#;
-                                                {
-                                                    *buf += r#"<td>taro.yamada@mail.com</td>"#;
-                                                    *buf += r#"<td>山田太郎</td>"#;
-                                                }
-                                                *buf += r#"</tr>"#;
-                                                *buf += r#"<tr>"#;
-                                                {
-                                                    *buf += r#"<td>masami.iwaki@mail.com</td>"#;
-                                                    *buf += r#"<td>岩鬼正美</td>"#;
-                                                }
-                                                *buf += r#"</tr>"#;
-                                            }
-                                            *buf += r#"</tbody>"#;
-                                        }
-                                        *buf += r#"</table>"#;
-                                    }
-                                    *buf += r#"</div>"#;
+                                    *buf += r#"<div class="form-floating" id="members"></div>"#;
                                 }
                                 *buf += r#"</div>"#;
                             }
@@ -332,19 +297,10 @@ impl Component for GanttChart {
                                 {
                                     *buf += r#"<div class="row">"#;
                                     {
-                                        *buf += r#"<div class="col-sm-6 mb-2">"#;
-                                        {
-                                            *buf += r#"<label class="form-label" for="startdate">開始日</label>"#;
-                                            *buf += r#"<input class="form-control" id="startdate" type="date" value="2024-09-10">"#;
-                                        }
-                                        *buf += r#"</div>"#;
-
-                                        *buf += r#"<div class="col-sm-6 mb-1">"#;
-                                        {
-                                            *buf += r#"<label class="form-label" for="enddate">終了日</label>"#;
-                                            *buf += r#"<input class="form-control" id="enddate" type="date">"#;
-                                        }
-                                        *buf += r#"</div>"#;
+                                        *buf +=
+                                            r#"<div class="col-sm-6 mb-2" id="start_date"></div>"#;
+                                        *buf +=
+                                            r#"<div class="col-sm-6 mb-2" id="end_date"></div>"#;
                                     }
                                     *buf += r#"</div>"#;
                                 }
@@ -355,40 +311,84 @@ impl Component for GanttChart {
                             // 進捗率
                             *buf += r#"<div class="row pt-1 pb-2">"#;
                             {
+                                *buf += r#"<legend class="col-form-label col-md-3 bg-light mb-1">進捗率</legend>"#;
+                                *buf += r#"<div class="col-md-9 mb-1">"#;
+                                {
+                                    *buf += r#"<div class="row">"#;
+                                    {
+                                        *buf += r#"<div class="col-sm-6 mb-2">"#;
+                                        {
+                                            *buf += r#"<table>"#;
+                                            {
+                                                *buf += r#"<tr>"#;
+                                                {
+                                                    *buf += r#"<td>"#;
+                                                    {
+                                                        *buf += r#"<input class="form-control" id="progress" name="progress" type="number" min="0" max="100" value="">"#;
+                                                    }
+                                                    *buf += r#"</td>"#;
+                                                    *buf += r#"<td>&nbsp;%</td>"#;
+                                                }
+                                                *buf += r#"</tr>"#;
+                                            }
+                                            *buf += r#"</table>"#;
+                                        }
+                                        *buf += r#"</div>"#;
+
+                                        *buf += r#"<div class="col-sm-6 mb-1">"#;
+                                        {
+                                            *buf += r#"<div class="form-check">"#;
+                                            {
+                                                *buf += r#"<input class="form-check-input" id="finished" type="checkbox">"#;
+                                                *buf += r#"<label class="form-check-label" for="finished">完了済</label>"#;
+                                            }
+                                            *buf += r#"</div>"#;
+                                        }
+                                        *buf += r#"</div>"#;
+                                    }
+                                    *buf += r#"</div>"#;
+                                }
+                                *buf += r#"</div>"#;
+                            }
+                            *buf += r#"</div>"#;
+
+                            // 優先度
+                            *buf += r#"<div class="row pt-1 pb-2">"#;
+                            {
                                 *buf += r#"<legend class="col-form-label col-md-3 bg-light mb-1">優先度</legend>"#;
                                 *buf += r#"<div class="col-md-9 mb-1">"#;
                                 {
                                     *buf += r#"<div class="form-check form-check-inline">"#;
                                     {
-                                        *buf += r#"<input class="form-check-input" id="priority1" name="priority" type="radio" value="priority1">"#;
+                                        *buf += r#"<input class="form-check-input" id="priority1" name="priority" type="radio" value="4">"#;
                                         *buf += r#"<label class="form-check-label" for="priority1">最優先</label>"#;
                                     }
                                     *buf += r#"</div>"#;
 
                                     *buf += r#"<div class="form-check form-check-inline">"#;
                                     {
-                                        *buf += r#"<input class="form-check-input" id="priority2" name="priority" type="radio" value="priority2" checked="checked">"#;
+                                        *buf += r#"<input class="form-check-input" id="priority2" name="priority" type="radio" value="3">"#;
                                         *buf += r#"<label class="form-check-label" for="priority2">高</label>"#;
                                     }
                                     *buf += r#"</div>"#;
 
                                     *buf += r#"<div class="form-check form-check-inline">"#;
                                     {
-                                        *buf += r#"<input class="form-check-input" id="priority3" name="priority" type="radio" value="priority3">"#;
+                                        *buf += r#"<input class="form-check-input" id="priority3" name="priority" type="radio" value="2">"#;
                                         *buf += r#"<label class="form-check-label" for="priority3">中</label>"#;
                                     }
                                     *buf += r#"</div>"#;
 
                                     *buf += r#"<div class="form-check form-check-inline">"#;
                                     {
-                                        *buf += r#"<input class="form-check-input" id="priority4" name="priority" type="radio" value="priority4">"#;
+                                        *buf += r#"<input class="form-check-input" id="priority4" name="priority" type="radio" value="1">"#;
                                         *buf += r#"<label class="form-check-label" for="priority4">低</label>"#;
                                     }
                                     *buf += r#"</div>"#;
 
                                     *buf += r#"<div class="form-check form-check-inline">"#;
                                     {
-                                        *buf += r#"<input class="form-check-input" id="priority0" name="priority" type="radio" value="priority0">"#;
+                                        *buf += r#"<input class="form-check-input" id="priority0" name="priority" type="radio" value="0">"#;
                                         *buf += r#"<label class="form-check-label" for="priority0">未設定</label>"#;
                                     }
                                     *buf += r#"</div>"#;
@@ -400,14 +400,8 @@ impl Component for GanttChart {
                             // 親チケット
                             *buf += r#"<div class="row pt-1 pb-2">"#;
                             {
-                                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="category">親チケット</label>"#;
-                                *buf += r#"<div class="col-md-9">"#;
-                                {
-                                    *buf += r#"BN5"#;
-                                    *buf += r#"&nbsp;:&nbsp;"#;
-                                    *buf += r#"文化祭出し物"#;
-                                }
-                                *buf += r#"</div>"#;
+                                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="parent">親チケット</label>"#;
+                                *buf += r#"<div class="col-md-9" id="parent"></div>"#;
                             }
                             *buf += r#"</div>"#;
 
@@ -415,24 +409,7 @@ impl Component for GanttChart {
                             *buf += r#"<div class="row pt-1 pb-2">"#;
                             {
                                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="category">子チケット</label>"#;
-                                *buf += r#"<div class="col-md-9 pb-md-2">"#;
-                                {
-                                    *buf += r#"<p class="mb-0">"#;
-                                    {
-                                        *buf += r#"BN13"#;
-                                        *buf += r#"&nbsp;:&nbsp;"#;
-                                        *buf += r#"備品準備"#;
-                                    }
-                                    *buf += r#"</p>"#;
-                                    *buf += r#"<p class="mb-0">"#;
-                                    {
-                                        *buf += r#"BN14"#;
-                                        *buf += r#"&nbsp;:&nbsp;"#;
-                                        *buf += r#"食材購入"#;
-                                    }
-                                    *buf += r#"</p>"#;
-                                }
-                                *buf += r#"</div>"#;
+                                *buf += r#"<div class="col-md-9 pb-md-2" id="children"></div>"#;
                             }
                             *buf += r#"</div>"#;
                         }
@@ -441,7 +418,7 @@ impl Component for GanttChart {
                         *buf += r#"<div class="modal-footer">"#;
                         {
                             *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
-                            *buf += r#"<button class="btn btn-primary" type="button">"#;
+                            *buf += r#"<button class="btn btn-primary" id="btnRedirectTicket" type="button">"#;
                             {
                                 *buf +=
                                     r#"<img class="icon" src="/static/ionicons/exit-outline.svg">"#;

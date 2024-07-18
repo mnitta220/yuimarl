@@ -238,28 +238,22 @@ export default class ColumnBody {
     clicky: number,
     level: number,
     y: number
-  ): [number, boolean] {
+  ): number {
     let y1 = y;
     for (let t of ts) {
       if (this.clickTicket(t, clickx, clicky, level, y1)) {
-        return [y1, true];
+        return y1;
       }
       y1 += TICKET_HEIGHT;
       if (t.open && t.children.length > 0) {
-        let [y2, end] = this.clickTickets(
-          t.children,
-          clickx,
-          clicky,
-          level + 1,
-          y1
-        );
-        if (end) {
-          return [y2, true];
+        let y2 = this.clickTickets(t.children, clickx, clicky, level + 1, y1);
+        if (this.clicked) {
+          return y2;
         }
         y1 = y2;
       }
     }
-    return [y1, false];
+    return y1;
   }
 
   clickTicket(

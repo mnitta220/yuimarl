@@ -16,6 +16,8 @@ export default class ColumnBody {
   posX = 0;
   posY = 0;
   clicked = "";
+  //startX = 0;
+  //startY = 0;
 
   constructor(private frame: GanttFrame) {}
 
@@ -27,7 +29,7 @@ export default class ColumnBody {
     body.id = this.id;
     this.width = this.frame.calendarLeft;
     body.className = "gantt-body";
-    body.style.top = `${HEADER_HEIGHT}px`;
+    body.style.top = `${HEADER_HEIGHT + 1}px`;
     body.style.left = `${this.posX}px`;
     body.style.width = `${this.width}px`;
     body.style.height = `${this.height}px`;
@@ -51,6 +53,28 @@ export default class ColumnBody {
           e.touches[0].pageY - ganttframe.offsetTop - colbody.offsetTop
         );
       });
+      colbody.addEventListener("mousemove", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.columnBody.mouseMove(e.layerY);
+      });
+      colbody.addEventListener("touchmove", function (e: TouchEvent) {
+        e.preventDefault();
+        frame.columnBody.mouseMove(
+          e.touches[0].pageY - ganttframe.offsetTop - colbody.offsetTop
+        );
+      });
+      colbody.addEventListener("mouseup", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.columnBody.mouseUp();
+      });
+      colbody.addEventListener("mouseleave", function (e: MouseEvent) {
+        e.preventDefault();
+        frame.columnBody.mouseLeave();
+      });
+      colbody.addEventListener("touchend", function (e: TouchEvent) {
+        e.preventDefault();
+        frame.columnBody.mouseUp();
+      });
     }
   }
 
@@ -73,6 +97,26 @@ export default class ColumnBody {
           0
         );
 
+        if (this.frame.moving && this.frame.ganttRow.y1 != -1) {
+          ctx.fillStyle = "#fffdef";
+          ctx.fillRect(
+            0,
+            this.frame.ganttRow.y1 + this.posY + this.frame.diffY,
+            width,
+            TICKET_HEIGHT
+          );
+          ctx.fill();
+          if (this.frame.movingTicket) {
+            this.drawTickets(
+              ctx,
+              [this.frame.movingTicket],
+              this.frame.movingLevel,
+              this.frame.ganttRow.y1 + this.posY + this.frame.diffY,
+              true
+            );
+          }
+        }
+
         ctx.fillStyle = "#82a4c1";
 
         let x = 0;
@@ -90,11 +134,26 @@ export default class ColumnBody {
 
         if (this.frame.ganttRow.y1 != -1) {
           ctx.fillStyle = "#f6f";
-          ctx.fillRect(0, this.frame.ganttRow.y1 + this.posY, width, 1);
+          ctx.fillRect(
+            0,
+            this.frame.ganttRow.y1 + this.posY + this.frame.diffY,
+            width,
+            1
+          );
           ctx.fill();
-          ctx.fillRect(0, this.frame.ganttRow.y2 + this.posY, width, 1);
+          ctx.fillRect(
+            0,
+            this.frame.ganttRow.y2 + this.posY + this.frame.diffY,
+            width,
+            1
+          );
           ctx.fill();
-          ctx.fillRect(0, this.frame.ganttRow.y1 + this.posY, 1, TICKET_HEIGHT);
+          ctx.fillRect(
+            0,
+            this.frame.ganttRow.y1 + this.posY + this.frame.diffY,
+            1,
+            TICKET_HEIGHT
+          );
           ctx.fill();
         }
 
@@ -107,7 +166,8 @@ export default class ColumnBody {
     ctx: CanvasRenderingContext2D,
     ts: GanttTicket[],
     level: number,
-    y: number
+    y: number,
+    moving: boolean = false
   ): number {
     let y1 = y;
     for (let t of ts) {
@@ -115,10 +175,19 @@ export default class ColumnBody {
         continue;
       }
 
-      this.drawTicket(ctx, t, level, y1);
-      y1 += TICKET_HEIGHT;
-      if (t.open && t.children.length > 0) {
-        y1 = this.drawTickets(ctx, t.children, level + 1, y1);
+      if (
+        !this.frame.moving ||
+        !this.frame.movingTicket ||
+        this.frame.movingTicket != t ||
+        moving
+      ) {
+        this.drawTicket(ctx, t, level, y1, moving);
+        y1 += TICKET_HEIGHT;
+        if (t.open && t.children.length > 0 && !moving) {
+          y1 = this.drawTickets(ctx, t.children, level + 1, y1, moving);
+        }
+      } else {
+        y1 += TICKET_HEIGHT;
       }
     }
     return y1;
@@ -140,32 +209,42 @@ export default class ColumnBody {
     ctx: CanvasRenderingContext2D,
     ticket: GanttTicket,
     level: number,
-    y: number
+    y: number,
+    moving: boolean = false
   ) {
     ctx.font = "9.5pt sans-serif";
     ctx.textBaseline = "bottom";
-    const y1 = y + 18;
+    let y2 = y;
+    if (this.frame.moving && !moving) {
+      let d = this.frame.startY + this.frame.diffY;
+      if (d > y && y > this.frame.startY) {
+        y2 -= TICKET_HEIGHT;
+      } else if (d - TICKET_HEIGHT < y && y < this.frame.startY) {
+        y2 += TICKET_HEIGHT;
+      }
+    }
+    const y1 = y2 + 18;
     ctx.fillStyle = "#00f";
     // ID
     ctx.fillText(ticket.id_disp, 3, y1 + this.posY);
     ctx.fillStyle = "#808080";
     // チケット□
     let x = this.frame.cols[0].width + level * 12 + 6;
-    ctx.fillRect(x, y + 7 + this.posY, 1, 8);
+    ctx.fillRect(x, y2 + 7 + this.posY, 1, 8);
     ctx.fill();
-    ctx.fillRect(x, y + 7 + this.posY, 8, 1);
+    ctx.fillRect(x, y2 + 7 + this.posY, 8, 1);
     ctx.fill();
-    ctx.fillRect(x, y + 15 + this.posY, 8, 1);
+    ctx.fillRect(x, y2 + 15 + this.posY, 8, 1);
     ctx.fill();
-    ctx.fillRect(x + 8, y + 7 + this.posY, 1, 9);
+    ctx.fillRect(x + 8, y2 + 7 + this.posY, 1, 9);
     ctx.fill();
     ctx.fillStyle = "#000";
 
     if (ticket.children.length > 0) {
-      ctx.fillRect(x + 2, y + 11 + this.posY, 5, 1);
+      ctx.fillRect(x + 2, y2 + 11 + this.posY, 5, 1);
       ctx.fill();
-      if (!ticket.open) {
-        ctx.fillRect(x + 4, y + 9 + this.posY, 1, 5);
+      if (!ticket.open || moving) {
+        ctx.fillRect(x + 4, y2 + 9 + this.posY, 1, 5);
         ctx.fill();
       }
     }
@@ -209,7 +288,7 @@ export default class ColumnBody {
 
     ctx.fillStyle = "#e5ebf2";
     // 区切り線
-    ctx.fillRect(0, y + TICKET_HEIGHT + this.posY, this.width, 1);
+    ctx.fillRect(0, y2 + TICKET_HEIGHT + this.posY, this.width, 1);
     ctx.fill();
   }
 
@@ -228,6 +307,9 @@ export default class ColumnBody {
 
   mouseDown(x: number, y: number) {
     try {
+      this.frame.clicked = true;
+      //this.startX = x;
+      this.frame.startY = y;
       this.clicked = "";
       this.clickTickets(this.frame.tickets, x, y, 0, 0);
 
@@ -247,6 +329,41 @@ export default class ColumnBody {
       } else {
         this.frame.draw();
       }
+    } catch (e) {
+      window.alert(`エラーが発生しました。: ${e}`);
+    }
+  }
+
+  mouseMove(y: number) {
+    if (!this.frame.clicked) return;
+    this.frame.moving = true;
+    try {
+      this.frame.diffY = y - this.frame.startY;
+      this.frame.draw();
+    } catch (e) {
+      window.alert(`エラーが発生しました。: ${e}`);
+    }
+  }
+
+  mouseUp() {
+    try {
+      this.frame.clicked = false;
+      this.frame.moving = false;
+      this.frame.diffY = 0;
+      this.frame.movingTicket = null;
+      this.frame.draw();
+    } catch (e) {
+      window.alert(`エラーが発生しました。: ${e}`);
+    }
+  }
+
+  mouseLeave() {
+    try {
+      this.frame.clicked = false;
+      this.frame.moving = false;
+      this.frame.diffY = 0;
+      this.frame.movingTicket = null;
+      this.frame.draw();
     } catch (e) {
       window.alert(`エラーが発生しました。: ${e}`);
     }
@@ -292,6 +409,8 @@ export default class ColumnBody {
     }
     this.frame.ganttRow.y1 = y;
     this.frame.ganttRow.y2 = y + TICKET_HEIGHT;
+    this.frame.movingTicket = ticket;
+    this.frame.movingLevel = level;
 
     if (clickx < this.frame.cols[0].width) {
       // IDをクリックした

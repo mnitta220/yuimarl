@@ -33,7 +33,7 @@ export default class CalendarBody {
     const height = this.frame.height - HEADER_HEIGHT - SCROLL_BAR_WIDTH;
     cv.id = this.id;
     cv.className = "gantt-body";
-    cv.style.top = `${HEADER_HEIGHT}px`;
+    cv.style.top = `${HEADER_HEIGHT + 1}px`;
     cv.style.left = `${this.posX + this.frame.calendarLeft}px`;
     cv.style.width = `${this.width}px`;
     cv.style.height = `${height}px`;
@@ -112,10 +112,40 @@ export default class CalendarBody {
         }
 
         if (this.frame.ganttRow.y1 != -1) {
+          if (this.frame.moving) {
+            ctx.fillStyle = "#fffdef";
+            ctx.fillRect(
+              0,
+              this.frame.ganttRow.y1 + this.posY + this.frame.diffY,
+              width,
+              TICKET_HEIGHT
+            );
+            ctx.fill();
+
+            if (this.frame.movingTicket) {
+              this.drawTickets(
+                ctx,
+                [this.frame.movingTicket],
+                this.frame.ganttRow.y1 + this.posY + this.frame.diffY,
+                true
+              );
+            }
+          }
+
           ctx.fillStyle = "#f6f";
-          ctx.fillRect(0, this.frame.ganttRow.y1 + this.posY, width, 1);
+          ctx.fillRect(
+            0,
+            this.frame.ganttRow.y1 + this.posY + this.frame.diffY,
+            width,
+            1
+          );
           ctx.fill();
-          ctx.fillRect(0, this.frame.ganttRow.y2 + this.posY, width, 1);
+          ctx.fillRect(
+            0,
+            this.frame.ganttRow.y2 + this.posY + this.frame.diffY,
+            width,
+            1
+          );
           ctx.fill();
         }
 
@@ -127,7 +157,8 @@ export default class CalendarBody {
   drawTickets(
     ctx: CanvasRenderingContext2D,
     ts: GanttTicket[],
-    y: number
+    y: number,
+    moving: boolean = false
   ): number {
     let y1 = y;
     for (let t of ts) {
@@ -135,17 +166,40 @@ export default class CalendarBody {
         continue;
       }
 
-      this.drawTicket(ctx, t, y1);
-      y1 += TICKET_HEIGHT;
-      if (t.open && t.children.length > 0) {
-        y1 = this.drawTickets(ctx, t.children, y1);
+      if (
+        !this.frame.moving ||
+        !this.frame.movingTicket ||
+        this.frame.movingTicket != t ||
+        moving
+      ) {
+        this.drawTicket(ctx, t, y1, moving);
+        y1 += TICKET_HEIGHT;
+        if (t.open && t.children.length > 0 && !moving) {
+          y1 = this.drawTickets(ctx, t.children, y1, moving);
+        }
+      } else {
+        y1 += TICKET_HEIGHT;
       }
     }
     return y1;
   }
 
   // チケットを描画する
-  drawTicket(ctx: CanvasRenderingContext2D, ticket: GanttTicket, y: number) {
+  drawTicket(
+    ctx: CanvasRenderingContext2D,
+    ticket: GanttTicket,
+    y: number,
+    moving: boolean = false
+  ) {
+    let y2 = y;
+    if (this.frame.moving && !moving) {
+      let d = this.frame.startY + this.frame.diffY;
+      if (d > y && y > this.frame.startY) {
+        y2 -= TICKET_HEIGHT;
+      } else if (d - TICKET_HEIGHT < y && y < this.frame.startY) {
+        y2 += TICKET_HEIGHT;
+      }
+    }
     // チケット開始日/終了日
     if (ticket.start_date) {
       if (ticket.end_date) {
@@ -157,19 +211,19 @@ export default class CalendarBody {
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         if (ticket.progress === 0) {
           ctx.fillStyle = "#9bf";
-          ctx.fillRect(x1, y + 8 + this.posY, x2 - x1, 6);
+          ctx.fillRect(x1, y2 + 8 + this.posY, x2 - x1, 6);
           ctx.fill();
         } else if (ticket.progress === 100) {
           ctx.fillStyle = "#57f";
-          ctx.fillRect(x1, y + 8 + this.posY, x2 - x1, 6);
+          ctx.fillRect(x1, y2 + 8 + this.posY, x2 - x1, 6);
           ctx.fill();
         } else {
           ctx.fillStyle = "#9bf";
-          ctx.fillRect(x1, y + 8 + this.posY, x2 - x1, 6);
+          ctx.fillRect(x1, y2 + 8 + this.posY, x2 - x1, 6);
           ctx.fill();
           const x3 = ((x2 - x1) * ticket.progress) / 100;
           ctx.fillStyle = "#57f";
-          ctx.fillRect(x1, y + 8 + this.posY, x3, 6);
+          ctx.fillRect(x1, y2 + 8 + this.posY, x3, 6);
           ctx.fill();
         }
       } else {
@@ -177,19 +231,19 @@ export default class CalendarBody {
         let x1 =
           dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x1 = x1 * DAY_WIDTH - this.dtpos;
-        ctx.fillRect(x1, y + 8 + this.posY, 12, 6);
+        ctx.fillRect(x1, y2 + 8 + this.posY, 12, 6);
         ctx.fill();
         ctx.fillStyle = "#68f";
         x1 += 12;
-        ctx.fillRect(x1, y + 8 + this.posY, 7, 6);
+        ctx.fillRect(x1, y2 + 8 + this.posY, 7, 6);
         ctx.fill();
         ctx.fillStyle = "#8af";
         x1 += 7;
-        ctx.fillRect(x1, y + 8 + this.posY, 6, 6);
+        ctx.fillRect(x1, y2 + 8 + this.posY, 6, 6);
         ctx.fill();
         ctx.fillStyle = "#bdf";
         x1 += 6;
-        ctx.fillRect(x1, y + 8 + this.posY, 5, 6);
+        ctx.fillRect(x1, y2 + 8 + this.posY, 5, 6);
         ctx.fill();
       }
     } else {
@@ -199,26 +253,26 @@ export default class CalendarBody {
           dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         x2 -= 12;
-        ctx.fillRect(x2, y + 8 + this.posY, 12, 6);
+        ctx.fillRect(x2, y2 + 8 + this.posY, 12, 6);
         ctx.fill();
         ctx.fillStyle = "#68f";
         x2 -= 7;
-        ctx.fillRect(x2, y + 8 + this.posY, 7, 6);
+        ctx.fillRect(x2, y2 + 8 + this.posY, 7, 6);
         ctx.fill();
         ctx.fillStyle = "#8af";
         x2 -= 6;
-        ctx.fillRect(x2, y + 8 + this.posY, 6, 6);
+        ctx.fillRect(x2, y2 + 8 + this.posY, 6, 6);
         ctx.fill();
         ctx.fillStyle = "#bdf";
         x2 -= 5;
-        ctx.fillRect(x2, y + 8 + this.posY, 5, 6);
+        ctx.fillRect(x2, y2 + 8 + this.posY, 5, 6);
         ctx.fill();
       }
     }
 
     ctx.fillStyle = "#e5ebf2";
     // 区切り線
-    ctx.fillRect(0, y + TICKET_HEIGHT + this.posY, this.width, 1);
+    ctx.fillRect(0, y2 + TICKET_HEIGHT + this.posY, this.width, 1);
     ctx.fill();
   }
 

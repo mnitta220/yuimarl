@@ -39,7 +39,7 @@
           <form action="/project/add" method="POST">
             <!-- ガントチャート-->
             <div class="row py-2">
-              <div class="col flexbox" id="flexbox">
+              <div class="col flexbox2" id="flexbox">
                 <div class="ganttbase" id="ganttbase">
                   <div class="ganttframe" id="ganttframe"></div>
                   <canvas class="scrollH" id="scrollh"></canvas>
@@ -48,6 +48,15 @@
                   <div class="sv1"></div>
                   <canvas class="sv2" id="scrollv"></canvas>
                   <div class="sv3"></div>
+                </div>
+              </div>
+            </div>
+            <!-- 完了済みを表示-->
+            <div class="row py-2">
+              <div class="col">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" id="showdone" type="checkbox" role="switch">
+                  <label class="form-check-label" for="showdone">完了済みを表示</label>
                 </div>
               </div>
             </div>

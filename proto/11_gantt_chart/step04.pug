@@ -28,7 +28,7 @@ html(lang="ja")
           form(action="/project/add" method="POST")
             // ガントチャート
             .row.py-2
-              .col.flexbox#flexbox
+              .col.flexbox2#flexbox
                 .ganttbase#ganttbase
                   .ganttframe#ganttframe
                   canvas.scrollH#scrollh
@@ -36,6 +36,13 @@ html(lang="ja")
                   .sv1
                   canvas.sv2#scrollv
                   .sv3
+
+            // 完了済みを表示
+            .row.py-2
+              .col
+                .form-check.form-switch
+                  input.form-check-input#showdone(type="checkbox" role="switch")
+                  label.form-check-label(for="showdone") 完了済みを表示
 
             .row.py-3.mt-2.bg-light
               .col

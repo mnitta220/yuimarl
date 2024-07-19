@@ -48,6 +48,12 @@ export default class GanttFrame {
   treeList: ITree[] = [];
   projectId: string | null = null;
   showDone = false;
+  startY = 0;
+  diffY = 0;
+  clicked = false;
+  moving = false;
+  movingTicket: GanttTicket | null = null;
+  movingLevel = 0;
   private _idb?: AppDatabase;
 
   constructor() {

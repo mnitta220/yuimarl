@@ -348,12 +348,61 @@ export default class ColumnBody {
   }
 
   mouseUp() {
-    if (!this.frame.moving) return;
+    if (!this.frame.moving) {
+      this.frame.clicked = false;
+      return;
+    }
 
     try {
       console.log(`${this.frame.movingTicket?.pos} ${this.frame.dropPos}`);
       if (`${this.frame.movingTicket?.pos}` != `${this.frame.dropPos}`) {
         // チケットの移動処理
+        const movePos = `${this.frame.movingTicket?.pos}`.split(",");
+        const dropPos = `${this.frame.dropPos}`.split(",");
+        let moveTicket: GanttTicket | null = null;
+        let dropTicket: GanttTicket | null = null;
+        let moveParent: GanttTicket | null = null;
+        let moveIndex = 0;
+        let dropParent: GanttTicket | null = null;
+        let dropIndex = 0;
+        let w = this.frame.tickets;
+        for (let i = 0; i < movePos.length; i++) {
+          let m = movePos[i];
+          moveTicket = w[Number(m)];
+          w = moveTicket.children;
+          if (i == movePos.length - 2) {
+            moveParent = moveTicket;
+          }
+          if (i == movePos.length - 1) {
+            moveIndex = Number(m);
+          }
+        }
+        w = this.frame.tickets;
+        for (let i = 0; i < dropPos.length; i++) {
+          let d = dropPos[i];
+          dropTicket = w[Number(d)];
+          w = dropTicket.children;
+          if (i == dropPos.length - 2) {
+            dropParent = dropTicket;
+          }
+          if (i == dropPos.length - 1) {
+            dropIndex = Number(d);
+          }
+        }
+        console.log(
+          `moveTicket: ${moveTicket?.id_disp}, dropTicket: ${dropTicket?.id_disp}, moveParent: ${moveParent?.id_disp}, moveIndex: ${moveIndex} `
+        );
+        if (
+          moveTicket &&
+          dropTicket &&
+          moveTicket.id != dropTicket.id &&
+          moveParent &&
+          dropParent
+        ) {
+          moveParent.children.splice(moveIndex, 1);
+          dropParent.children.splice(dropIndex, 0, moveTicket);
+          this.frame.setPos(this.frame.tickets, "", -1, moveTicket.id);
+        }
       }
       this.frame.clicked = false;
       this.frame.moving = false;

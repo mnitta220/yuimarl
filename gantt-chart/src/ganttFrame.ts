@@ -5,6 +5,8 @@ import {
   DAY_WIDTH,
   Column,
   GanttTicket,
+  GanttRow,
+  TICKET_HEIGHT,
 } from "./common";
 import ColumnHeader from "./columnHeader";
 import ColumnBody from "./columnBody";
@@ -15,7 +17,6 @@ import CalendarScroll from "./calendarScroll";
 import ScrollH from "./scrollH";
 import ScrollV from "./scrollV";
 import TicketModal from "./ticketModal";
-import GanttRow from "./ganttRow";
 import { AppDatabase, Project, ITree, Tree } from "./idb";
 
 // ガントチャート全体フレーム
@@ -107,7 +108,7 @@ export default class GanttFrame {
     this.handler();
   }
 
-  setPos(ts: GanttTicket[], pos: string, line: number): number {
+  setPos(ts: GanttTicket[], pos: string, line: number, cursor: string): number {
     let i = 0;
     let l = line;
     for (const t of ts) {
@@ -119,8 +120,17 @@ export default class GanttFrame {
       i++;
       l++;
       t.line = l;
+
+      if (t.id === cursor) {
+        this.ganttRow.y1 = l * TICKET_HEIGHT;
+        this.ganttRow.y2 = (l + 1) * TICKET_HEIGHT;
+        console.log(
+          `this.ganttRow.y1=${this.ganttRow.y1} this.ganttRow.y2=${this.ganttRow.y2}`
+        );
+      }
+
       if (t.children.length > 0) {
-        l = this.setPos(t.children, t.pos, l);
+        l = this.setPos(t.children, t.pos, l, cursor);
       }
     }
     return l;

@@ -6,7 +6,7 @@ const frame = new GanttFrame();
 const main = async () => {
   await frame.readProject();
   await frame.readTreeList();
-  frame.setPos(frame.tickets, "", -1);
+  frame.setPos(frame.tickets, "", -1, "");
   frame.draw();
 };
 

@@ -53,3 +53,8 @@ export interface ModalTicketMember {
   name: string;
   email: string;
 }
+
+export class GanttRow {
+  y1 = -1;
+  y2 = -1;
+}

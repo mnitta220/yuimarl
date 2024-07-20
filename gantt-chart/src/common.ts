@@ -15,6 +15,8 @@ export class GanttTicket {
   end_date: string | null = null;
   progress: number = 0;
   open: boolean = false;
+  pos: string | null = null;
+  line: number = 0;
   children: GanttTicket[] = [];
 }
 

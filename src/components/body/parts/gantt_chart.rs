@@ -34,7 +34,7 @@ impl Component for GanttChart {
                 *buf += r#"</div>"#;
 
                 // 完了済みを表示
-                *buf += r#"<div class="row py-2">"#;
+                *buf += r#"<div class="row pt-2">"#;
                 {
                     *buf += r#"<div class="col">"#;
                     {
@@ -42,6 +42,22 @@ impl Component for GanttChart {
                         {
                             *buf += r#"<input class="form-check-input" id="showdone" type="checkbox" role="switch">"#;
                             *buf += r#"<label class="form-check-label" for="showdone">完了済みを表示</label>"#;
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</div>"#;
+                }
+                *buf += r#"</div>"#;
+
+                // 進捗遅れを赤く表示
+                *buf += r#"<div class="row py-2">"#;
+                {
+                    *buf += r#"<div class="col">"#;
+                    {
+                        *buf += r#"<div class="form-check form-switch">"#;
+                        {
+                            *buf += r#"<input class="form-check-input" id="delayred" type="checkbox" role="switch">"#;
+                            *buf += r#"<label class="form-check-label" for="delayred">進捗遅れを赤く表示</label>"#;
                         }
                         *buf += r#"</div>"#;
                     }

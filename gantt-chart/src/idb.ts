@@ -21,16 +21,19 @@ export class AppDatabase extends Dexie {
 
 export interface IProject {
   id: string; // プロジェクトID
-  showDone: boolean; // true:完了済みを表示する, false:表示しない
+  showDone: boolean; // 完了済みを表示
+  delayRed: boolean; // 進捗遅れを赤く表示
 }
 
 export class Project implements IProject {
   id: string;
   showDone: boolean;
+  delayRed: boolean;
 
-  constructor(id: string, showDone: boolean) {
+  constructor(id: string, showDone: boolean, delayRed: boolean) {
     this.id = id;
     this.showDone = showDone;
+    this.delayRed = delayRed;
   }
 }
 

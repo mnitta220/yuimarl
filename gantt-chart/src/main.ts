@@ -6,6 +6,7 @@ const frame = new GanttFrame();
 const main = async () => {
   await frame.readProject();
   await frame.readTreeList();
+  frame.setPos(frame.tickets, "", -1);
   frame.draw();
 };
 
@@ -19,9 +20,18 @@ window.addEventListener("resize", function () {
   frame.draw();
 });
 
+// 「完了済みを表示」が変更された
 const showdone = document.querySelector<HTMLInputElement>(`#showdone`);
 if (showdone) {
   showdone.addEventListener("change", function () {
     frame.setShowDone(showdone.checked);
+  });
+}
+
+// 「進捗遅れを赤く表示」が変更された
+const delayred = document.querySelector<HTMLInputElement>(`#delayred`);
+if (delayred) {
+  delayred.addEventListener("change", function () {
+    frame.setDelayRed(delayred.checked);
   });
 }

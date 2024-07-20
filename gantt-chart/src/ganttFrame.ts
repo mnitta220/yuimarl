@@ -48,12 +48,14 @@ export default class GanttFrame {
   treeList: ITree[] = [];
   projectId: string | null = null;
   showDone = false;
+  delayRed = false;
   startY = 0;
   diffY = 0;
   clicked = false;
   moving = false;
   movingTicket: GanttTicket | null = null;
   movingLevel = 0;
+  dropPos = "";
   private _idb?: AppDatabase;
 
   constructor() {
@@ -105,6 +107,25 @@ export default class GanttFrame {
     this.handler();
   }
 
+  setPos(ts: GanttTicket[], pos: string, line: number): number {
+    let i = 0;
+    let l = line;
+    for (const t of ts) {
+      if (t.progress === 100 && this.showDone === false) {
+        continue;
+      }
+
+      t.pos = pos.length === 0 ? `${i}` : `${pos},${i}`;
+      i++;
+      l++;
+      t.line = l;
+      if (t.children.length > 0) {
+        l = this.setPos(t.children, t.pos, l);
+      }
+    }
+    return l;
+  }
+
   async readProject() {
     try {
       if (!this.projectId) {
@@ -116,9 +137,14 @@ export default class GanttFrame {
       let project = await this._idb.projects.get(this.projectId);
       if (project) {
         this.showDone = project.showDone;
+        this.delayRed = project.delayRed;
         const showdone = document.querySelector<HTMLInputElement>(`#showdone`);
         if (showdone) {
           showdone.checked = this.showDone;
+        }
+        const delayred = document.querySelector<HTMLInputElement>(`#delayred`);
+        if (delayred) {
+          delayred.checked = this.delayRed;
         }
       }
     } catch (e) {
@@ -307,7 +333,19 @@ export default class GanttFrame {
     this.showDone = show;
     try {
       if (!this.projectId) return;
-      let project = new Project(this.projectId, show);
+      let project = new Project(this.projectId, show, this.delayRed);
+      await this._idb?.projects.put(project);
+      this.draw();
+    } catch (e) {
+      throw Error(`${e}`);
+    }
+  }
+
+  async setDelayRed(red: boolean) {
+    this.delayRed = red;
+    try {
+      if (!this.projectId) return;
+      let project = new Project(this.projectId, this.showDone, red);
       await this._idb?.projects.put(project);
       this.draw();
     } catch (e) {

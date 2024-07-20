@@ -38,11 +38,18 @@ html(lang="ja")
                   .sv3
 
             // 完了済みを表示
-            .row.py-2
+            .row.pt-2
               .col
                 .form-check.form-switch
                   input.form-check-input#showdone(type="checkbox" role="switch")
                   label.form-check-label(for="showdone") 完了済みを表示
+
+            // 進捗遅れを赤く表示
+            .row.py-2
+              .col
+                .form-check.form-switch
+                  input.form-check-input#delayred(type="checkbox" role="switch")
+                  label.form-check-label(for="delayred") 進捗遅れを赤く表示
 
             .row.py-3.mt-2.bg-light
               .col

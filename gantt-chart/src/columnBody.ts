@@ -16,8 +16,6 @@ export default class ColumnBody {
   posX = 0;
   posY = 0;
   clicked = "";
-  //startX = 0;
-  //startY = 0;
 
   constructor(private frame: GanttFrame) {}
 
@@ -218,8 +216,12 @@ export default class ColumnBody {
     if (this.frame.moving && !moving) {
       let d = this.frame.startY + this.frame.diffY;
       if (d > y && y > this.frame.startY) {
+        this.frame.dropPos = ticket.pos ?? "";
         y2 -= TICKET_HEIGHT;
       } else if (d - TICKET_HEIGHT < y && y < this.frame.startY) {
+        if (!this.frame.dropPos) {
+          this.frame.dropPos = ticket.pos ?? "";
+        }
         y2 += TICKET_HEIGHT;
       }
     }
@@ -308,7 +310,6 @@ export default class ColumnBody {
   mouseDown(x: number, y: number) {
     try {
       this.frame.clicked = true;
-      //this.startX = x;
       this.frame.startY = y;
       this.clicked = "";
       this.clickTickets(this.frame.tickets, x, y, 0, 0);
@@ -339,6 +340,7 @@ export default class ColumnBody {
     this.frame.moving = true;
     try {
       this.frame.diffY = y - this.frame.startY;
+      this.frame.dropPos = "";
       this.frame.draw();
     } catch (e) {
       window.alert(`エラーが発生しました。: ${e}`);
@@ -346,7 +348,13 @@ export default class ColumnBody {
   }
 
   mouseUp() {
+    if (!this.frame.moving) return;
+
     try {
+      console.log(`${this.frame.movingTicket?.pos} ${this.frame.dropPos}`);
+      if (`${this.frame.movingTicket?.pos}` != `${this.frame.dropPos}`) {
+        // チケットの移動処理
+      }
       this.frame.clicked = false;
       this.frame.moving = false;
       this.frame.diffY = 0;
@@ -411,6 +419,7 @@ export default class ColumnBody {
     this.frame.ganttRow.y2 = y + TICKET_HEIGHT;
     this.frame.movingTicket = ticket;
     this.frame.movingLevel = level;
+    this.frame.dropPos = "";
 
     if (clickx < this.frame.cols[0].width) {
       // IDをクリックした

@@ -46,16 +46,21 @@ export default class GanttFrame {
   cols: Column[] = [];
   holidays: dayjs.Dayjs[] = []; // 日本の祝日
   tickets: GanttTicket[] = [];
+  lines: GanttTicket[] = [];
   treeList: ITree[] = [];
   projectId: string | null = null;
   showDone = false;
   delayRed = false;
   startY = 0;
+  startX = 0;
+  diffX = 0;
   diffY = 0;
+  cursorLine = -1;
+  targetLine = -1;
   clicked = false;
   moving = false;
   movingTicket: GanttTicket | null = null;
-  movingLevel = 0;
+  //movingLevel = 0;
   dropPos = "";
   private _idb?: AppDatabase;
 
@@ -108,7 +113,18 @@ export default class GanttFrame {
     this.handler();
   }
 
-  setPos(ts: GanttTicket[], pos: string, line: number, cursor: string): number {
+  resetLines(cursor: string = "") {
+    this.lines = [];
+    this.setPos(this.tickets, "", 0, -1, cursor);
+  }
+
+  private setPos(
+    ts: GanttTicket[],
+    pos: string,
+    level: number,
+    line: number,
+    cursor: string
+  ): number {
     let i = 0;
     let l = line;
     for (const t of ts) {
@@ -119,18 +135,20 @@ export default class GanttFrame {
       t.pos = pos.length === 0 ? `${i}` : `${pos},${i}`;
       i++;
       l++;
+      t.level = level;
       t.line = l;
+      t.y1 = l * TICKET_HEIGHT;
+      t.y2 = (l + 1) * TICKET_HEIGHT;
+      this.lines.push(t);
 
       if (t.id === cursor) {
-        this.ganttRow.y1 = l * TICKET_HEIGHT;
-        this.ganttRow.y2 = (l + 1) * TICKET_HEIGHT;
-        console.log(
-          `this.ganttRow.y1=${this.ganttRow.y1} this.ganttRow.y2=${this.ganttRow.y2}`
-        );
-      }
-
-      if (t.children.length > 0) {
-        l = this.setPos(t.children, t.pos, l, cursor);
+        this.ganttRow.y1 = t.y1;
+        this.ganttRow.y2 = t.y2;
+        //console.log(
+        //  `this.ganttRow.y1=${this.ganttRow.y1} this.ganttRow.y2=${this.ganttRow.y2}`
+        //);
+      } else if (!t.moving && t.open && t.children.length > 0) {
+        l = this.setPos(t.children, t.pos, level + 1, l, cursor);
       }
     }
     return l;
@@ -334,6 +352,8 @@ export default class GanttFrame {
       let tree = new Tree(id, open, "");
       await this._idb?.trees.put(tree);
       await this.readTreeList();
+      this.resetLines();
+      this.draw();
     } catch (e) {
       throw Error(`${e}`);
     }

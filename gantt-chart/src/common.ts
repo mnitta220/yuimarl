@@ -17,6 +17,10 @@ export class GanttTicket {
   open: boolean = false;
   pos: string | null = null;
   line: number = 0;
+  level: number = 0;
+  y1: number = -1;
+  y2: number = -1;
+  moving: boolean = false;
   children: GanttTicket[] = [];
 }
 

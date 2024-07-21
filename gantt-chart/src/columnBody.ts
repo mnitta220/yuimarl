@@ -8,6 +8,15 @@ import {
 } from "./common";
 import GanttFrame from "./ganttFrame";
 
+/*
+enum MovingPart {
+  TOP = 1,
+  MIDDLE = 2,
+  BOTTOM = 3,
+  NONE = 0,
+}
+*/
+
 // カラムボディ
 export default class ColumnBody {
   id = "colbody";
@@ -15,7 +24,14 @@ export default class ColumnBody {
   height = 0;
   posX = 0;
   posY = 0;
-  clicked = "";
+  //cursorTicket: GanttTicket | null = null;
+  //targetTicket: GanttTicket | null = null;
+  //cursorIndex = -1;
+  //targetIndex = -1;
+  clickedId = "";
+  dropLevel = 0;
+  //movingPart: MovingPart = MovingPart.NONE; // ドラッグ位置 1:上, 2:中, 3:下
+  //movingPartSave: MovingPart = MovingPart.NONE; // ドラッグ位置 1:上, 2:中, 3:下
 
   constructor(private frame: GanttFrame) {}
 
@@ -53,11 +69,12 @@ export default class ColumnBody {
       });
       colbody.addEventListener("mousemove", function (e: MouseEvent) {
         e.preventDefault();
-        frame.columnBody.mouseMove(e.layerY);
+        frame.columnBody.mouseMove(e.layerX, e.layerY);
       });
       colbody.addEventListener("touchmove", function (e: TouchEvent) {
         e.preventDefault();
         frame.columnBody.mouseMove(
+          e.touches[0].pageX - ganttframe.offsetLeft - colbody.offsetLeft,
           e.touches[0].pageY - ganttframe.offsetTop - colbody.offsetTop
         );
       });
@@ -88,12 +105,16 @@ export default class ColumnBody {
       if (ctx) {
         ctx.save();
 
+        /*
         this.frame.ticketsTotalHeight = this.drawTickets(
           ctx,
           this.frame.tickets,
-          0,
           0
         );
+        */
+        for (let t of this.frame.lines) {
+          this.drawTicket(ctx, t);
+        }
 
         if (this.frame.moving && this.frame.ganttRow.y1 != -1) {
           ctx.fillStyle = "#fffdef";
@@ -105,12 +126,18 @@ export default class ColumnBody {
           );
           ctx.fill();
           if (this.frame.movingTicket) {
+            /*
             this.drawTickets(
               ctx,
               [this.frame.movingTicket],
-              this.frame.movingLevel,
               this.frame.ganttRow.y1 + this.posY + this.frame.diffY,
               true
+            );
+            */
+            this.drawMovingTicket(
+              ctx,
+              this.frame.movingTicket,
+              this.frame.ganttRow.y1 + this.posY + this.frame.diffY
             );
           }
         }
@@ -160,10 +187,11 @@ export default class ColumnBody {
     }
   }
 
+  /*
   drawTickets(
     ctx: CanvasRenderingContext2D,
     ts: GanttTicket[],
-    level: number,
+    //level: number,
     y: number,
     moving: boolean = false
   ): number {
@@ -179,10 +207,10 @@ export default class ColumnBody {
         this.frame.movingTicket != t ||
         moving
       ) {
-        this.drawTicket(ctx, t, level, y1, moving);
+        this.drawTicket(ctx, t, y1, moving);
         y1 += TICKET_HEIGHT;
         if (t.open && t.children.length > 0 && !moving) {
-          y1 = this.drawTickets(ctx, t.children, level + 1, y1, moving);
+          y1 = this.drawTickets(ctx, t.children, y1, moving);
         }
       } else {
         y1 += TICKET_HEIGHT;
@@ -190,6 +218,7 @@ export default class ColumnBody {
     }
     return y1;
   }
+  */
 
   getFrameHeight(ts: GanttTicket[], y: number): number {
     let y1 = y;
@@ -202,11 +231,12 @@ export default class ColumnBody {
     return y1;
   }
 
+  /*
   // チケットを描画する
   drawTicket(
     ctx: CanvasRenderingContext2D,
     ticket: GanttTicket,
-    level: number,
+    //level: number,
     y: number,
     moving: boolean = false
   ) {
@@ -231,7 +261,7 @@ export default class ColumnBody {
     ctx.fillText(ticket.id_disp, 3, y1 + this.posY);
     ctx.fillStyle = "#808080";
     // チケット□
-    let x = this.frame.cols[0].width + level * 12 + 6;
+    let x = this.frame.cols[0].width + ticket.level * 12 + 6;
     ctx.fillRect(x, y2 + 7 + this.posY, 1, 8);
     ctx.fill();
     ctx.fillRect(x, y2 + 7 + this.posY, 8, 1);
@@ -293,6 +323,195 @@ export default class ColumnBody {
     ctx.fillRect(0, y2 + TICKET_HEIGHT + this.posY, this.width, 1);
     ctx.fill();
   }
+  */
+
+  // チケットを描画する
+  drawTicket(ctx: CanvasRenderingContext2D, ticket: GanttTicket) {
+    if (this.frame.moving && ticket.id === this.frame.movingTicket?.id) return;
+    ctx.font = "9.5pt sans-serif";
+    ctx.textBaseline = "bottom";
+    let y1 = ticket.y1;
+    let y2 = ticket.y2;
+
+    if (
+      this.frame.moving &&
+      this.frame.movingTicket &&
+      this.frame.cursorLine !== -1 &&
+      this.frame.targetLine !== -1
+    ) {
+      if (ticket.line < this.frame.cursorLine) {
+        if (this.frame.movingTicket.y1 + this.frame.diffY < ticket.y2 - 10) {
+          y1 += TICKET_HEIGHT;
+          y2 += TICKET_HEIGHT;
+        }
+      } else if (ticket.line > this.frame.cursorLine) {
+        if (this.frame.movingTicket.y2 + this.frame.diffY > ticket.y1 + 10) {
+          y1 -= TICKET_HEIGHT;
+          y2 -= TICKET_HEIGHT;
+        }
+      }
+    }
+
+    const y3 = y1 + 18;
+    ctx.fillStyle = "#00f";
+    // ID
+    ctx.fillText(ticket.id_disp, 3, y3 + this.posY);
+    ctx.fillStyle = "#808080";
+    // チケット□
+    let x = this.frame.cols[0].width + ticket.level * 12 + 6;
+    ctx.fillRect(x, y1 + 7 + this.posY, 1, 8);
+    ctx.fill();
+    ctx.fillRect(x, y1 + 7 + this.posY, 8, 1);
+    ctx.fill();
+    ctx.fillRect(x, y1 + 15 + this.posY, 8, 1);
+    ctx.fill();
+    ctx.fillRect(x + 8, y1 + 7 + this.posY, 1, 9);
+    ctx.fill();
+    ctx.fillStyle = "#000";
+
+    if (ticket.children.length > 0) {
+      ctx.fillRect(x + 2, y1 + 11 + this.posY, 5, 1);
+      ctx.fill();
+      if (!ticket.open) {
+        ctx.fillRect(x + 4, y1 + 9 + this.posY, 1, 5);
+        ctx.fill();
+      }
+    }
+
+    // チケット名
+    let w = this.frame.cols[0].width + this.frame.cols[1].width - (x + 14);
+    let m = ctx.measureText(ticket.name).width;
+    if (m <= w) {
+      ctx.fillText(ticket.name, x + 14, y3 + this.posY);
+    } else {
+      let s = ticket.name;
+      while (ctx.measureText(`${s}…`).width > w) {
+        s = s.slice(0, -1);
+      }
+      ctx.fillText(`${s}…`, x + 14, y3 + this.posY);
+    }
+
+    x = this.frame.cols[0].width + this.frame.cols[1].width + 3;
+    // 開始日
+    if (ticket.start_date) {
+      ctx.fillText(
+        dayjs(ticket.start_date).format("YY/MM/DD"),
+        x,
+        y3 + this.posY
+      );
+    }
+    x += this.frame.cols[2].width;
+    // 終了日
+    if (ticket.end_date) {
+      ctx.fillText(
+        dayjs(ticket.end_date).format("YY/MM/DD"),
+        x,
+        y3 + this.posY
+      );
+    }
+    x += this.frame.cols[3].width + this.frame.cols[4].width - 6;
+    // 進捗率
+    const t1 = `${ticket.progress}`;
+    const m1 = ctx.measureText(t1).width;
+    ctx.fillText(t1, x - m1, y3 + this.posY);
+
+    ctx.fillStyle = "#e5ebf2";
+    // 区切り線
+    ctx.fillRect(0, y2 + this.posY, this.width, 1);
+    ctx.fill();
+  }
+
+  // チケットを描画する
+  drawMovingTicket(
+    ctx: CanvasRenderingContext2D,
+    ticket: GanttTicket,
+    y: number
+  ) {
+    ctx.font = "9.5pt sans-serif";
+    ctx.textBaseline = "bottom";
+    let y2 = y;
+    const y1 = y2 + 18;
+    ctx.fillStyle = "#00f";
+    // ID
+    ctx.fillText(ticket.id_disp, 3, y1 + this.posY);
+    ctx.fillStyle = "#808080";
+    // チケット□
+    this.dropLevel = ticket.level;
+
+    if (this.frame.targetLine != -1) {
+      let target = this.frame.lines[this.frame.targetLine];
+      if (target.children.length > 0 && target.open) {
+        this.dropLevel = target.level + 1;
+      } else {
+        this.dropLevel = target.level;
+        if (this.frame.diffX > 12) {
+          this.dropLevel++;
+        }
+      }
+    }
+
+    let x = this.frame.cols[0].width + this.dropLevel * 12 + 6;
+    ctx.fillRect(x, y2 + 7 + this.posY, 1, 8);
+    ctx.fill();
+    ctx.fillRect(x, y2 + 7 + this.posY, 8, 1);
+    ctx.fill();
+    ctx.fillRect(x, y2 + 15 + this.posY, 8, 1);
+    ctx.fill();
+    ctx.fillRect(x + 8, y2 + 7 + this.posY, 1, 9);
+    ctx.fill();
+    ctx.fillStyle = "#000";
+
+    if (ticket.children.length > 0) {
+      ctx.fillRect(x + 2, y2 + 11 + this.posY, 5, 1);
+      ctx.fill();
+      //if (!ticket.open || moving) {
+      ctx.fillRect(x + 4, y2 + 9 + this.posY, 1, 5);
+      ctx.fill();
+      //}
+    }
+
+    // チケット名
+    let w = this.frame.cols[0].width + this.frame.cols[1].width - (x + 14);
+    let m = ctx.measureText(ticket.name).width;
+    if (m <= w) {
+      ctx.fillText(ticket.name, x + 14, y1 + this.posY);
+    } else {
+      let s = ticket.name;
+      while (ctx.measureText(`${s}…`).width > w) {
+        s = s.slice(0, -1);
+      }
+      ctx.fillText(`${s}…`, x + 14, y1 + this.posY);
+    }
+
+    x = this.frame.cols[0].width + this.frame.cols[1].width + 3;
+    // 開始日
+    if (ticket.start_date) {
+      ctx.fillText(
+        dayjs(ticket.start_date).format("YY/MM/DD"),
+        x,
+        y1 + this.posY
+      );
+    }
+    x += this.frame.cols[2].width;
+    // 終了日
+    if (ticket.end_date) {
+      ctx.fillText(
+        dayjs(ticket.end_date).format("YY/MM/DD"),
+        x,
+        y1 + this.posY
+      );
+    }
+    x += this.frame.cols[3].width + this.frame.cols[4].width - 6;
+    // 進捗率
+    const t1 = `${ticket.progress}`;
+    const m1 = ctx.measureText(t1).width;
+    ctx.fillText(t1, x - m1, y1 + this.posY);
+
+    ctx.fillStyle = "#e5ebf2";
+    // 区切り線
+    ctx.fillRect(0, y2 + TICKET_HEIGHT + this.posY, this.width, 1);
+    ctx.fill();
+  }
 
   scrollH(x: number) {
     this.posX = -x;
@@ -310,12 +529,31 @@ export default class ColumnBody {
   mouseDown(x: number, y: number) {
     try {
       this.frame.clicked = true;
+      this.frame.startX = x;
       this.frame.startY = y;
-      this.clicked = "";
-      this.clickTickets(this.frame.tickets, x, y, 0, 0);
+      this.frame.cursorLine = -1;
+      this.clickedId = "";
+      //this.movingPartSave = MovingPart.NONE;
+      //this.clickTickets(this.frame.tickets, x, y, 0);
+      /*
+      for (let t of this.frame.lines) {
+        if (t.y1 <= y && y <= t.y2) {
+          this.clickTicket(t, x);
+          break;
+        }
+      }
+      */
+      for (let i = 0; i < this.frame.lines.length; i++) {
+        let t = this.frame.lines[i];
+        if (t.y1 <= y && y <= t.y2) {
+          this.frame.cursorLine = i;
+          this.clickTicket(t, x);
+          break;
+        }
+      }
 
-      if (this.clicked) {
-        fetch(`/api/ticket/${this.clicked}`, {
+      if (this.clickedId) {
+        fetch(`/api/ticket/${this.clickedId}`, {
           method: "GET",
         })
           .then((response) => response.json())
@@ -335,11 +573,135 @@ export default class ColumnBody {
     }
   }
 
-  mouseMove(y: number) {
+  mouseMove(x: number, y: number) {
     if (!this.frame.clicked) return;
-    this.frame.moving = true;
     try {
+      if (!this.frame.moving) {
+        this.frame.resetLines(this.frame.movingTicket?.id ?? "");
+        this.frame.moving = true;
+      }
+      this.frame.diffX = x - this.frame.startX;
       this.frame.diffY = y - this.frame.startY;
+
+      this.frame.targetLine = -1;
+      for (let i = 0; i < this.frame.lines.length; i++) {
+        let t = this.frame.lines[i];
+        if (t == this.frame.movingTicket) continue;
+        /*
+        if (t.y1 < y && t.y2 > y) {
+          this.frame.targetLine = i;
+          if (t.y1 + t.y2 > y + y) {
+            --this.frame.targetLine;
+          }
+          break;
+        }
+        */
+        //*
+        if (
+          t.y1 < this.frame.ganttRow.y2 + this.posY + this.frame.diffY &&
+          t.y2 > this.frame.ganttRow.y1 + this.posY + this.frame.diffY
+        ) {
+          this.frame.targetLine = i;
+          break;
+        }
+        //*/
+        /*
+        if (t.y1 < y && t.y2 > y) {
+          this.frame.targetLine = i;
+          break;
+        }
+        */
+        /*
+        if (
+          t.y1 < this.frame.ganttRow.y2 + this.posY + this.frame.diffY &&
+          t.y2 > this.frame.ganttRow.y1 + this.posY + this.frame.diffY
+        ) {
+          this.frame.targetLine = i;
+          this.movingPart = MovingPart.NONE;
+          if (this.frame.diffY > 14) {
+            this.movingPart = MovingPart.BOTTOM;
+          } else if (this.frame.diffY > 7) {
+            this.movingPart = MovingPart.MIDDLE;
+          } else if (this.frame.diffY > 0) {
+            this.movingPart = MovingPart.TOP;
+          }
+          //if (this.movingPartSave === MovingPart.NONE) {
+          //  this.movingPartSave = this.movingPart;
+          //}
+          break;
+        }
+        */
+      }
+      //console.log(`mouseMove: targetLine=${this.frame.targetLine}`);
+
+      /*
+      if (
+        this.frame.cursorLine != -1 &&
+        this.frame.targetLine !== -1 //&&
+        //this.movingPart !== this.movingPartSave
+      ) {
+        //this.movingPartSave = this.movingPart;
+        console.log(
+          `cursorLine=${this.frame.cursorLine} targetLine=${this.frame.targetLine} movingPart=${this.movingPart}`
+        );
+        this.cursorTicket = this.frame.lines[this.frame.cursorLine];
+        this.targetTicket = this.frame.lines[this.frame.targetLine];
+        let cursorParent: GanttTicket | null = null;
+        let targetParent: GanttTicket | null = null;
+        this.cursorIndex = -1;
+        this.targetIndex = -1;
+        for (let i = this.frame.cursorLine - 1; i >= 0; i--) {
+          let t = this.frame.lines[i];
+          if (t.level < this.cursorTicket.level) {
+            cursorParent = t;
+            for (let j = 0; j < t.children.length; j++) {
+              if (t.children[j].id === this.cursorTicket.id) {
+                this.cursorIndex = j;
+                break;
+              }
+            }
+            break;
+          }
+        }
+
+        for (let i = this.frame.targetLine - 1; i >= 0; i--) {
+          let t = this.frame.lines[i];
+          if (t.level < this.targetTicket.level) {
+            targetParent = t;
+            for (let j = 0; j < t.children.length; j++) {
+              if (t.children[j].id === this.targetTicket.id) {
+                this.targetIndex = j;
+                break;
+              }
+            }
+            break;
+          }
+        }
+        //console.log(
+        //  `cursorIndex=${this.cursorIndex} targetIndex=${this.targetIndex}`
+        //);
+
+        switch (this.movingPart) {
+          case MovingPart.TOP:
+            break;
+          case MovingPart.MIDDLE:
+            if (
+              cursorParent &&
+              targetParent &&
+              cursorIndex !== -1 &&
+              targetIndex !== -1
+            ) {
+              cursorParent.children.splice(cursorIndex, 1);
+              targetTicket.children.push(cursorTicket);
+              this.frame.resetLines(cursorTicket.id);
+            }
+            break;
+          case MovingPart.BOTTOM:
+            break;
+        }
+      }
+      */
+
       this.frame.dropPos = "";
       this.frame.draw();
     } catch (e) {
@@ -354,6 +716,30 @@ export default class ColumnBody {
     }
 
     try {
+      console.log(
+        `mouseUp: cursorLine=${this.frame.cursorLine} targetLine=${this.frame.targetLine} dropLevel=${this.dropLevel} diffY=${this.frame.diffY}`
+      );
+      if (
+        this.frame.movingTicket &&
+        this.frame.cursorLine !== -1 &&
+        this.frame.targetLine !== -1 &&
+        (this.frame.cursorLine !== this.frame.targetLine ||
+          this.frame.movingTicket.level !== this.dropLevel)
+      ) {
+        let target = this.frame.lines[this.frame.targetLine];
+        if (this.frame.diffY < 0) {
+          // 上に移動
+          let l = this.frame.cursorLine - this.frame.targetLine;
+          let d = -this.frame.diffY;
+          let p = d - (l - 1) * TICKET_HEIGHT;
+          console.log(
+            `mouseUp: target=${target.id_disp} ${target.y1} ${target.y2} ${l} ${d} ${p}`
+          );
+        } else {
+          // 下に移動
+        }
+      }
+      /*
       console.log(`${this.frame.movingTicket?.pos} ${this.frame.dropPos}`);
       if (`${this.frame.movingTicket?.pos}` != `${this.frame.dropPos}`) {
         // チケットの移動処理
@@ -401,14 +787,16 @@ export default class ColumnBody {
         ) {
           moveParent.children.splice(moveIndex, 1);
           dropParent.children.splice(dropIndex, 0, moveTicket);
-          this.frame.setPos(this.frame.tickets, "", -1, moveTicket.id);
+          //this.frame.resetLines(moveTicket.id);
         }
       }
+      */
       this.frame.clicked = false;
       this.frame.moving = false;
       this.frame.diffY = 0;
-      this.frame.movingTicket = null;
+      this.frame.resetLines("");
       this.frame.draw();
+      this.frame.movingTicket = null;
     } catch (e) {
       window.alert(`エラーが発生しました。: ${e}`);
     }
@@ -426,11 +814,12 @@ export default class ColumnBody {
     }
   }
 
+  /*
   clickTickets(
     ts: GanttTicket[],
     clickx: number,
     clicky: number,
-    level: number,
+    //level: number,
     y: number
   ): number {
     let y1 = y;
@@ -439,13 +828,13 @@ export default class ColumnBody {
         continue;
       }
 
-      if (this.clickTicket(t, clickx, clicky, level, y1)) {
+      if (this.clickTicket(t, clickx, clicky, y1)) {
         return y1;
       }
       y1 += TICKET_HEIGHT;
       if (t.open && t.children.length > 0) {
-        let y2 = this.clickTickets(t.children, clickx, clicky, level + 1, y1);
-        if (this.clicked) {
+        let y2 = this.clickTickets(t.children, clickx, clicky, y1);
+        if (this.clickedId) {
           return y2;
         }
         y1 = y2;
@@ -458,7 +847,7 @@ export default class ColumnBody {
     ticket: GanttTicket,
     clickx: number,
     clicky: number,
-    level: number,
+    //level: number,
     y: number
   ): boolean {
     if (clicky < y + this.posY || clicky > y + TICKET_HEIGHT + this.posY) {
@@ -467,16 +856,16 @@ export default class ColumnBody {
     this.frame.ganttRow.y1 = y;
     this.frame.ganttRow.y2 = y + TICKET_HEIGHT;
     this.frame.movingTicket = ticket;
-    this.frame.movingLevel = level;
+    //this.frame.movingLevel = level;
     this.frame.dropPos = "";
 
     if (clickx < this.frame.cols[0].width) {
       // IDをクリックした
-      this.clicked = ticket.id;
+      this.clickedId = ticket.id;
       return true;
     }
     if (clickx < this.frame.cols[0].width + this.frame.cols[1].width) {
-      const x = this.frame.cols[0].width + level * 12 + 2;
+      const x = this.frame.cols[0].width + ticket.level * 12 + 2;
       if (clickx > x && clickx < x + 16) {
         // チケット名の□をクリックした
         ticket.open = !ticket.open;
@@ -495,5 +884,49 @@ export default class ColumnBody {
       }
     }
     return false;
+  }
+  */
+
+  clickTicket(
+    ticket: GanttTicket,
+    clickx: number
+    //clicky: number,
+    //level: number,
+    //y: number
+  ) {
+    //if (clicky < y + this.posY || clicky > y + TICKET_HEIGHT + this.posY) {
+    //  return false;
+    //}
+    this.frame.ganttRow.y1 = ticket.y1;
+    this.frame.ganttRow.y2 = ticket.y2;
+    this.frame.movingTicket = ticket;
+    //this.frame.movingLevel = level;
+    this.frame.dropPos = "";
+
+    if (clickx < this.frame.cols[0].width) {
+      // IDをクリックした
+      this.clickedId = ticket.id;
+      return;
+    }
+    if (clickx < this.frame.cols[0].width + this.frame.cols[1].width) {
+      const x = this.frame.cols[0].width + ticket.level * 12 + 2;
+      if (clickx > x && clickx < x + 16) {
+        // チケット名の□をクリックした
+        ticket.open = !ticket.open;
+        this.frame.nodeOpenClose(ticket.id, ticket.open);
+        this.frame.draw();
+        if (
+          this.frame.ticketsTotalHeight < this.frame.ticketsFrameHeight &&
+          this.posY != 0
+        ) {
+          this.posY = 0;
+          this.frame.calendarBody.posY = 0;
+          this.frame.scv.pos = 0;
+          this.frame.draw();
+        }
+        //return true;
+      }
+    }
+    //return false;
   }
 }

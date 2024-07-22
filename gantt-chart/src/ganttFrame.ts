@@ -55,12 +55,12 @@ export default class GanttFrame {
   startX = 0;
   diffX = 0;
   diffY = 0;
-  cursorLine = -1;
-  targetLine = -1;
   clicked = false;
   moving = false;
   movingTicket: GanttTicket | null = null;
+  movingLine = -1;
   //movingLevel = 0;
+  hoverLine = -1;
   dropPos = "";
   private _idb?: AppDatabase;
 

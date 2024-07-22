@@ -29,7 +29,9 @@ export default class ColumnBody {
   //cursorIndex = -1;
   //targetIndex = -1;
   clickedId = "";
-  dropLevel = 0;
+  movingLevel = 0;
+  upper: GanttTicket | null = null;
+  lower: GanttTicket | null = null;
   //movingPart: MovingPart = MovingPart.NONE; // ドラッグ位置 1:上, 2:中, 3:下
   //movingPartSave: MovingPart = MovingPart.NONE; // ドラッグ位置 1:上, 2:中, 3:下
 
@@ -336,20 +338,60 @@ export default class ColumnBody {
     if (
       this.frame.moving &&
       this.frame.movingTicket &&
-      this.frame.cursorLine !== -1 &&
-      this.frame.targetLine !== -1
+      this.frame.movingLine !== -1 &&
+      this.frame.hoverLine !== -1
     ) {
-      if (ticket.line < this.frame.cursorLine) {
+      if (this.frame.diffY < 0) {
+        // 上に移動
+        if (ticket.line === this.frame.hoverLine) {
+          let l = this.frame.movingLine - this.frame.hoverLine;
+          let d = -this.frame.diffY;
+          let p = d - (l - 1) * TICKET_HEIGHT;
+          //console.log(`drawTicket: ticket=${ticket.id_disp} ${l} ${d} ${p}`);
+          if (p > 10) {
+            y1 += TICKET_HEIGHT;
+            y2 += TICKET_HEIGHT;
+          }
+        } else if (
+          ticket.line > this.frame.hoverLine &&
+          ticket.line < this.frame.movingLine
+        ) {
+          y1 += TICKET_HEIGHT;
+          y2 += TICKET_HEIGHT;
+        }
+      } else {
+        // 下に移動
+        if (ticket.line === this.frame.hoverLine) {
+          let l = this.frame.hoverLine - this.frame.movingLine;
+          let d = this.frame.diffY;
+          let p = d - (l - 1) * TICKET_HEIGHT;
+          //console.log(`drawTicket: ticket=${ticket.id_disp} ${l} ${d} ${p}`);
+          if (p > 10) {
+            y1 -= TICKET_HEIGHT;
+            y2 -= TICKET_HEIGHT;
+          }
+        } else if (
+          ticket.line < this.frame.hoverLine &&
+          ticket.line > this.frame.movingLine
+        ) {
+          y1 -= TICKET_HEIGHT;
+          y2 -= TICKET_HEIGHT;
+        }
+      }
+
+      /*
+      if (ticket.line < this.frame.movingLine) {
         if (this.frame.movingTicket.y1 + this.frame.diffY < ticket.y2 - 10) {
           y1 += TICKET_HEIGHT;
           y2 += TICKET_HEIGHT;
         }
-      } else if (ticket.line > this.frame.cursorLine) {
+      } else if (ticket.line > this.frame.movingLine) {
         if (this.frame.movingTicket.y2 + this.frame.diffY > ticket.y1 + 10) {
           y1 -= TICKET_HEIGHT;
           y2 -= TICKET_HEIGHT;
         }
       }
+      */
     }
 
     const y3 = y1 + 18;
@@ -436,21 +478,165 @@ export default class ColumnBody {
     ctx.fillText(ticket.id_disp, 3, y1 + this.posY);
     ctx.fillStyle = "#808080";
     // チケット□
-    this.dropLevel = ticket.level;
+    this.movingLevel = ticket.level;
 
-    if (this.frame.targetLine != -1) {
-      let target = this.frame.lines[this.frame.targetLine];
-      if (target.children.length > 0 && target.open) {
-        this.dropLevel = target.level + 1;
+    if (
+      this.frame.movingLine !== -1 &&
+      this.frame.hoverLine != -1 &&
+      this.frame.movingTicket
+    ) {
+      let hover = this.frame.lines[this.frame.hoverLine];
+      //let upper: GanttTicket | null = hover;
+      if (this.frame.diffY < 0) {
+        // 上に移動
+        this.upper = hover;
+        if (this.frame.lines.length > this.frame.hoverLine + 1) {
+          this.lower = this.frame.lines[this.frame.hoverLine + 1];
+          if (this.lower === this.frame.movingTicket) {
+            if (this.frame.lines.length > this.frame.hoverLine + 2) {
+              this.lower = this.frame.lines[this.frame.hoverLine + 2];
+            } else {
+              this.lower = null;
+            }
+          }
+        } else {
+          this.lower = null;
+        }
+        let l = this.frame.movingLine - this.frame.hoverLine;
+        let d = -this.frame.diffY;
+        let p = d - (l - 1) * TICKET_HEIGHT;
+        //console.log(
+        //  `drawMovingTicket: ticket=${ticket.id_disp} ${l} ${d} ${p}`
+        //);
+        if (p > 10) {
+          if (this.frame.hoverLine === 0) {
+            this.upper = null;
+            if (this.frame.lines.length > 0) {
+              this.lower = this.frame.lines[0];
+              if (this.lower === this.frame.movingTicket) {
+                if (this.frame.lines.length > 1) {
+                  this.lower = this.frame.lines[1];
+                } else {
+                  this.lower = null;
+                }
+              }
+            } else {
+              this.lower = null;
+            }
+          } else {
+            this.upper = this.frame.lines[this.frame.hoverLine - 1];
+            this.lower = this.frame.lines[this.frame.hoverLine];
+            if (this.lower === this.frame.movingTicket) {
+              if (this.frame.lines.length > this.frame.hoverLine + 1) {
+                this.lower = this.frame.lines[this.frame.hoverLine + 1];
+              } else {
+                this.lower = null;
+              }
+            }
+          }
+        }
       } else {
-        this.dropLevel = target.level;
-        if (this.frame.diffX > 12) {
-          this.dropLevel++;
+        // 下に移動
+        if (this.frame.movingLine === 0) {
+          this.upper = null;
+          if (this.frame.lines.length > 0) {
+            this.lower = this.frame.lines[0];
+            if (this.lower === this.frame.movingTicket) {
+              if (this.frame.lines.length > 1) {
+                this.lower = this.frame.lines[1];
+              } else {
+                this.lower = null;
+              }
+            }
+          } else {
+            this.lower = null;
+          }
+        } else {
+          this.upper = this.frame.lines[this.frame.movingLine - 1];
+          this.lower = this.frame.lines[this.frame.movingLine];
+          if (this.lower === this.frame.movingTicket) {
+            if (this.frame.lines.length > this.frame.movingLine + 1) {
+              this.lower = this.frame.lines[this.frame.movingLine + 1];
+            } else {
+              this.lower = null;
+            }
+          }
+        }
+        let l = this.frame.hoverLine - this.frame.movingLine;
+        let d = this.frame.diffY;
+        let p = d - (l - 1) * TICKET_HEIGHT;
+        //console.log(
+        //  `drawMovingTicket: ticket=${ticket.id_disp} ${l} ${d} ${p}`
+        //);
+        //console.log(`drawTicket: ticket=${ticket.id_disp} ${l} ${d} ${p}`);
+        if (p > 10) {
+          this.upper = hover;
+          if (this.frame.lines.length > this.frame.hoverLine + 1) {
+            this.lower = this.frame.lines[this.frame.hoverLine + 1];
+            if (this.lower === this.frame.movingTicket) {
+              if (this.frame.lines.length > this.frame.hoverLine + 2) {
+                this.lower = this.frame.lines[this.frame.hoverLine + 2];
+              } else {
+                this.lower = null;
+              }
+            }
+          } else {
+            this.lower = null;
+          }
         }
       }
+
+      if (this.upper) {
+        if (this.upper.children.length > 0 && this.upper.open) {
+          this.movingLevel = this.upper.level + 1;
+          if (
+            this.upper.children[this.upper.children.length - 1] ===
+            this.frame.movingTicket
+          ) {
+            if (this.frame.diffX < -12) {
+              this.movingLevel =
+                this.frame.movingTicket.level -
+                Math.floor(-this.frame.diffX / 12);
+              if (this.lower) {
+                if (this.movingLevel < this.lower.level)
+                  this.movingLevel = this.lower.level;
+              } else {
+                if (this.movingLevel < 0) this.movingLevel = 0;
+              }
+            }
+          }
+        } else {
+          this.movingLevel = this.upper.level;
+          if (this.frame.diffX > 12) {
+            this.movingLevel++;
+          } else if (this.frame.diffX < -12) {
+            if (this.lower) {
+              this.movingLevel = this.lower.level;
+            } else {
+              this.movingLevel =
+                this.frame.movingTicket.level -
+                Math.floor(-this.frame.diffX / 12);
+              if (this.movingLevel < 0) this.movingLevel = 0;
+            }
+          }
+        }
+      } else {
+        this.movingLevel = 0;
+      }
+
+      /*
+      if (hover.children.length > 0 && hover.open) {
+        this.movingLevel = hover.level + 1;
+      } else {
+        this.movingLevel = hover.level;
+        if (this.frame.diffX > 12) {
+          this.movingLevel++;
+        }
+      }
+      */
     }
 
-    let x = this.frame.cols[0].width + this.dropLevel * 12 + 6;
+    let x = this.frame.cols[0].width + this.movingLevel * 12 + 6;
     ctx.fillRect(x, y2 + 7 + this.posY, 1, 8);
     ctx.fill();
     ctx.fillRect(x, y2 + 7 + this.posY, 8, 1);
@@ -531,7 +717,7 @@ export default class ColumnBody {
       this.frame.clicked = true;
       this.frame.startX = x;
       this.frame.startY = y;
-      this.frame.cursorLine = -1;
+      this.frame.movingLine = -1;
       this.clickedId = "";
       //this.movingPartSave = MovingPart.NONE;
       //this.clickTickets(this.frame.tickets, x, y, 0);
@@ -546,7 +732,7 @@ export default class ColumnBody {
       for (let i = 0; i < this.frame.lines.length; i++) {
         let t = this.frame.lines[i];
         if (t.y1 <= y && y <= t.y2) {
-          this.frame.cursorLine = i;
+          this.frame.movingLine = i;
           this.clickTicket(t, x);
           break;
         }
@@ -583,15 +769,15 @@ export default class ColumnBody {
       this.frame.diffX = x - this.frame.startX;
       this.frame.diffY = y - this.frame.startY;
 
-      this.frame.targetLine = -1;
+      this.frame.hoverLine = -1;
       for (let i = 0; i < this.frame.lines.length; i++) {
         let t = this.frame.lines[i];
         if (t == this.frame.movingTicket) continue;
         /*
         if (t.y1 < y && t.y2 > y) {
-          this.frame.targetLine = i;
+          this.frame.hoverLine = i;
           if (t.y1 + t.y2 > y + y) {
-            --this.frame.targetLine;
+            --this.frame.hoverLine;
           }
           break;
         }
@@ -601,13 +787,13 @@ export default class ColumnBody {
           t.y1 < this.frame.ganttRow.y2 + this.posY + this.frame.diffY &&
           t.y2 > this.frame.ganttRow.y1 + this.posY + this.frame.diffY
         ) {
-          this.frame.targetLine = i;
+          this.frame.hoverLine = i;
           break;
         }
         //*/
         /*
         if (t.y1 < y && t.y2 > y) {
-          this.frame.targetLine = i;
+          this.frame.hoverLine = i;
           break;
         }
         */
@@ -616,7 +802,7 @@ export default class ColumnBody {
           t.y1 < this.frame.ganttRow.y2 + this.posY + this.frame.diffY &&
           t.y2 > this.frame.ganttRow.y1 + this.posY + this.frame.diffY
         ) {
-          this.frame.targetLine = i;
+          this.frame.hoverLine = i;
           this.movingPart = MovingPart.NONE;
           if (this.frame.diffY > 14) {
             this.movingPart = MovingPart.BOTTOM;
@@ -632,25 +818,25 @@ export default class ColumnBody {
         }
         */
       }
-      //console.log(`mouseMove: targetLine=${this.frame.targetLine}`);
+      //console.log(`mouseMove: hoverLine=${this.frame.hoverLine}`);
 
       /*
       if (
-        this.frame.cursorLine != -1 &&
-        this.frame.targetLine !== -1 //&&
+        this.frame.movingLine != -1 &&
+        this.frame.hoverLine !== -1 //&&
         //this.movingPart !== this.movingPartSave
       ) {
         //this.movingPartSave = this.movingPart;
         console.log(
-          `cursorLine=${this.frame.cursorLine} targetLine=${this.frame.targetLine} movingPart=${this.movingPart}`
+          `movingLine=${this.frame.movingLine} hoverLine=${this.frame.hoverLine} movingPart=${this.movingPart}`
         );
-        this.cursorTicket = this.frame.lines[this.frame.cursorLine];
-        this.targetTicket = this.frame.lines[this.frame.targetLine];
+        this.cursorTicket = this.frame.lines[this.frame.movingLine];
+        this.targetTicket = this.frame.lines[this.frame.hoverLine];
         let cursorParent: GanttTicket | null = null;
         let targetParent: GanttTicket | null = null;
         this.cursorIndex = -1;
         this.targetIndex = -1;
-        for (let i = this.frame.cursorLine - 1; i >= 0; i--) {
+        for (let i = this.frame.movingLine - 1; i >= 0; i--) {
           let t = this.frame.lines[i];
           if (t.level < this.cursorTicket.level) {
             cursorParent = t;
@@ -664,7 +850,7 @@ export default class ColumnBody {
           }
         }
 
-        for (let i = this.frame.targetLine - 1; i >= 0; i--) {
+        for (let i = this.frame.hoverLine - 1; i >= 0; i--) {
           let t = this.frame.lines[i];
           if (t.level < this.targetTicket.level) {
             targetParent = t;
@@ -716,20 +902,81 @@ export default class ColumnBody {
     }
 
     try {
+      // チケットの移動処理
       console.log(
-        `mouseUp: cursorLine=${this.frame.cursorLine} targetLine=${this.frame.targetLine} dropLevel=${this.dropLevel} diffY=${this.frame.diffY}`
+        `mouseUp: ${this.frame.movingTicket?.pos} ${this.upper?.pos ?? ""} ${
+          this.movingLevel
+        }`
+      );
+      const movePos = `${this.frame.movingTicket?.pos}`.split(",");
+      //const dropPos = `${this.frame.dropPos}`.split(",");
+      let moveTicket: GanttTicket | null = null;
+      let upperTicket: GanttTicket | null = null;
+      //let dropTicket: GanttTicket | null = null;
+      let moveParent: GanttTicket | null = null;
+      //let upperParent: GanttTicket | null = null;
+      let moveIndex = 0;
+      //let upperIndex = -1;
+      let dropParent: GanttTicket | null = null;
+      let dropIndex = -1;
+      //let movingParent: GanttTicket | null = null;
+      //let dropParent: GanttTicket | null = null;
+      let w = this.frame.tickets;
+      for (let i = 0; i < movePos.length; i++) {
+        let m = movePos[i];
+        moveTicket = w[Number(m)];
+        w = moveTicket.children;
+        if (i == movePos.length - 2) {
+          moveParent = moveTicket;
+        }
+        if (i == movePos.length - 1) {
+          moveIndex = Number(m);
+        }
+      }
+      console.log(
+        `moveParent=${
+          moveParent ? moveParent.id_disp : "null"
+        } moveIndex=${moveIndex}`
+      );
+
+      if (this.upper) {
+        const upperPos = `${this.upper.pos}`.split(",");
+        w = this.frame.tickets;
+        for (let i = 0; i < upperPos.length; i++) {
+          let m = upperPos[i];
+          upperTicket = w[Number(m)];
+          w = upperTicket.children;
+          if (i + 1 === this.movingLevel) {
+            dropParent = upperTicket;
+            dropIndex = -1;
+            if (i + 1 < upperPos.length) {
+              dropIndex = Number(upperPos[i + 1]);
+            }
+          }
+        }
+      } else {
+        //
+      }
+      console.log(
+        `dropParent=${
+          dropParent ? dropParent.id_disp : "null"
+        } dropIndex=${dropIndex}`
+      );
+      /*
+      console.log(
+        `mouseUp: movingLine=${this.frame.movingLine} hoverLine=${this.frame.hoverLine} movingLevel=${this.movingLevel} diffY=${this.frame.diffY}`
       );
       if (
         this.frame.movingTicket &&
-        this.frame.cursorLine !== -1 &&
-        this.frame.targetLine !== -1 &&
-        (this.frame.cursorLine !== this.frame.targetLine ||
-          this.frame.movingTicket.level !== this.dropLevel)
+        this.frame.movingLine !== -1 &&
+        this.frame.hoverLine !== -1 &&
+        (this.frame.movingLine !== this.frame.hoverLine ||
+          this.frame.movingTicket.level !== this.movingLevel)
       ) {
-        let target = this.frame.lines[this.frame.targetLine];
+        let target = this.frame.lines[this.frame.hoverLine];
         if (this.frame.diffY < 0) {
           // 上に移動
-          let l = this.frame.cursorLine - this.frame.targetLine;
+          let l = this.frame.movingLine - this.frame.hoverLine;
           let d = -this.frame.diffY;
           let p = d - (l - 1) * TICKET_HEIGHT;
           console.log(
@@ -739,6 +986,7 @@ export default class ColumnBody {
           // 下に移動
         }
       }
+      */
       /*
       console.log(`${this.frame.movingTicket?.pos} ${this.frame.dropPos}`);
       if (`${this.frame.movingTicket?.pos}` != `${this.frame.dropPos}`) {

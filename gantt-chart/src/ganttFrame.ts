@@ -59,7 +59,6 @@ export default class GanttFrame {
   moving = false;
   movingTicket: GanttTicket | null = null;
   movingLine = -1;
-  //movingLevel = 0;
   hoverLine = -1;
   dropPos = "";
   private _idb?: AppDatabase;
@@ -144,9 +143,6 @@ export default class GanttFrame {
       if (t.id === cursor) {
         this.ganttRow.y1 = t.y1;
         this.ganttRow.y2 = t.y2;
-        //console.log(
-        //  `this.ganttRow.y1=${this.ganttRow.y1} this.ganttRow.y2=${this.ganttRow.y2}`
-        //);
       } else if (!t.moving && t.open && t.children.length > 0) {
         l = this.setPos(t.children, t.pos, level + 1, l, cursor);
       }

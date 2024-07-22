@@ -101,7 +101,9 @@ export default class CalendarBody {
           ctx.fill();
         }
 
-        this.drawTickets(ctx, this.frame.tickets, 0);
+        for (let t of this.frame.lines) {
+          this.drawTicket(ctx, t);
+        }
 
         // 現在線
         x = (dayjs().diff(this.frame.calendarStart) / DAY_MILISEC) * DAY_WIDTH;
@@ -123,11 +125,10 @@ export default class CalendarBody {
             ctx.fill();
 
             if (this.frame.movingTicket) {
-              this.drawTickets(
+              this.drawMovingTicket(
                 ctx,
-                [this.frame.movingTicket],
-                this.frame.ganttRow.y1 + this.posY + this.frame.diffY,
-                true
+                this.frame.movingTicket,
+                this.frame.ganttRow.y1 + this.posY + this.frame.diffY
               );
             }
           }
@@ -154,52 +155,139 @@ export default class CalendarBody {
     }
   }
 
-  drawTickets(
-    ctx: CanvasRenderingContext2D,
-    ts: GanttTicket[],
-    y: number,
-    moving: boolean = false
-  ): number {
-    let y1 = y;
-    for (let t of ts) {
-      if (t.progress === 100 && this.frame.showDone === false) {
-        continue;
-      }
+  // チケットを描画する
+  drawTicket(ctx: CanvasRenderingContext2D, ticket: GanttTicket) {
+    if (this.frame.moving && ticket.id === this.frame.movingTicket?.id) return;
+    let y1 = ticket.y1;
+    let y2 = ticket.y2;
 
-      if (
-        !this.frame.moving ||
-        !this.frame.movingTicket ||
-        this.frame.movingTicket != t ||
-        moving
-      ) {
-        this.drawTicket(ctx, t, y1, moving);
-        y1 += TICKET_HEIGHT;
-        if (t.open && t.children.length > 0 && !moving) {
-          y1 = this.drawTickets(ctx, t.children, y1, moving);
+    if (
+      this.frame.moving &&
+      this.frame.movingTicket &&
+      this.frame.movingLine !== -1 &&
+      this.frame.hoverLine !== -1
+    ) {
+      if (this.frame.diffY < 0) {
+        // 上に移動
+        if (ticket.line === this.frame.hoverLine) {
+          let l = this.frame.movingLine - this.frame.hoverLine;
+          let d = -this.frame.diffY;
+          let p = d - (l - 1) * TICKET_HEIGHT;
+          if (p > 10) {
+            y1 += TICKET_HEIGHT;
+            y2 += TICKET_HEIGHT;
+          }
+        } else if (
+          ticket.line > this.frame.hoverLine &&
+          ticket.line < this.frame.movingLine
+        ) {
+          y1 += TICKET_HEIGHT;
+          y2 += TICKET_HEIGHT;
         }
       } else {
-        y1 += TICKET_HEIGHT;
+        // 下に移動
+        if (ticket.line === this.frame.hoverLine) {
+          let l = this.frame.hoverLine - this.frame.movingLine;
+          let d = this.frame.diffY;
+          let p = d - (l - 1) * TICKET_HEIGHT;
+          if (p > 10) {
+            y1 -= TICKET_HEIGHT;
+            y2 -= TICKET_HEIGHT;
+          }
+        } else if (
+          ticket.line < this.frame.hoverLine &&
+          ticket.line > this.frame.movingLine
+        ) {
+          y1 -= TICKET_HEIGHT;
+          y2 -= TICKET_HEIGHT;
+        }
       }
     }
-    return y1;
+
+    // チケット開始日/終了日
+    if (ticket.start_date) {
+      if (ticket.end_date) {
+        let x1 =
+          dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        x1 = x1 * DAY_WIDTH - this.dtpos;
+        let x2 =
+          dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
+        if (ticket.progress === 0) {
+          ctx.fillStyle = "#9bf";
+          ctx.fillRect(x1, y1 + 8 + this.posY, x2 - x1, 6);
+          ctx.fill();
+        } else if (ticket.progress === 100) {
+          ctx.fillStyle = "#57f";
+          ctx.fillRect(x1, y1 + 8 + this.posY, x2 - x1, 6);
+          ctx.fill();
+        } else {
+          ctx.fillStyle = "#9bf";
+          ctx.fillRect(x1, y1 + 8 + this.posY, x2 - x1, 6);
+          ctx.fill();
+          const x3 = ((x2 - x1) * ticket.progress) / 100;
+          ctx.fillStyle = "#57f";
+          ctx.fillRect(x1, y1 + 8 + this.posY, x3, 6);
+          ctx.fill();
+        }
+      } else {
+        ctx.fillStyle = "#57f";
+        let x1 =
+          dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        x1 = x1 * DAY_WIDTH - this.dtpos;
+        ctx.fillRect(x1, y1 + 8 + this.posY, 12, 6);
+        ctx.fill();
+        ctx.fillStyle = "#68f";
+        x1 += 12;
+        ctx.fillRect(x1, y1 + 8 + this.posY, 7, 6);
+        ctx.fill();
+        ctx.fillStyle = "#8af";
+        x1 += 7;
+        ctx.fillRect(x1, y1 + 8 + this.posY, 6, 6);
+        ctx.fill();
+        ctx.fillStyle = "#bdf";
+        x1 += 6;
+        ctx.fillRect(x1, y1 + 8 + this.posY, 5, 6);
+        ctx.fill();
+      }
+    } else {
+      if (ticket.end_date) {
+        ctx.fillStyle = "#57f";
+        let x2 =
+          dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
+        x2 -= 12;
+        ctx.fillRect(x2, y1 + 8 + this.posY, 12, 6);
+        ctx.fill();
+        ctx.fillStyle = "#68f";
+        x2 -= 7;
+        ctx.fillRect(x2, y1 + 8 + this.posY, 7, 6);
+        ctx.fill();
+        ctx.fillStyle = "#8af";
+        x2 -= 6;
+        ctx.fillRect(x2, y1 + 8 + this.posY, 6, 6);
+        ctx.fill();
+        ctx.fillStyle = "#bdf";
+        x2 -= 5;
+        ctx.fillRect(x2, y1 + 8 + this.posY, 5, 6);
+        ctx.fill();
+      }
+    }
+
+    ctx.fillStyle = "#e5ebf2";
+    // 区切り線
+    ctx.fillRect(0, y2 + this.posY, this.width, 1);
+    ctx.fill();
   }
 
   // チケットを描画する
-  drawTicket(
+  drawMovingTicket(
     ctx: CanvasRenderingContext2D,
     ticket: GanttTicket,
-    y: number,
-    moving: boolean = false
+    y: number
   ) {
     let y2 = y;
-    if (this.frame.moving && !moving) {
-      let d = this.frame.startY + this.frame.diffY;
-      if (d > y && y > this.frame.startY) {
-        y2 -= TICKET_HEIGHT;
-      } else if (d - TICKET_HEIGHT < y && y < this.frame.startY) {
-        y2 += TICKET_HEIGHT;
-      }
-    }
+
     // チケット開始日/終了日
     if (ticket.start_date) {
       if (ticket.end_date) {

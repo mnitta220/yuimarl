@@ -7,7 +7,7 @@ pub struct GanttChart {
 impl Component for GanttChart {
     fn write(&self, props: &Props, buf: &mut String) {
         if let Some(p) = &props.project {
-            *buf += r#"<form action="/project_note" method="POST">"#;
+            *buf += r#"<form id="ganttform" action="/gantt_save" method="POST">"#;
             {
                 // ガントチャート
                 *buf += r#"<div class="row p-2">"#;
@@ -70,7 +70,8 @@ impl Component for GanttChart {
                     {
                         *buf += r#"<div class="col">"#;
                         {
-                            *buf += r#"<button class="btn btn-primary" type="submit">"#;
+                            *buf +=
+                                r#"<button id="btnSave" class="btn btn-primary" type="button">"#;
                             {
                                 *buf += r#"<img class="icon" src="/static/ionicons/save-outline.svg">&nbsp;更新"#;
                             }
@@ -78,7 +79,7 @@ impl Component for GanttChart {
 
                             *buf += r#"<a class="btn btn-primary" href="/project?id="#;
                             *buf += &p.id;
-                            *buf += r#"&tab=map" role="button">"#;
+                            *buf += r#"&tab=gantt" role="button">"#;
                             {
                                 *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
                             }
@@ -89,7 +90,7 @@ impl Component for GanttChart {
                     *buf += r#"</div>"#;
                 }
 
-                *buf += r#"<input type="hidden" id="projectId" value=""#;
+                *buf += r#"<input type="hidden" id="projectId" name="project_id" value=""#;
                 if let Some(p) = &props.project {
                     *buf += &p.id;
                 }
@@ -119,7 +120,7 @@ impl Component for GanttChart {
                 }
                 *buf += r#"">"#;
 
-                *buf += r#"<input type="hidden" id="tickets" value=""#;
+                *buf += r#"<input type="hidden" id="tickets" name="tickets" value=""#;
                 if let Ok(g) = serde_json::to_string(&props.gantt_tickets) {
                     super::super::super::escape_html(&g, buf)
                 }

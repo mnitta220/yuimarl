@@ -498,3 +498,31 @@ pub async fn get_project_select(
 
     return super::home::show_home(session, &db).await;
 }
+
+#[derive(Deserialize, Debug)]
+pub struct GanttSaveInput {
+    pub tickets: String,
+    pub project_id: String,
+}
+
+pub async fn gantt_save(
+    cookies: Cookies,
+    Form(input): Form<GanttSaveInput>,
+) -> Result<Html<String>, AppError> {
+    tracing::info!("POST /gantt_save {}, {}", input.project_id, input.tickets);
+    let tickets: Vec<model::ticket::GanttTicket> = match serde_json::from_str(&input.tickets) {
+        Ok(t) => t,
+        Err(_) => Vec::new(),
+    };
+
+    for ticket in tickets {
+        println!("id: {:?}", ticket.id_disp);
+    }
+
+    let params = Params {
+        id: Some(input.project_id),
+        tab: Some("gantt".to_string()),
+    };
+    let query = Query::from(axum::extract::Query(params));
+    return get(cookies, query).await;
+}

@@ -1396,7 +1396,7 @@ impl GanttTicket {
         let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
             .fluent()
             .select()
-            .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority, start_date, end_date, parent_id, ganttseq}))
+            .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority, start_date, end_date, parent_id, ganttseq, updated_at}))
             .from(COLLECTION_NAME)
             .filter(|q| {
                 q.for_all([

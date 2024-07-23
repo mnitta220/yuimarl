@@ -240,6 +240,24 @@ export default class GanttFrame {
     this.sch.handler();
     this.scv.handler();
     this.ticketModal.handler();
+
+    const btnSave = document.querySelector<HTMLButtonElement>(`#btnSave`);
+    if (btnSave) {
+      btnSave.addEventListener("click", () => {
+        this.save();
+      });
+    }
+  }
+
+  save() {
+    const tickets = document.querySelector<HTMLInputElement>(`#tickets`);
+    if (tickets) {
+      tickets.value = JSON.stringify(this.tickets);
+      const ganttform = document.querySelector<HTMLFormElement>(`#ganttform`);
+      if (ganttform) {
+        ganttform.submit();
+      }
+    }
   }
 
   resize() {

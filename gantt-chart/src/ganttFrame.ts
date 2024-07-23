@@ -359,6 +359,9 @@ export default class GanttFrame {
     this.showDone = show;
     try {
       if (!this.projectId) return;
+      this.resetLines();
+      this.ganttRow.y1 = -1;
+      this.ganttRow.y2 = -1;
       let project = new Project(this.projectId, show, this.delayRed);
       await this._idb?.projects.put(project);
       this.draw();

@@ -613,13 +613,31 @@ export default class ColumnBody {
 
       for (let i = 0; i < movePos.length; i++) {
         let m = movePos[i];
-        moveTicket = w[Number(m)];
+        let idx = Number(m);
+        if (this.frame.showDone) {
+          moveTicket = w[idx];
+        } else {
+          let m2 = idx;
+          let c = 0;
+          for (let j = 0; j < w.length; j++) {
+            let w2 = w[j];
+            if (w2.progress < 100) {
+              c++;
+            }
+            if (c > m2) {
+              moveTicket = w2;
+              idx = j;
+              break;
+            }
+          }
+        }
+        if (!moveTicket) break;
         w = moveTicket.children;
         if (i == movePos.length - 2) {
           moveParent = moveTicket;
         }
         if (i == movePos.length - 1) {
-          moveIndex = Number(m);
+          moveIndex = idx;
         }
       }
 
@@ -628,16 +646,50 @@ export default class ColumnBody {
         w = this.frame.tickets;
         for (let i = 0; i < upperPos.length; i++) {
           let m = upperPos[i];
-          upperTicket = w[Number(m)];
+          let idx = Number(m);
+          if (this.frame.showDone) {
+            upperTicket = w[idx];
+          } else {
+            let m2 = idx;
+            let c = 0;
+            for (let j = 0; j < w.length; j++) {
+              let w2 = w[j];
+              if (w2.progress < 100) {
+                c++;
+              }
+              if (c > m2) {
+                upperTicket = w2;
+                idx = j;
+                break;
+              }
+            }
+          }
+          if (!upperTicket) break;
           w = upperTicket.children;
           if (i === 0) {
-            dropIndex = Number(m);
+            dropIndex = idx;
           }
           if (i < this.movingLevel) {
             dropParent = upperTicket;
             dropIndex = -1;
             if (i + 1 < upperPos.length) {
-              dropIndex = Number(upperPos[i + 1]);
+              idx = Number(upperPos[i + 1]);
+              if (this.frame.showDone) {
+                dropIndex = idx;
+              } else {
+                let m2 = idx;
+                let c = 0;
+                for (let j = 0; j < w.length; j++) {
+                  let w2 = w[j];
+                  if (w2.progress < 100) {
+                    c++;
+                  }
+                  if (c > m2) {
+                    dropIndex = j;
+                    break;
+                  }
+                }
+              }
             }
           }
         }

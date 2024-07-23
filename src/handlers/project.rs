@@ -499,6 +499,7 @@ pub async fn get_project_select(
     return super::home::show_home(session, &db).await;
 }
 
+/*
 #[derive(Deserialize, Debug)]
 pub struct GanttSaveInput {
     pub tickets: String,
@@ -510,14 +511,30 @@ pub async fn gantt_save(
     Form(input): Form<GanttSaveInput>,
 ) -> Result<Html<String>, AppError> {
     tracing::info!("POST /gantt_save {}, {}", input.project_id, input.tickets);
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            return Err(AppError(anyhow::anyhow!(e)));
+        }
+    };
+
     let tickets: Vec<model::ticket::GanttTicket> = match serde_json::from_str(&input.tickets) {
         Ok(t) => t,
-        Err(_) => Vec::new(),
+        Err(e) => return Err(AppError(anyhow::anyhow!(e))),
     };
 
     for ticket in tickets {
         println!("id: {:?}", ticket.id_disp);
     }
+
+    let (ts, _min, _max) =
+        match model::ticket::GanttTicket::load_gantt(&input.project_id, &db).await {
+            Ok(tickets) => tickets,
+            Err(e) => {
+                return Err(AppError(anyhow::anyhow!(e)));
+            }
+        };
 
     let params = Params {
         id: Some(input.project_id),
@@ -526,3 +543,4 @@ pub async fn gantt_save(
     let query = Query::from(axum::extract::Query(params));
     return get(cookies, query).await;
 }
+*/

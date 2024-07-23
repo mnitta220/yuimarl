@@ -230,6 +230,35 @@ pub async fn project_member(Form(input): Form<ProjectMemberInput>) -> String {
 }
 
 #[derive(Deserialize, Debug)]
+pub struct UpdateGanttInput {
+    pub project_id: String,
+    pub tickets: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct UpdateGanttResult {
+    pub result: bool,
+    pub message: String,
+}
+
+/// ガントチャートを更新する。
+pub async fn update_gantt(Form(input): Form<UpdateGanttInput>) -> String {
+    println!("{}, {}", input.project_id, input.tickets);
+
+    let result = UpdateGanttResult {
+        result: false,
+        message: "他のユーザーがチケットを更新しため、更新できませんでした。<br>再読み込みを行ってください。".to_string(),
+    };
+
+    let buf = match serde_json::to_string(&result) {
+        Ok(r) => r,
+        Err(e) => format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
+    };
+
+    buf
+}
+
+#[derive(Deserialize, Debug)]
 pub struct TicketByIdDispInput {
     pub project_id: String,
     pub id_disp: String,

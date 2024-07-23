@@ -68,7 +68,7 @@ async fn main() {
         .route("/project_add", get(handlers::project::get_add))
         .route("/project_list", get(handlers::project::get_list))
         .route("/project_note", post(handlers::project::post_note))
-        .route("/gantt_save", post(handlers::project::gantt_save))
+        //.route("/gantt_save", post(handlers::project::gantt_save))
         .route(
             "/project_select/:id",
             get(handlers::project::get_project_select),
@@ -90,6 +90,7 @@ async fn main() {
         .route("/api/userByEmail", post(handlers::api::user_by_email))
         .route("/api/userByName", post(handlers::api::user_by_name))
         .route("/api/projectMember", post(handlers::api::project_member))
+        .route("/api/ganttUpdate", post(handlers::api::update_gantt))
         .route(
             "/api/ticketByIdDisp",
             post(handlers::api::ticket_by_id_disp),

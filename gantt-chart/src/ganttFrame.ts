@@ -6,6 +6,7 @@ import {
   Column,
   GanttTicket,
   GanttRow,
+  GanttSaveResult,
   TICKET_HEIGHT,
 } from "./common";
 import ColumnHeader from "./columnHeader";
@@ -250,6 +251,71 @@ export default class GanttFrame {
   }
 
   save() {
+    let data = new FormData();
+    //data.append("project_id", this.projectId ?? "");
+    data.append("email", "aaa");
+    //data.append("tickets", JSON.stringify(this.tickets));
+    //data.append("tickets", "bbb");
+    fetch("/api/userByEmail", {
+      method: "POST",
+      body: data,
+    })
+      .then((response) => response.json())
+      .then((data: GanttSaveResult) => {
+        console.log(JSON.stringify(data));
+        if (data.result) {
+          //this.frame.ticketModal.show(data);
+        } else {
+          window.alert(`エラーが発生しました。: ${data.message}`);
+        }
+      })
+      .catch((e) => window.alert(`エラーが発生しました。: ${e.message}`));
+    /*
+    data.append("project_id", "aaa");
+    //data.append("tickets", JSON.stringify(this.tickets));
+    data.append("tickets", "bbb");
+    fetch("/api/ganttUpdate", {
+      method: "POST",
+      body: data,
+    })
+      .then((response) => response.json())
+      .then((data: GanttSaveResult) => {
+        console.log(JSON.stringify(data));
+        if (data.result) {
+          //this.frame.ticketModal.show(data);
+        } else {
+          window.alert(`エラーが発生しました。: ${data.message}`);
+        }
+      })
+      .catch((e) => window.alert(`エラーが発生しました。: ${e.message}`));
+      */
+    /*
+    let data = {
+      project_id: this.projectId ?? "",
+      tickets: "hello", // JSON.stringify(this.tickets),
+    };
+    fetch("/api/ganttUpdate", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      mode: "no-cors",
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data: GanttSaveResult) => {
+        console.log(JSON.stringify(data));
+        if (data.result) {
+          //this.frame.ticketModal.show(data);
+        } else {
+          window.alert(`エラーが発生しました。: ${data.message}`);
+        }
+      })
+      .catch((e) => window.alert(`エラーが発生しました。: ${e.message}`));
+      */
+
+    /*
     const tickets = document.querySelector<HTMLInputElement>(`#tickets`);
     if (tickets) {
       tickets.value = JSON.stringify(this.tickets);
@@ -258,6 +324,7 @@ export default class GanttFrame {
         ganttform.submit();
       }
     }
+    */
   }
 
   resize() {

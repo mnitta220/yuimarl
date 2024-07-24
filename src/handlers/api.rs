@@ -245,14 +245,66 @@ pub struct UpdateGanttResult {
 pub async fn update_gantt(Form(input): Form<UpdateGanttInput>) -> String {
     println!("{}, {}", input.project_id, input.tickets);
 
+    let tickets: Vec<model::gantt_ticket::GanttTicket> = match serde_json::from_str(&input.tickets)
+    {
+        Ok(t) => t,
+        Err(e) => {
+            let result = UpdateGanttResult {
+                result: false,
+                message: format!("更新に失敗しました。 [{}]", e.to_string()),
+            };
+
+            let buf = match serde_json::to_string(&result) {
+                Ok(r) => r,
+                Err(e) => format!("更新に失敗しました。 [{}]", e.to_string()),
+            };
+
+            return buf;
+        }
+    };
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            let result = UpdateGanttResult {
+                result: false,
+                message: format!("更新に失敗しました。 [{}]", e.to_string()),
+            };
+
+            let buf = match serde_json::to_string(&result) {
+                Ok(r) => r,
+                Err(e) => format!("更新に失敗しました。 [{}]", e.to_string()),
+            };
+
+            return buf;
+        }
+    };
+
+    match model::gantt_ticket::GanttTicket::update_gantt(&input.project_id, &tickets, &db).await {
+        Ok(u) => u,
+        Err(e) => {
+            let result = UpdateGanttResult {
+                result: false,
+                message: format!("更新に失敗しました。 [{}]", e.to_string()),
+            };
+
+            let buf = match serde_json::to_string(&result) {
+                Ok(r) => r,
+                Err(e) => format!("更新に失敗しました。 [{}]", e.to_string()),
+            };
+
+            return buf;
+        }
+    };
+
     let result = UpdateGanttResult {
-        result: false,
-        message: "他のユーザーがチケットを更新しため、更新できませんでした。<br>再読み込みを行ってください。".to_string(),
+        result: true,
+        message: "".to_string(),
     };
 
     let buf = match serde_json::to_string(&result) {
         Ok(r) => r,
-        Err(e) => format!("チケットの検索に失敗しました。 [{}]", e.to_string()),
+        Err(e) => format!("更新に失敗しました。 [{}]", e.to_string()),
     };
 
     buf

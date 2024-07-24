@@ -1,5 +1,6 @@
 pub mod comment;
 pub mod deliverable;
+pub mod gantt_ticket;
 pub mod history;
 pub mod horiday;
 pub mod news;

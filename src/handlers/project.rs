@@ -148,7 +148,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
             }
 
             let (ts, min, max) =
-                match model::ticket::GanttTicket::load_gantt(&project.id, &db).await {
+                match model::gantt_ticket::GanttTicket::load_gantt(&project.id, &db).await {
                     Ok(tickets) => tickets,
                     Err(e) => {
                         return Err(AppError(anyhow::anyhow!(e)));

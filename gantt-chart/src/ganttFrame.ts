@@ -265,7 +265,30 @@ export default class GanttFrame {
       },
       success: function (result) {
         $("#loading").addClass("d-none");
-        console.log(result);
+        //console.log(result);
+        var ret = JSON.parse(result);
+        if (ret.result) {
+          const projectid =
+            document.querySelector<HTMLInputElement>(`#projectId`);
+          if (projectid) {
+            window.location.href = `/project?id=${projectid.value}&tab=gantt`;
+          }
+          //console.log(ret.message);
+          /*
+          const ts = document.querySelector<HTMLInputElement>(`#tickets`);
+          if (ts) {
+            ts.value = ret.message;
+            this.tickets = JSON.parse(ts.value);
+          }
+          */
+        } else {
+          window.alert(`エラーが発生しました。: ${ret.message}`);
+        }
+      },
+      error: function (result) {
+        $("#loading").addClass("d-none");
+        console.error(result);
+        window.alert(`エラーが発生しました。: ${result}`);
       },
     });
 

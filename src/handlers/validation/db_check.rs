@@ -219,7 +219,7 @@ impl DbCheckValidation {
             }
         };
 
-        match model::ticket::GanttTicket::load_gantt(&prj.id, &db).await {
+        match model::gantt_ticket::GanttTicket::load_gantt(&prj.id, &db).await {
             Ok(tickets) => tickets,
             Err(e) => {
                 return Err(anyhow::anyhow!(e));

@@ -20,7 +20,7 @@ pub struct Props {
     pub ticket_parent: Option<model::ticket::Ticket>,
     pub ticket_children: Vec<model::ticket::Ticket>,
     pub ticket_comments: Vec<model::comment::Comment>,
-    pub gantt_tickets: Vec<model::ticket::GanttTicket>,
+    pub gantt_tickets: Vec<model::gantt_ticket::GanttTicket>,
     pub gantt_start: Option<String>,
     pub gantt_end: Option<String>,
     pub news: Vec<model::news::News>,

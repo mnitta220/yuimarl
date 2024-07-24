@@ -302,7 +302,7 @@ export default class ColumnBody {
     const y1 = y2 + 18;
     ctx.fillStyle = "#00f";
     // ID
-    ctx.fillText(ticket.id_disp, 3, y1 + this.posY);
+    ctx.fillText(ticket.id_disp, 3, y1);
     ctx.fillStyle = "#808080";
     // チケット□
     this.movingLevel = ticket.level;
@@ -452,20 +452,20 @@ export default class ColumnBody {
     }
 
     let x = this.frame.cols[0].width + this.movingLevel * 12 + 6;
-    ctx.fillRect(x, y2 + 7 + this.posY, 1, 8);
+    ctx.fillRect(x, y2 + 7, 1, 8);
     ctx.fill();
-    ctx.fillRect(x, y2 + 7 + this.posY, 8, 1);
+    ctx.fillRect(x, y2 + 7, 8, 1);
     ctx.fill();
-    ctx.fillRect(x, y2 + 15 + this.posY, 8, 1);
+    ctx.fillRect(x, y2 + 15, 8, 1);
     ctx.fill();
-    ctx.fillRect(x + 8, y2 + 7 + this.posY, 1, 9);
+    ctx.fillRect(x + 8, y2 + 7, 1, 9);
     ctx.fill();
     ctx.fillStyle = "#000";
 
     if (ticket.children.length > 0) {
-      ctx.fillRect(x + 2, y2 + 11 + this.posY, 5, 1);
+      ctx.fillRect(x + 2, y2 + 11, 5, 1);
       ctx.fill();
-      ctx.fillRect(x + 4, y2 + 9 + this.posY, 1, 5);
+      ctx.fillRect(x + 4, y2 + 9, 1, 5);
       ctx.fill();
     }
 
@@ -473,43 +473,32 @@ export default class ColumnBody {
     let w = this.frame.cols[0].width + this.frame.cols[1].width - (x + 14);
     let m = ctx.measureText(ticket.name).width;
     if (m <= w) {
-      ctx.fillText(ticket.name, x + 14, y1 + this.posY);
+      ctx.fillText(ticket.name, x + 14, y1);
     } else {
       let s = ticket.name;
       while (ctx.measureText(`${s}…`).width > w) {
         s = s.slice(0, -1);
       }
-      ctx.fillText(`${s}…`, x + 14, y1 + this.posY);
+      ctx.fillText(`${s}…`, x + 14, y1);
     }
 
     x = this.frame.cols[0].width + this.frame.cols[1].width + 3;
     // 開始日
     if (ticket.start_date) {
-      ctx.fillText(
-        dayjs(ticket.start_date).format("YY/MM/DD"),
-        x,
-        y1 + this.posY
-      );
+      ctx.fillText(dayjs(ticket.start_date).format("YY/MM/DD"), x, y1);
     }
     x += this.frame.cols[2].width;
     // 終了日
     if (ticket.end_date) {
-      ctx.fillText(
-        dayjs(ticket.end_date).format("YY/MM/DD"),
-        x,
-        y1 + this.posY
-      );
+      ctx.fillText(dayjs(ticket.end_date).format("YY/MM/DD"), x, y1);
     }
     x += this.frame.cols[3].width + this.frame.cols[4].width - 6;
     // 進捗率
     const t1 = `${ticket.progress}`;
     const m1 = ctx.measureText(t1).width;
-    ctx.fillText(t1, x - m1, y1 + this.posY);
+    ctx.fillText(t1, x - m1, y1);
 
     ctx.fillStyle = "#e5ebf2";
-    // 区切り線
-    ctx.fillRect(0, y2 + TICKET_HEIGHT + this.posY, this.width, 1);
-    ctx.fill();
   }
 
   scrollH(x: number) {
@@ -535,7 +524,7 @@ export default class ColumnBody {
 
       for (let i = 0; i < this.frame.lines.length; i++) {
         let t = this.frame.lines[i];
-        if (t.y1 <= y && y <= t.y2) {
+        if (t.y1 + this.posY <= y && y <= t.y2 + this.posY) {
           this.frame.movingLine = i;
           this.clickTicket(t, x);
           break;
@@ -579,8 +568,8 @@ export default class ColumnBody {
         if (t == this.frame.movingTicket) continue;
 
         if (
-          t.y1 < this.frame.ganttRow.y2 + this.posY + this.frame.diffY &&
-          t.y2 > this.frame.ganttRow.y1 + this.posY + this.frame.diffY
+          t.y1 < this.frame.ganttRow.y2 + this.frame.diffY &&
+          t.y2 > this.frame.ganttRow.y1 + this.frame.diffY
         ) {
           this.frame.hoverLine = i;
           break;

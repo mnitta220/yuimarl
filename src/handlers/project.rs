@@ -134,7 +134,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
 
     if props.tab == crate::Tab::GanttChart {
         let now = Utc::now();
-        let offset = Duration::days(14);
+        let offset = Duration::days(20);
         let jst: DateTime<FixedOffset> =
             now.with_timezone(&FixedOffset::east_opt(9 * 3600).unwrap());
         let dt = jst - offset;

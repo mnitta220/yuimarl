@@ -4,6 +4,7 @@ import {
   SCROLL_BAR_WIDTH,
   CALENDAR_MIN,
   DAY_WIDTH,
+  DAY_MILISEC,
   Column,
   GanttTicket,
   GanttRow,
@@ -116,6 +117,20 @@ export default class GanttFrame {
   resetLines(cursor: string = "") {
     this.lines = [];
     this.setPos(this.tickets, "", 0, -1, cursor);
+    this.ticketsTotalHeight = this.lines.length * TICKET_HEIGHT;
+  }
+
+  initDtPos() {
+    let dtpos =
+      (dayjs().diff(this.calendarStart) / DAY_MILISEC) * DAY_WIDTH -
+      this.calendarHeader.width / 2;
+    let barpos =
+      (dtpos *
+        (this.calendarHeader.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH)) /
+      this.calendarTotalWidth;
+    this.calendarHeader.dtpos = dtpos;
+    this.calendarBody.dtpos = dtpos;
+    this.calendarScroll.barpos = barpos;
   }
 
   private setPos(

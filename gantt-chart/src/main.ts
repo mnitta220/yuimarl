@@ -7,6 +7,7 @@ const main = async () => {
   await frame.readProject();
   await frame.readTreeList();
   frame.resetLines();
+  frame.initDtPos();
   frame.draw();
 };
 

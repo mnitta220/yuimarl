@@ -299,19 +299,19 @@ export default class CalendarBody {
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         if (ticket.progress === 0) {
           ctx.fillStyle = "#9bf";
-          ctx.fillRect(x1, y2 + 8 + this.posY, x2 - x1, 6);
+          ctx.fillRect(x1, y2 + 8, x2 - x1, 6);
           ctx.fill();
         } else if (ticket.progress === 100) {
           ctx.fillStyle = "#57f";
-          ctx.fillRect(x1, y2 + 8 + this.posY, x2 - x1, 6);
+          ctx.fillRect(x1, y2 + 8, x2 - x1, 6);
           ctx.fill();
         } else {
           ctx.fillStyle = "#9bf";
-          ctx.fillRect(x1, y2 + 8 + this.posY, x2 - x1, 6);
+          ctx.fillRect(x1, y2 + 8, x2 - x1, 6);
           ctx.fill();
           const x3 = ((x2 - x1) * ticket.progress) / 100;
           ctx.fillStyle = "#57f";
-          ctx.fillRect(x1, y2 + 8 + this.posY, x3, 6);
+          ctx.fillRect(x1, y2 + 8, x3, 6);
           ctx.fill();
         }
       } else {
@@ -319,19 +319,19 @@ export default class CalendarBody {
         let x1 =
           dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x1 = x1 * DAY_WIDTH - this.dtpos;
-        ctx.fillRect(x1, y2 + 8 + this.posY, 12, 6);
+        ctx.fillRect(x1, y2 + 8, 12, 6);
         ctx.fill();
         ctx.fillStyle = "#68f";
         x1 += 12;
-        ctx.fillRect(x1, y2 + 8 + this.posY, 7, 6);
+        ctx.fillRect(x1, y2 + 8, 7, 6);
         ctx.fill();
         ctx.fillStyle = "#8af";
         x1 += 7;
-        ctx.fillRect(x1, y2 + 8 + this.posY, 6, 6);
+        ctx.fillRect(x1, y2 + 8, 6, 6);
         ctx.fill();
         ctx.fillStyle = "#bdf";
         x1 += 6;
-        ctx.fillRect(x1, y2 + 8 + this.posY, 5, 6);
+        ctx.fillRect(x1, y2 + 8, 5, 6);
         ctx.fill();
       }
     } else {
@@ -341,27 +341,24 @@ export default class CalendarBody {
           dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         x2 -= 12;
-        ctx.fillRect(x2, y2 + 8 + this.posY, 12, 6);
+        ctx.fillRect(x2, y2 + 8, 12, 6);
         ctx.fill();
         ctx.fillStyle = "#68f";
         x2 -= 7;
-        ctx.fillRect(x2, y2 + 8 + this.posY, 7, 6);
+        ctx.fillRect(x2, y2 + 8, 7, 6);
         ctx.fill();
         ctx.fillStyle = "#8af";
         x2 -= 6;
-        ctx.fillRect(x2, y2 + 8 + this.posY, 6, 6);
+        ctx.fillRect(x2, y2 + 8, 6, 6);
         ctx.fill();
         ctx.fillStyle = "#bdf";
         x2 -= 5;
-        ctx.fillRect(x2, y2 + 8 + this.posY, 5, 6);
+        ctx.fillRect(x2, y2 + 8, 5, 6);
         ctx.fill();
       }
     }
 
     ctx.fillStyle = "#e5ebf2";
-    // 区切り線
-    ctx.fillRect(0, y2 + TICKET_HEIGHT + this.posY, this.width, 1);
-    ctx.fill();
   }
 
   scrollH(x: number) {

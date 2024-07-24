@@ -39,10 +39,12 @@ export interface TicketModalResult {
   message: string;
 }
 
+/*
 export interface GanttSaveResult {
   result: boolean;
   message: string;
 }
+*/
 
 export interface ModalTicket {
   id: string;

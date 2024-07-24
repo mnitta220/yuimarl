@@ -11,10 +11,12 @@
   "dependencies": {
     "bootstrap": "^5.3.3",
     "dayjs": "^1.11.11",
-    "dexie": "^4.0.8"
+    "dexie": "^4.0.8",
+    "jquery": "^3.7.1"
   },
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
+    "@types/jquery": "^3.5.30",
     "typescript": "^5.2.2",
     "vite": "^5.3.1"
   }

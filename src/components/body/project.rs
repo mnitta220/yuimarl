@@ -1,6 +1,6 @@
 use super::super::Component;
 use super::parts::{
-    footer::Footer, gantt_chart::GanttChart, nav::Nav, project_history::ProjectHistory,
+    footer::Footer, gantt_chart::GanttChart, loading, nav::Nav, project_history::ProjectHistory,
     project_info::ProjectInfo, project_note::ProjectNote,
 };
 use crate::{handlers::validation, Props, Tab};
@@ -41,6 +41,11 @@ impl Component for ProjectBody {
     fn write(&self, props: &Props, buf: &mut String) {
         *buf += r#"<body>"#;
         {
+            // ローディング画面
+            if props.tab == Tab::GanttChart {
+                loading::loading(buf);
+            }
+
             self.nav.write(props, buf);
 
             *buf += r#"<main>"#;

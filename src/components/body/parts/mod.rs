@@ -1,5 +1,6 @@
 pub mod footer;
 pub mod gantt_chart;
+pub mod loading;
 pub mod nav;
 pub mod news;
 pub mod project_history;

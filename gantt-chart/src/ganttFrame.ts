@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import $ from "jquery";
 import {
   SCROLL_BAR_WIDTH,
   CALENDAR_MIN,
@@ -6,7 +7,6 @@ import {
   Column,
   GanttTicket,
   GanttRow,
-  GanttSaveResult,
   TICKET_HEIGHT,
 } from "./common";
 import ColumnHeader from "./columnHeader";
@@ -244,6 +244,7 @@ export default class GanttFrame {
 
     const btnSave = document.querySelector<HTMLButtonElement>(`#btnSave`);
     if (btnSave) {
+      // 更新ボタンが押された
       btnSave.addEventListener("click", () => {
         this.save();
       });
@@ -251,7 +252,24 @@ export default class GanttFrame {
   }
 
   save() {
-    let data = new FormData();
+    $("#loading").removeClass("d-none");
+    //setTimeout(function () {
+    //  $("#loading").addClass("d-none");
+    //}, 1000);
+    $.ajax({
+      type: "POST",
+      url: "/api/ganttUpdate",
+      data: {
+        project_id: this.projectId ?? "",
+        tickets: JSON.stringify(this.tickets),
+      },
+      success: function (result) {
+        $("#loading").addClass("d-none");
+        console.log(result);
+      },
+    });
+
+    /*let data = new FormData();
     //data.append("project_id", this.projectId ?? "");
     data.append("email", "aaa");
     //data.append("tickets", JSON.stringify(this.tickets));
@@ -270,6 +288,7 @@ export default class GanttFrame {
         }
       })
       .catch((e) => window.alert(`エラーが発生しました。: ${e.message}`));
+      */
     /*
     data.append("project_id", "aaa");
     //data.append("tickets", JSON.stringify(this.tickets));

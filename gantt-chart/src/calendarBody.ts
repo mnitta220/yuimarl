@@ -13,6 +13,11 @@ import GanttFrame from "./ganttFrame";
 
 dayjs.extend(isSameOrAfter);
 
+const BLUE1 = "#57f";
+const BLUE2 = "#9bf";
+const RED1 = "#f66";
+const RED2 = "#faa";
+
 // カレンダーボディ
 export default class CalendarBody {
   id = "calbody";
@@ -20,6 +25,7 @@ export default class CalendarBody {
   posX = 0;
   posY = 0;
   dtpos = 0;
+  nowpos = 0;
 
   constructor(private frame: GanttFrame) {}
 
@@ -64,6 +70,8 @@ export default class CalendarBody {
       if (ctx) {
         ctx.save();
 
+        this.nowpos =
+          (dayjs().diff(this.frame.calendarStart) / DAY_MILISEC) * DAY_WIDTH;
         let dt = this.frame.calendarStart.clone();
         let x = 0;
         while (this.frame.calendarEnd.isSameOrAfter(dt)) {
@@ -106,10 +114,9 @@ export default class CalendarBody {
         }
 
         // 現在線
-        x = (dayjs().diff(this.frame.calendarStart) / DAY_MILISEC) * DAY_WIDTH;
         ctx.fillStyle = "#0a0";
         for (let y = 0; y < height; y += 7) {
-          ctx.fillRect(x - this.dtpos, y, 1, 4);
+          ctx.fillRect(this.nowpos - this.dtpos, y, 1, 4);
           ctx.fill();
         }
 
@@ -214,24 +221,25 @@ export default class CalendarBody {
           dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         if (ticket.progress === 0) {
-          ctx.fillStyle = "#9bf";
+          ctx.fillStyle = BLUE2;
           ctx.fillRect(x1, y1 + 8 + this.posY, x2 - x1, 6);
           ctx.fill();
         } else if (ticket.progress === 100) {
-          ctx.fillStyle = "#57f";
+          ctx.fillStyle = BLUE1;
           ctx.fillRect(x1, y1 + 8 + this.posY, x2 - x1, 6);
           ctx.fill();
         } else {
-          ctx.fillStyle = "#9bf";
+          const x3 = ((x2 - x1) * ticket.progress) / 100;
+          const delay = x1 + x3 < this.nowpos - this.dtpos;
+          ctx.fillStyle = delay ? RED2 : BLUE2;
           ctx.fillRect(x1, y1 + 8 + this.posY, x2 - x1, 6);
           ctx.fill();
-          const x3 = ((x2 - x1) * ticket.progress) / 100;
-          ctx.fillStyle = "#57f";
+          ctx.fillStyle = delay ? RED1 : BLUE1;
           ctx.fillRect(x1, y1 + 8 + this.posY, x3, 6);
           ctx.fill();
         }
       } else {
-        ctx.fillStyle = "#57f";
+        ctx.fillStyle = BLUE1;
         let x1 =
           dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x1 = x1 * DAY_WIDTH - this.dtpos;
@@ -252,7 +260,7 @@ export default class CalendarBody {
       }
     } else {
       if (ticket.end_date) {
-        ctx.fillStyle = "#57f";
+        ctx.fillStyle = BLUE1;
         let x2 =
           dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;

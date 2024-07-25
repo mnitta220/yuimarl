@@ -243,8 +243,6 @@ pub struct UpdateGanttResult {
 
 /// ガントチャートを更新する。
 pub async fn update_gantt(Form(input): Form<UpdateGanttInput>) -> String {
-    println!("{}, {}", input.project_id, input.tickets);
-
     let tickets: Vec<model::gantt_ticket::GanttTicket> = match serde_json::from_str(&input.tickets)
     {
         Ok(t) => t,
@@ -486,7 +484,7 @@ pub struct TicketWithMemberResult {
 
 /// ガントチャート画面のチケットダイアログの情報を取得する
 pub async fn ticket(cookies: Cookies, Path(id): Path<String>) -> String {
-    tracing::info!("GET /ticket: {:?}", &id);
+    tracing::debug!("GET /ticket: {:?}", &id);
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,

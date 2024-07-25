@@ -208,12 +208,6 @@ impl GanttTicket {
         };
 
         let tickets_upd = GanttTicket::serialize(tickets_upd);
-        for upd in &tickets_upd {
-            println!(
-                "upd: id={} id_disp={:?} parent={:?} seq={:?}",
-                upd.id, upd.id_disp, upd.parent_id, upd.ganttseq
-            );
-        }
 
         /*
          * チケットの更新処理
@@ -273,7 +267,6 @@ impl GanttTicket {
                                     ne = true;
                                 }
                             }
-                            println!("id_disp={:?} ne={}", cur.id_disp, ne);
 
                             if ne {
                                 if let Some(curu) = cur.updated_at {

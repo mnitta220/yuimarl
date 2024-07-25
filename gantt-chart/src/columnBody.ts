@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import {
-  HEADER_HEIGHT,
+  //HEADER_HEIGHT,
   SCROLL_BAR_WIDTH,
   TICKET_HEIGHT,
   GanttTicket,
@@ -26,12 +26,13 @@ export default class ColumnBody {
   // カラムボディを構築する
   build(frag: DocumentFragment) {
     const body = document.createElement("canvas");
-    this.height = this.frame.height - HEADER_HEIGHT - SCROLL_BAR_WIDTH;
+    this.height =
+      this.frame.height - this.frame.headerHeight - SCROLL_BAR_WIDTH;
     this.frame.ticketsFrameHeight = this.height;
     body.id = this.id;
     this.width = this.frame.calendarLeft;
     body.className = "gantt-body";
-    body.style.top = `${HEADER_HEIGHT + 1}px`;
+    body.style.top = `${this.frame.headerHeight + 1}px`;
     body.style.left = `${this.posX}px`;
     body.style.width = `${this.width}px`;
     body.style.height = `${this.height}px`;
@@ -280,13 +281,6 @@ export default class ColumnBody {
       let delay = false;
       if (this.frame.delayRed && ticket.progress !== 100) {
         if (dt.isBefore(this.now)) delay = true;
-      }
-      if (ticket.id_disp === "YU73") {
-        console.log({
-          dt: dt.format("YY/MM/DD"),
-          now: this.now.format("YY/MM/DD"),
-          delay,
-        });
       }
       ctx.fillStyle = delay ? "#f00" : "#000";
       ctx.fillText(dayjs(dt).format("YY/MM/DD"), x, y3 + this.posY);

@@ -144,7 +144,6 @@ function setChargeTable() {
         buf += '</tr></thead>';
         buf += '<tbody>';
         for (var i in members) {
-            console.log('i=' + i + ', uid=' + members[i].uid + ', name=' + members[i].name);
             buf += '<tr><td>';
             buf += members[i].email;
             buf += '</td><td>';
@@ -271,7 +270,6 @@ function clickDeliverables() {
 }
 
 $('#btnAddDeliverable').on('click', function () {
-    //console.log("add deliverable");
     if (`${$("input#deliverable-name").val()}`.trim() == "") {
         $('#deliverable-name').addClass('is-invalid');
         $('#deliverable-feedback').removeClass('d-none');
@@ -327,7 +325,6 @@ function setDeliverablesTable() {
 
 $('#finished').change(function () {
     var r = $(this).prop('checked');
-    console.log(r);
     if (r) {
         $('#progress').val(100);
     }

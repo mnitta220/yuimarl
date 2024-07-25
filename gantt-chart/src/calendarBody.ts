@@ -3,7 +3,6 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import {
   SCROLL_BAR_WIDTH,
   CALENDAR_MIN,
-  HEADER_HEIGHT,
   DAY_WIDTH,
   DAY_MILISEC,
   TICKET_HEIGHT,
@@ -42,10 +41,11 @@ export default class CalendarBody {
     if (this.width < CALENDAR_MIN) {
       this.width = CALENDAR_MIN;
     }
-    const height = this.frame.height - HEADER_HEIGHT - SCROLL_BAR_WIDTH;
+    const height =
+      this.frame.height - this.frame.headerHeight - SCROLL_BAR_WIDTH;
     cv.id = this.id;
     cv.className = "gantt-body";
-    cv.style.top = `${HEADER_HEIGHT + 1}px`;
+    cv.style.top = `${this.frame.headerHeight + 1}px`;
     cv.style.left = `${this.posX + this.frame.calendarLeft}px`;
     cv.style.width = `${this.width}px`;
     cv.style.height = `${height}px`;
@@ -220,11 +220,14 @@ export default class CalendarBody {
     // チケット開始日/終了日
     if (ticket.start_date) {
       if (ticket.end_date) {
-        let x1 =
-          dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        let start_date = ticket.start_date;
+        let end_date = ticket.end_date;
+        if (start_date > end_date) {
+          [start_date, end_date] = [end_date, start_date];
+        }
+        let x1 = dayjs(start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x1 = x1 * DAY_WIDTH - this.dtpos;
-        let x2 =
-          dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x2 = dayjs(end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         if (ticket.progress === 0) {
           const delay = this.frame.delayRed && x1 < this.nowpos - this.dtpos;
@@ -309,11 +312,14 @@ export default class CalendarBody {
     // チケット開始日/終了日
     if (ticket.start_date) {
       if (ticket.end_date) {
-        let x1 =
-          dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        let start_date = ticket.start_date;
+        let end_date = ticket.end_date;
+        if (start_date > end_date) {
+          [start_date, end_date] = [end_date, start_date];
+        }
+        let x1 = dayjs(start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x1 = x1 * DAY_WIDTH - this.dtpos;
-        let x2 =
-          dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x2 = dayjs(end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         if (ticket.progress === 0) {
           const delay = this.frame.delayRed && x1 < this.nowpos - this.dtpos;

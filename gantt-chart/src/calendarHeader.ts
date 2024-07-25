@@ -1,7 +1,7 @@
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import {
   CALENDAR_MIN,
-  HEADER_HEIGHT,
+  //HEADER_HEIGHT,
   LINE_HEIGHT,
   DAY_WIDTH,
   SCROLL_BAR_WIDTH,
@@ -32,8 +32,16 @@ export default class CalendarHeader {
     cv.style.top = `0px`;
     cv.style.left = `${this.pos + this.frame.calendarLeft}px`;
     cv.style.width = `${this.width}px`;
-    cv.style.height = `${HEADER_HEIGHT + 1}px`;
+    cv.style.height = `${this.frame.headerHeight}px`;
     frag.append(cv);
+
+    let line = document.createElement("div");
+    line.className = "line";
+    line.style.top = `${this.frame.headerHeight}px`;
+    line.style.left = `${this.pos + this.frame.calendarLeft}px`;
+    line.style.width = `${this.width}px`;
+    line.style.height = "1px";
+    frag.append(line);
   }
 
   resize() {
@@ -55,7 +63,9 @@ export default class CalendarHeader {
       const height = cnvs.offsetHeight;
       cnvs.width = this.width;
       cnvs.height = height;
-      const dtTop = LINE_HEIGHT + LINE_HEIGHT;
+      const dtTop = this.frame.useIteration
+        ? LINE_HEIGHT + LINE_HEIGHT
+        : LINE_HEIGHT;
       const ctx = cnvs.getContext("2d");
       const font = "9.5pt sans-serif";
       if (ctx) {
@@ -64,10 +74,10 @@ export default class CalendarHeader {
         ctx.fillStyle = "#82a4c1";
         ctx.fillRect(0, LINE_HEIGHT, this.width, 1);
         ctx.fill();
-        ctx.fillRect(0, LINE_HEIGHT + LINE_HEIGHT, this.width, 1);
-        ctx.fill();
-        ctx.fillRect(0, HEADER_HEIGHT, this.width, 1);
-        ctx.fill();
+        if (this.frame.useIteration) {
+          ctx.fillRect(0, LINE_HEIGHT + LINE_HEIGHT, this.width, 1);
+          ctx.fill();
+        }
 
         let dt = this.frame.calendarStart.clone();
         let x = 0;
@@ -75,31 +85,62 @@ export default class CalendarHeader {
         ctx.font = font;
         ctx.textBaseline = "bottom";
         ctx.textAlign = "left";
-        let iteration = 1;
-        let iter = -1;
+        let iteration = this.frame.iterationNo;
+        let it = -1;
+        let iter = 7;
+        switch (this.frame.iterationUnit) {
+          case "w2":
+            iter = 14;
+            break;
+          case "w3":
+            iter = 21;
+            break;
+          case "w4":
+            iter = 28;
+            break;
+        }
+        if (this.frame.useIteration && this.frame.iterationStart) {
+          let diff = this.frame.iterationStart.diff(dt, "day");
+          if (diff < 0) {
+            it = (-diff % iter) - 1;
+            iteration += Math.floor(-diff / iter);
+          }
+        }
 
         while (this.frame.calendarEnd.isSameOrAfter(dt)) {
-          iter++;
-          if (iter > 13) {
-            iter = 0;
-            iteration++;
-          }
-          if (x < this.dtpos - DAY_WIDTH) {
-            x += DAY_WIDTH;
-            dt = dt.add(1, "day");
-            first = false;
-            continue;
-          }
-          if (x > this.width + this.dtpos) break;
-
-          if (iter === 0) {
-            ctx.fillStyle = "#000";
-            ctx.fillText(`${iteration}`, x + 3 - this.dtpos, LINE_HEIGHT - 3);
-            if (!first) {
-              ctx.fillStyle = "#bdcede";
-              ctx.fillRect(x - this.dtpos, 0, 1, LINE_HEIGHT);
-              ctx.fill();
+          if (this.frame.useIteration && this.frame.iterationStart) {
+            if (dt.isSameOrAfter(this.frame.iterationStart)) {
+              it++;
+              if (it >= iter) {
+                it = 0;
+                iteration++;
+              }
             }
+            if (x < this.dtpos - DAY_WIDTH) {
+              x += DAY_WIDTH;
+              dt = dt.add(1, "day");
+              first = false;
+              continue;
+            }
+            if (x > this.width + this.dtpos) break;
+
+            if (it === 0) {
+              ctx.fillStyle = "#000";
+              ctx.fillText(`${iteration}`, x + 3 - this.dtpos, LINE_HEIGHT - 3);
+              if (!first) {
+                ctx.fillStyle = "#bdcede";
+                ctx.fillRect(x - this.dtpos, 0, 1, LINE_HEIGHT);
+                ctx.fill();
+              }
+            }
+          } else {
+            if (x < this.dtpos - DAY_WIDTH) {
+              x += DAY_WIDTH;
+              dt = dt.add(1, "day");
+              first = false;
+              continue;
+            }
+            if (x > this.width + this.dtpos) break;
           }
 
           if (first) {
@@ -109,7 +150,9 @@ export default class CalendarHeader {
               ctx.fillText(
                 `${dt.format("YYYY/M")}`,
                 x + 3 - this.dtpos,
-                LINE_HEIGHT + LINE_HEIGHT - 3
+                this.frame.useIteration
+                  ? LINE_HEIGHT + LINE_HEIGHT - 3
+                  : LINE_HEIGHT - 3
               );
             }
           } else if (dt.date() === 1) {
@@ -117,10 +160,17 @@ export default class CalendarHeader {
             ctx.fillText(
               `${dt.format("YYYY/M")}`,
               x + 3 - this.dtpos,
-              LINE_HEIGHT + LINE_HEIGHT - 3
+              this.frame.useIteration
+                ? LINE_HEIGHT + LINE_HEIGHT - 3
+                : LINE_HEIGHT - 3
             );
             ctx.fillStyle = "#bdcede";
-            ctx.fillRect(x - this.dtpos, LINE_HEIGHT, 1, LINE_HEIGHT);
+            ctx.fillRect(
+              x - this.dtpos,
+              this.frame.useIteration ? LINE_HEIGHT : 0,
+              1,
+              LINE_HEIGHT
+            );
             ctx.fill();
           }
 
@@ -140,7 +190,11 @@ export default class CalendarHeader {
                 break;
             }
           }
-          ctx.fillText(`${dt.date()}`, x + 3 - this.dtpos, HEADER_HEIGHT - 3);
+          ctx.fillText(
+            `${dt.date()}`,
+            x + 3 - this.dtpos,
+            this.frame.headerHeight - 4
+          );
           x += DAY_WIDTH;
           dt = dt.add(1, "day");
           // 日付区切り線

@@ -1,7 +1,7 @@
 export const SCROLL_BAR_WIDTH = 16;
-export const HEADER_LABEL_Y = 42;
+//export const HEADER_LABEL_Y = 42;
 export const LINE_HEIGHT = 21;
-export const HEADER_HEIGHT = 63;
+//export const HEADER_HEIGHT = 63;
 export const TICKET_HEIGHT = 22;
 export const DAY_WIDTH = 22;
 export const CALENDAR_MIN = DAY_WIDTH * 10;

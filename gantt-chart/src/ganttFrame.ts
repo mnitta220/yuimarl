@@ -3,6 +3,7 @@ import $ from "jquery";
 import {
   SCROLL_BAR_WIDTH,
   CALENDAR_MIN,
+  LINE_HEIGHT,
   DAY_WIDTH,
   DAY_MILISEC,
   Column,
@@ -36,6 +37,11 @@ export default class GanttFrame {
   ganttRow = new GanttRow();
   sch = new ScrollH(this);
   scv = new ScrollV(this);
+  useIteration = false;
+  iterationStart: dayjs.Dayjs | null = null;
+  iterationNo = 1;
+  iterationUnit = "w1";
+  headerHeight = 0;
   colW = 0;
   calendarLeft = 0;
   calendarStart = dayjs();
@@ -67,12 +73,51 @@ export default class GanttFrame {
 
   constructor() {
     this._idb = new AppDatabase();
+
     const projectid = document.querySelector<HTMLInputElement>(`#projectId`);
+    if (projectid) {
+      this.projectId = projectid.value ?? null;
+    }
+
     const startdate = document.querySelector<HTMLInputElement>(`#startdate`);
+    if (startdate) {
+      this.calendarStart = dayjs(`${startdate.value ?? ""}`);
+    }
+
     const enddate = document.querySelector<HTMLInputElement>(`#enddate`);
-    this.projectId = projectid?.value ?? null;
-    this.calendarStart = dayjs(`${startdate?.value ?? ""}`);
-    this.calendarEnd = dayjs(`${enddate?.value ?? ""}`);
+    if (enddate) {
+      this.calendarEnd = dayjs(`${enddate.value ?? ""}`);
+    }
+
+    const useIteration =
+      document.querySelector<HTMLInputElement>(`#useIteration`);
+    if (useIteration) {
+      this.useIteration = useIteration.value === "true" ? true : false;
+    }
+    this.headerHeight =
+      (this.useIteration ? LINE_HEIGHT * 3 : LINE_HEIGHT * 2) + 1;
+    const sv1 = document.querySelector<HTMLDivElement>(`#sv1`);
+    if (sv1) {
+      sv1.style.height = `${this.useIteration ? 64 : 43}px`;
+    }
+
+    const iterationStart =
+      document.querySelector<HTMLInputElement>(`#iterationStart`);
+    if (iterationStart) {
+      this.iterationStart = dayjs(iterationStart.value);
+    }
+
+    const iterationNo =
+      document.querySelector<HTMLInputElement>(`#iterationNo`);
+    if (iterationNo) {
+      this.iterationNo = Number(iterationNo.value);
+    }
+
+    const iterationUnit =
+      document.querySelector<HTMLInputElement>(`#iterationUnit`);
+    if (iterationUnit) {
+      this.iterationUnit = iterationUnit.value;
+    }
 
     const holidays = document.querySelector<HTMLInputElement>(`#holidays`);
     if (holidays?.value) {
@@ -268,9 +313,6 @@ export default class GanttFrame {
 
   save() {
     $("#loading").removeClass("d-none");
-    //setTimeout(function () {
-    //  $("#loading").addClass("d-none");
-    //}, 1000);
     $.ajax({
       type: "POST",
       url: "/api/ganttUpdate",
@@ -280,7 +322,6 @@ export default class GanttFrame {
       },
       success: function (result) {
         $("#loading").addClass("d-none");
-        //console.log(result);
         var ret = JSON.parse(result);
         if (ret.result) {
           const projectid =
@@ -288,14 +329,6 @@ export default class GanttFrame {
           if (projectid) {
             window.location.href = `/project?id=${projectid.value}&tab=gantt`;
           }
-          //console.log(ret.message);
-          /*
-          const ts = document.querySelector<HTMLInputElement>(`#tickets`);
-          if (ts) {
-            ts.value = ret.message;
-            this.tickets = JSON.parse(ts.value);
-          }
-          */
         } else {
           window.alert(`エラーが発生しました。: ${ret.message}`);
         }

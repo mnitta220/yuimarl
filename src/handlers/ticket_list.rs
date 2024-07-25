@@ -54,7 +54,7 @@ pub async fn post_list(
     cookies: Cookies,
     Form(input): Form<TicketListInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::info!(
+    tracing::debug!(
         "POST /post_list {:?}, {:?}, {:?}, {:?}, {:?}, {}, {}",
         input.ticketid,
         input.ticketname,

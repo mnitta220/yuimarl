@@ -361,17 +361,6 @@ impl Component for ProjectInfo {
                                 *buf += r#"<label class="form-check-label" for="w4">4週</label>"#;
                             }
                             *buf += r#"</div>"#;
-
-                            *buf += r#"<div class="form-check form-check-inline">"#;
-                            {
-                                *buf += r#"<input class="form-check-input" id="m1" name="iteration_unit" type="radio" value="m1""#;
-                                if iteration_unit == "m1" {
-                                    *buf += r#" checked="checked""#;
-                                }
-                                *buf += r#">"#;
-                                *buf += r#"<label class="form-check-label" for="m1">1月</label>"#;
-                            }
-                            *buf += r#"</div>"#;
                         }
                         *buf += r#"</div>"#;
                     }

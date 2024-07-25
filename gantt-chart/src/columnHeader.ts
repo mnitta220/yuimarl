@@ -1,4 +1,4 @@
-import { HEADER_HEIGHT, HEADER_LABEL_Y } from "./common";
+//import { HEADER_LABEL_Y } from "./common";
 import GanttFrame from "./ganttFrame";
 
 // カラムヘッダー
@@ -16,12 +16,12 @@ export default class ColumnHeader {
     hd.style.top = `0px`;
     hd.style.left = `${this.pos}px`;
     hd.style.width = `${this.frame.calendarLeft}px`;
-    hd.style.height = `${HEADER_HEIGHT}px`;
+    hd.style.height = `${this.frame.headerHeight}px`;
     frag.append(hd);
 
     let line = document.createElement("div");
     line.className = "line";
-    line.style.top = `${HEADER_HEIGHT}px`;
+    line.style.top = `${this.frame.headerHeight}px`;
     line.style.left = "0px";
     line.style.width = `${this.frame.calendarLeft}px`;
     line.style.height = "1px";
@@ -32,7 +32,7 @@ export default class ColumnHeader {
       // カラムラベル
       let label = document.createElement("div");
       label.className = "label";
-      label.style.top = `${HEADER_LABEL_Y}px`;
+      label.style.top = `${this.frame.useIteration ? 42 : 21}px`;
       label.style.left = `${x}px`;
       label.style.width = `${col.width}px`;
       label.textContent = col.name;
@@ -45,7 +45,7 @@ export default class ColumnHeader {
       line.style.top = "0px";
       line.style.left = `${x}px`;
       line.style.width = "1px";
-      line.style.height = `${HEADER_HEIGHT}px`;
+      line.style.height = `${this.frame.headerHeight}px`;
       hd.append(line);
     }
 
@@ -56,7 +56,7 @@ export default class ColumnHeader {
     line.style.top = "0px";
     line.style.left = `${x}px`;
     line.style.width = "1px";
-    line.style.height = `${HEADER_HEIGHT}px`;
+    line.style.height = `${this.frame.headerHeight}px`;
     hd.append(line);
   }
 

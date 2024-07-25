@@ -23,7 +23,7 @@ impl Component for GanttChart {
 
                         *buf += r#"<div class="scrollV">"#;
                         {
-                            *buf += r#"<div class="sv1"></div>"#;
+                            *buf += r#"<div class="sv1" id="sv1"></div>"#;
                             *buf += r#"<canvas class="sv2" id="scrollv"></canvas>"#;
                             *buf += r#"<div class="sv3"></div>"#;
                         }
@@ -118,6 +118,50 @@ impl Component for GanttChart {
                         }
                     }
                 }
+                *buf += r#"">"#;
+
+                *buf += r#"<input type="hidden" id="useIteration" value=""#;
+                let mut ui = false;
+                if let Some(p) = &props.project {
+                    if p.iteration_start.is_some() {
+                        if let Some(i) = p.use_iteration {
+                            ui = i;
+                        }
+                    }
+                }
+                if ui {
+                    *buf += "true";
+                } else {
+                    *buf += "false";
+                }
+                *buf += r#"">"#;
+
+                *buf += r#"<input type="hidden" id="iterationStart" value=""#;
+                if let Some(p) = &props.project {
+                    if let Some(i) = &p.iteration_start {
+                        *buf += &i;
+                    }
+                }
+                *buf += r#"">"#;
+
+                *buf += r#"<input type="hidden" id="iterationNo" value=""#;
+                let mut no = 1;
+                if let Some(p) = &props.project {
+                    if let Some(n) = p.iteration_no {
+                        no = n;
+                    }
+                }
+                *buf += &no.to_string();
+                *buf += r#"">"#;
+
+                *buf += r#"<input type="hidden" id="iterationUnit" value=""#;
+                let mut unit = "w1".to_string();
+                if let Some(p) = &props.project {
+                    if let Some(u) = &p.iteration_unit {
+                        unit = u.clone();
+                    }
+                }
+                *buf += &unit;
                 *buf += r#"">"#;
 
                 *buf += r#"<input type="hidden" id="tickets" name="tickets" value=""#;

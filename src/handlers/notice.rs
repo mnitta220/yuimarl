@@ -34,7 +34,7 @@ pub async fn post_add(
     cookies: Cookies,
     Form(input): Form<NoticeAddInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::info!(
+    tracing::debug!(
         "POST /notice_add, message: {}, password: {}",
         input.message,
         input.password
@@ -112,7 +112,7 @@ pub async fn post_del(
     cookies: Cookies,
     Form(input): Form<NoticeDelInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::info!(
+    tracing::debug!(
         "POST /notice_del, notice_id: {}, password: {}",
         input.notice_id,
         input.password

@@ -193,7 +193,7 @@ pub async fn post(
     cookies: Cookies,
     Form(input): Form<TicketInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::info!(
+    tracing::debug!(
         "POST /ticket {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {:?}, {}, {}, {}, {}",
         input.action,
         input.name,

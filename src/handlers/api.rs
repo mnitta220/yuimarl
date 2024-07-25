@@ -242,7 +242,7 @@ pub struct UpdateGanttResult {
 }
 
 /// ガントチャートを更新する。
-pub async fn update_gantt(Form(input): Form<UpdateGanttInput>) -> String {
+pub async fn update_gantt(cookies: Cookies, Form(input): Form<UpdateGanttInput>) -> String {
     let tickets: Vec<model::gantt_ticket::GanttTicket> = match serde_json::from_str(&input.tickets)
     {
         Ok(t) => t,
@@ -278,7 +278,26 @@ pub async fn update_gantt(Form(input): Form<UpdateGanttInput>) -> String {
         }
     };
 
-    match model::gantt_ticket::GanttTicket::update_gantt(&input.project_id, &tickets, &db).await {
+    let session = match super::get_session_info(cookies, true, &db).await {
+        Ok(session_id) => session_id,
+        Err(e) => {
+            let result = UpdateGanttResult {
+                result: false,
+                message: format!("更新に失敗しました。 [{}]", e.to_string()),
+            };
+
+            let buf = match serde_json::to_string(&result) {
+                Ok(r) => r,
+                Err(e) => format!("更新に失敗しました。 [{}]", e.to_string()),
+            };
+
+            return buf;
+        }
+    };
+
+    match model::gantt_ticket::GanttTicket::update_gantt(&session, &input.project_id, &tickets, &db)
+        .await
+    {
         Ok(u) => u,
         Err(e) => {
             let result = UpdateGanttResult {

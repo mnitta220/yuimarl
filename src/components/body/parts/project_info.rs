@@ -227,6 +227,9 @@ impl Component for ProjectInfo {
                                         }
                                     }
                                 }
+                                if !self.can_update {
+                                    *buf += r#" disabled"#;
+                                }
                                 *buf += r#">"#;
                                 *buf += r#"<label class="form-check-label" for="holiday">日本の祝日を赤表示</label>"#;
                             }
@@ -257,6 +260,9 @@ impl Component for ProjectInfo {
                                         }
                                     }
                                 }
+                                if !self.can_update {
+                                    *buf += r#" disabled"#;
+                                }
                                 *buf += r#">"#;
                                 *buf += r#"<label class="form-check-label" for="use_iteration">イテレーション / スプリント 番号を表示</label>"#;
                             }
@@ -279,7 +285,11 @@ impl Component for ProjectInfo {
                                     *buf += st;
                                 }
                             }
-                            *buf += r#"">"#;
+                            *buf += r#"""#;
+                            if !self.can_update {
+                                *buf += r#" disabled"#;
+                            }
+                            *buf += r#">"#;
                         }
                         *buf += r#"</div>"#;
 
@@ -298,7 +308,11 @@ impl Component for ProjectInfo {
                             } else {
                                 *buf += "1";
                             }
-                            *buf += r#"">"#;
+                            *buf += r#"""#;
+                            if !self.can_update {
+                                *buf += r#" disabled"#;
+                            }
+                            *buf += r#">"#;
                         }
                         *buf += r#"</div>"#;
                     }
@@ -324,6 +338,9 @@ impl Component for ProjectInfo {
                                 if iteration_unit == "w1" {
                                     *buf += r#" checked="checked""#;
                                 }
+                                if !self.can_update {
+                                    *buf += r#" disabled"#;
+                                }
                                 *buf += r#">"#;
                                 *buf += r#"<label class="form-check-label" for="w1">1週</label>"#;
                             }
@@ -334,6 +351,9 @@ impl Component for ProjectInfo {
                                 *buf += r#"<input class="form-check-input" id="w2" name="iteration_unit" type="radio" value="w2""#;
                                 if iteration_unit == "w2" {
                                     *buf += r#" checked="checked""#;
+                                }
+                                if !self.can_update {
+                                    *buf += r#" disabled"#;
                                 }
                                 *buf += r#">"#;
                                 *buf += r#"<label class="form-check-label" for="w2">2週</label>"#;
@@ -346,6 +366,9 @@ impl Component for ProjectInfo {
                                 if iteration_unit == "w3" {
                                     *buf += r#" checked="checked""#;
                                 }
+                                if !self.can_update {
+                                    *buf += r#" disabled"#;
+                                }
                                 *buf += r#">"#;
                                 *buf += r#"<label class="form-check-label" for="w3">3週</label>"#;
                             }
@@ -356,6 +379,9 @@ impl Component for ProjectInfo {
                                 *buf += r#"<input class="form-check-input" id="w4" name="iteration_unit" type="radio" value="w4""#;
                                 if iteration_unit == "w4" {
                                     *buf += r#" checked="checked""#;
+                                }
+                                if !self.can_update {
+                                    *buf += r#" disabled"#;
                                 }
                                 *buf += r#">"#;
                                 *buf += r#"<label class="form-check-label" for="w4">4週</label>"#;

@@ -1,4 +1,5 @@
 use super::ticket::Ticket;
+use crate::model;
 use anyhow::Result;
 use chrono::{DateTime, Utc};
 use firestore::*;
@@ -169,11 +170,36 @@ impl GanttTicket {
 
     /// ガントチャートを更新する
     pub async fn update_gantt(
+        session: &model::session::Session,
         project_id: &str,
         tickets_upd: &Vec<GanttTicket>,
         db: &FirestoreDb,
     ) -> Result<()> {
         let updated = "他のユーザーがチケットを更新しため、更新できませんでした。<br>再読み込みを行ってください。".to_string();
+
+        let member = match model::project::ProjectMember::find(&project_id, &session.uid, &db).await
+        {
+            Ok(member) => member,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e));
+            }
+        };
+
+        let mut ok = false;
+        if let Some(member) = &member {
+            if let Some(role) = member.role {
+                if role == model::project::ProjectRole::Owner as i32
+                    || role == model::project::ProjectRole::Administrator as i32
+                {
+                    ok = true;
+                }
+            }
+        }
+        if ok == false {
+            return Err(anyhow::anyhow!(
+                "プロジェクト情報を更新する権限がありません".to_string()
+            ));
+        }
 
         // 現在のデータ
         let object_stream: BoxStream<FirestoreResult<Ticket>> = match db

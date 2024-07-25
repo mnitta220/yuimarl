@@ -76,8 +76,9 @@ export default class CalendarBody {
       if (ctx) {
         ctx.save();
 
-        this.nowpos =
-          (dayjs().diff(this.frame.calendarStart) / DAY_MILISEC) * DAY_WIDTH;
+        this.nowpos = Math.floor(
+          (dayjs().diff(this.frame.calendarStart) / DAY_MILISEC) * DAY_WIDTH
+        );
         let dt = this.frame.calendarStart.clone();
         let x = 0;
         while (this.frame.calendarEnd.isSameOrAfter(dt)) {
@@ -225,9 +226,13 @@ export default class CalendarBody {
         if (start_date > end_date) {
           [start_date, end_date] = [end_date, start_date];
         }
-        let x1 = dayjs(start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x1 = Math.floor(
+          dayjs(start_date).diff(this.frame.calendarStart) / DAY_MILISEC
+        );
         x1 = x1 * DAY_WIDTH - this.dtpos;
-        let x2 = dayjs(end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x2 = Math.floor(
+          dayjs(end_date).diff(this.frame.calendarStart) / DAY_MILISEC
+        );
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         if (ticket.progress === 0) {
           const delay = this.frame.delayRed && x1 < this.nowpos - this.dtpos;
@@ -239,7 +244,7 @@ export default class CalendarBody {
           ctx.fillRect(x1, y1 + 8 + this.posY, x2 - x1, 6);
           ctx.fill();
         } else {
-          const x3 = ((x2 - x1) * ticket.progress) / 100;
+          const x3 = Math.floor(((x2 - x1) * ticket.progress) / 100);
           const delay =
             this.frame.delayRed && x1 + x3 < this.nowpos - this.dtpos;
           ctx.fillStyle = delay ? RED2 : BLUE2;
@@ -250,13 +255,14 @@ export default class CalendarBody {
           ctx.fill();
         }
       } else {
-        let x1 =
-          dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x1 = Math.floor(
+          dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC
+        );
+        x1 = x1 * DAY_WIDTH - this.dtpos;
         const delay =
           this.frame.delayRed &&
           x1 < this.nowpos - this.dtpos &&
           ticket.progress === 0;
-        x1 = x1 * DAY_WIDTH - this.dtpos;
         ctx.fillStyle = delay ? RED1 : BLUE1;
         ctx.fillRect(x1, y1 + 8 + this.posY, 12, 6);
         ctx.fill();
@@ -275,8 +281,9 @@ export default class CalendarBody {
       }
     } else {
       if (ticket.end_date) {
-        let x2 =
-          dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x2 = Math.floor(
+          dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC
+        );
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         const delay =
           this.frame.delayRed &&
@@ -323,9 +330,13 @@ export default class CalendarBody {
         if (start_date > end_date) {
           [start_date, end_date] = [end_date, start_date];
         }
-        let x1 = dayjs(start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x1 = Math.floor(
+          dayjs(start_date).diff(this.frame.calendarStart) / DAY_MILISEC
+        );
         x1 = x1 * DAY_WIDTH - this.dtpos;
-        let x2 = dayjs(end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x2 = Math.floor(
+          dayjs(end_date).diff(this.frame.calendarStart) / DAY_MILISEC
+        );
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         if (ticket.progress === 0) {
           const delay = this.frame.delayRed && x1 < this.nowpos - this.dtpos;
@@ -337,7 +348,7 @@ export default class CalendarBody {
           ctx.fillRect(x1, y2 + 8, x2 - x1, 6);
           ctx.fill();
         } else {
-          const x3 = ((x2 - x1) * ticket.progress) / 100;
+          const x3 = Math.floor(((x2 - x1) * ticket.progress) / 100);
           const delay =
             this.frame.delayRed && x1 + x3 < this.nowpos - this.dtpos;
           ctx.fillStyle = delay ? RED2 : BLUE2;
@@ -348,8 +359,9 @@ export default class CalendarBody {
           ctx.fill();
         }
       } else {
-        let x1 =
-          dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x1 = Math.floor(
+          dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC
+        );
         const delay = this.frame.delayRed && x1 < this.nowpos - this.dtpos;
         x1 = x1 * DAY_WIDTH - this.dtpos;
         ctx.fillStyle = delay ? RED1 : BLUE1;
@@ -370,8 +382,9 @@ export default class CalendarBody {
       }
     } else {
       if (ticket.end_date) {
-        let x2 =
-          dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        let x2 = Math.floor(
+          dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC
+        );
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         const delay = this.frame.delayRed && x2 < this.nowpos - this.dtpos;
         ctx.fillStyle = delay ? RED1 : BLUE1;

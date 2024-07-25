@@ -1,7 +1,6 @@
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import {
   CALENDAR_MIN,
-  //HEADER_HEIGHT,
   LINE_HEIGHT,
   DAY_WIDTH,
   SCROLL_BAR_WIDTH,
@@ -199,7 +198,7 @@ export default class CalendarHeader {
           dt = dt.add(1, "day");
           // 日付区切り線
           ctx.fillStyle = "#bdcede";
-          ctx.fillRect(x - this.dtpos, dtTop, 1, LINE_HEIGHT);
+          ctx.fillRect(x - this.dtpos, dtTop + 1, 1, LINE_HEIGHT);
           ctx.fill();
         }
 
@@ -217,9 +216,10 @@ export default class CalendarHeader {
   }
 
   scroll(x: number) {
-    this.dtpos =
+    this.dtpos = Math.floor(
       (x * this.frame.calendarTotalWidth) /
-      (this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH);
+        (this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH)
+    );
     this.draw();
     this.frame.calendarBody.dtpos = this.dtpos;
     this.frame.calendarBody.draw();

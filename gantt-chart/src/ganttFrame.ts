@@ -166,13 +166,15 @@ export default class GanttFrame {
   }
 
   initDtPos() {
-    let dtpos =
+    let dtpos = Math.floor(
       (dayjs().diff(this.calendarStart) / DAY_MILISEC) * DAY_WIDTH -
-      this.calendarHeader.width / 2;
-    let barpos =
+        this.calendarHeader.width / 2
+    );
+    let barpos = Math.floor(
       (dtpos *
         (this.calendarHeader.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH)) /
-      this.calendarTotalWidth;
+        this.calendarTotalWidth
+    );
     this.calendarHeader.dtpos = dtpos;
     this.calendarBody.dtpos = dtpos;
     this.calendarScroll.barpos = barpos;
@@ -458,9 +460,10 @@ export default class GanttFrame {
   }
 
   scrollH(x: number) {
-    this.posX =
+    this.posX = Math.floor(
       (x * this.schThreshold) /
-      (this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH);
+        (this.width - SCROLL_BAR_WIDTH - SCROLL_BAR_WIDTH)
+    );
     this.columnBody.scrollH(this.posX);
     this.columnHeader.scrollH(this.posX);
     this.columnScroll.scrollH(this.posX);
@@ -470,8 +473,9 @@ export default class GanttFrame {
   }
 
   scrollV(y: number) {
-    this.columnBody.scrollV(y);
-    this.calendarBody.scrollV(y);
+    let y2 = Math.floor(y);
+    this.columnBody.scrollV(y2);
+    this.calendarBody.scrollV(y2);
   }
 
   columnWidth(): number {

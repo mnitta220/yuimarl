@@ -252,7 +252,10 @@ export default class CalendarBody {
       } else {
         let x1 =
           dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
-        const delay = this.frame.delayRed && x1 < this.nowpos - this.dtpos;
+        const delay =
+          this.frame.delayRed &&
+          x1 < this.nowpos - this.dtpos &&
+          ticket.progress === 0;
         x1 = x1 * DAY_WIDTH - this.dtpos;
         ctx.fillStyle = delay ? RED1 : BLUE1;
         ctx.fillRect(x1, y1 + 8 + this.posY, 12, 6);
@@ -275,7 +278,10 @@ export default class CalendarBody {
         let x2 =
           dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
-        const delay = this.frame.delayRed && x2 < this.nowpos - this.dtpos;
+        const delay =
+          this.frame.delayRed &&
+          x2 < this.nowpos - this.dtpos &&
+          ticket.progress !== 100;
         x2 -= 12;
         ctx.fillStyle = delay ? RED1 : BLUE1;
         ctx.fillRect(x2, y1 + 8 + this.posY, 12, 6);

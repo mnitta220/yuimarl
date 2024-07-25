@@ -19,6 +19,7 @@ export default class ColumnBody {
   movingLevel = 0;
   upper: GanttTicket | null = null;
   lower: GanttTicket | null = null;
+  now = dayjs();
 
   constructor(private frame: GanttFrame) {}
 
@@ -91,6 +92,7 @@ export default class ColumnBody {
       const ctx: CanvasRenderingContext2D | null = cnvs.getContext("2d");
       if (ctx) {
         ctx.save();
+        this.now = dayjs().startOf("day");
 
         for (let t of this.frame.lines) {
           this.drawTicket(ctx, t);
@@ -263,21 +265,33 @@ export default class ColumnBody {
     x = this.frame.cols[0].width + this.frame.cols[1].width + 3;
     // 開始日
     if (ticket.start_date) {
-      ctx.fillText(
-        dayjs(ticket.start_date).format("YY/MM/DD"),
-        x,
-        y3 + this.posY
-      );
+      let dt = dayjs(ticket.start_date).startOf("day");
+      let delay = false;
+      if (this.frame.delayRed && ticket.progress === 0) {
+        if (dt.isBefore(this.now)) delay = true;
+      }
+      ctx.fillStyle = delay ? "#f00" : "#000";
+      ctx.fillText(dayjs(dt).format("YY/MM/DD"), x, y3 + this.posY);
     }
     x += this.frame.cols[2].width;
     // 終了日
     if (ticket.end_date) {
-      ctx.fillText(
-        dayjs(ticket.end_date).format("YY/MM/DD"),
-        x,
-        y3 + this.posY
-      );
+      let dt = dayjs(ticket.end_date).startOf("day");
+      let delay = false;
+      if (this.frame.delayRed && ticket.progress !== 100) {
+        if (dt.isBefore(this.now)) delay = true;
+      }
+      if (ticket.id_disp === "YU73") {
+        console.log({
+          dt: dt.format("YY/MM/DD"),
+          now: this.now.format("YY/MM/DD"),
+          delay,
+        });
+      }
+      ctx.fillStyle = delay ? "#f00" : "#000";
+      ctx.fillText(dayjs(dt).format("YY/MM/DD"), x, y3 + this.posY);
     }
+    ctx.fillStyle = "#000";
     x += this.frame.cols[3].width + this.frame.cols[4].width - 6;
     // 進捗率
     const t1 = `${ticket.progress}`;

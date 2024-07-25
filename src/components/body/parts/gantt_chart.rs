@@ -158,7 +158,7 @@ impl Component for GanttChart {
                                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="ticket_name">チケット名</label>"#;
                                 *buf += r#"<div class="col-md-9 mb-1">"#;
                                 {
-                                    *buf += r#"<input class="form-control" id="ticket_name" type="text" value="">"#;
+                                    *buf += r#"<input class="form-control" id="ticket_name" type="text" value="" disabled>"#;
                                 }
                                 *buf += r#"</div>"#;
                             }
@@ -170,7 +170,7 @@ impl Component for GanttChart {
                                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="description">内容</label>"#;
                                 *buf += r#"<div class="col-md-9 mb-1">"#;
                                 {
-                                    *buf += r#"<textarea class="form-control" id="description" rows="3" name="description">"#;
+                                    *buf += r#"<textarea class="form-control" id="description" rows="3" name="description" disabled>"#;
                                     *buf += r#"</textarea>"#;
                                 }
                                 *buf += r#"</div>"#;
@@ -224,7 +224,7 @@ impl Component for GanttChart {
                                                 {
                                                     *buf += r#"<td>"#;
                                                     {
-                                                        *buf += r#"<input class="form-control" id="progress" name="progress" type="number" min="0" max="100" value="">"#;
+                                                        *buf += r#"<input class="form-control" id="progress" name="progress" type="number" min="0" max="100" value="" disabled>"#;
                                                     }
                                                     *buf += r#"</td>"#;
                                                     *buf += r#"<td>&nbsp;%</td>"#;
@@ -239,7 +239,7 @@ impl Component for GanttChart {
                                         {
                                             *buf += r#"<div class="form-check">"#;
                                             {
-                                                *buf += r#"<input class="form-check-input" id="finished" type="checkbox">"#;
+                                                *buf += r#"<input class="form-check-input" id="finished" type="checkbox" disabled>"#;
                                                 *buf += r#"<label class="form-check-label" for="finished">完了済</label>"#;
                                             }
                                             *buf += r#"</div>"#;
@@ -260,35 +260,35 @@ impl Component for GanttChart {
                                 {
                                     *buf += r#"<div class="form-check form-check-inline">"#;
                                     {
-                                        *buf += r#"<input class="form-check-input" id="priority1" name="priority" type="radio" value="4">"#;
+                                        *buf += r#"<input class="form-check-input" id="priority1" name="priority" type="radio" value="4" disabled>"#;
                                         *buf += r#"<label class="form-check-label" for="priority1">最優先</label>"#;
                                     }
                                     *buf += r#"</div>"#;
 
                                     *buf += r#"<div class="form-check form-check-inline">"#;
                                     {
-                                        *buf += r#"<input class="form-check-input" id="priority2" name="priority" type="radio" value="3">"#;
+                                        *buf += r#"<input class="form-check-input" id="priority2" name="priority" type="radio" value="3" disabled>"#;
                                         *buf += r#"<label class="form-check-label" for="priority2">高</label>"#;
                                     }
                                     *buf += r#"</div>"#;
 
                                     *buf += r#"<div class="form-check form-check-inline">"#;
                                     {
-                                        *buf += r#"<input class="form-check-input" id="priority3" name="priority" type="radio" value="2">"#;
+                                        *buf += r#"<input class="form-check-input" id="priority3" name="priority" type="radio" value="2" disabled>"#;
                                         *buf += r#"<label class="form-check-label" for="priority3">中</label>"#;
                                     }
                                     *buf += r#"</div>"#;
 
                                     *buf += r#"<div class="form-check form-check-inline">"#;
                                     {
-                                        *buf += r#"<input class="form-check-input" id="priority4" name="priority" type="radio" value="1">"#;
+                                        *buf += r#"<input class="form-check-input" id="priority4" name="priority" type="radio" value="1" disabled>"#;
                                         *buf += r#"<label class="form-check-label" for="priority4">低</label>"#;
                                     }
                                     *buf += r#"</div>"#;
 
                                     *buf += r#"<div class="form-check form-check-inline">"#;
                                     {
-                                        *buf += r#"<input class="form-check-input" id="priority0" name="priority" type="radio" value="0">"#;
+                                        *buf += r#"<input class="form-check-input" id="priority0" name="priority" type="radio" value="0" disabled>"#;
                                         *buf += r#"<label class="form-check-label" for="priority0">未設定</label>"#;
                                     }
                                     *buf += r#"</div>"#;

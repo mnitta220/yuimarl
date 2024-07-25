@@ -15,8 +15,14 @@ dayjs.extend(isSameOrAfter);
 
 const BLUE1 = "#57f";
 const BLUE2 = "#9bf";
+const BLUE3 = "#68f";
+const BLUE4 = "#8af";
+const BLUE5 = "#bdf";
 const RED1 = "#f66";
 const RED2 = "#faa";
+const RED3 = "#f77";
+const RED4 = "#f99";
+const RED5 = "#fcc";
 
 // カレンダーボディ
 export default class CalendarBody {
@@ -221,7 +227,8 @@ export default class CalendarBody {
           dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         if (ticket.progress === 0) {
-          ctx.fillStyle = BLUE2;
+          const delay = this.frame.delayRed && x1 < this.nowpos - this.dtpos;
+          ctx.fillStyle = delay ? RED2 : BLUE2;
           ctx.fillRect(x1, y1 + 8 + this.posY, x2 - x1, 6);
           ctx.fill();
         } else if (ticket.progress === 100) {
@@ -230,7 +237,8 @@ export default class CalendarBody {
           ctx.fill();
         } else {
           const x3 = ((x2 - x1) * ticket.progress) / 100;
-          const delay = x1 + x3 < this.nowpos - this.dtpos;
+          const delay =
+            this.frame.delayRed && x1 + x3 < this.nowpos - this.dtpos;
           ctx.fillStyle = delay ? RED2 : BLUE2;
           ctx.fillRect(x1, y1 + 8 + this.posY, x2 - x1, 6);
           ctx.fill();
@@ -239,43 +247,45 @@ export default class CalendarBody {
           ctx.fill();
         }
       } else {
-        ctx.fillStyle = BLUE1;
         let x1 =
           dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        const delay = this.frame.delayRed && x1 < this.nowpos - this.dtpos;
         x1 = x1 * DAY_WIDTH - this.dtpos;
+        ctx.fillStyle = delay ? RED1 : BLUE1;
         ctx.fillRect(x1, y1 + 8 + this.posY, 12, 6);
         ctx.fill();
-        ctx.fillStyle = "#68f";
+        ctx.fillStyle = delay ? RED3 : BLUE3;
         x1 += 12;
         ctx.fillRect(x1, y1 + 8 + this.posY, 7, 6);
         ctx.fill();
-        ctx.fillStyle = "#8af";
+        ctx.fillStyle = delay ? RED4 : BLUE4;
         x1 += 7;
         ctx.fillRect(x1, y1 + 8 + this.posY, 6, 6);
         ctx.fill();
-        ctx.fillStyle = "#bdf";
+        ctx.fillStyle = delay ? RED5 : BLUE5;
         x1 += 6;
         ctx.fillRect(x1, y1 + 8 + this.posY, 5, 6);
         ctx.fill();
       }
     } else {
       if (ticket.end_date) {
-        ctx.fillStyle = BLUE1;
         let x2 =
           dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
+        const delay = this.frame.delayRed && x2 < this.nowpos - this.dtpos;
         x2 -= 12;
+        ctx.fillStyle = delay ? RED1 : BLUE1;
         ctx.fillRect(x2, y1 + 8 + this.posY, 12, 6);
         ctx.fill();
-        ctx.fillStyle = "#68f";
+        ctx.fillStyle = delay ? RED3 : BLUE3;
         x2 -= 7;
         ctx.fillRect(x2, y1 + 8 + this.posY, 7, 6);
         ctx.fill();
-        ctx.fillStyle = "#8af";
+        ctx.fillStyle = delay ? RED4 : BLUE4;
         x2 -= 6;
         ctx.fillRect(x2, y1 + 8 + this.posY, 6, 6);
         ctx.fill();
-        ctx.fillStyle = "#bdf";
+        ctx.fillStyle = delay ? RED5 : BLUE5;
         x2 -= 5;
         ctx.fillRect(x2, y1 + 8 + this.posY, 5, 6);
         ctx.fill();
@@ -306,60 +316,65 @@ export default class CalendarBody {
           dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
         if (ticket.progress === 0) {
-          ctx.fillStyle = "#9bf";
+          const delay = this.frame.delayRed && x1 < this.nowpos - this.dtpos;
+          ctx.fillStyle = delay ? RED2 : BLUE2;
           ctx.fillRect(x1, y2 + 8, x2 - x1, 6);
           ctx.fill();
         } else if (ticket.progress === 100) {
-          ctx.fillStyle = "#57f";
+          ctx.fillStyle = BLUE1;
           ctx.fillRect(x1, y2 + 8, x2 - x1, 6);
           ctx.fill();
         } else {
-          ctx.fillStyle = "#9bf";
+          const x3 = ((x2 - x1) * ticket.progress) / 100;
+          const delay =
+            this.frame.delayRed && x1 + x3 < this.nowpos - this.dtpos;
+          ctx.fillStyle = delay ? RED2 : BLUE2;
           ctx.fillRect(x1, y2 + 8, x2 - x1, 6);
           ctx.fill();
-          const x3 = ((x2 - x1) * ticket.progress) / 100;
-          ctx.fillStyle = "#57f";
+          ctx.fillStyle = delay ? RED1 : BLUE1;
           ctx.fillRect(x1, y2 + 8, x3, 6);
           ctx.fill();
         }
       } else {
-        ctx.fillStyle = "#57f";
         let x1 =
           dayjs(ticket.start_date).diff(this.frame.calendarStart) / DAY_MILISEC;
+        const delay = this.frame.delayRed && x1 < this.nowpos - this.dtpos;
         x1 = x1 * DAY_WIDTH - this.dtpos;
+        ctx.fillStyle = delay ? RED1 : BLUE1;
         ctx.fillRect(x1, y2 + 8, 12, 6);
         ctx.fill();
-        ctx.fillStyle = "#68f";
+        ctx.fillStyle = delay ? RED3 : BLUE3;
         x1 += 12;
         ctx.fillRect(x1, y2 + 8, 7, 6);
         ctx.fill();
-        ctx.fillStyle = "#8af";
+        ctx.fillStyle = delay ? RED4 : BLUE4;
         x1 += 7;
         ctx.fillRect(x1, y2 + 8, 6, 6);
         ctx.fill();
-        ctx.fillStyle = "#bdf";
+        ctx.fillStyle = delay ? RED5 : BLUE5;
         x1 += 6;
         ctx.fillRect(x1, y2 + 8, 5, 6);
         ctx.fill();
       }
     } else {
       if (ticket.end_date) {
-        ctx.fillStyle = "#57f";
         let x2 =
           dayjs(ticket.end_date).diff(this.frame.calendarStart) / DAY_MILISEC;
         x2 = (x2 + 1) * DAY_WIDTH - this.dtpos;
+        const delay = this.frame.delayRed && x2 < this.nowpos - this.dtpos;
+        ctx.fillStyle = delay ? RED1 : BLUE1;
         x2 -= 12;
         ctx.fillRect(x2, y2 + 8, 12, 6);
         ctx.fill();
-        ctx.fillStyle = "#68f";
+        ctx.fillStyle = delay ? RED3 : BLUE3;
         x2 -= 7;
         ctx.fillRect(x2, y2 + 8, 7, 6);
         ctx.fill();
-        ctx.fillStyle = "#8af";
+        ctx.fillStyle = delay ? RED4 : BLUE4;
         x2 -= 6;
         ctx.fillRect(x2, y2 + 8, 6, 6);
         ctx.fill();
-        ctx.fillStyle = "#bdf";
+        ctx.fillStyle = delay ? RED5 : BLUE5;
         x2 -= 5;
         ctx.fillRect(x2, y2 + 8, 5, 6);
         ctx.fill();

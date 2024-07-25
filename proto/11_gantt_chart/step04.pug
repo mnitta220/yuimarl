@@ -76,12 +76,12 @@ html(lang="ja")
                     .row.pt-1.pb-2
                       label.col-md-3.col-form-label.bg-light.mb-1(for="name") チケット名
                       .col-md-9.mb-1
-                        input.form-control#name(type="text" maxlength="40" value="たこやき模擬店1" required)
+                        input.form-control#name(type="text" maxlength="40" value="たこやき模擬店1" disabled)
                     // 内容
                     .row.pt-1.pb-2
                       label.col-md-3.col-form-label.bg-light.mb-1(for="message") 内容
                       .col-md-9.mb-1
-                        textarea.form-control#message(rows="3" name="message")
+                        textarea.form-control#message(rows="3" name="message" disabled)
                           | たこやき模擬店を出店するために、やるべきことを検討する。
                     // 担当者
                     .row.pt-1.pb-2
@@ -146,10 +146,10 @@ html(lang="ja")
                         .row
                           .col-sm-6.mb-2
                             label.form-label(for="startdate") 開始日
-                            input.form-control#startdate(type="date" value="2024-09-10")
+                            input.form-control#startdate(type="date" value="2024-09-10" disabled)
                           .col-sm-6.mb-1
                             label.form-label(for="enddate") 終了日
-                            input.form-control#enddate(type="date")
+                            input.form-control#enddate(type="date" disabled)
                     // 進捗率
                     .row.pt-1.pb-2
                       legend.col-form-label.col-md-3.bg-light.mb-1 進捗率
@@ -159,31 +159,31 @@ html(lang="ja")
                             table
                               tr
                                 td
-                                  input.form-control#progress(type="number" min="0" max="100" value="25")
+                                  input.form-control#progress(type="number" min="0" max="100" value="25" disabled)
                                 td
                                   | &nbsp;%
                           .col-sm-6.mb-1
                             .form-check
-                              input.form-check-input#finished(type="checkbox" value="")
+                              input.form-check-input#finished(type="checkbox" value="" disabled)
                               label.form-check-label(for="finished") 完了済
                     // 優先度
                     .row.pt-1.pb-2
                       legend.col-form-label.col-md-3.bg-light.mb-1 優先度
                       .col-md-9.mb-1
                         .form-check.form-check-inline
-                          input.form-check-input#priority1(name="priority" type="radio" value="priority1")
+                          input.form-check-input#priority1(name="priority" type="radio" value="priority1" disabled)
                           label.form-check-label(for="priority1") 最優先
                         .form-check.form-check-inline
-                          input.form-check-input#priority2(name="priority" type="radio" value="priority2" checked="checked")
+                          input.form-check-input#priority2(name="priority" type="radio" value="priority2" checked="checked" disabled)
                           label.form-check-label(for="priority2") 高
                         .form-check.form-check-inline
-                          input.form-check-input#priority3(name="priority" type="radio" value="priority3")
+                          input.form-check-input#priority3(name="priority" type="radio" value="priority3" disabled)
                           label.form-check-label(for="priority3") 中
                         .form-check.form-check-inline
-                          input.form-check-input#priority4(name="priority" type="radio" value="priority4")
+                          input.form-check-input#priority4(name="priority" type="radio" value="priority4" disabled)
                           label.form-check-label(for="priority4") 低
                         .form-check.form-check-inline
-                          input.form-check-input#priority0(name="priority" type="radio" value="priority0")
+                          input.form-check-input#priority0(name="priority" type="radio" value="priority0" disabled)
                           label.form-check-label(for="priority0") 未設定
                     // 親チケット
                     .row.pt-1.pb-2

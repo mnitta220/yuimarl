@@ -76,7 +76,7 @@ export default class TicketModal {
         let buf = `<label class="form-label" for="startdate">開始日</label>`;
         buf += `<input class="form-control" id="startdate" type="date" value="${
           data.ticket.start_date ?? ""
-        }">`;
+        }" disabled>`;
         startdate.innerHTML = buf;
       }
 
@@ -85,7 +85,7 @@ export default class TicketModal {
         let buf = `<label class="form-label" for="enddate">終了日</label>`;
         buf += `<input class="form-control" id="enddate" type="date" value="${
           data.ticket.end_date ?? ""
-        }">`;
+        }" disabled>`;
         enddate.innerHTML = buf;
       }
 

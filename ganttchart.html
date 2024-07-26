@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Yuimarl</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style4.css">
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+  </head>
+  <body>
+    <main>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-1"></div>
+          <div class="col col-md-10">
+            <div class="row py-2">
+              <div class="col-auto">
+                <div class="logoImg"><a href="index.html"><img src="images/logo.gif" alt="Yuimarl"></a></div>
+              </div>
+            </div>
+            <div class="row bg-dark px-2 px-md-0">
+              <nav class="navbar navbar-expand-md navbar-dark sticky-top px-2">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-content" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbar-content">
+                  <ul class="navbar-nav me-auto">
+                    <li class="nav-item active"><a class="nav-link" href="index.html">ホーム</a></li>
+                  </ul>
+                </div>
+              </nav>
+            </div>
+            <div class="row">
+              <div class="col-md-9">
+                <section class="pt-3">
+                  <h2 class="pb-1">ガントチャート</h2>
+                  <p>プロジェクト情報画面のガントチャートタブの使い方について、ご説明いたします。</p>
+                  <p>ガントチャートの意味や一般的な説明については、次のページをご参照ください。<br><a href="https://ja.wikipedia.org/wiki/%E3%82%AC%E3%83%B3%E3%83%88%E3%83%81%E3%83%A3%E3%83%BC%E3%83%88" target="_blank">ガントチャート (Wikipedia)</a></p>
+                  <p>Yuimarl のガントチャート機能は、プロジェクトごとに、１つのガントチャートを作成することができます。<br>プロジェクトとタスクのスケジュールや進捗状態を確認することができます。<br>縦方向には、チケットの親子関係に従ってツリー状に表示されます。横方向には、チケットの開始日から終了日までが棒状に表示されます。</p><a href="images/screen90.png"><img class="border border-info border-1 img-fluid" src="images/screen90.png"></a>
+                </section>
+                <hr>
+                <section class="pb-2">
+                  <h3 id="project">プロジェクトの設定</h3>
+                  <p>はじめに、<a href="howtouse.html#prjadd">プロジェクト情報画面</a> の基本情報タブにある「ガントチャート」欄で、ガントチャートの設定を行います。</p><a href="images/screen91.png"><img class="border border-info border-1 img-fluid" src="images/screen91.png"></a>
+                  <div class="py-2">
+                    <table class="table table-bordered">
+                      <tr>
+                        <th>項目</th>
+                        <th>説明</th>
+                      </tr>
+                      <tr>
+                        <td>日本の祝日を赤表示</td>
+                        <td>チェックを付けると、ガントチャート右側のカレンダーで、日本の祝日が赤く表示されます。</td>
+                      </tr>
+                      <tr>
+                        <td>イテレーション / スプリント 番号を表示</td>
+                        <td>チェックを付けると、ガントチャート右側のカレンダーの上部に、イテレーション番号、スプリント番号が表示されます。<br>(参照)&nbsp;<a href="https://it-trend.jp/development_tools/article/32-0022" target="_blank">イテレーションとは？スプリントとの違いや開発プロセスを解説！</a></td>
+                      </tr>
+                      <tr>
+                        <td>開始日、開始番号、単位</td>
+                        <td>イテレーション / スプリント の開始日、開始番号、単位を指定します。<br>たとえば、開始日を「2024/07/03」、開始番号を「10」、単位を「2週」とした場合は、<br>2024/07/03～2024/07/16 が 10<br>2024/07/17～2024/07/30 が 11<br>2024/07/31～2024/08/13 が 12 ・・・<br>となります。<br><a href="images/screen92.png"><img class="border border-info border-1 img-fluid" src="images/screen92.png"></a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </section>
+                <hr>
+                <section class="pb-2">
+                  <h3 id="ticket">チケットの設定</h3>
+                  <p>ガントチャートに表示するチケットの、<a href="howtouse.html#tktadd">チケット情報画面</a> の基本情報タブで、「ガントチャートに表示する」にチェックを付けます。<br>そのチケットに親チケットが存在する場合は、親チケットでも、「ガントチャートに表示する」にチェックを付ける必要があります。</p>
+                </section>
+                <hr>
+                <section class="pb-2">
+                  <h3 id="operation">ガントチャート画面の操作方法</h3>
+                  <p>縦方向のツリーでは、チケットの ID、チケット名、開始日、終了日、進捗が表示されます。<br>ID をクリックすると、チケット情報ダイアログが表示されます。<br>チケット名の前の□は、子チケットがあって、開いていれば－、閉じていれば＋になります。開いたり閉じたりした状態は、使っているブラウザに保存されます。</p><a href="images/screen93.png"><img class="border border-info border-1 img-fluid" src="images/screen93.png"></a>
+                  <p class="pt-2">「完了済みを表示」を ON にすると、進捗が 100（完了済み）のチケットがツリーに表示されます。（選択状態は使っているブラウザに保存されます）</p>
+                  <p>「進捗遅れを赤く表示」を ON にすると、進捗が遅延しているチケットが赤く表示されます。（選択状態は使っているブラウザに保存されます）<br>遅延の判定と表示は、以下のように行われます。</p>
+                  <ul>
+                    <li>開始日が過ぎているのに進捗が 0 の場合、開始日が赤く表示されます。</li>
+                    <li>終了日が過ぎているのに進捗が 100 でない場合、終了日が赤く表示されます。</li>
+                    <li>右側のカレンダーに緑色の破線で表示される現在日時よりも、進捗が遅れている場合、棒が赤く表示されます。<br><a href="images/screen94.png"><img class="border border-info border-1 img-fluid" src="images/screen94.png"></a></li>
+                  </ul>
+                  <p>ツリー表示されたチケットを、ドラッグ＆ドロップで移動することができます。<br>たとえば、上の画像の「PJ30: [BUG] 名前が空のチケットが登録できる」というチケットを、「PJ3: Doing」の下にドラッグ＆ドロップで移動することができます。<br>移動した状態を保存するには、「更新」ボタンをクリックしてください。</p>
+                </section>
+              </div>
+              <div class="col-md-3">
+                <div class="submenu mt-3">
+                  <h3>CONTENTS</h3>
+                  <ul>
+                    <li><a href="https://mnitta220.github.io/">新田システム事務所</a></li>
+                    <li><a href="index.html">ホーム</a>
+                      <ul>
+                        <li><a href="howtouse.html">使い方</a>
+                          <ul>
+                            <li><a class="current" href="ganttchart.html">ガントチャート</a></li>
+                            <li><a href="markdown.html">マークダウン</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="deploy.html">運用環境構築</a></li>
+                        <li><a href="devsetup.html">開発環境構築</a></li>
+                        <li><a href="develop.html">開発情報</a></li>
+                        <li><a href="agreement.html">利用規約</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="row bg-dark px-3">
+              <footer class="py-1 text-light">
+                <div class="container text-center">
+                  <ul class="nav justify-content-center">
+                    <li class="nav-item"><a class="nav-link" href="../privacy.html">プライバシー・ポリシー</a></li>
+                  </ul>
+                  <p style="color: #a0a0a0"><small>Copyright &copy; 2024 Masahiro Nitta. All Rights Reserved.</small></p>
+                </div>
+              </footer>
+            </div>
+          </div>
+          <div class="col-md-1"></div>
+        </div>
+      </div>
+    </main>
+    <script src="js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

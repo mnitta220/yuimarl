@@ -166,9 +166,9 @@ export default class GanttFrame {
   }
 
   getNow(): dayjs.Dayjs {
-    //return dayjs();
+    return dayjs();
     // デバッグ用の日時を設定
-    return dayjs("2024/07/17 15:00:00.000+09:00");
+    //return dayjs("2024/07/17 15:00:00.000+09:00");
   }
 
   initDtPos() {

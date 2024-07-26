@@ -143,10 +143,6 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
         let mut gantt_end = &dt.format("%Y-%m-%d").to_string();
 
         if let Some(project) = &project {
-            if let Some(start) = &project.iteration_start {
-                gantt_start = start;
-            }
-
             let (ts, min, max) =
                 match model::gantt_ticket::GanttTicket::load_gantt(&project.id, &db).await {
                     Ok(tickets) => tickets,

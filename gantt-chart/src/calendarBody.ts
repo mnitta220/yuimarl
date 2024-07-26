@@ -77,7 +77,8 @@ export default class CalendarBody {
         ctx.save();
 
         this.nowpos = Math.floor(
-          (dayjs().diff(this.frame.calendarStart) / DAY_MILISEC) * DAY_WIDTH
+          (this.frame.getNow().diff(this.frame.calendarStart) / DAY_MILISEC) *
+            DAY_WIDTH
         );
         let dt = this.frame.calendarStart.clone();
         let x = 0;
@@ -121,9 +122,9 @@ export default class CalendarBody {
         }
 
         // 現在線
-        ctx.fillStyle = "#0a0";
-        for (let y = 0; y < height; y += 7) {
-          ctx.fillRect(this.nowpos - this.dtpos, y, 1, 4);
+        ctx.fillStyle = "#0b0";
+        for (let y = 0; y < height; y += 8) {
+          ctx.fillRect(this.nowpos - this.dtpos, y, 2, 4);
           ctx.fill();
         }
 

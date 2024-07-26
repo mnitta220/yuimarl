@@ -66,7 +66,7 @@ export default class CalendarHeader {
         ? LINE_HEIGHT + LINE_HEIGHT
         : LINE_HEIGHT;
       const ctx = cnvs.getContext("2d");
-      const font = "9.5pt sans-serif";
+      const font = "10pt sans-serif";
       if (ctx) {
         ctx.save();
         // カレンダーヘッダー横線

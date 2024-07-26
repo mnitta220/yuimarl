@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import {
-  //HEADER_HEIGHT,
   SCROLL_BAR_WIDTH,
   TICKET_HEIGHT,
   GanttTicket,
@@ -93,7 +92,7 @@ export default class ColumnBody {
       const ctx: CanvasRenderingContext2D | null = cnvs.getContext("2d");
       if (ctx) {
         ctx.save();
-        this.now = dayjs().startOf("day");
+        this.now = this.frame.getNow().startOf("day");
 
         for (let t of this.frame.lines) {
           this.drawTicket(ctx, t);
@@ -176,7 +175,7 @@ export default class ColumnBody {
   // チケットを描画する
   drawTicket(ctx: CanvasRenderingContext2D, ticket: GanttTicket) {
     if (this.frame.moving && ticket.id === this.frame.movingTicket?.id) return;
-    ctx.font = "9.5pt sans-serif";
+    ctx.font = "10pt sans-serif";
     ctx.textBaseline = "bottom";
     let y1 = ticket.y1;
     let y2 = ticket.y2;
@@ -304,7 +303,7 @@ export default class ColumnBody {
     ticket: GanttTicket,
     y: number
   ) {
-    ctx.font = "9.5pt sans-serif";
+    ctx.font = "10pt sans-serif";
     ctx.textBaseline = "bottom";
     let y2 = y;
     const y1 = y2 + 18;
@@ -713,11 +712,15 @@ export default class ColumnBody {
               }
             } else {
               moveParent.children.splice(moveIndex, 1);
-              dropParent.children.splice(
-                dropIndex + 1,
-                0,
-                this.frame.movingTicket
-              );
+              if (dropParent.open) {
+                dropParent.children.splice(
+                  dropIndex + 1,
+                  0,
+                  this.frame.movingTicket
+                );
+              } else {
+                dropParent.children.push(this.frame.movingTicket);
+              }
             }
           } else {
             moveParent.children.splice(moveIndex, 1);

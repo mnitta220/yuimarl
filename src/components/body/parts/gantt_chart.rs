@@ -88,6 +88,30 @@ impl Component for GanttChart {
                         *buf += r#"</div>"#;
                     }
                     *buf += r#"</div>"#;
+
+                    *buf += r#"<div class="row pt-2">"#;
+                    {
+                        *buf += r#"<div class="col">"#;
+                        {
+                            *buf += r#"<a href="/ticket_list">"#;
+                            {
+                                *buf += r#"<img class="icon3" src="/static/ionicons/list-outline.svg" title="チケット一覧">"#;
+                            }
+                            *buf += r#"</a>"#;
+
+                            let ticket_cnt = p.ticket_number.unwrap_or_default();
+                            let ticket_limit = p.ticket_limit.unwrap_or_default();
+                            if ticket_cnt < ticket_limit {
+                                *buf += r#"&nbsp;&nbsp;&nbsp;<a href="/ticket_add">"#;
+                                {
+                                    *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="チケットを追加">"#;
+                                }
+                                *buf += r#"</a>"#;
+                            }
+                        }
+                        *buf += r#"</div>"#;
+                    }
+                    *buf += r#"</div>"#;
                 }
 
                 *buf += r#"<input type="hidden" id="projectId" name="project_id" value=""#;

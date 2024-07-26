@@ -1,4 +1,4 @@
-//import { HEADER_LABEL_Y } from "./common";
+import { LINE_HEIGHT } from "./common";
 import GanttFrame from "./ganttFrame";
 
 // カラムヘッダー
@@ -32,7 +32,9 @@ export default class ColumnHeader {
       // カラムラベル
       let label = document.createElement("div");
       label.className = "label";
-      label.style.top = `${this.frame.useIteration ? 42 : 21}px`;
+      label.style.top = `${
+        this.frame.useIteration ? LINE_HEIGHT + LINE_HEIGHT : LINE_HEIGHT
+      }px`;
       label.style.left = `${x}px`;
       label.style.width = `${col.width}px`;
       label.textContent = col.name;

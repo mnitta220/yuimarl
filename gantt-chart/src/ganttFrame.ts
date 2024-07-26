@@ -135,7 +135,7 @@ export default class GanttFrame {
     this.cols = [
       {
         name: "ID",
-        width: 54,
+        width: 56,
       },
       {
         name: "チケット名",
@@ -143,11 +143,11 @@ export default class GanttFrame {
       },
       {
         name: "開始日",
-        width: 67,
+        width: 72,
       },
       {
         name: "終了日",
-        width: 67,
+        width: 72,
       },
       {
         name: "進捗",
@@ -165,9 +165,15 @@ export default class GanttFrame {
     this.ticketsTotalHeight = this.lines.length * TICKET_HEIGHT;
   }
 
+  getNow(): dayjs.Dayjs {
+    //return dayjs();
+    // デバッグ用の日時を設定
+    return dayjs("2024/07/17 15:00:00.000+09:00");
+  }
+
   initDtPos() {
     let dtpos = Math.floor(
-      (dayjs().diff(this.calendarStart) / DAY_MILISEC) * DAY_WIDTH -
+      (this.getNow().diff(this.calendarStart) / DAY_MILISEC) * DAY_WIDTH -
         this.calendarHeader.width / 2
     );
     let barpos = Math.floor(
@@ -543,6 +549,8 @@ export default class GanttFrame {
       this.ganttRow.y2 = -1;
       let project = new Project(this.projectId, show, this.delayRed);
       await this._idb?.projects.put(project);
+      this.scv.pos = 0;
+      this.scrollV(0);
       this.draw();
     } catch (e) {
       throw Error(`${e}`);

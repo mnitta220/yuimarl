@@ -194,6 +194,14 @@ html(lang="ja")
                         img.icon(src="../../static/ionicons/add-circle-outline2.svg")
                         | &nbsp;追加
 
+            // ガントチャート
+            .row.pt-1.pb-2
+              label.col-md-3.col-form-label.bg-light.mb-1(for="category") ガントチャート
+              .col-md-9.mb-1
+                .form-check
+                  input.form-check-input#ganttchart(type="checkbox" value="on" checked="checked")
+                  label.form-check-label(for="ganttchart") ガントチャートに表示する
+
             .row.py-3.mt-2.bg-light
               .col-9
                 button.btn.btn-primary(type="submit")

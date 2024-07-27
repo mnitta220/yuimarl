@@ -439,9 +439,7 @@ export default class ColumnBody {
             this.movingLevel++;
           } else if (this.frame.diffX < -12) {
             if (this.lower) {
-              this.movingLevel =
-                this.frame.movingTicket.level -
-                Math.floor(-this.frame.diffX / 12);
+              this.movingLevel -= Math.floor(-this.frame.diffX / 12);
               if (this.movingLevel < this.lower.level) {
                 this.movingLevel = this.lower.level;
               }

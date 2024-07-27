@@ -453,6 +453,7 @@ export default class GanttFrame {
     this.calendarHeader.resize();
     this.calendarScroll.resize();
     this.scrollH(0);
+    this.initDtPos();
   }
 
   // ガントチャートを表示する

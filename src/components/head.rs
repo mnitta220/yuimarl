@@ -22,10 +22,19 @@ impl Component for Head {
             *buf += r#"<link rel="icon" type="image/x-icon" href="/static/favicon2.ico">"#;
 
             match &props.tab {
+                Tab::Info => {
+                    if let Some(title) = &props.title {
+                        if title == "プロジェクト" {
+                            // 次の行は、vite/project-info フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
+                            // (参照) vite/project-info/README.md
+                            *buf += r#"<script type="module" crossorigin src="/static/js/project-info/index-WGwNeKAQ.js"></script>"#;
+                        }
+                    }
+                }
                 Tab::GanttChart => {
                     // 以下の2行は、gantt-chart フォルダでビルドして出力された index-XXXXXXXX.js と index-XXXXXXXX.css を設定する。
                     // (参照) gantt-chart/README.md
-                    *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-DdvX0tzu.js"></script>"#;
+                    *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-uPPKiBja.js"></script>"#;
                     *buf += r#"<link rel="stylesheet" crossorigin href="/static/js/gantt-chart/index-BZzXyAxC.css">"#;
                 }
                 _ => {}

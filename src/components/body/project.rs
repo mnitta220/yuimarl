@@ -159,17 +159,14 @@ impl Component for ProjectBody {
                 Tab::Info => {
                     *buf +=
                         r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
-                    *buf += r#"<script src="/static/js/project105.js"></script>"#;
+                    *buf += r#"<script src="/static/js/project1015.js"></script>"#;
                 }
                 Tab::Note => {
                     *buf +=
                         r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
                     *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;
-                    *buf += r#"<script src="/static/js/markdown0012.js"></script>"#;
+                    *buf += r#"<script src="/static/js/markdown1015.js"></script>"#;
                 }
-                //Tab::GanttChart => {
-                //    *buf += r#"<script src="/static/js/ticket_map1013.js"></script>"#;
-                //}
                 _ => {}
             }
         }

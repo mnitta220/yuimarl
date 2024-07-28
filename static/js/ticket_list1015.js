@@ -1,5 +1,5 @@
-var inChargeModal = new bootstrap.Modal("#inChargeModal");
-var members = [];
+let inChargeModal = new bootstrap.Modal("#inChargeModal");
+let members = [];
 
 function pageChange(idx) {
     $("#page").val(idx);
@@ -19,8 +19,8 @@ function clickSelectCharge() {
             project_id: $("input#project_id").val()
         },
         success: function (result) {
-            var ret = JSON.parse(result);
-            var buf = '';
+            let ret = JSON.parse(result);
+            let buf = '';
             if (ret.result == "OK") {
                 members = ret.members;
                 buf += '<table class="table table-hover">';
@@ -34,7 +34,7 @@ function clickSelectCharge() {
                 buf += '</tr>';
                 buf += '</thead>';
                 buf += '<tbody>';
-                for (var i in members) {
+                for (let i in members) {
                     buf += '<tr><td>';
                     buf += '<input class="form-check-input" type="radio" ';
                     buf += 'id="charge' + i + '" name="charge" value="';
@@ -80,8 +80,8 @@ function clickSelectCharge() {
 }
 
 $('#btnSelectMember').on('click', function () {
-    var idx = Number($('input[name="charge"]:checked').val());
-    var member = members[idx];
+    let idx = Number($('input[name="charge"]:checked').val());
+    let member = members[idx];
     $('#charge-sel').html('<small>[' + member.email + ']</small> ' + member.name);
     $('#chargeuid').val(member.uid);
     $('#chargemail').val(member.email);

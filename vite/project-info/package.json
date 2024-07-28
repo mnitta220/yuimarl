@@ -1,5 +1,5 @@
 {
-  "name": "gantt-chart",
+  "name": "project-info",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,14 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "bootstrap": "^5.3.3",
-    "dayjs": "^1.11.11",
-    "dexie": "^4.0.8"
-  },
   "devDependencies": {
-    "@types/bootstrap": "^5.2.10",
     "typescript": "^5.2.2",
-    "vite": "^5.3.1"
+    "vite": "^5.3.4"
   }
 }

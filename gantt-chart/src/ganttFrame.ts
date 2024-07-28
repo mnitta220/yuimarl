@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import $ from "jquery";
 import {
   SCROLL_BAR_WIDTH,
   CALENDAR_MIN,
@@ -10,6 +9,7 @@ import {
   GanttTicket,
   GanttRow,
   TICKET_HEIGHT,
+  GanttSaveResult,
 } from "./common";
 import ColumnHeader from "./columnHeader";
 import ColumnBody from "./columnBody";
@@ -320,7 +320,47 @@ export default class GanttFrame {
   }
 
   save() {
-    $("#loading").removeClass("d-none");
+    const loading = document.querySelector<HTMLDivElement>(`#loading`);
+    if (loading) {
+      loading.classList.remove("d-none");
+    }
+    //$("#loading").removeClass("d-none");
+
+    const buf = `project_id=${this.projectId ?? ""}&tickets=${JSON.stringify(
+      this.tickets
+    )}`;
+
+    fetch("/api/ganttUpdate", {
+      method: "POST",
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+      },
+      mode: "cors",
+      body: encodeURI(buf),
+    })
+      .then((response) => {
+        if (loading) {
+          loading.classList.add("d-none");
+        }
+        // $("#loading").addClass("d-none");
+        return response.json();
+      })
+      .then((data: GanttSaveResult) => {
+        //console.log(JSON.stringify(data));
+        if (data.result) {
+          const projectid =
+            document.querySelector<HTMLInputElement>(`#projectId`);
+          if (projectid) {
+            window.location.href = `/project?id=${projectid.value}&tab=gantt`;
+          }
+        } else {
+          window.alert(`エラーが発生しました。: ${data.message}`);
+        }
+      })
+      .catch((e) => window.alert(`エラーが発生しました。: ${e.message}`));
+
+    /*
     $.ajax({
       type: "POST",
       url: "/api/ganttUpdate",
@@ -335,7 +375,7 @@ export default class GanttFrame {
           const projectid =
             document.querySelector<HTMLInputElement>(`#projectId`);
           if (projectid) {
-            window.location.href = `/project?id=${projectid.value}&tab=gantt`;
+            //window.location.href = `/project?id=${projectid.value}&tab=gantt`;
           }
         } else {
           window.alert(`エラーが発生しました。: ${ret.message}`);
@@ -347,6 +387,7 @@ export default class GanttFrame {
         window.alert(`エラーが発生しました。: ${result}`);
       },
     });
+    */
 
     /*let data = new FormData();
     //data.append("project_id", this.projectId ?? "");

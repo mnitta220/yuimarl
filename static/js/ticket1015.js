@@ -1,8 +1,8 @@
-var members = [];
-var deliverables = [];
-var inChargeModal = new bootstrap.Modal("#inChargeModal");
-var addParentModal = new bootstrap.Modal("#addParentModal");
-var deliverablesModal = new bootstrap.Modal("#deliverablesModal");
+let members = [];
+let deliverables = [];
+let inChargeModal = new bootstrap.Modal("#inChargeModal");
+let addParentModal = new bootstrap.Modal("#addParentModal");
+let deliverablesModal = new bootstrap.Modal("#deliverablesModal");
 
 $(document).ready(function () {
     members = JSON.parse($("#members").val());
@@ -17,8 +17,8 @@ function clickAddCharge() {
             project_id: $("input#project_id").val()
         },
         success: function (result) {
-            var ret = JSON.parse(result);
-            var buf = '';
+            let ret = JSON.parse(result);
+            let buf = '';
             if (ret.result == "OK") {
                 buf += '<table class="table table-hover">';
                 buf += '<thead>';
@@ -31,11 +31,11 @@ function clickAddCharge() {
                 buf += '</tr>';
                 buf += '</thead>';
                 buf += '<tbody>';
-                for (var i in ret.members) {
+                for (let i in ret.members) {
                     buf += '<tr><td>';
                     buf += '<input class="form-check-input" type="checkbox" ';
-                    buf += 'id="check' + i + '"';
-                    for (var j in members) {
+                    buf += `id="check${i}"`;
+                    for (let j in members) {
                         if (members[j].uid == ret.members[i].uid) {
                             buf += ' checked';
                             break;
@@ -59,12 +59,9 @@ function clickAddCharge() {
                     buf += '</td><td>';
                     buf += ret.members[i].email + '</td><td>';
                     buf += ret.members[i].name + '</td><td>';
-                    buf += '<input type="hidden" id="uid' + i + '" value="';
-                    buf += ret.members[i].uid + '">';
-                    buf += '<input type="hidden" id="email' + i + '" value="';
-                    buf += ret.members[i].email + '">';
-                    buf += '<input type="hidden" id="name' + i + '" value="';
-                    buf += ret.members[i].name + '">';
+                    buf += `<input type="hidden" id="uid${i}" value="${ret.members[i].uid}">`;
+                    buf += `<input type="hidden" id="email${i}" value="${ret.members[i].email}">`;
+                    buf += `<input type="hidden" id="name${i}" value="${ret.members[i].name}">`;
                     buf += '</td></tr>';
                 }
                 buf += '</tbody>';
@@ -82,19 +79,19 @@ $('#btnMemberAdd').on('click', function () {
     for (i = 0; i < 1000; i++) {
         if ($('#check' + i)) {
             if ($('#check' + i).prop('checked')) {
-                var member = {
-                    uid: $('#uid' + i).val(),
-                    email: $('#email' + i).val(),
-                    name: $('#name' + i).val(),
+                let member = {
+                    uid: $(`#uid${i}`).val(),
+                    email: $(`#email${i}`).val(),
+                    name: $(`#name${i}`).val(),
                 };
-                var idx = members.findIndex(x => x.uid == member.uid);
+                let idx = members.findIndex(x => x.uid == member.uid);
                 if (idx < 0) {
                     members.push(member);
                 } else {
                     members[idx] = member;
                 }
             } else {
-                var idx = members.findIndex(x => x.uid == $('#uid' + i).val());
+                let idx = members.findIndex(x => x.uid == $(`#uid${i}`).val());
                 if (idx >= 0) {
                     members.splice(idx, 1);
                 }
@@ -119,22 +116,22 @@ function removeCharge(idx) {
 }
 
 function chargeSeqUp(idx) {
-    var j = Number(idx);
-    var i = j - 1;
+    let j = Number(idx);
+    let i = j - 1;
     [members[i], members[j]] = [members[j], members[i]];
     setChargeTable();
 }
 
 function chargeSeqDown(idx) {
-    var i = Number(idx);
-    var j = i + 1;
+    let i = Number(idx);
+    let j = i + 1;
     [members[i], members[j]] = [members[j], members[i]];
     setChargeTable();
 }
 
 function setChargeTable() {
-    var buf = '';
-    var exist = false;
+    let buf = '';
+    let exist = false;
     if (members.length > 0) {
         buf += '<table class="table table-hover">';
         buf += '<thead><tr>';
@@ -143,20 +140,20 @@ function setChargeTable() {
         buf += '<th scope="col"></th>';
         buf += '</tr></thead>';
         buf += '<tbody>';
-        for (var i in members) {
+        for (let i in members) {
             buf += '<tr><td>';
             buf += members[i].email;
             buf += '</td><td>';
             buf += members[i].name;
             buf += '</td><td>';
-            buf += '<a href="javascript:removeCharge(' + i + ')">';
+            buf += `<a href="javascript:removeCharge(${i})">`;
             buf += '<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除"></a>';
             if (i != 0) {
-                buf += '&nbsp;<a href="javascript:chargeSeqUp(' + i + ')">';
+                buf += `&nbsp;<a href="javascript:chargeSeqUp(${i})">`;
                 buf += '<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動"></a>';
             }
             if ((Number(i) + 1) != members.length) {
-                buf += '&nbsp;<a href="javascript:chargeSeqDown(' + i + ')">';
+                buf += `&nbsp;<a href="javascript:chargeSeqDown(${i})">`;
                 buf += '<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動"></a>';
             }
             buf += '</td></tr>';
@@ -183,7 +180,7 @@ function clickAddParent() {
 
 $('#search-parent').on('click', function () {
     if (`${$("input#search_id").val()}`.trim() == "") {
-        var buf = '<p class="text-danger">チケットID を入力してください</p>';
+        let buf = '<p class="text-danger">チケットID を入力してください</p>';
         buf += '<input type="hidden" id="searchedParentId" value="">';
         buf += '<input type="hidden" id="searchedParentIdDisp" value="">';
         buf += '<input type="hidden" id="searchedParentName" value="">';
@@ -201,8 +198,8 @@ $('#search-parent').on('click', function () {
             id_disp: $("input#search_id").val(),
         },
         success: function (result) {
-            var ret = JSON.parse(result);
-            var buf = '';
+            let ret = JSON.parse(result);
+            let buf = '';
             if (ret.result) {
                 if (ret.ticket.id == $("#ticket_id").val()) {
                     buf += '<p class="text-danger">自身を親チケットにすることはできません</p>';
@@ -237,7 +234,7 @@ $('#search-parent').on('click', function () {
 });
 
 $('#btnAddParent').on('click', function () {
-    var buf = '<a href="/ticket?id=';
+    let buf = '<a href="/ticket?id=';
     buf += $("input#searchedParentId").val() + '">';
     buf += $("input#searchedParentIdDisp").val();
     buf += '</a>&nbsp;:&nbsp;';
@@ -253,7 +250,7 @@ $('#btnAddParent').on('click', function () {
 });
 
 function removeParent() {
-    var buf = '<p class="my-1">';
+    let buf = '<p class="my-1">';
     buf += '<a href="javascript:clickAddParent();">';
     buf += '<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">';
     buf += '</a></p>';
@@ -276,7 +273,7 @@ $('#btnAddDeliverable').on('click', function () {
         return;
     }
 
-    var deliverable = {
+    let deliverable = {
         name: $("input#deliverable-name").val(),
         path: $("input#deliverable-path").val(),
     };
@@ -291,7 +288,7 @@ function removeDeliverable(idx) {
 }
 
 function setDeliverablesTable() {
-    var buf = '';
+    let buf = '';
     if (deliverables.length > 0) {
         buf += '<table class="table table-hover">';
         buf += '<thead><tr>';
@@ -300,7 +297,7 @@ function setDeliverablesTable() {
         buf += '<th scope="col"></th>';
         buf += '</tr></thead>';
         buf += '<tbody>';
-        for (var i in deliverables) {
+        for (let i in deliverables) {
             buf += '<tr><td>';
             buf += escape_html(deliverables[i].name);
             buf += '</td><td>';
@@ -324,7 +321,7 @@ function setDeliverablesTable() {
 }
 
 $('#finished').change(function () {
-    var r = $(this).prop('checked');
+    let r = $(this).prop('checked');
     if (r) {
         $('#progress').val(100);
     }

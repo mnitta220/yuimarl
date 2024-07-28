@@ -592,7 +592,7 @@ impl Component for TicketListBody {
             self.footer.write(props, buf);
 
             *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
-            *buf += r#"<script src="/static/js/ticket_list1012.js"></script>"#;
+            *buf += r#"<script src="/static/js/ticket_list1015.js"></script>"#;
         }
         *buf += r#"</body>"#;
     }

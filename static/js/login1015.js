@@ -3,7 +3,7 @@ $(document).ready(function () {
     type: "GET",
     url: "/api/firebaseConfig",
     success: function (result) {
-      var ret = JSON.parse(result);
+      let ret = JSON.parse(result);
       const firebaseConfig = {
         apiKey: ret.api_key,
         authDomain: ret.auth_domain,

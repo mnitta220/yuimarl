@@ -1,6 +1,6 @@
-var members = [];
-var addMemberModal = new bootstrap.Modal("#addMemberModal");
-var updateMemberModal = new bootstrap.Modal("#updateMemberModal");
+let members = [];
+let addMemberModal = new bootstrap.Modal("#addMemberModal");
+let updateMemberModal = new bootstrap.Modal("#updateMemberModal");
 
 $(document).ready(function () {
     members = JSON.parse($("#members").val());
@@ -30,7 +30,7 @@ function removeMember(i) {
 }
 
 function updateMember(i) {
-    var buf = '';
+    let buf = '';
     buf += '<table class="table table-hover">';
     buf += '<thead>';
     buf += '<tr>';
@@ -98,8 +98,8 @@ $('#search-name').on('click', function () {
 });
 
 function memberSearchResult(result) {
-    var ret = JSON.parse(result);
-    var buf = '';
+    let ret = JSON.parse(result);
+    let buf = '';
     if (ret.result == "OK") {
         if (ret.users.length > 0) {
             buf += '<table class="table table-hover">';
@@ -112,7 +112,7 @@ function memberSearchResult(result) {
             buf += '</tr>';
             buf += '</thead>';
             buf += '<tbody>';
-            for (var i in ret.users) {
+            for (let i in ret.users) {
                 buf += '<tr><td>';
                 buf += '<input class="form-check-input" type="checkbox" ';
                 buf += 'id="check' + i + '" checked></td><td>';
@@ -149,13 +149,13 @@ $('#btnAddMember').on('click', function () {
     for (i = 0; i < 10; i++) {
         if ($('#check' + i)) {
             if ($('#check' + i).prop('checked')) {
-                var member = {
+                let member = {
                     uid: $('#uid' + i).val(),
                     email: $('#email' + i).val(),
                     name: $('#name' + i).val(),
                     role: Number($('#role' + i).children('option:selected').val()),
                 };
-                var idx = members.findIndex(x => x.uid == member.uid);
+                let idx = members.findIndex(x => x.uid == member.uid);
                 if (idx == -1) {
                     members.push(member);
                 }
@@ -173,7 +173,7 @@ $('#btnAddMember').on('click', function () {
 });
 
 $('#btnUpdateMember').on('click', function () {
-    var idx = $("#updateMemberIdx").val();
+    let idx = $("#updateMemberIdx").val();
     members[idx].role = Number($("#updateMemberRole").val());
     $("div#memberTbl").html("");
     updateMemberModal.hide();
@@ -182,8 +182,8 @@ $('#btnUpdateMember').on('click', function () {
 
 function setMemberList() {
     $("#members").val(JSON.stringify(members));
-    var buf = '';
-    for (var i in members) {
+    let buf = '';
+    for (let i in members) {
         buf += '<tr><td>';
         buf += roleToString(members[i].role);
         buf += '</td><td>';
@@ -203,7 +203,7 @@ function setMemberList() {
 
     $("#members-tbody").html(buf);
 
-    var limit = Number($("#member_limit").val());
+    let limit = Number($("#member_limit").val());
     if (members.length < limit) {
         $('#divAddMember').removeClass('d-none');
     } else {

@@ -1,23 +1,23 @@
-var commentModal = new bootstrap.Modal("#commentModal");
-var deleteCommentModal = new bootstrap.Modal("#deleteCommentModal");
+let commentModal = new bootstrap.Modal("#commentModal");
+let deleteCommentModal = new bootstrap.Modal("#deleteCommentModal");
 
 function editComment(idx) {
     $("#commentModalLabel").html('コメントを編集');
     $('#btnAdd').addClass('d-none');
     $('#btnUpdate').removeClass('d-none');
-    var cid = '#cid' + idx;
-    var mid = '#mkd' + idx;
+    let cid = '#cid' + idx;
+    let mid = '#mkd' + idx;
     if ($(cid) && $(mid)) {
         $("#comment_id").val($(cid).val());
         $('#markdown').val($(mid).val());
-        var html = marked.parse($(mid).val());
+        let html = marked.parse($(mid).val());
         $('#preview1').html(html);
         commentModal.show();
     }
 }
 
 function deleteComment(idx) {
-    var cid = '#cid' + idx;
+    let cid = '#cid' + idx;
     if ($(cid)) {
         $("#comment_id").val($(cid).val());
         deleteCommentModal.show();
@@ -25,7 +25,7 @@ function deleteComment(idx) {
 }
 
 $('#markdown').keyup(function () {
-    var html = marked.parse($(this).val());
+    let html = marked.parse($(this).val());
     $('#preview1').html(html);
 });
 
@@ -41,9 +41,9 @@ function clickComment() {
 
 $(document).ready(function () {
     for (i = 0; i < 100; i++) {
-        var mid = '#mkd' + i;
+        let mid = '#mkd' + i;
         if ($(mid)) {
-            var html = marked.parse($(mid).val());
+            let html = marked.parse($(mid).val());
             $('#pre' + i).html(html);
         } else {
             break;

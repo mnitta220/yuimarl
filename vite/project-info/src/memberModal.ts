@@ -1,5 +1,5 @@
 import * as bootstrap from "bootstrap";
-//import { TicketModalResult } from "./common";
+import ProjectInfo, { IMember } from "./projectInfo";
 
 interface IUserSub {
   uid: string;
@@ -16,9 +16,9 @@ interface IUserResult {
 export default class MemberModal {
   private id = "addMemberModal";
   private modal: bootstrap.Modal | null = null;
-  //private ticketId: string | null = null;
 
-  constructor() {
+  constructor(private info: ProjectInfo) {
+    this.info = info;
     const memberModal = document.querySelector<HTMLDivElement>(`#${this.id}`);
     if (memberModal) {
       this.modal = new bootstrap.Modal(memberModal);
@@ -30,10 +30,24 @@ export default class MemberModal {
     const searchEmail =
       document.querySelector<HTMLButtonElement>(`#search-email`);
     if (searchEmail) {
-      // 更新ボタンが押された
       searchEmail.addEventListener("click", () => {
-        //console.log("searchEmail");
         this.searchEmail();
+      });
+    }
+
+    const searchName =
+      document.querySelector<HTMLButtonElement>(`#search-name`);
+    if (searchName) {
+      searchName.addEventListener("click", () => {
+        this.searchName();
+      });
+    }
+
+    const btnAddMember =
+      document.querySelector<HTMLButtonElement>(`#btnAddMember`);
+    if (btnAddMember) {
+      btnAddMember.addEventListener("click", () => {
+        this.addMember();
       });
     }
   }
@@ -51,7 +65,6 @@ export default class MemberModal {
   }
 
   private searchEmail() {
-    console.log("searchEmail");
     const addMembers = document.querySelector<HTMLInputElement>(`#add_members`);
     if (addMembers) {
       addMembers.value = "";
@@ -70,46 +83,62 @@ export default class MemberModal {
         mode: "cors",
         body: encodeURI(buf),
       })
-        .then((response) => {
-          return response.json();
-        })
+        .then((response) => response.json())
         .then((data: IUserResult) => {
-          console.log(JSON.stringify(data));
           this.memberSearchResult(data);
-          /*
-          if (data.result) {
-            const projectid =
-              document.querySelector<HTMLInputElement>(`#projectId`);
-            if (projectid) {
-              window.location.href = `/project?id=${projectid.value}&tab=gantt`;
-            }
-          } else {
-            window.alert(`エラーが発生しました。: ${data.message}`);
-          }
-          */
         })
         .catch((e) => window.alert(`エラーが発生しました。: ${e.message}`));
     }
   }
 
-  private memberSearchResult(ret: IUserResult) {
+  private searchName() {
+    const addMembers = document.querySelector<HTMLInputElement>(`#add_members`);
+    if (addMembers) {
+      addMembers.value = "";
+    }
+
+    const inputName =
+      document.querySelector<HTMLInputElement>(`input#member-name`);
+    if (inputName && inputName.value) {
+      const buf = `name=${inputName.value}`;
+
+      fetch("/api/userByName", {
+        method: "POST",
+        headers: {
+          Accept: "*/*",
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        },
+        mode: "cors",
+        body: encodeURI(buf),
+      })
+        .then((response) => response.json())
+        .then((data: IUserResult) => {
+          this.memberSearchResult(data);
+        })
+        .catch((e) => window.alert(`エラーが発生しました。: ${e.message}`));
+    }
+  }
+
+  private memberSearchResult(res: IUserResult) {
     let buf = "";
-    if (ret.result === "OK") {
-      if (ret.users.length > 0) {
-        buf += `<table class="table table-hover">`;
+    if (res.result === "OK") {
+      if (res.users.length > 0) {
+        buf = `<table class="table table-hover">`;
         {
           buf += `<thead>`;
           {
             buf += `<tr>`;
-            buf += `<th scope="col">選択</th>`;
-            buf += `<th scope="col">メールアドレス</th>`;
-            buf += `<th scope="col">名前</th>`;
-            buf += `<th scope="col">ロール</th>`;
+            {
+              buf += `<th scope="col">選択</th>`;
+              buf += `<th scope="col">メールアドレス</th>`;
+              buf += `<th scope="col">名前</th>`;
+              buf += `<th scope="col">ロール</th>`;
+            }
             buf += `</tr>`;
           }
           buf += `</thead>`;
           buf += `<tbody>`;
-          for (let i in ret.users) {
+          for (let i in res.users) {
             buf += `<tr>`;
             {
               buf += `<td>`;
@@ -117,8 +146,8 @@ export default class MemberModal {
                 buf += `<input class="form-check-input" type="checkbox" id="check${i}" checked>`;
               }
               buf += `</td>`;
-              buf += `<td>${ret.users[i].email}</td>`;
-              buf += `<td>${ret.users[i].name}</td>`;
+              buf += `<td>${res.users[i].email}</td>`;
+              buf += `<td>${res.users[i].name}</td>`;
               buf += `<td>`;
               {
                 buf += `<select class="form-select" id="role${i}" name="role${i}">`;
@@ -128,9 +157,9 @@ export default class MemberModal {
                   buf += `<option value="4">閲覧者</option>`;
                 }
                 buf += `</select>`;
-                buf += `<input type="hidden" id="uid${i}" value="${ret.users[i].uid}">`;
-                buf += `<input type="hidden" id="name${i}" value="${ret.users[i].name}">`;
-                buf += `<input type="hidden" id="email${i}" value="${ret.users[i].email}">`;
+                buf += `<input type="hidden" id="uid${i}" value="${res.users[i].uid}">`;
+                buf += `<input type="hidden" id="name${i}" value="${res.users[i].name}">`;
+                buf += `<input type="hidden" id="email${i}" value="${res.users[i].email}">`;
               }
               buf += `</td>`;
             }
@@ -145,7 +174,7 @@ export default class MemberModal {
           btnAddMember.removeAttribute("disabled");
         }
       } else {
-        buf +=
+        buf =
           '<div class="col"><p class="text-danger">該当するユーザーが登録されていません。</p></div>';
         const btnAddMember =
           document.querySelector<HTMLButtonElement>(`#btnAddMember`);
@@ -154,12 +183,69 @@ export default class MemberModal {
         }
       }
     } else {
-      buf += ret.message;
+      buf = res.message;
     }
 
     const searched = document.querySelector<HTMLDivElement>(`#searched`);
     if (searched) {
       searched.innerHTML = buf;
     }
+  }
+
+  private addMember() {
+    //console.log("addMember");
+    for (let i = 0; i < 10; i++) {
+      const check = document.querySelector<HTMLInputElement>(`#check${i}`);
+      if (check) {
+        if (!check.checked) {
+          continue;
+        }
+        let member = {
+          uid: "",
+          email: "",
+          name: "",
+          role: 0,
+        } as IMember;
+        const uid = document.querySelector<HTMLInputElement>(`#uid${i}`);
+        if (uid) {
+          member.uid = uid.value;
+        }
+        const email = document.querySelector<HTMLInputElement>(`#email${i}`);
+        if (email) {
+          member.email = email.value;
+        }
+        const name = document.querySelector<HTMLInputElement>(`#name${i}`);
+        if (name) {
+          member.name = name.value;
+        }
+        const role = document.querySelector<HTMLInputElement>(`#role${i}`);
+        if (role) {
+          member.role = Number(role.value);
+        }
+        let idx = this.info?.members.findIndex((x) => x.uid == member.uid);
+        if (idx == -1) {
+          this.info.members.push(member);
+        }
+      } else {
+        break;
+      }
+    }
+
+    const inputEmail = document.querySelector<HTMLInputElement>(`input#email`);
+    if (inputEmail) {
+      inputEmail.value = "";
+    }
+    const inputName =
+      document.querySelector<HTMLInputElement>(`input#member-name`);
+    if (inputName) {
+      inputName.value = "";
+    }
+    const searched = document.querySelector<HTMLDivElement>(`#searched`);
+    if (searched) {
+      searched.innerHTML = "";
+    }
+
+    this.hide();
+    this.info.setMemberList();
   }
 }

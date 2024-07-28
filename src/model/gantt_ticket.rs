@@ -243,10 +243,11 @@ impl GanttTicket {
             }
         }
 
-        let (gantts, _min, _max) = GanttTicket::gantt_sub(gantts, &tickets_cur);
-        let tickets_cur = GanttTicket::flatten(&gantts);
+        let (mut gantts, _min, _max) = GanttTicket::gantt_sub(gantts, &tickets_cur);
+        GanttTicket::gantt_sort(&mut gantts);
+        let tickets_cur = GanttTicket::flatten(&gantts, false);
 
-        let tickets_upd = GanttTicket::flatten(tickets_upd);
+        let tickets_upd = GanttTicket::flatten(tickets_upd, true);
 
         /*
          * チケットの更新処理
@@ -361,16 +362,19 @@ impl GanttTicket {
     }
 
     /// 更新するデータを直列化する
-    fn flatten(tickets_upd: &Vec<GanttTicket>) -> Vec<GanttTicket> {
+    fn flatten(tickets_upd: &Vec<GanttTicket>, set_seq: bool) -> Vec<GanttTicket> {
         let mut tickets: Vec<GanttTicket> = Vec::new();
 
         let mut i = 0;
         for t in tickets_upd {
             let mut ticket = t.clone();
-            ticket.ganttseq = Some(i);
+            if set_seq {
+                ticket.ganttseq = Some(i);
+            }
             ticket.parent_id = None;
+            ticket.children.clear();
             tickets.push(ticket);
-            GanttTicket::flatten_sub(Some(t.id.clone()), &t.children, &mut tickets);
+            GanttTicket::flatten_sub(Some(t.id.clone()), &t.children, set_seq, &mut tickets);
             i += 1;
         }
 
@@ -382,6 +386,7 @@ impl GanttTicket {
     fn flatten_sub(
         parent: Option<String>,
         tickets_upd: &Vec<GanttTicket>,
+        set_seq: bool,
         tickets: &mut Vec<GanttTicket>,
     ) {
         let mut i = 0;
@@ -389,8 +394,9 @@ impl GanttTicket {
             let mut ticket = t.clone();
             ticket.ganttseq = Some(i);
             ticket.parent_id = parent.clone();
+            ticket.children.clear();
             tickets.push(ticket);
-            GanttTicket::flatten_sub(Some(t.id.clone()), &t.children, tickets);
+            GanttTicket::flatten_sub(Some(t.id.clone()), &t.children, set_seq, tickets);
             i += 1;
         }
     }

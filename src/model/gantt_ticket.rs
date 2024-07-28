@@ -233,7 +233,20 @@ impl GanttTicket {
             }
         };
 
-        let tickets_upd = GanttTicket::serialize(tickets_upd);
+        let mut gantts: Vec<GanttTicket> = Vec::new();
+
+        // 親チケットがないチケットを最上位に表示する
+        for ticket in &tickets_cur {
+            if ticket.parent_id.is_none() {
+                let gantt = GanttTicket::new(ticket);
+                gantts.push(gantt);
+            }
+        }
+
+        let (gantts, _min, _max) = GanttTicket::gantt_sub(gantts, &tickets_cur);
+        let tickets_cur = GanttTicket::flatten(&gantts);
+
+        let tickets_upd = GanttTicket::flatten(tickets_upd);
 
         /*
          * チケットの更新処理
@@ -348,7 +361,7 @@ impl GanttTicket {
     }
 
     /// 更新するデータを直列化する
-    fn serialize(tickets_upd: &Vec<GanttTicket>) -> Vec<GanttTicket> {
+    fn flatten(tickets_upd: &Vec<GanttTicket>) -> Vec<GanttTicket> {
         let mut tickets: Vec<GanttTicket> = Vec::new();
 
         let mut i = 0;
@@ -357,7 +370,7 @@ impl GanttTicket {
             ticket.ganttseq = Some(i);
             ticket.parent_id = None;
             tickets.push(ticket);
-            GanttTicket::serialize_sub(Some(t.id.clone()), &t.children, &mut tickets);
+            GanttTicket::flatten_sub(Some(t.id.clone()), &t.children, &mut tickets);
             i += 1;
         }
 
@@ -366,7 +379,7 @@ impl GanttTicket {
         tickets
     }
 
-    fn serialize_sub(
+    fn flatten_sub(
         parent: Option<String>,
         tickets_upd: &Vec<GanttTicket>,
         tickets: &mut Vec<GanttTicket>,
@@ -377,7 +390,7 @@ impl GanttTicket {
             ticket.ganttseq = Some(i);
             ticket.parent_id = parent.clone();
             tickets.push(ticket);
-            GanttTicket::serialize_sub(Some(t.id.clone()), &t.children, tickets);
+            GanttTicket::flatten_sub(Some(t.id.clone()), &t.children, tickets);
             i += 1;
         }
     }

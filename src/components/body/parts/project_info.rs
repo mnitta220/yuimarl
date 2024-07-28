@@ -182,11 +182,14 @@ impl Component for ProjectInfo {
                             }
                             *buf += r#" id="divAddMember">"#;
                             {
+                                /*
                                 *buf += r#"<a href="javascript:clickAddMember();">"#;
                                 {
                                     *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="メンバーを追加">"#;
                                 }
                                 *buf += r#"</a>"#;
+                                */
+                                *buf += r#"<img class="icon3" id="icnAddMember" src="/static/ionicons/add-circle-outline.svg" title="メンバーを追加">"#;
                             }
                             *buf += r#"</div>"#;
                         }

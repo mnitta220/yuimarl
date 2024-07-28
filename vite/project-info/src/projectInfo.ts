@@ -1,3 +1,5 @@
+import MemberModal from "./memberModal";
+
 interface IMember {
   id: string; // プロジェクトID
   uid: string; // メンバーのユーザーID
@@ -8,6 +10,25 @@ interface IMember {
 
 export default class ProjectInfo {
   members: IMember[] = [];
+  memberModal = new MemberModal();
+
+  constructor() {
+    this.handler();
+  }
+
+  // イベントハンドラを登録する
+  private handler() {
+    const icnAddMember =
+      document.querySelector<HTMLButtonElement>(`#icnAddMember`);
+    if (icnAddMember) {
+      // メンバーを追加アイコンが押された
+      icnAddMember.addEventListener("click", () => {
+        //console.log("icnAddMember");
+        this.memberModal.show();
+      });
+    }
+    this.memberModal.handler();
+  }
 
   load() {
     this.members = [];

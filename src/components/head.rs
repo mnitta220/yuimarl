@@ -27,7 +27,7 @@ impl Component for Head {
                         if title == "プロジェクト" {
                             // 次の行は、vite/project-info フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
                             // (参照) vite/project-info/README.md
-                            *buf += r#"<script type="module" crossorigin src="/static/js/project-info/index-WGwNeKAQ.js"></script>"#;
+                            *buf += r#"<script type="module" crossorigin src="/static/js/project-info/index-pq4VUMf7.js"></script>"#;
                         }
                     }
                 }

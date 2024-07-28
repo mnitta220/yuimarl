@@ -156,11 +156,13 @@ impl Component for ProjectBody {
 
             self.footer.write(props, buf);
             match &props.tab {
+                /*
                 Tab::Info => {
                     *buf +=
                         r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
                     *buf += r#"<script src="/static/js/project1015.js"></script>"#;
                 }
+                */
                 Tab::Note => {
                     *buf +=
                         r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;

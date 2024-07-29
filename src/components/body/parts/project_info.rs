@@ -150,20 +150,12 @@ impl Component for ProjectInfo {
                                         *buf += r#"</td><td>"#;
 
                                         if i > 0 && self.can_update {
-                                            *buf += r#"<a href="javascript:updateMember("#;
+                                            *buf += r#"<img class="icon" style="cursor:pointer" id="icnSetMem"#;
                                             *buf += &i.to_string();
-                                            *buf += r#")">"#;
-                                            {
-                                                *buf += r#"<img class="icon" src="/static/ionicons/settings-outline.svg" title="設定">"#;
-                                            }
-                                            *buf += r#"</a>&nbsp;"#;
-                                            *buf += r#"<a href="javascript:removeMember("#;
+                                            *buf += r#"" src="/static/ionicons/settings-outline.svg" title="設定">"#;
+                                            *buf += r#"<img class="icon" style="cursor:pointer" id="icnRemoveMem"#;
                                             *buf += &i.to_string();
-                                            *buf += r#")">"#;
-                                            {
-                                                *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
-                                            }
-                                            *buf += r#"</a>"#;
+                                            *buf += r#"" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
                                         }
                                         *buf += r#"</td>"#;
                                     }
@@ -189,7 +181,7 @@ impl Component for ProjectInfo {
                                 }
                                 *buf += r#"</a>"#;
                                 */
-                                *buf += r#"<img class="icon3" id="icnAddMember" src="/static/ionicons/add-circle-outline.svg" title="メンバーを追加">"#;
+                                *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddMember" src="/static/ionicons/add-circle-outline.svg" title="メンバーを追加">"#;
                             }
                             *buf += r#"</div>"#;
                         }
@@ -282,6 +274,7 @@ impl Component for ProjectInfo {
                         {
                             *buf +=
                                 r#"<label class="form-label" for="iteration_start">開始日</label>"#;
+                            /*
                             *buf += r#"<input class="form-control" id="iteration_start" name="iteration_start" type="date" value=""#;
                             if let Some(p) = &props.project {
                                 if let Some(st) = &p.iteration_start {
@@ -293,6 +286,31 @@ impl Component for ProjectInfo {
                                 *buf += r#" disabled"#;
                             }
                             *buf += r#">"#;
+                            */
+                            if self.can_update {
+                                *buf += r#"<input class="form-control" id="iteration_start" name="iteration_start" type="date" value=""#;
+                                if let Some(p) = &props.project {
+                                    if let Some(st) = &p.iteration_start {
+                                        *buf += st;
+                                    }
+                                }
+                                *buf += r#"">"#;
+                            } else {
+                                *buf += r#"<input class="form-control" type="date" value=""#;
+                                if let Some(p) = &props.project {
+                                    if let Some(st) = &p.iteration_start {
+                                        *buf += st;
+                                    }
+                                }
+                                *buf += r#"" disabled>"#;
+                                *buf += r#"<input id="iteration_start" name="iteration_start" type="hidden" value=""#;
+                                if let Some(p) = &props.project {
+                                    if let Some(st) = &p.iteration_start {
+                                        *buf += st;
+                                    }
+                                }
+                                *buf += r#"">"#;
+                            }
                         }
                         *buf += r#"</div>"#;
 
@@ -301,6 +319,7 @@ impl Component for ProjectInfo {
                         {
                             *buf +=
                                 r#"<label class="form-label" for="iteration_no">開始番号</label>"#;
+                            /*
                             *buf += r#"<input class="form-control" id="iteration_no" name="iteration_no" type="number" value=""#;
                             if let Some(p) = &props.project {
                                 if let Some(no) = &p.iteration_no {
@@ -316,6 +335,41 @@ impl Component for ProjectInfo {
                                 *buf += r#" disabled"#;
                             }
                             *buf += r#">"#;
+                            */
+                            if self.can_update {
+                                *buf += r#"<input class="form-control" id="iteration_no" name="iteration_no" type="number" value=""#;
+                                if let Some(p) = &props.project {
+                                    if let Some(no) = &p.iteration_no {
+                                        *buf += &no.to_string();
+                                    } else {
+                                        *buf += "1";
+                                    }
+                                } else {
+                                    *buf += "1";
+                                }
+                                *buf += r#"">"#;
+                            } else {
+                                *buf += r#"<input class="form-control" type="number" value=""#;
+                                if let Some(p) = &props.project {
+                                    if let Some(no) = &p.iteration_no {
+                                        *buf += &no.to_string();
+                                    } else {
+                                        *buf += "1";
+                                    }
+                                } else {
+                                    *buf += "1";
+                                }
+                                *buf += r#"" disabled>"#;
+                                *buf += r#"<input id="iteration_no" name="iteration_no" type="hidden" value=""#;
+                                if let Some(p) = &props.project {
+                                    if let Some(no) = &p.iteration_no {
+                                        *buf += &no.to_string();
+                                    } else {
+                                        *buf += "1";
+                                    }
+                                }
+                                *buf += r#"">"#;
+                            }
                         }
                         *buf += r#"</div>"#;
                     }
@@ -335,6 +389,7 @@ impl Component for ProjectInfo {
                                 }
                             }
 
+                            /*
                             *buf += r#"<div class="form-check form-check-inline">"#;
                             {
                                 *buf += r#"<input class="form-check-input" id="w1" name="iteration_unit" type="radio" value="w1""#;
@@ -390,6 +445,108 @@ impl Component for ProjectInfo {
                                 *buf += r#"<label class="form-check-label" for="w4">4週</label>"#;
                             }
                             *buf += r#"</div>"#;
+                            */
+                            if self.can_update {
+                                *buf += r#"<div class="form-check form-check-inline">"#;
+                                {
+                                    *buf += r#"<input class="form-check-input" id="w1" name="iteration_unit" type="radio" value="w1""#;
+                                    if iteration_unit == "w1" {
+                                        *buf += r#" checked="checked""#;
+                                    }
+                                    *buf += r#">"#;
+                                    *buf +=
+                                        r#"<label class="form-check-label" for="w1">1週</label>"#;
+                                }
+                                *buf += r#"</div>"#;
+
+                                *buf += r#"<div class="form-check form-check-inline">"#;
+                                {
+                                    *buf += r#"<input class="form-check-input" id="w2" name="iteration_unit" type="radio" value="w2""#;
+                                    if iteration_unit == "w2" {
+                                        *buf += r#" checked="checked""#;
+                                    }
+                                    *buf += r#">"#;
+                                    *buf +=
+                                        r#"<label class="form-check-label" for="w2">2週</label>"#;
+                                }
+                                *buf += r#"</div>"#;
+
+                                *buf += r#"<div class="form-check form-check-inline">"#;
+                                {
+                                    *buf += r#"<input class="form-check-input" id="w3" name="iteration_unit" type="radio" value="w3""#;
+                                    if iteration_unit == "w3" {
+                                        *buf += r#" checked="checked""#;
+                                    }
+                                    *buf += r#">"#;
+                                    *buf +=
+                                        r#"<label class="form-check-label" for="w3">3週</label>"#;
+                                }
+                                *buf += r#"</div>"#;
+
+                                *buf += r#"<div class="form-check form-check-inline">"#;
+                                {
+                                    *buf += r#"<input class="form-check-input" id="w4" name="iteration_unit" type="radio" value="w4""#;
+                                    if iteration_unit == "w4" {
+                                        *buf += r#" checked="checked""#;
+                                    }
+                                    *buf += r#">"#;
+                                    *buf +=
+                                        r#"<label class="form-check-label" for="w4">4週</label>"#;
+                                }
+                                *buf += r#"</div>"#;
+                            } else {
+                                *buf += r#"<div class="form-check form-check-inline">"#;
+                                {
+                                    *buf += r#"<input class="form-check-input" type="radio" value="w1""#;
+                                    if iteration_unit == "w1" {
+                                        *buf += r#" checked="checked""#;
+                                    }
+                                    *buf += r#" disabled>"#;
+                                    *buf +=
+                                        r#"<label class="form-check-label" for="w1">1週</label>"#;
+                                }
+                                *buf += r#"</div>"#;
+
+                                *buf += r#"<div class="form-check form-check-inline">"#;
+                                {
+                                    *buf += r#"<input class="form-check-input" type="radio" value="w2""#;
+                                    if iteration_unit == "w2" {
+                                        *buf += r#" checked="checked""#;
+                                    }
+                                    *buf += r#" disabled>"#;
+                                    *buf +=
+                                        r#"<label class="form-check-label" for="w2">2週</label>"#;
+                                }
+                                *buf += r#"</div>"#;
+
+                                *buf += r#"<div class="form-check form-check-inline">"#;
+                                {
+                                    *buf += r#"<input class="form-check-input" type="radio" value="w3""#;
+                                    if iteration_unit == "w3" {
+                                        *buf += r#" checked="checked""#;
+                                    }
+                                    *buf += r#" disabled>"#;
+                                    *buf +=
+                                        r#"<label class="form-check-label" for="w3">3週</label>"#;
+                                }
+                                *buf += r#"</div>"#;
+
+                                *buf += r#"<div class="form-check form-check-inline">"#;
+                                {
+                                    *buf += r#"<input class="form-check-input" type="radio" value="w4""#;
+                                    if iteration_unit == "w4" {
+                                        *buf += r#" checked="checked""#;
+                                    }
+                                    *buf += r#" disabled>"#;
+                                    *buf +=
+                                        r#"<label class="form-check-label" for="w4">4週</label>"#;
+                                }
+                                *buf += r#"</div>"#;
+
+                                *buf += r#"<input id="iteration_unit" name="iteration_unit" type="hidden" value=""#;
+                                *buf += iteration_unit;
+                                *buf += r#"">"#;
+                            }
                         }
                         *buf += r#"</div>"#;
                     }

@@ -13,7 +13,7 @@ interface IUserResult {
   message: string;
 }
 
-export default class MemberModal {
+export default class AddMemberModal {
   private id = "addMemberModal";
   private modal: bootstrap.Modal | null = null;
 
@@ -193,7 +193,6 @@ export default class MemberModal {
   }
 
   private addMember() {
-    //console.log("addMember");
     for (let i = 0; i < 10; i++) {
       const check = document.querySelector<HTMLInputElement>(`#check${i}`);
       if (check) {
@@ -231,19 +230,9 @@ export default class MemberModal {
       }
     }
 
-    const inputEmail = document.querySelector<HTMLInputElement>(`input#email`);
-    if (inputEmail) {
-      inputEmail.value = "";
-    }
-    const inputName =
-      document.querySelector<HTMLInputElement>(`input#member-name`);
-    if (inputName) {
-      inputName.value = "";
-    }
-    const searched = document.querySelector<HTMLDivElement>(`#searched`);
-    if (searched) {
-      searched.innerHTML = "";
-    }
+    document.querySelector<HTMLInputElement>(`input#email`)!.value = "";
+    document.querySelector<HTMLInputElement>(`input#member-name`)!.value = "";
+    document.querySelector<HTMLDivElement>(`#searched`)!.innerHTML = "";
 
     this.hide();
     this.info.setMemberList();

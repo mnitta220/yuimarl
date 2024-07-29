@@ -163,6 +163,14 @@ impl Component for ProjectBody {
                     *buf += r#"<script src="/static/js/project1015.js"></script>"#;
                 }
                 */
+                Tab::Info => {
+                    *buf += r#"<script>
+                    function updateMember(i) {
+                        console.log('updateMember', i);
+                        main();
+                    }
+                    </script>"#;
+                }
                 Tab::Note => {
                     *buf +=
                         r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;

@@ -47,7 +47,7 @@ impl Props {
             gantt_start: None,
             gantt_end: None,
             news: Vec::new(),
-            tab: Tab::Info,
+            tab: Tab::ProjectInfo,
             action: crate::Action::Read,
         }
     }
@@ -56,11 +56,12 @@ impl Props {
 /// プロジェクト画面のタブ
 #[derive(Clone, Copy, PartialEq)]
 pub enum Tab {
-    Info = 1,       // 基本情報
-    Note = 2,       // ノート
-    History = 3,    // 更新履歴
-    Comment = 4,    // コメント
-    GanttChart = 5, // ガントチャート
+    ProjectInfo = 1, // プロジェクト基本情報
+    TicketInfo = 2,  // チケット基本情報
+    Note = 3,        // ノート
+    History = 4,     // 更新履歴
+    Comment = 5,     // コメント
+    GanttChart = 6,  // ガントチャート
 }
 
 pub struct Page {

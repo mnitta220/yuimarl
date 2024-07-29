@@ -81,7 +81,7 @@ impl Component for TicketBody {
                                         *buf += r#"<li class="nav-item">"#;
                                         {
                                             *buf += r#"<a class="nav-link"#;
-                                            if props.tab == Tab::Info {
+                                            if props.tab == Tab::TicketInfo {
                                                 *buf += r#" active"#;
                                             }
                                             *buf += r#"" href="/ticket?id="#;
@@ -133,7 +133,7 @@ impl Component for TicketBody {
                         }
 
                         match &props.tab {
-                            Tab::Info => {
+                            Tab::TicketInfo => {
                                 self.ticket_info.write(props, buf);
                             }
                             Tab::Note => {
@@ -162,9 +162,11 @@ impl Component for TicketBody {
             self.footer.write(props, buf);
             *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
             match &props.tab {
+                /*
                 Tab::Info => {
                     *buf += r#"<script src="/static/js/ticket1015.js"></script>"#;
                 }
+                */
                 Tab::Note => {
                     *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;
                     *buf += r#"<script src="/static/js/markdown1015.js"></script>"#;

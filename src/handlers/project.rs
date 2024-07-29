@@ -121,7 +121,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
             props.tab = crate::Tab::History;
         }
         _ => {
-            props.tab = crate::Tab::Info;
+            props.tab = crate::Tab::ProjectInfo;
         }
     }
 

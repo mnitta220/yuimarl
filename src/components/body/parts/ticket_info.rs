@@ -185,11 +185,14 @@ impl Component for TicketInfo {
                         *buf += r#"</div>"#;
 
                         if self.can_update {
+                            /*
                             *buf += r#"<a href="javascript:clickAddCharge();">"#;
                             {
                                 *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="担当者を追加">"#;
                             }
                             *buf += r#"</a>"#;
+                            */
+                            *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddCharge" src="/static/ionicons/add-circle-outline.svg" title="担当者を追加">"#;
                         }
                     }
                     *buf += r#"</div>"#;
@@ -859,7 +862,7 @@ impl Component for TicketInfo {
         *buf += r#"</form>"#;
 
         // 担当者追加ダイアログ
-        *buf += r#"<div class="modal fade" id="inChargeModal" tabindex="-1" aria-labelledby="chargeModalLabel" aria-hidden="true">"#;
+        *buf += r#"<div class="modal fade" id="addChargeModal" tabindex="-1" aria-labelledby="chargeModalLabel" aria-hidden="true">"#;
         {
             *buf += r#"<div class="modal-dialog modal-lg">"#;
             {
@@ -867,7 +870,7 @@ impl Component for TicketInfo {
                 {
                     *buf += r#"<div class="modal-header">"#;
                     {
-                        *buf += r#"<h1 class="modal-title fs-5" id="addMemberModalLabel">担当者を追加</h1>"#;
+                        *buf += r#"<h1 class="modal-title fs-5" id="addChargeModalLabel">担当者を追加</h1>"#;
                         *buf += r#"<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="キャンセル"></button>"#;
                     }
                     *buf += r#"</div>"#;

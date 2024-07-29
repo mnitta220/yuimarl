@@ -18,7 +18,7 @@ export default class AddMemberModal {
   private modal: bootstrap.Modal | null = null;
 
   constructor(private info: ProjectInfo) {
-    this.info = info;
+    //this.info = info;
     const memberModal = document.querySelector<HTMLDivElement>(`#${this.id}`);
     if (memberModal) {
       this.modal = new bootstrap.Modal(memberModal);

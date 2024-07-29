@@ -9,7 +9,7 @@ npm コマンドで JavaScript にコンパイルされます。
 
 ## インストール
 
-1. `vite\project` フォルダで、次のコマンドを実行します。
+1. `vite\project-info` フォルダで、次のコマンドを実行します。
 
 ```
 npm install
@@ -17,15 +17,15 @@ npm install
 
 ## ビルド
 
-1. `vite\project` フォルダで、次のコマンドを実行します。
+1. `vite\project-info` フォルダで、次のコマンドを実行します。
 
 ```
 npm run build
 ```
 
-2. `vite\project\dist\assets` の下に出力された `index-XXXXXXXX.js` を、 `static\js\project` にコピーし、既存の `index-XXXXXXXX.js` を削除します。
+2. `vite\project-info\dist\assets` の下に出力された `index-XXXXXXXX.js` を、 `static\js\project` にコピーし、既存の `index-XXXXXXXX.js` を削除します。
 3. `src\components\head.rs` にある `<script ・・・ index-XXXXXXXX.js` を書き換えます。
 
 ```Rust
-    *buf += r#"<script type="module" crossorigin src="/static/js/project/index-XXXXXXXX.js"></script>"#;
+    *buf += r#"<script type="module" crossorigin src="/static/js/project-info/index-XXXXXXXX.js"></script>"#;
 ```

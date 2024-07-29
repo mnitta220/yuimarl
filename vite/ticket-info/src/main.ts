@@ -1,9 +1,9 @@
-import ProjectInfo from "./projectInfo";
+import TicketInfo from "./ticketInfo";
 
-const project = new ProjectInfo();
+const info = new TicketInfo();
 
 const main = async () => {
-  project.load();
+  info.load();
 };
 
 main().catch((e) => {

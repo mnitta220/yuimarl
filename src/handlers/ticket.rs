@@ -34,6 +34,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
     let mut props = page::Props::new(&session.id);
     props.title = Some("チケットを作成".to_string());
     props.action = crate::Action::Create;
+    props.tab = crate::Tab::TicketInfo;
 
     let (project, member, tickets) =
         match model::project::Project::current_project_and_tickets(&session, &db).await {
@@ -113,7 +114,7 @@ pub async fn show_ticket(
             props.tab = crate::Tab::History;
         }
         _ => {
-            props.tab = crate::Tab::Info;
+            props.tab = crate::Tab::TicketInfo;
         }
     }
 

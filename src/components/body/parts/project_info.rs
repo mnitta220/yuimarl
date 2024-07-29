@@ -274,19 +274,6 @@ impl Component for ProjectInfo {
                         {
                             *buf +=
                                 r#"<label class="form-label" for="iteration_start">開始日</label>"#;
-                            /*
-                            *buf += r#"<input class="form-control" id="iteration_start" name="iteration_start" type="date" value=""#;
-                            if let Some(p) = &props.project {
-                                if let Some(st) = &p.iteration_start {
-                                    *buf += st;
-                                }
-                            }
-                            *buf += r#"""#;
-                            if !self.can_update {
-                                *buf += r#" disabled"#;
-                            }
-                            *buf += r#">"#;
-                            */
                             if self.can_update {
                                 *buf += r#"<input class="form-control" id="iteration_start" name="iteration_start" type="date" value=""#;
                                 if let Some(p) = &props.project {
@@ -319,23 +306,6 @@ impl Component for ProjectInfo {
                         {
                             *buf +=
                                 r#"<label class="form-label" for="iteration_no">開始番号</label>"#;
-                            /*
-                            *buf += r#"<input class="form-control" id="iteration_no" name="iteration_no" type="number" value=""#;
-                            if let Some(p) = &props.project {
-                                if let Some(no) = &p.iteration_no {
-                                    *buf += &no.to_string();
-                                } else {
-                                    *buf += "1";
-                                }
-                            } else {
-                                *buf += "1";
-                            }
-                            *buf += r#"""#;
-                            if !self.can_update {
-                                *buf += r#" disabled"#;
-                            }
-                            *buf += r#">"#;
-                            */
                             if self.can_update {
                                 *buf += r#"<input class="form-control" id="iteration_no" name="iteration_no" type="number" value=""#;
                                 if let Some(p) = &props.project {
@@ -389,63 +359,6 @@ impl Component for ProjectInfo {
                                 }
                             }
 
-                            /*
-                            *buf += r#"<div class="form-check form-check-inline">"#;
-                            {
-                                *buf += r#"<input class="form-check-input" id="w1" name="iteration_unit" type="radio" value="w1""#;
-                                if iteration_unit == "w1" {
-                                    *buf += r#" checked="checked""#;
-                                }
-                                if !self.can_update {
-                                    *buf += r#" disabled"#;
-                                }
-                                *buf += r#">"#;
-                                *buf += r#"<label class="form-check-label" for="w1">1週</label>"#;
-                            }
-                            *buf += r#"</div>"#;
-
-                            *buf += r#"<div class="form-check form-check-inline">"#;
-                            {
-                                *buf += r#"<input class="form-check-input" id="w2" name="iteration_unit" type="radio" value="w2""#;
-                                if iteration_unit == "w2" {
-                                    *buf += r#" checked="checked""#;
-                                }
-                                if !self.can_update {
-                                    *buf += r#" disabled"#;
-                                }
-                                *buf += r#">"#;
-                                *buf += r#"<label class="form-check-label" for="w2">2週</label>"#;
-                            }
-                            *buf += r#"</div>"#;
-
-                            *buf += r#"<div class="form-check form-check-inline">"#;
-                            {
-                                *buf += r#"<input class="form-check-input" id="w3" name="iteration_unit" type="radio" value="w3""#;
-                                if iteration_unit == "w3" {
-                                    *buf += r#" checked="checked""#;
-                                }
-                                if !self.can_update {
-                                    *buf += r#" disabled"#;
-                                }
-                                *buf += r#">"#;
-                                *buf += r#"<label class="form-check-label" for="w3">3週</label>"#;
-                            }
-                            *buf += r#"</div>"#;
-
-                            *buf += r#"<div class="form-check form-check-inline">"#;
-                            {
-                                *buf += r#"<input class="form-check-input" id="w4" name="iteration_unit" type="radio" value="w4""#;
-                                if iteration_unit == "w4" {
-                                    *buf += r#" checked="checked""#;
-                                }
-                                if !self.can_update {
-                                    *buf += r#" disabled"#;
-                                }
-                                *buf += r#">"#;
-                                *buf += r#"<label class="form-check-label" for="w4">4週</label>"#;
-                            }
-                            *buf += r#"</div>"#;
-                            */
                             if self.can_update {
                                 *buf += r#"<div class="form-check form-check-inline">"#;
                                 {

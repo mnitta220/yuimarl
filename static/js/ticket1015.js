@@ -1,6 +1,6 @@
 let members = [];
 let deliverables = [];
-let inChargeModal = new bootstrap.Modal("#inChargeModal");
+let addChargeModal = new bootstrap.Modal("#addChargeModal");
 let addParentModal = new bootstrap.Modal("#addParentModal");
 let deliverablesModal = new bootstrap.Modal("#deliverablesModal");
 
@@ -70,7 +70,7 @@ function clickAddCharge() {
                 buf += ret.message;
             }
             $("div#searched").html(buf);
-            inChargeModal.show();
+            addChargeModal.show();
         }
     });
 }
@@ -101,7 +101,7 @@ $('#btnMemberAdd').on('click', function () {
         }
     }
     setChargeTable();
-    inChargeModal.hide();
+    addChargeModal.hide();
 });
 
 $('#btnSave').on('click', function () {

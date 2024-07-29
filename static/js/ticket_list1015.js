@@ -1,4 +1,4 @@
-let inChargeModal = new bootstrap.Modal("#inChargeModal");
+let addChargeModal = new bootstrap.Modal("#addChargeModal");
 let members = [];
 
 function pageChange(idx) {
@@ -74,7 +74,7 @@ function clickSelectCharge() {
                 buf += ret.message;
             }
             $("div#searched").html(buf);
-            inChargeModal.show();
+            addChargeModal.show();
         }
     });
 }
@@ -88,7 +88,7 @@ $('#btnSelectMember').on('click', function () {
     $('#chargename').val(member.name);
     $('#charge2').removeClass('d-none');
     $('#charge1').addClass('d-none');
-    inChargeModal.hide();
+    addChargeModal.hide();
 });
 
 function clickRemoveCharge() {

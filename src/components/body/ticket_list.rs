@@ -540,7 +540,7 @@ impl Component for TicketListBody {
                             }
 
                             // 担当者選択ダイアログ
-                            *buf += r#"<div class="modal fade" id="inChargeModal" tabindex="-1" aria-labelledby="chargeModalLabel" aria-hidden="true">"#;
+                            *buf += r#"<div class="modal fade" id="addChargeModal" tabindex="-1" aria-labelledby="chargeModalLabel" aria-hidden="true">"#;
                             {
                                 *buf += r#"<div class="modal-dialog modal-lg">"#;
                                 {

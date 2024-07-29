@@ -1,12 +1,13 @@
 import * as bootstrap from "bootstrap";
-import ProjectInfo from "./projectInfo";
+import TicketInfo from "./ticketInfo";
 
 export default class UpdateMemberModal {
   private id = "updateMemberModal";
   private modal: bootstrap.Modal | null = null;
 
-  constructor(private info: ProjectInfo) {
+  constructor(private info: TicketInfo) {
     //this.info = info;
+    console.log(`${this.info.members.length}`);
     const memberModal = document.querySelector<HTMLDivElement>(`#${this.id}`);
     if (memberModal) {
       this.modal = new bootstrap.Modal(memberModal);
@@ -15,6 +16,7 @@ export default class UpdateMemberModal {
 
   // イベントハンドラを登録する
   handler() {
+    /*
     const btnUpdateMember =
       document.querySelector<HTMLButtonElement>(`#btnUpdateMember`);
     if (btnUpdateMember) {
@@ -22,6 +24,7 @@ export default class UpdateMemberModal {
         this.updateMember();
       });
     }
+    */
   }
 
   show() {
@@ -36,6 +39,7 @@ export default class UpdateMemberModal {
     }
   }
 
+  /*
   private updateMember() {
     const updateMemberIdx =
       document.querySelector<HTMLInputElement>(`#updateMemberIdx`);
@@ -55,4 +59,5 @@ export default class UpdateMemberModal {
       this.info.setMemberList();
     }
   }
+  */
 }

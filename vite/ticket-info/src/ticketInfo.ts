@@ -27,11 +27,47 @@ export default class TicketInfo {
 
   // イベントハンドラを登録する
   private handler() {
-    const icnRemoveParent =
-      document.querySelector<HTMLButtonElement>(`#icnRemoveParent`);
-    if (icnRemoveParent) {
-      icnRemoveParent.addEventListener("click", () => {
+    const btnRemoveParent =
+      document.querySelector<HTMLButtonElement>(`#btnRemoveParent`);
+    if (btnRemoveParent) {
+      btnRemoveParent.addEventListener("click", () => {
         this.removeParent();
+      });
+    }
+
+    const btnRemoveCharge =
+      document.querySelector<HTMLButtonElement>(`#btnRemoveCharge`);
+    if (btnRemoveCharge) {
+      btnRemoveCharge.addEventListener("click", () => {
+        const selectedIndex =
+          document.querySelector<HTMLInputElement>(`#selectedIndex`);
+        if (selectedIndex) {
+          this.removeCharge(Number(selectedIndex.value));
+        }
+      });
+    }
+
+    const btnUpCharge =
+      document.querySelector<HTMLButtonElement>(`#btnUpCharge`);
+    if (btnUpCharge) {
+      btnUpCharge.addEventListener("click", () => {
+        const selectedIndex =
+          document.querySelector<HTMLInputElement>(`#selectedIndex`);
+        if (selectedIndex) {
+          this.chargeSeqUp(Number(selectedIndex.value));
+        }
+      });
+    }
+
+    const btnDownCharge =
+      document.querySelector<HTMLButtonElement>(`#btnDownCharge`);
+    if (btnDownCharge) {
+      btnDownCharge.addEventListener("click", () => {
+        const selectedIndex =
+          document.querySelector<HTMLInputElement>(`#selectedIndex`);
+        if (selectedIndex) {
+          this.chargeSeqDown(Number(selectedIndex.value));
+        }
       });
     }
 
@@ -50,36 +86,6 @@ export default class TicketInfo {
     const ds = document.querySelector<HTMLInputElement>(`#deliverables`);
     if (ds?.value) {
       this.deliverables = JSON.parse(ds.value);
-    }
-    this.memberHandler();
-  }
-
-  private memberHandler() {
-    for (let i in this.members) {
-      let icnRemoveMem = document.querySelector<HTMLImageElement>(
-        `#icnRemoveMem${i}`
-      );
-      if (icnRemoveMem) {
-        icnRemoveMem.addEventListener("click", () => {
-          this.removeCharge(Number(i));
-        });
-      }
-
-      let icnUpMem = document.querySelector<HTMLImageElement>(`#icnUpMem${i}`);
-      if (icnUpMem) {
-        icnUpMem.addEventListener("click", () => {
-          this.chargeSeqUp(Number(i));
-        });
-      }
-
-      let icnDownMem = document.querySelector<HTMLImageElement>(
-        `#icnDownMem${i}`
-      );
-      if (icnDownMem) {
-        icnDownMem.addEventListener("click", () => {
-          this.chargeSeqDown(Number(i));
-        });
-      }
     }
   }
 
@@ -126,12 +132,21 @@ export default class TicketInfo {
             buf += `<td>${this.members[i].email}</td>`;
             buf += `<td>${this.members[i].name}</td>`;
             buf += `<td>`;
-            buf += `<img class="icon" style="cursor:pointer" id="icnRemoveMem${i}" src="/static/ionicons/remove-circle-outline.svg" title="削除">`;
-            if (Number(i) != 0) {
-              buf += `&nbsp;<img class="icon" style="cursor:pointer" id="icnUpMem${i}" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">`;
-            }
-            if (Number(i) + 1 != this.members.length) {
-              buf += `&nbsp;<img class="icon" style="cursor:pointer" id="icnDownMem${i}" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">`;
+            {
+              buf += `<a href="javascript:clickRemoveCharge(${i});">`;
+              buf += `<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">`;
+              buf += `</a>`;
+
+              if (Number(i) != 0) {
+                buf += `<a href="javascript:clickUpCharge(${i});">`;
+                buf += `<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">`;
+                buf += `</a>`;
+              }
+              if (Number(i) + 1 != this.members.length) {
+                buf += `<a href="javascript:clickDownCharge(${i});">`;
+                buf += `<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">`;
+                buf += `</a>`;
+              }
             }
             buf += `</td>`;
           }
@@ -160,27 +175,19 @@ export default class TicketInfo {
 
     const ct = document.querySelector<HTMLElement>(`div#chargeTbl`);
     if (ct) ct.innerHTML = buf;
-
-    this.memberHandler();
   }
 
   removeParent() {
     let buf = '<p class="my-1">';
+    buf += `<a href="javascript:clickAddParentInvisible();">`;
     buf +=
-      '<img class="icon3" style="cursor:pointer" id="icnAddParent" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">';
-    buf += "</p>";
+      '<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">';
+    buf += "</a>";
     buf += '<input type="hidden" id="parent" name="parent" value="">';
+    buf += "</p>";
     const parentTicket = document.querySelector<HTMLElement>(`#parentTicket`);
     if (parentTicket) {
       parentTicket.innerHTML = buf;
-    }
-
-    const icnAddParent =
-      document.querySelector<HTMLButtonElement>(`#icnAddParent`);
-    if (icnAddParent) {
-      icnAddParent.addEventListener("click", () => {
-        this.addParentModal.show();
-      });
     }
   }
 

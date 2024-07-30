@@ -30,7 +30,7 @@ impl Component for Head {
                 Tab::TicketInfo => {
                     // 次の行は、vite/ticket-info フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
                     // (参照) vite/ticket-info/README.md
-                    *buf += r#"<script type="module" crossorigin src="/static/js/ticket-info/index-8E2T0c7t.js"></script>"#;
+                    *buf += r#"<script type="module" crossorigin src="/static/js/ticket-info/index-BEEU_tzV.js"></script>"#;
                 }
                 Tab::GanttChart => {
                     // 以下の2行は、gantt-chart フォルダでビルドして出力された index-XXXXXXXX.js と index-XXXXXXXX.css を設定する。

@@ -26,10 +26,11 @@ export default class AddParentModal {
 
   // イベントハンドラを登録する
   handler() {
-    const icnAddParent =
-      document.querySelector<HTMLButtonElement>(`#icnAddParent`);
-    if (icnAddParent) {
-      icnAddParent.addEventListener("click", () => {
+    const btnAddParentInvisible = document.querySelector<HTMLButtonElement>(
+      `#btnAddParentInvisible`
+    );
+    if (btnAddParentInvisible) {
+      btnAddParentInvisible.addEventListener("click", () => {
         this.show();
       });
     }
@@ -195,7 +196,9 @@ export default class AddParentModal {
       buf += this.info.escapeHtml(parentName.value);
     }
     buf += `&nbsp;`;
-    buf += `<img class="icon" style="cursor:pointer" id="icnRemoveParent" src="/static/ionicons/remove-circle-outline.svg" title="削除">`;
+    buf += `<a href="javascript:clickRemoveParent();">`;
+    buf += `<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">`;
+    buf += `</a>`;
     buf += `<input type="hidden" id="parent" name="parent" value="`;
     if (parentId) {
       buf += parentId.value;
@@ -204,14 +207,6 @@ export default class AddParentModal {
     const parentTicket = document.querySelector<HTMLElement>(`#parentTicket`);
     if (parentTicket) {
       parentTicket.innerHTML = buf;
-    }
-
-    const icnRemoveParent =
-      document.querySelector<HTMLButtonElement>(`#icnRemoveParent`);
-    if (icnRemoveParent) {
-      icnRemoveParent.addEventListener("click", () => {
-        this.info.removeParent();
-      });
     }
 
     this.hide();

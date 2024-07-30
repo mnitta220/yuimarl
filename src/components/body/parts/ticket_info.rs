@@ -19,19 +19,29 @@ impl Component for TicketInfo {
                 }
                 *buf += r#"</label>"#;
                 *buf += r#"<div class="col-md-9 mb-1">"#;
-                if let Some(p) = &props.project {
-                    if let Some(name) = &p.project_name {
-                        super::super::super::escape_html(&name, buf);
-                    }
-                    if let Some(t) = &props.ticket {
-                        if let Some(id) = &t.id_disp {
-                            *buf += r#" / "#;
-                            *buf += &id;
+                {
+                    if let Some(p) = &props.project {
+                        if let Some(name) = &p.project_name {
+                            super::super::super::escape_html(&name, buf);
                         }
+                        if let Some(t) = &props.ticket {
+                            if let Some(id) = &t.id_disp {
+                                *buf += r#" / "#;
+                                *buf += &id;
+                            }
+                        }
+                        *buf += r#"<input type="hidden" id="project_id" name="project_id" value=""#;
+                        *buf += &p.id;
+                        *buf += r#"">"#;
                     }
-                    *buf += r#"<input type="hidden" id="project_id" name="project_id" value=""#;
-                    *buf += &p.id;
-                    *buf += r#"">"#;
+                    *buf += r#"<input class="invisible" type="button" id="btnAddParentInvisible" value="">"#;
+                    *buf +=
+                        r#"<input class="invisible" type="button" id="btnRemoveParent" value="">"#;
+                    *buf +=
+                        r#"<input class="invisible" type="button" id="btnRemoveCharge" value="">"#;
+                    *buf += r#"<input class="invisible" type="button" id="btnUpCharge" value="">"#;
+                    *buf +=
+                        r#"<input class="invisible" type="button" id="btnDownCharge" value="">"#;
                 }
                 *buf += r#"</div>"#;
             }
@@ -141,20 +151,35 @@ impl Component for TicketInfo {
                                                 *buf += r#"<td>"#;
                                                 {
                                                     if self.can_update {
-                                                        *buf += r#"<img class="icon" style="cursor:pointer" id="icnRemoveMem"#;
+                                                        //*buf += r#"<img class="icon" style="cursor:pointer" id="icnRemoveMem"#;
+                                                        //*buf += &i.to_string();
+                                                        //*buf += r#"" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                                                        *buf += r#"<a href="javascript:clickRemoveCharge(">"#;
                                                         *buf += &i.to_string();
-                                                        *buf += r#"" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                                                        *buf += r#");">"#;
+                                                        *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                                                        *buf += r#"</a>"#;
 
                                                         if i != 0 {
-                                                            *buf += r#"&nbsp;<img class="icon" style="cursor:pointer" id="icnUpMem"#;
+                                                            //*buf += r#"&nbsp;<img class="icon" style="cursor:pointer" id="icnUpMem"#;
+                                                            //*buf += &i.to_string();
+                                                            //*buf += r#"" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">"#;
+                                                            *buf += r#"&nbsp;<a href="javascript:clickUpCharge(">"#;
                                                             *buf += &i.to_string();
-                                                            *buf += r#"" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">"#;
+                                                            *buf += r#");">"#;
+                                                            *buf += r#"<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">"#;
+                                                            *buf += r#"</a>"#;
                                                         }
 
                                                         if (i + 1) != props.ticket_members.len() {
-                                                            *buf += r#"&nbsp;<img class="icon" style="cursor:pointer" id="icnDownMem"#;
+                                                            //*buf += r#"&nbsp;<img class="icon" style="cursor:pointer" id="icnDownMem"#;
+                                                            //*buf += &i.to_string();
+                                                            //*buf += r#"" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
+                                                            *buf += r#"&nbsp;<a href="javascript:clickDownCharge(">"#;
                                                             *buf += &i.to_string();
-                                                            *buf += r#"" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
+                                                            *buf += r#");">"#;
+                                                            *buf += r#"<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
+                                                            *buf += r#"</a>"#;
                                                         }
                                                     }
                                                 }
@@ -411,15 +436,15 @@ impl Component for TicketInfo {
 
                             if self.can_update {
                                 *buf += r#"&nbsp;"#;
-                                /*
-                                *buf += r#"<a href="javascript:removeParent();">"#;
+                                *buf += r#"<a href="javascript:clickRemoveParent();">"#;
                                 {
                                     *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
                                 }
                                 *buf += r#"</a>"#;
-                                */
-                                *buf += r#"<img class="icon" style="cursor:pointer" id="icnRemoveParent" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                                //*buf += r#"<img class="icon" style="cursor:pointer" id="icnRemoveParent" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
 
+                                //*buf += r#"<input class="invisible" type="button" id="btnAddParentInvisible" value="">"#;
+                                //*buf += r#"<input class="invisible" type="button" id="btnRemoveParent" value="">"#;
                                 *buf += r#"<input type="hidden" id="parent" name="parent" value=""#;
                                 *buf += &t.id;
                                 *buf += r#"">"#;
@@ -428,19 +453,19 @@ impl Component for TicketInfo {
                             *buf += r#"<p class="my-1">"#;
                             {
                                 if self.can_update {
-                                    /*
-                                    *buf += r#"<a href="javascript:clickAddParent();">"#;
+                                    *buf += r#"<a href="javascript:clickAddParentInvisible();">"#;
                                     {
                                         *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">"#;
                                     }
                                     *buf += r#"</a>"#;
-                                    */
-                                    *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddParent" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">"#;
+                                    //*buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddParent" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">"#;
+
+                                    //*buf += r#"<input class="invisible" type="button" id="btnAddParentInvisible" value="">"#;
+                                    //*buf += r#"<input class="invisible" type="button" id="btnRemoveParent" value="">"#;
+                                    *buf += r#"<input type="hidden" id="parent" name="parent" value="">"#;
                                 }
                             }
                             *buf += r#"</p>"#;
-
-                            *buf += r#"<input type="hidden" id="parent" name="parent" value="">"#;
                         }
                     }
                     *buf += r#"</div>"#;
@@ -844,6 +869,8 @@ impl Component for TicketInfo {
             *buf += r#"<input type="hidden" name="action" id="action" value=""#;
             *buf += &props.action.to_string();
             *buf += r#"">"#;
+
+            *buf += r#"<input type="hidden" name="selectedIndex" id="selectedIndex" value="">"#;
         }
         *buf += r#"</form>"#;
 
@@ -1040,5 +1067,54 @@ impl Component for TicketInfo {
             *buf += r#"</div>"#;
         }
         *buf += r#"</div>"#;
+
+        *buf += r#"<script>
+        function clickRemoveCharge(id) {
+          const btnRemoveCharge = document.querySelector(`#btnRemoveCharge`);
+          if (btnRemoveCharge) {
+            const selectedIndex = document.querySelector(`#selectedIndex`);
+            if (selectedIndex) {
+              selectedIndex.value = `${id}`;
+              btnRemoveCharge.click();
+            }
+          }
+        }
+
+        function clickUpCharge(id) {
+          const btnUpCharge = document.querySelector(`#btnUpCharge`);
+          if (btnUpCharge) {
+            const selectedIndex = document.querySelector(`#selectedIndex`);
+            if (selectedIndex) {
+              selectedIndex.value = `${id}`;
+              btnUpCharge.click();
+            }
+          }
+        }
+
+        function clickDownCharge(id) {
+          const btnDownCharge = document.querySelector(`#btnDownCharge`);
+          if (btnDownCharge) {
+            const selectedIndex = document.querySelector(`#selectedIndex`);
+            if (selectedIndex) {
+              selectedIndex.value = `${id}`;
+              btnDownCharge.click();
+            }
+          }
+        }
+
+        function clickAddParentInvisible() {
+            const btnAddParentInvisible = document.querySelector(`#btnAddParentInvisible`);
+            if (btnAddParentInvisible) {
+              btnAddParentInvisible.click();
+            }
+        }
+
+        function clickRemoveParent() {
+            const btnRemoveParent = document.querySelector(`#btnRemoveParent`);
+            if (btnRemoveParent) {
+              btnRemoveParent.click();
+            }
+        }
+        </script>"#;
     }
 }

@@ -12,3 +12,6 @@
 .env
 .DS_Store
 myworkspace.code-workspace
+
+/vite/**/dist
+/vite/**/node_modules

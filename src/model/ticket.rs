@@ -1160,20 +1160,50 @@ impl Ticket {
             }
         };
 
-        if let Err(e) = db
+        let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
             .fluent()
-            .delete()
+            .select()
+            .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority, parent_id}))
             .from(COLLECTION_NAME)
-            .document_id(&input.ticket_id)
-            .add_to_transaction(&mut transaction)
+            .filter(|q| q.for_all([q.field(path!(Ticket::parent_id)).eq(&input.ticket_id)]))
+            .obj()
+            .stream_query_with_errors()
+            .await
         {
-            return Err(anyhow::anyhow!(e.to_string()));
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let tickets: Vec<Ticket> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let now = Utc::now();
+        for mut ticket in tickets {
+            ticket.parent_id = None;
+            ticket.updated_at = Some(now);
+            if let Err(e) = db
+                .fluent()
+                .update()
+                .fields(paths!(Ticket::{parent_id, updated_at}))
+                .in_col(&COLLECTION_NAME)
+                .document_id(&input.ticket_id)
+                .object(&ticket)
+                .add_to_transaction(&mut transaction)
+            {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
         }
 
         let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
             .fluent()
             .select()
-            .fields(paths!(TicketMember::{id, ticket_id, uid, seq}))
+            .fields(paths!(TicketMember::{id, project_id, ticket_id, uid, seq}))
             .from(COLLECTION_MEMBER)
             .filter(|q| q.for_all([q.field(path!(TicketMember::ticket_id)).eq(&input.ticket_id)]))
             .obj()
@@ -1203,6 +1233,16 @@ impl Ticket {
             {
                 return Err(anyhow::anyhow!(e.to_string()));
             }
+        }
+
+        if let Err(e) = db
+            .fluent()
+            .delete()
+            .from(COLLECTION_NAME)
+            .document_id(&input.ticket_id)
+            .add_to_transaction(&mut transaction)
+        {
+            return Err(anyhow::anyhow!(e.to_string()));
         }
 
         if let Err(e) = transaction.commit().await {

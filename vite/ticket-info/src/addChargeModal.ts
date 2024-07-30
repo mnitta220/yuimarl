@@ -1,14 +1,6 @@
 import * as bootstrap from "bootstrap";
 import TicketInfo, { IMember } from "./ticketInfo";
 
-/*
-interface IProjectMemberUserSub {
-  uid: string;
-  email: string;
-  name: string;
-}
-*/
-
 interface IMemberResult {
   result: string;
   members: IMember[];
@@ -20,7 +12,6 @@ export default class AddChargeModal {
   private modal: bootstrap.Modal | null = null;
 
   constructor(private info: TicketInfo) {
-    console.log(`${this.info.members.length}`);
     const memberModal = document.querySelector<HTMLDivElement>(`#${this.id}`);
     if (memberModal) {
       this.modal = new bootstrap.Modal(memberModal);
@@ -33,7 +24,6 @@ export default class AddChargeModal {
       document.querySelector<HTMLButtonElement>(`#icnAddCharge`);
     if (icnAddCharge) {
       icnAddCharge.addEventListener("click", () => {
-        console.log("icnAddCharge click");
         this.clickAddCharge();
       });
     }
@@ -42,36 +32,9 @@ export default class AddChargeModal {
       document.querySelector<HTMLButtonElement>(`#btnMemberAdd`);
     if (btnMemberAdd) {
       btnMemberAdd.addEventListener("click", () => {
-        console.log("btnMemberAdd click");
         this.addCharge();
       });
     }
-
-    /*
-    const searchEmail =
-      document.querySelector<HTMLButtonElement>(`#search-email`);
-    if (searchEmail) {
-      searchEmail.addEventListener("click", () => {
-        this.searchEmail();
-      });
-    }
-
-    const searchName =
-      document.querySelector<HTMLButtonElement>(`#search-name`);
-    if (searchName) {
-      searchName.addEventListener("click", () => {
-        this.searchName();
-      });
-    }
-
-    const btnAddMember =
-      document.querySelector<HTMLButtonElement>(`#btnAddMember`);
-    if (btnAddMember) {
-      btnAddMember.addEventListener("click", () => {
-        this.addMember();
-      });
-    }
-    */
   }
 
   show() {
@@ -109,63 +72,6 @@ export default class AddChargeModal {
     }
   }
 
-  /*
-  private searchEmail() {
-    const addMembers = document.querySelector<HTMLInputElement>(`#add_members`);
-    if (addMembers) {
-      addMembers.value = "";
-    }
-
-    const inputEmail = document.querySelector<HTMLInputElement>(`input#email`);
-    if (inputEmail && inputEmail.value) {
-      const buf = `email=${inputEmail.value}`;
-
-      fetch("/api/userByEmail", {
-        method: "POST",
-        headers: {
-          Accept: "* / *",
-          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        },
-        mode: "cors",
-        body: encodeURI(buf),
-      })
-        .then((response) => response.json())
-        .then((data: IUserResult) => {
-          this.memberSearchResult(data);
-        })
-        .catch((e) => window.alert(`エラーが発生しました。: ${e.message}`));
-    }
-  }
-
-  private searchName() {
-    const addMembers = document.querySelector<HTMLInputElement>(`#add_members`);
-    if (addMembers) {
-      addMembers.value = "";
-    }
-
-    const inputName =
-      document.querySelector<HTMLInputElement>(`input#member-name`);
-    if (inputName && inputName.value) {
-      const buf = `name=${inputName.value}`;
-
-      fetch("/api/userByName", {
-        method: "POST",
-        headers: {
-          Accept: "* / *",
-          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        },
-        mode: "cors",
-        body: encodeURI(buf),
-      })
-        .then((response) => response.json())
-        .then((data: IUserResult) => {
-          this.memberSearchResult(data);
-        })
-        .catch((e) => window.alert(`エラーが発生しました。: ${e.message}`));
-    }
-  }
-    */
-
   private projectMemberResult(res: IMemberResult) {
     let buf = "";
     if (res.result === "OK") {
@@ -201,20 +107,7 @@ export default class AddChargeModal {
             }
             buf += `</td>`;
             buf += `<td>`;
-            switch (res.members[i].role) {
-              case 1:
-                buf += `オーナー`;
-                break;
-              case 2:
-                buf += `管理者`;
-                break;
-              case 3:
-                buf += `メンバー`;
-                break;
-              case 4:
-                buf += `閲覧者`;
-                break;
-            }
+            buf += this.info.roleToString(res.members[i].role);
             buf += `</td>`;
             buf += `<td>${res.members[i].email}</td>`;
             buf += `<td>${res.members[i].name}</td>`;

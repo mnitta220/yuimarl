@@ -141,33 +141,20 @@ impl Component for TicketInfo {
                                                 *buf += r#"<td>"#;
                                                 {
                                                     if self.can_update {
-                                                        *buf +=
-                                                            r#"<a href="javascript:removeCharge("#;
+                                                        *buf += r#"<img class="icon" style="cursor:pointer" id="icnRemoveMem"#;
                                                         *buf += &i.to_string();
-                                                        *buf += r#")">"#;
-                                                        {
-                                                            *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
-                                                        }
-                                                        *buf += r#"</a>"#;
+                                                        *buf += r#"" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
 
                                                         if i != 0 {
-                                                            *buf += r#"&nbsp;<a href="javascript:chargeSeqUp("#;
+                                                            *buf += r#"&nbsp;<img class="icon" style="cursor:pointer" id="icnUpMem"#;
                                                             *buf += &i.to_string();
-                                                            *buf += r#")">"#;
-                                                            {
-                                                                *buf += r#"<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">"#;
-                                                            }
-                                                            *buf += r#"</a>"#;
+                                                            *buf += r#"" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">"#;
                                                         }
 
                                                         if (i + 1) != props.ticket_members.len() {
-                                                            *buf += r#"&nbsp;<a href="javascript:chargeSeqDown("#;
+                                                            *buf += r#"&nbsp;<img class="icon" style="cursor:pointer" id="icnDownMem"#;
                                                             *buf += &i.to_string();
-                                                            *buf += r#")">"#;
-                                                            {
-                                                                *buf += r#"<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
-                                                            }
-                                                            *buf += r#"</a>"#;
+                                                            *buf += r#"" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
                                                         }
                                                     }
                                                 }
@@ -185,13 +172,6 @@ impl Component for TicketInfo {
                         *buf += r#"</div>"#;
 
                         if self.can_update {
-                            /*
-                            *buf += r#"<a href="javascript:clickAddCharge();">"#;
-                            {
-                                *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="担当者を追加">"#;
-                            }
-                            *buf += r#"</a>"#;
-                            */
                             *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddCharge" src="/static/ionicons/add-circle-outline.svg" title="担当者を追加">"#;
                         }
                     }
@@ -431,11 +411,14 @@ impl Component for TicketInfo {
 
                             if self.can_update {
                                 *buf += r#"&nbsp;"#;
+                                /*
                                 *buf += r#"<a href="javascript:removeParent();">"#;
                                 {
                                     *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
                                 }
                                 *buf += r#"</a>"#;
+                                */
+                                *buf += r#"<img class="icon" style="cursor:pointer" id="icnRemoveParent" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
 
                                 *buf += r#"<input type="hidden" id="parent" name="parent" value=""#;
                                 *buf += &t.id;
@@ -445,11 +428,14 @@ impl Component for TicketInfo {
                             *buf += r#"<p class="my-1">"#;
                             {
                                 if self.can_update {
+                                    /*
                                     *buf += r#"<a href="javascript:clickAddParent();">"#;
                                     {
                                         *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">"#;
                                     }
                                     *buf += r#"</a>"#;
+                                    */
+                                    *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddParent" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">"#;
                                 }
                             }
                             *buf += r#"</p>"#;

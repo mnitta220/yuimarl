@@ -79,7 +79,7 @@ export default class ProjectInfo {
     }
   }
 
-  private roleToString(role: number | null) {
+  private roleToString(role: number | null): string {
     if (!role) return "";
     switch (role) {
       case 1:
@@ -91,7 +91,7 @@ export default class ProjectInfo {
       case 4:
         return "閲覧者";
     }
-    return "Unknown";
+    return "";
   }
 
   setMemberList() {

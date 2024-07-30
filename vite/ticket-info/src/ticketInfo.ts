@@ -1,9 +1,8 @@
 import AddChargeModal from "./addChargeModal";
-import UpdateMemberModal from "./updateMemberModal";
+import AddParentModal from "./addParentModal";
 
 export interface IMember {
   id: string; // チケットメンバーID
-  //ticket_id: string; // チケットID
   uid: string; // メンバーのユーザーID
   role: number | null; // ロール 1:オーナー, 2:管理者, 3:メンバー, 4:閲覧者
   seq: number | null; // 表示順
@@ -20,7 +19,7 @@ export default class TicketInfo {
   members: IMember[] = [];
   deliverables: IDeliverable[] = [];
   addChargeModal = new AddChargeModal(this);
-  updateMemberModal = new UpdateMemberModal(this);
+  addParentModal = new AddParentModal(this);
 
   constructor() {
     this.handler();
@@ -28,37 +27,16 @@ export default class TicketInfo {
 
   // イベントハンドラを登録する
   private handler() {
-    /*
-    const icnAddCharge =
-      document.querySelector<HTMLButtonElement>(`#icnAddCharge`);
-    if (icnAddCharge) {
-      icnAddCharge.addEventListener("click", () => {
-        console.log("icnAddCharge click");
-        this.addChargeModal.show();
+    const icnRemoveParent =
+      document.querySelector<HTMLButtonElement>(`#icnRemoveParent`);
+    if (icnRemoveParent) {
+      icnRemoveParent.addEventListener("click", () => {
+        this.removeParent();
       });
     }
-    */
 
     this.addChargeModal.handler();
-    /*
-    const btnProjectDel =
-      document.querySelector<HTMLButtonElement>(`#btnProjectDel`);
-    if (btnProjectDel) {
-      btnProjectDel.addEventListener("click", () => {
-        this.deleteProject();
-      });
-    }
-
-    const btnWithdraw =
-      document.querySelector<HTMLButtonElement>(`#btnWithdraw`);
-    if (btnWithdraw) {
-      btnWithdraw.addEventListener("click", () => {
-        this.withdraw();
-      });
-    }
-
-    this.updateMemberModal.handler();
-    */
+    this.addParentModal.handler();
   }
 
   load() {
@@ -73,7 +51,55 @@ export default class TicketInfo {
     if (ds?.value) {
       this.deliverables = JSON.parse(ds.value);
     }
-    //this.memberHandler();
+    this.memberHandler();
+  }
+
+  private memberHandler() {
+    for (let i in this.members) {
+      let icnRemoveMem = document.querySelector<HTMLImageElement>(
+        `#icnRemoveMem${i}`
+      );
+      if (icnRemoveMem) {
+        icnRemoveMem.addEventListener("click", () => {
+          this.removeCharge(Number(i));
+        });
+      }
+
+      let icnUpMem = document.querySelector<HTMLImageElement>(`#icnUpMem${i}`);
+      if (icnUpMem) {
+        icnUpMem.addEventListener("click", () => {
+          this.chargeSeqUp(Number(i));
+        });
+      }
+
+      let icnDownMem = document.querySelector<HTMLImageElement>(
+        `#icnDownMem${i}`
+      );
+      if (icnDownMem) {
+        icnDownMem.addEventListener("click", () => {
+          this.chargeSeqDown(Number(i));
+        });
+      }
+    }
+  }
+
+  private removeCharge(i: number) {
+    this.members.splice(i, 1);
+    this.setChargeTable();
+  }
+
+  private chargeSeqUp(idx: number) {
+    let j = idx;
+    let i = j - 1;
+    [this.members[i], this.members[j]] = [this.members[j], this.members[i]];
+    this.setChargeTable();
+  }
+
+  private chargeSeqDown(idx: number) {
+    let i = idx;
+    let j = i + 1;
+    [this.members[i], this.members[j]] = [this.members[j], this.members[i]];
+    this.setChargeTable();
   }
 
   setChargeTable() {
@@ -100,15 +126,12 @@ export default class TicketInfo {
             buf += `<td>${this.members[i].email}</td>`;
             buf += `<td>${this.members[i].name}</td>`;
             buf += `<td>`;
-            buf += `<a href="javascript:removeCharge(${i})">`;
-            buf += `<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除"></a>`;
+            buf += `<img class="icon" style="cursor:pointer" id="icnRemoveMem${i}" src="/static/ionicons/remove-circle-outline.svg" title="削除">`;
             if (Number(i) != 0) {
-              buf += `&nbsp;<a href="javascript:chargeSeqUp(${i})">`;
-              buf += `<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動"></a>`;
+              buf += `&nbsp;<img class="icon" style="cursor:pointer" id="icnUpMem${i}" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">`;
             }
             if (Number(i) + 1 != this.members.length) {
-              buf += `&nbsp;<a href="javascript:chargeSeqDown(${i})">`;
-              buf += `<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動"></a>`;
+              buf += `&nbsp;<img class="icon" style="cursor:pointer" id="icnDownMem${i}" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">`;
             }
             buf += `</td>`;
           }
@@ -137,32 +160,31 @@ export default class TicketInfo {
 
     const ct = document.querySelector<HTMLElement>(`div#chargeTbl`);
     if (ct) ct.innerHTML = buf;
+
+    this.memberHandler();
   }
 
-  /*
-  private memberHandler() {
-    for (let i in this.members) {
-      let icnSetMem = document.querySelector<HTMLImageElement>(
-        `#icnSetMem${i}`
-      );
-      if (icnSetMem) {
-        icnSetMem.addEventListener("click", () => {
-          this.updateMember(Number(i));
-        });
-      }
+  removeParent() {
+    let buf = '<p class="my-1">';
+    buf +=
+      '<img class="icon3" style="cursor:pointer" id="icnAddParent" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">';
+    buf += "</p>";
+    buf += '<input type="hidden" id="parent" name="parent" value="">';
+    const parentTicket = document.querySelector<HTMLElement>(`#parentTicket`);
+    if (parentTicket) {
+      parentTicket.innerHTML = buf;
+    }
 
-      let icnRemoveMem = document.querySelector<HTMLImageElement>(
-        `#icnRemoveMem${i}`
-      );
-      if (icnRemoveMem) {
-        icnRemoveMem.addEventListener("click", () => {
-          this.removeMember(Number(i));
-        });
-      }
+    const icnAddParent =
+      document.querySelector<HTMLButtonElement>(`#icnAddParent`);
+    if (icnAddParent) {
+      icnAddParent.addEventListener("click", () => {
+        this.addParentModal.show();
+      });
     }
   }
 
-  private roleToString(role: number | null) {
+  roleToString(role: number | null): string {
     if (!role) return "";
     switch (role) {
       case 1:
@@ -174,141 +196,27 @@ export default class TicketInfo {
       case 4:
         return "閲覧者";
     }
-    return "Unknown";
+    return "";
   }
 
-  setMemberList() {
-    const ms = document.querySelector<HTMLInputElement>(`#members`);
-    if (ms) {
-      ms.value = JSON.stringify(this.members);
-    }
-    let buf = "";
-    for (let i in this.members) {
-      buf += `<tr>`;
-      {
-        buf += `<td>${this.roleToString(this.members[i].role)}</td>`;
-        buf += `<td>${this.members[i].email}</td>`;
-        buf += `<td>${this.members[i].name}</td>`;
-        buf += `<td>`;
-        if (Number(i) > 0) {
-          buf += `<img class="icon" style="cursor:pointer" id="icnSetMem${i}" src="/static/ionicons/settings-outline.svg" title="設定">&nbsp;`;
-          buf += `<img class="icon" style="cursor:pointer" id="icnRemoveMem${i}" src="/static/ionicons/remove-circle-outline.svg" title="削除">`;
-        }
-        buf += `</td>`;
+  escapeHtml(str: string): string {
+    return str.replace(/[&'`"<>]/g, (match) => {
+      switch (match) {
+        case "&":
+          return "&amp;";
+        case "'":
+          return "&#x27;";
+        case "`":
+          return "&#x60;";
+        case '"':
+          return "&quot;";
+        case "<":
+          return "&lt;";
+        case ">":
+          return "&gt;";
+        default:
+          return match;
       }
-      buf += `</tr>`;
-    }
-
-    const tbody = document.querySelector<HTMLElement>(`#members-tbody`);
-    if (tbody) {
-      tbody.innerHTML = buf;
-    }
-
-    this.memberHandler();
-
-    const limit = document.querySelector<HTMLInputElement>(`#member_limit`);
-    if (limit) {
-      let l = Number(limit.value);
-      if (this.members.length < l) {
-        const divAddMember =
-          document.querySelector<HTMLInputElement>(`#divAddMember`);
-        if (divAddMember) {
-          divAddMember.classList.remove("d-none");
-        }
-      } else {
-        const divAddMember =
-          document.querySelector<HTMLInputElement>(`#divAddMember`);
-        if (divAddMember) {
-          divAddMember.classList.add("d-none");
-        }
-      }
-    }
+    });
   }
-
-  updateMember(i: number) {
-    let buf = `<table class="table table-hover">`;
-    {
-      buf += `<thead>`;
-      {
-        buf += `<tr>`;
-        {
-          buf += `<th scope="col">メールアドレス</th>`;
-          buf += `<th scope="col">名前</th>`;
-          buf += `<th scope="col">ロール</th>`;
-        }
-        buf += `</tr>`;
-      }
-      buf += `</thead>`;
-      buf += `<tbody>`;
-      {
-        buf += `<tr>`;
-        {
-          buf += `<td>${this.members[i].email}</td>`;
-          buf += `<td>${this.members[i].name}</td>`;
-          buf += `<td>`;
-          {
-            buf += `<select class="form-select" id="updateMemberRole" name="updateMemberRole">`;
-            {
-              buf += `<option value="2"`;
-              if (this.members[i].role == 2) {
-                buf += ` selected`;
-              }
-              buf += `>管理者</option>`;
-              buf += `<option value="3"`;
-              if (this.members[i].role == 3) {
-                buf += ` selected`;
-              }
-              buf += `>メンバー</option>`;
-              buf += `<option value="4"`;
-              if (this.members[i].role == 4) {
-                buf += ` selected`;
-              }
-              buf += `>閲覧者</option>`;
-            }
-            buf += `</select>`;
-          }
-          buf += `</td>`;
-        }
-        buf += `</tr>`;
-      }
-      buf += `</tbody>`;
-    }
-    buf += `</table>`;
-    buf += `<input type="hidden" id="updateMemberIdx" value="${i}">`;
-
-    const memberTbl = document.querySelector<HTMLDivElement>(`div#memberTbl`);
-    if (memberTbl) {
-      memberTbl.innerHTML = buf;
-    }
-
-    this.updateMemberModal.show();
-  }
-
-  private removeMember(i: number) {
-    this.members.splice(i, 1);
-    this.setMemberList();
-  }
-
-  private deleteProject() {
-    const action = document.querySelector<HTMLInputElement>(`#action`);
-    if (action) {
-      action.value = "Delete";
-      const form = document.querySelector<HTMLFormElement>(`#post_project`);
-      if (form) {
-        form.submit();
-      }
-    }
-  }
-
-  private withdraw() {
-    const action = document.querySelector<HTMLInputElement>(`#action`);
-    if (action) {
-      action.value = "Withdraw";
-      const form = document.querySelector<HTMLFormElement>(`#post_project`);
-      if (form) {
-        form.submit();
-      }
-    }
-  }
-  */
 }

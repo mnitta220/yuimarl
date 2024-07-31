@@ -150,12 +150,17 @@ impl Component for ProjectInfo {
                                         *buf += r#"</td><td>"#;
 
                                         if i > 0 && self.can_update {
-                                            *buf += r#"<img class="icon" style="cursor:pointer" id="icnSetMem"#;
+                                            *buf += r#"<a href="javascript:clickSetMember("#;
                                             *buf += &i.to_string();
-                                            *buf += r#"" src="/static/ionicons/settings-outline.svg" title="設定">"#;
-                                            *buf += r#"<img class="icon" style="cursor:pointer" id="icnRemoveMem"#;
+                                            *buf += r#");">"#;
+                                            *buf += r#"<img class="icon" src="/static/ionicons/settings-outline.svg" title="設定">"#;
+                                            *buf += r#"</a>&nbsp;"#;
+
+                                            *buf += r#"<a href="javascript:clickRemoveMember("#;
                                             *buf += &i.to_string();
-                                            *buf += r#"" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                                            *buf += r#");">"#;
+                                            *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
+                                            *buf += r#"</a>"#;
                                         }
                                         *buf += r#"</td>"#;
                                     }
@@ -479,6 +484,9 @@ impl Component for ProjectInfo {
                             *buf += r#"<img class="icon" src="/static/ionicons/create-outline.svg">&nbsp;作成"#;
                         }
                         *buf += r#"</button>"#;
+                        *buf +=
+                            r#"<input class="invisible" type="button" id="btnSetMember" value="">"#;
+                        *buf += r#"<input class="invisible" type="button" id="btnRemoveMember" value="">"#;
                     }
                     *buf += r#"</div>"#;
                     *buf += r#"<input type="hidden" name="project_id" value="">"#;
@@ -505,6 +513,8 @@ impl Component for ProjectInfo {
                                     *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
                                 }
                                 *buf += r#"</a>"#;
+                                *buf += r#"<input class="invisible" type="button" id="btnSetMember" value="">"#;
+                                *buf += r#"<input class="invisible" type="button" id="btnRemoveMember" value="">"#;
                             }
                             *buf += r#"</div>"#;
 
@@ -543,6 +553,8 @@ impl Component for ProjectInfo {
                         if let Some(p) = &props.project {
                             *buf += r#"<div class="col text-end">"#;
                             {
+                                *buf += r#"<input class="invisible" type="button" id="btnSetMember" value="">"#;
+                                *buf += r#"<input class="invisible" type="button" id="btnRemoveMember" value="">"#;
                                 *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#withdrawModal">"##;
                                 {
                                     *buf += r#"<img class="icon" src="/static/ionicons/exit-outline.svg">&nbsp;プロジェクトから離脱"#;
@@ -565,6 +577,7 @@ impl Component for ProjectInfo {
                 }
             }
 
+            *buf += r#"<input type="hidden" name="selectedIndex" id="selectedIndex" value="">"#;
             *buf += r#"<input type="hidden" name="action" id="action" value=""#;
             *buf += &props.action.to_string();
             *buf += r#"">"#;
@@ -764,5 +777,29 @@ impl Component for ProjectInfo {
             *buf += r#"</div>"#;
         }
         *buf += r#"</div>"#;
+
+        *buf += r#"<script>
+        function clickSetMember(idx) {
+          const btnSetMember = document.querySelector(`#btnSetMember`);
+          if (btnSetMember) {
+            const selectedIndex = document.querySelector(`#selectedIndex`);
+            if (selectedIndex) {
+              selectedIndex.value = `${idx}`;
+              btnSetMember.click();
+            }
+          }
+        }
+
+        function clickRemoveMember(idx) {
+          const btnRemoveMember = document.querySelector(`#btnRemoveMember`);
+          if (btnRemoveMember) {
+            const selectedIndex = document.querySelector(`#selectedIndex`);
+            if (selectedIndex) {
+              selectedIndex.value = `${idx}`;
+              btnRemoveMember.click();
+            }
+          }
+        }
+        </script>"#;
     }
 }

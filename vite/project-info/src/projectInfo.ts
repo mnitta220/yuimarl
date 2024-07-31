@@ -28,6 +28,30 @@ export default class ProjectInfo {
       });
     }
 
+    const btnSetMember =
+      document.querySelector<HTMLButtonElement>(`#btnSetMember`);
+    if (btnSetMember) {
+      btnSetMember.addEventListener("click", () => {
+        const selectedIndex =
+          document.querySelector<HTMLInputElement>(`#selectedIndex`);
+        if (selectedIndex) {
+          this.updateMember(Number(selectedIndex.value));
+        }
+      });
+    }
+
+    const btnRemoveMember =
+      document.querySelector<HTMLButtonElement>(`#btnRemoveMember`);
+    if (btnRemoveMember) {
+      btnRemoveMember.addEventListener("click", () => {
+        const selectedIndex =
+          document.querySelector<HTMLInputElement>(`#selectedIndex`);
+        if (selectedIndex) {
+          this.removeMember(Number(selectedIndex.value));
+        }
+      });
+    }
+
     const btnProjectDel =
       document.querySelector<HTMLButtonElement>(`#btnProjectDel`);
     if (btnProjectDel) {
@@ -53,29 +77,6 @@ export default class ProjectInfo {
     const ms = document.querySelector<HTMLInputElement>(`#members`);
     if (ms?.value) {
       this.members = JSON.parse(ms.value);
-    }
-    this.memberHandler();
-  }
-
-  private memberHandler() {
-    for (let i in this.members) {
-      let icnSetMem = document.querySelector<HTMLImageElement>(
-        `#icnSetMem${i}`
-      );
-      if (icnSetMem) {
-        icnSetMem.addEventListener("click", () => {
-          this.updateMember(Number(i));
-        });
-      }
-
-      let icnRemoveMem = document.querySelector<HTMLImageElement>(
-        `#icnRemoveMem${i}`
-      );
-      if (icnRemoveMem) {
-        icnRemoveMem.addEventListener("click", () => {
-          this.removeMember(Number(i));
-        });
-      }
     }
   }
 
@@ -108,8 +109,12 @@ export default class ProjectInfo {
         buf += `<td>${this.members[i].name}</td>`;
         buf += `<td>`;
         if (Number(i) > 0) {
-          buf += `<img class="icon" style="cursor:pointer" id="icnSetMem${i}" src="/static/ionicons/settings-outline.svg" title="設定">&nbsp;`;
-          buf += `<img class="icon" style="cursor:pointer" id="icnRemoveMem${i}" src="/static/ionicons/remove-circle-outline.svg" title="削除">`;
+          buf += `<a href="javascript:clickSetMember(${i});">`;
+          buf += `<img class="icon" src="/static/ionicons/settings-outline.svg" title="設定">`;
+          buf += `</a>&nbsp;`;
+          buf += `<a href="javascript:clickRemoveMember(${i});">`;
+          buf += `<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">`;
+          buf += `</a>`;
         }
         buf += `</td>`;
       }
@@ -120,8 +125,6 @@ export default class ProjectInfo {
     if (tbody) {
       tbody.innerHTML = buf;
     }
-
-    this.memberHandler();
 
     const limit = document.querySelector<HTMLInputElement>(`#member_limit`);
     if (limit) {

@@ -42,6 +42,8 @@ impl Component for TicketInfo {
                     *buf += r#"<input class="invisible" type="button" id="btnUpCharge" value="">"#;
                     *buf +=
                         r#"<input class="invisible" type="button" id="btnDownCharge" value="">"#;
+                    *buf +=
+                        r#"<input type="hidden" name="selectedIndex" id="selectedIndex" value="">"#;
                 }
                 *buf += r#"</div>"#;
             }
@@ -151,9 +153,6 @@ impl Component for TicketInfo {
                                                 *buf += r#"<td>"#;
                                                 {
                                                     if self.can_update {
-                                                        //*buf += r#"<img class="icon" style="cursor:pointer" id="icnRemoveMem"#;
-                                                        //*buf += &i.to_string();
-                                                        //*buf += r#"" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
                                                         *buf += r#"<a href="javascript:clickRemoveCharge(">"#;
                                                         *buf += &i.to_string();
                                                         *buf += r#");">"#;
@@ -161,9 +160,6 @@ impl Component for TicketInfo {
                                                         *buf += r#"</a>"#;
 
                                                         if i != 0 {
-                                                            //*buf += r#"&nbsp;<img class="icon" style="cursor:pointer" id="icnUpMem"#;
-                                                            //*buf += &i.to_string();
-                                                            //*buf += r#"" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">"#;
                                                             *buf += r#"&nbsp;<a href="javascript:clickUpCharge(">"#;
                                                             *buf += &i.to_string();
                                                             *buf += r#");">"#;
@@ -172,9 +168,6 @@ impl Component for TicketInfo {
                                                         }
 
                                                         if (i + 1) != props.ticket_members.len() {
-                                                            //*buf += r#"&nbsp;<img class="icon" style="cursor:pointer" id="icnDownMem"#;
-                                                            //*buf += &i.to_string();
-                                                            //*buf += r#"" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;
                                                             *buf += r#"&nbsp;<a href="javascript:clickDownCharge(">"#;
                                                             *buf += &i.to_string();
                                                             *buf += r#");">"#;
@@ -869,8 +862,6 @@ impl Component for TicketInfo {
             *buf += r#"<input type="hidden" name="action" id="action" value=""#;
             *buf += &props.action.to_string();
             *buf += r#"">"#;
-
-            *buf += r#"<input type="hidden" name="selectedIndex" id="selectedIndex" value="">"#;
         }
         *buf += r#"</form>"#;
 
@@ -1069,34 +1060,34 @@ impl Component for TicketInfo {
         *buf += r#"</div>"#;
 
         *buf += r#"<script>
-        function clickRemoveCharge(id) {
+        function clickRemoveCharge(idx) {
           const btnRemoveCharge = document.querySelector(`#btnRemoveCharge`);
           if (btnRemoveCharge) {
             const selectedIndex = document.querySelector(`#selectedIndex`);
             if (selectedIndex) {
-              selectedIndex.value = `${id}`;
+              selectedIndex.value = `${idx}`;
               btnRemoveCharge.click();
             }
           }
         }
 
-        function clickUpCharge(id) {
+        function clickUpCharge(idx) {
           const btnUpCharge = document.querySelector(`#btnUpCharge`);
           if (btnUpCharge) {
             const selectedIndex = document.querySelector(`#selectedIndex`);
             if (selectedIndex) {
-              selectedIndex.value = `${id}`;
+              selectedIndex.value = `${idx}`;
               btnUpCharge.click();
             }
           }
         }
 
-        function clickDownCharge(id) {
+        function clickDownCharge(idx) {
           const btnDownCharge = document.querySelector(`#btnDownCharge`);
           if (btnDownCharge) {
             const selectedIndex = document.querySelector(`#selectedIndex`);
             if (selectedIndex) {
-              selectedIndex.value = `${id}`;
+              selectedIndex.value = `${idx}`;
               btnDownCharge.click();
             }
           }

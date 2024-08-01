@@ -30,6 +30,11 @@ impl Component for Head {
                                 // (参照) vite/project-info/README.md
                                 *buf += r#"<script type="module" crossorigin src="/static/js/project-info/index-TqQ--d0M.js"></script>"#;
                             }
+                            Tab::Note => {
+                                // 次の行は、vite/note フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
+                                // (参照) vite/note/README.md
+                                *buf += r#"<script type="module" crossorigin src="/static/js/note/index-ClrermOc.js"></script>"#;
+                            }
                             Tab::GanttChart => {
                                 // 以下の2行は、gantt-chart フォルダでビルドして出力された index-XXXXXXXX.js と index-XXXXXXXX.css を設定する。
                                 // (参照) gantt-chart/README.md
@@ -46,13 +51,23 @@ impl Component for Head {
                                 // (参照) vite/ticket-info/README.md
                                 *buf += r#"<script type="module" crossorigin src="/static/js/ticket-info/index-Bry6yV1i.js"></script>"#;
                             }
+                            Tab::Note => {
+                                // 次の行は、vite/note フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
+                                // (参照) vite/note/README.md
+                                *buf += r#"<script type="module" crossorigin src="/static/js/note/index-ClrermOc.js"></script>"#;
+                            }
+                            Tab::Comment => {
+                                // 次の行は、vite/comment フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
+                                // (参照) vite/comment/README.md
+                                *buf += r#"<script type="module" crossorigin src="/static/js/comment/index-pehMYcZQ.js"></script>"#;
+                            }
                             _ => {}
                         }
                     }
                     Screen::TicketList => {
                         // 次の行は、vite/ticket-list フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
                         // (参照) vite/ticket-list/README.md
-                        *buf += r#"<script type="module" crossorigin src="/static/js/ticket-list/index-NZQ-KzTl.js"></script>"#;
+                        *buf += r#"<script type="module" crossorigin src="/static/js/ticket-list/index-Lp42aFvT.js"></script>"#;
                     }
                 }
             }

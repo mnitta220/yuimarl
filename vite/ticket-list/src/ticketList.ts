@@ -46,8 +46,6 @@ export default class TicketList {
     this.chargeModal.handler();
   }
 
-  load() {}
-
   private removeCharge() {
     const uid = document.querySelector<HTMLInputElement>(`#chargeuid`);
     if (uid) uid.value = "";

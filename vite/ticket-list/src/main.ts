@@ -1,3 +1,5 @@
 import TicketList from "./ticketList";
 
-new TicketList();
+document.addEventListener("DOMContentLoaded", () => {
+  new TicketList();
+});

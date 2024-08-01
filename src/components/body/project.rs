@@ -163,12 +163,14 @@ impl Component for ProjectBody {
                     *buf += r#"<script src="/static/js/project1015.js"></script>"#;
                 }
                 */
+                /*
                 Tab::Note => {
                     *buf +=
                         r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
                     *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;
                     *buf += r#"<script src="/static/js/markdown1015.js"></script>"#;
                 }
+                */
                 _ => {}
             }
         }

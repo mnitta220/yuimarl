@@ -99,11 +99,15 @@ impl Component for TicketComment {
                         {
                             *buf += r#"<div class="col">"#;
                             {
+                                /*
                                 *buf += r#"<a href="javascript:clickComment();">"#;
                                 {
                                     *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="コメントを追加">"#;
                                 }
                                 *buf += r#"</a>"#;
+                                */
+                                *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddComment" src="/static/ionicons/add-circle-outline.svg" title="コメントを追加">"#;
+                                *buf += r#"<input class="invisible" type="button" id="btnEditComment" value="">"#;
                             }
                             *buf += r#"</div>"#;
                         }
@@ -121,6 +125,8 @@ impl Component for TicketComment {
                     *buf += r#"<input type="hidden" id="comment_id" name="comment_id" value="">"#;
                     *buf += r#"<input type="hidden" id="action" name="action" value="">"#;
                     *buf += r#"<input type="hidden" id="comment" name="comment" value="">"#;
+                    *buf +=
+                        r#"<input type="hidden" id="selectedIndex" name="selectedIndex" value="">"#;
                 }
                 *buf += r#"</form>"#;
 
@@ -218,6 +224,19 @@ impl Component for TicketComment {
                 }
                 *buf += r#"</div>"#;
             }
+
+            *buf += r#"<script>
+            function editComment(idx) {
+              const btnEditComment = document.querySelector(`#btnEditComment`);
+              if (btnEditComment) {
+                const selectedIndex = document.querySelector(`#selectedIndex`);
+                if (selectedIndex) {
+                  selectedIndex.value = `${idx}`;
+                  btnEditComment.click();
+                }
+              }
+            }
+            </script>"#;
         }
     }
 }

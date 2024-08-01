@@ -1,0 +1,21 @@
+{
+  "name": "comment",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "marked": "^13.0.3"
+  },
+  "devDependencies": {
+    "@types/bootstrap": "^5.2.10",
+    "@types/marked": "^6.0.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.3.4"
+  }
+}

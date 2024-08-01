@@ -1,4 +1,4 @@
-use crate::{components::Component, Props, Tab};
+use crate::{components::Component, Props, Screen, Tab};
 
 pub struct Head {}
 
@@ -21,24 +21,40 @@ impl Component for Head {
             *buf += r#"<link rel="stylesheet" href="/static/css/style1013a.css">"#;
             *buf += r#"<link rel="icon" type="image/x-icon" href="/static/favicon2.ico">"#;
 
-            match &props.tab {
-                Tab::ProjectInfo => {
-                    // 次の行は、vite/project-info フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
-                    // (参照) vite/project-info/README.md
-                    *buf += r#"<script type="module" crossorigin src="/static/js/project-info/index-BPVg0OjE.js"></script>"#;
+            if let Some(screen) = &props.screen {
+                match screen {
+                    Screen::ProjectInfo => {
+                        match &props.tab {
+                            Tab::Info => {
+                                // 次の行は、vite/project-info フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
+                                // (参照) vite/project-info/README.md
+                                *buf += r#"<script type="module" crossorigin src="/static/js/project-info/index-BPVg0OjE.js"></script>"#;
+                            }
+                            Tab::GanttChart => {
+                                // 以下の2行は、gantt-chart フォルダでビルドして出力された index-XXXXXXXX.js と index-XXXXXXXX.css を設定する。
+                                // (参照) gantt-chart/README.md
+                                *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-uPPKiBja.js"></script>"#;
+                                *buf += r#"<link rel="stylesheet" crossorigin href="/static/js/gantt-chart/index-BZzXyAxC.css">"#;
+                            }
+                            _ => {}
+                        }
+                    }
+                    Screen::TicketInfo => {
+                        match &props.tab {
+                            Tab::Info => {
+                                // 次の行は、vite/ticket-info フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
+                                // (参照) vite/ticket-info/README.md
+                                *buf += r#"<script type="module" crossorigin src="/static/js/ticket-info/index-Bry6yV1i.js"></script>"#;
+                            }
+                            _ => {}
+                        }
+                    }
+                    Screen::TicketList => {
+                        // 次の行は、vite/ticket-list フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
+                        // (参照) vite/ticket-list/README.md
+                        *buf += r#"<script type="module" crossorigin src="/static/js/ticket-list/index-NZQ-KzTl.js"></script>"#;
+                    }
                 }
-                Tab::TicketInfo => {
-                    // 次の行は、vite/ticket-info フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
-                    // (参照) vite/ticket-info/README.md
-                    *buf += r#"<script type="module" crossorigin src="/static/js/ticket-info/index-Bry6yV1i.js"></script>"#;
-                }
-                Tab::GanttChart => {
-                    // 以下の2行は、gantt-chart フォルダでビルドして出力された index-XXXXXXXX.js と index-XXXXXXXX.css を設定する。
-                    // (参照) gantt-chart/README.md
-                    *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-uPPKiBja.js"></script>"#;
-                    *buf += r#"<link rel="stylesheet" crossorigin href="/static/js/gantt-chart/index-BZzXyAxC.css">"#;
-                }
-                _ => {}
             }
         }
         *buf += r#"</head>"#;

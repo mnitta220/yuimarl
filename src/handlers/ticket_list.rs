@@ -111,6 +111,7 @@ async fn get_list_sub(cookies: Cookies, input: TicketListInput) -> Result<Html<S
     props.session = Some(session);
     props.project = project;
     props.project_member = member;
+    props.screen = Some(crate::Screen::TicketList);
 
     let mut page = TicketListPage::new(props, input, list_props);
 

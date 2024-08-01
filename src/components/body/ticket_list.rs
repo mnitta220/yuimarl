@@ -153,6 +153,7 @@ impl Component for TicketListBody {
                                                 *buf += r#"<img class="icon2" src="/static/ionicons/person-circle-outline.svg">"#;
                                             }
                                             *buf += r#"</a>"#;
+                                            //*buf += r#"<img class="icon2" style="cursor:pointer" id="icnSelectCharge" src="/static/ionicons/person-circle-outline.svg" title="担当者を選択">"#;
                                         }
                                         *buf += r#"</div>"#;
 
@@ -226,6 +227,9 @@ impl Component for TicketListBody {
                                     {
                                         *buf += r#"<div class="col d-flex align-items-end justify-content-end">"#;
                                         {
+                                            *buf += r#"<input class="invisible" type="button" id="btnAddCharge" value="">"#;
+                                            *buf += r#"<input class="invisible" type="button" id="btnRemoveCharge" value="">"#;
+                                            *buf += r#"<input class="invisible" type="button" id="btnPageCharge" value="">"#;
                                             *buf += r#"<button id="btnFilter" class="btn btn-sm btn-primary" type="button">"#;
                                             {
                                                 *buf += r#"<img class="icon" src="/static/ionicons/funnel-outline.svg">&nbsp;フィルター"#;
@@ -540,7 +544,7 @@ impl Component for TicketListBody {
                             }
 
                             // 担当者選択ダイアログ
-                            *buf += r#"<div class="modal fade" id="addChargeModal" tabindex="-1" aria-labelledby="chargeModalLabel" aria-hidden="true">"#;
+                            *buf += r#"<div class="modal fade" id="chargeModal" tabindex="-1" aria-labelledby="chargeModalLabel" aria-hidden="true">"#;
                             {
                                 *buf += r#"<div class="modal-dialog modal-lg">"#;
                                 {
@@ -548,7 +552,7 @@ impl Component for TicketListBody {
                                     {
                                         *buf += r#"<div class="modal-header">"#;
                                         {
-                                            *buf += r#"<h1 class="modal-title fs-5" id="addMemberModalLabel">担当者を選択</h1>"#;
+                                            *buf += r#"<h1 class="modal-title fs-5" id="chargeModalLabel">担当者を選択</h1>"#;
                                             *buf += r#"<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="キャンセル"></button>"#;
                                         }
                                         *buf += r#"</div>"#;
@@ -570,7 +574,7 @@ impl Component for TicketListBody {
                                         *buf += r#"<div class="modal-footer">"#;
                                         {
                                             *buf += r#"<button class="btn btn-secondary" type="button" data-bs-dismiss="modal">キャンセル</button>"#;
-                                            *buf += r#"<button class="btn btn-primary" id="btnSelectMember" type="button">選択</button>"#;
+                                            *buf += r#"<button class="btn btn-primary" id="btnSelectCharge" type="button">選択</button>"#;
                                         }
                                         *buf += r#"</div>"#;
                                     }
@@ -591,9 +595,36 @@ impl Component for TicketListBody {
 
             self.footer.write(props, buf);
 
-            *buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
-            *buf += r#"<script src="/static/js/ticket_list1015.js"></script>"#;
+            //*buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
+            //*buf += r#"<script src="/static/js/ticket_list1015.js"></script>"#;
         }
         *buf += r#"</body>"#;
+
+        *buf += r#"<script>
+        function clickSelectCharge() {
+          const btnAddCharge = document.querySelector(`#btnAddCharge`);
+          if (btnAddCharge) {
+            btnAddCharge.click();
+          }
+        }
+
+        function clickRemoveCharge() {
+          const btnRemoveCharge = document.querySelector(`#btnRemoveCharge`);
+          if (btnRemoveCharge) {
+            btnRemoveCharge.click();
+          }
+        }
+  
+        function pageChange(idx) {
+          const page = document.querySelector(`#page`);
+          if (page) {
+            page.value = `${idx}`;
+          }
+          const btnPageCharge = document.querySelector(`#btnPageCharge`);
+          if (btnPageCharge) {
+            btnPageCharge.click();
+          }
+        }
+        </script>"#;
     }
 }

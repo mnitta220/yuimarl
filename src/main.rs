@@ -8,8 +8,7 @@ use axum::{
 };
 use dotenv::dotenv;
 use once_cell::sync::OnceCell;
-use pages::page::Props;
-use pages::page::Tab;
+use pages::page::{Props, Screen, Tab};
 use std::time::Duration;
 use tower::{BoxError, ServiceBuilder};
 use tower_cookies::CookieManagerLayer;

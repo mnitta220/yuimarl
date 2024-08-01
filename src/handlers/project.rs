@@ -42,6 +42,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
     props.title = Some("プロジェクトを作成".to_string());
     props.action = crate::Action::Create;
     props.project = None;
+    props.screen = Some(crate::Screen::ProjectInfo);
 
     let mut member = model::project::ProjectMember::new("", "", &session.uid);
     member.name = Some(session.name.clone());
@@ -109,6 +110,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
     let mut props = page::Props::new(&session.id);
     props.action = crate::Action::Update;
     props.title = Some("プロジェクト".to_string());
+    props.screen = Some(crate::Screen::ProjectInfo);
 
     match tab.as_ref() {
         "note" => {
@@ -121,7 +123,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
             props.tab = crate::Tab::History;
         }
         _ => {
-            props.tab = crate::Tab::ProjectInfo;
+            props.tab = crate::Tab::Info;
         }
     }
 

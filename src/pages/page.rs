@@ -24,6 +24,7 @@ pub struct Props {
     pub gantt_start: Option<String>,
     pub gantt_end: Option<String>,
     pub news: Vec<model::news::News>,
+    pub screen: Option<Screen>,
     pub tab: Tab,
     pub action: crate::Action,
 }
@@ -47,21 +48,29 @@ impl Props {
             gantt_start: None,
             gantt_end: None,
             news: Vec::new(),
-            tab: Tab::ProjectInfo,
+            screen: None,
+            tab: Tab::Info,
             action: crate::Action::Read,
         }
     }
 }
 
+/// 画面
+#[derive(Clone, Copy, PartialEq)]
+pub enum Screen {
+    ProjectInfo = 1, // プロジェクト情報画面
+    TicketInfo = 2,  // チケット情報画面
+    TicketList = 3,  // チケット一覧画面
+}
+
 /// プロジェクト画面のタブ
 #[derive(Clone, Copy, PartialEq)]
 pub enum Tab {
-    ProjectInfo = 1, // プロジェクト基本情報
-    TicketInfo = 2,  // チケット基本情報
-    Note = 3,        // ノート
-    History = 4,     // 更新履歴
-    Comment = 5,     // コメント
-    GanttChart = 6,  // ガントチャート
+    Info = 1,       // 基本情報
+    Note = 2,       // ノート
+    History = 3,    // 更新履歴
+    Comment = 4,    // コメント
+    GanttChart = 5, // ガントチャート
 }
 
 pub struct Page {

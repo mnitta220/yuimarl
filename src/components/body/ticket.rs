@@ -81,7 +81,7 @@ impl Component for TicketBody {
                                         *buf += r#"<li class="nav-item">"#;
                                         {
                                             *buf += r#"<a class="nav-link"#;
-                                            if props.tab == Tab::TicketInfo {
+                                            if props.tab == Tab::Info {
                                                 *buf += r#" active"#;
                                             }
                                             *buf += r#"" href="/ticket?id="#;
@@ -133,7 +133,7 @@ impl Component for TicketBody {
                         }
 
                         match &props.tab {
-                            Tab::TicketInfo => {
+                            Tab::Info => {
                                 self.ticket_info.write(props, buf);
                             }
                             Tab::Note => {

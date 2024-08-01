@@ -157,14 +157,14 @@ impl Component for TicketInfo {
                                                 *buf += r#"<td>"#;
                                                 {
                                                     if self.can_update {
-                                                        *buf += r#"<a href="javascript:clickRemoveCharge(">"#;
+                                                        *buf += r#"<a href="javascript:clickRemoveCharge("#;
                                                         *buf += &i.to_string();
                                                         *buf += r#");">"#;
                                                         *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
                                                         *buf += r#"</a>"#;
 
                                                         if i != 0 {
-                                                            *buf += r#"&nbsp;<a href="javascript:clickUpCharge(">"#;
+                                                            *buf += r#"&nbsp;<a href="javascript:clickUpCharge("#;
                                                             *buf += &i.to_string();
                                                             *buf += r#");">"#;
                                                             *buf += r#"<img class="icon" src="/static/ionicons/arrow-up-outline.svg" title="上に移動">"#;
@@ -172,7 +172,7 @@ impl Component for TicketInfo {
                                                         }
 
                                                         if (i + 1) != props.ticket_members.len() {
-                                                            *buf += r#"&nbsp;<a href="javascript:clickDownCharge(">"#;
+                                                            *buf += r#"&nbsp;<a href="javascript:clickDownCharge("#;
                                                             *buf += &i.to_string();
                                                             *buf += r#");">"#;
                                                             *buf += r#"<img class="icon" src="/static/ionicons/arrow-down-outline.svg" title="下に移動">"#;

@@ -81,7 +81,7 @@ impl Component for ProjectBody {
                                         *buf += r#"<li class="nav-item">"#;
                                         {
                                             *buf += r#"<a class="nav-link"#;
-                                            if props.tab == Tab::ProjectInfo {
+                                            if props.tab == Tab::Info {
                                                 *buf += r#" active"#;
                                             }
                                             *buf += r#"" href="/project?id="#;
@@ -133,7 +133,7 @@ impl Component for ProjectBody {
                         }
 
                         match &props.tab {
-                            Tab::ProjectInfo => {
+                            Tab::Info => {
                                 self.project_info.write(props, buf);
                             }
                             Tab::Note => {

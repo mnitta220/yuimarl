@@ -2479,6 +2479,7 @@ dependencies = [
  "firestore",
  "futures",
  "once_cell",
+ "percent-encoding",
  "serde",
  "serde_json",
  "time",

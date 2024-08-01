@@ -28,12 +28,12 @@ impl Component for Head {
                             Tab::Info => {
                                 // 次の行は、vite/project-info フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
                                 // (参照) vite/project-info/README.md
-                                *buf += r#"<script type="module" crossorigin src="/static/js/project-info/index-BPVg0OjE.js"></script>"#;
+                                *buf += r#"<script type="module" crossorigin src="/static/js/project-info/index-TqQ--d0M.js"></script>"#;
                             }
                             Tab::GanttChart => {
                                 // 以下の2行は、gantt-chart フォルダでビルドして出力された index-XXXXXXXX.js と index-XXXXXXXX.css を設定する。
                                 // (参照) gantt-chart/README.md
-                                *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-uPPKiBja.js"></script>"#;
+                                *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-BlGiFZq-.js"></script>"#;
                                 *buf += r#"<link rel="stylesheet" crossorigin href="/static/js/gantt-chart/index-BZzXyAxC.css">"#;
                             }
                             _ => {}

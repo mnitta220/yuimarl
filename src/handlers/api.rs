@@ -1,6 +1,7 @@
 use crate::model;
 use axum::extract::{Form, Path};
 use firestore::*;
+use percent_encoding::percent_decode_str;
 use serde::{Deserialize, Serialize};
 use tower_cookies::Cookies;
 
@@ -66,6 +67,10 @@ pub async fn firebase_config() -> String {
 /// ユーザーをメールアドレスで検索する
 pub async fn user_by_email(Form(input): Form<UserByEmailInput>) -> String {
     tracing::debug!("GET /user_by_email");
+    let email = percent_decode_str(&input.email)
+        .decode_utf8()
+        .unwrap()
+        .to_string();
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
@@ -85,7 +90,7 @@ pub async fn user_by_email(Form(input): Form<UserByEmailInput>) -> String {
         }
     };
 
-    let users = match model::user::User::search_by_email(&input.email, &db).await {
+    let users = match model::user::User::search_by_email(&email, &db).await {
         Ok(u) => u,
         Err(e) => {
             let result = UserResult {
@@ -120,6 +125,10 @@ pub async fn user_by_email(Form(input): Form<UserByEmailInput>) -> String {
 /// ユーザーを名前で検索する
 pub async fn user_by_name(Form(input): Form<UserByNameInput>) -> String {
     tracing::debug!("GET /user_by_name");
+    let name = percent_decode_str(&input.name)
+        .decode_utf8()
+        .unwrap()
+        .to_string();
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
@@ -139,7 +148,7 @@ pub async fn user_by_name(Form(input): Form<UserByNameInput>) -> String {
         }
     };
 
-    let users = match model::user::User::search_by_name(&input.name, &db).await {
+    let users = match model::user::User::search_by_name(&name, &db).await {
         Ok(u) => u,
         Err(e) => {
             let result = UserResult {
@@ -243,8 +252,8 @@ pub struct UpdateGanttResult {
 
 /// ガントチャートを更新する。
 pub async fn update_gantt(cookies: Cookies, Form(input): Form<UpdateGanttInput>) -> String {
-    let tickets: Vec<model::gantt_ticket::GanttTicket> = match serde_json::from_str(&input.tickets)
-    {
+    let tickets = percent_decode_str(&input.tickets).decode_utf8().unwrap();
+    let tickets: Vec<model::gantt_ticket::GanttTicket> = match serde_json::from_str(&tickets) {
         Ok(t) => t,
         Err(e) => {
             let result = UpdateGanttResult {

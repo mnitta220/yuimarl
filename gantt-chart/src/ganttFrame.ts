@@ -324,11 +324,10 @@ export default class GanttFrame {
     if (loading) {
       loading.classList.remove("d-none");
     }
-    //$("#loading").removeClass("d-none");
 
-    const buf = `project_id=${this.projectId ?? ""}&tickets=${JSON.stringify(
-      this.tickets
-    )}`;
+    const buf = `project_id=${
+      this.projectId ?? ""
+    }&tickets=${encodeURIComponent(JSON.stringify(this.tickets))}`;
 
     fetch("/api/ganttUpdate", {
       method: "POST",
@@ -343,11 +342,9 @@ export default class GanttFrame {
         if (loading) {
           loading.classList.add("d-none");
         }
-        // $("#loading").addClass("d-none");
         return response.json();
       })
       .then((data: GanttSaveResult) => {
-        //console.log(JSON.stringify(data));
         if (data.result) {
           const projectid =
             document.querySelector<HTMLInputElement>(`#projectId`);

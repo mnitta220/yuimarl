@@ -71,7 +71,7 @@ export default class AddMemberModal {
 
     const inputEmail = document.querySelector<HTMLInputElement>(`input#email`);
     if (inputEmail && inputEmail.value) {
-      const buf = `email=${inputEmail.value}`;
+      const buf = `email=${encodeURIComponent(inputEmail.value)}`;
 
       fetch("/api/userByEmail", {
         method: "POST",
@@ -99,7 +99,7 @@ export default class AddMemberModal {
     const inputName =
       document.querySelector<HTMLInputElement>(`input#member-name`);
     if (inputName && inputName.value) {
-      const buf = `name=${inputName.value}`;
+      const buf = `name=${encodeURIComponent(inputName.value)}`;
 
       fetch("/api/userByName", {
         method: "POST",

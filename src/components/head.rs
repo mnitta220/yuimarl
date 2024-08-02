@@ -59,7 +59,7 @@ impl Component for Head {
                             Tab::Comment => {
                                 // 次の行は、vite/comment フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
                                 // (参照) vite/comment/README.md
-                                *buf += r#"<script type="module" crossorigin src="/static/js/comment/index-pehMYcZQ.js"></script>"#;
+                                *buf += r#"<script type="module" crossorigin src="/static/js/comment/index-DGGa0BgU.js"></script>"#;
                             }
                             _ => {}
                         }

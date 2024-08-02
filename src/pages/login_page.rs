@@ -17,7 +17,10 @@ impl LoginPage {
                 buf += r#"<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>"#;
                 buf += r#"<script src="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth__ja.js"></script>"#;
                 buf += r#"<link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.css" />"#;
-                buf += r#"<link rel="icon" type="image/x-icon" href="/static/favicon.ico">"#;
+                buf += r#"<link rel="icon" type="image/x-icon" href="/static/favicon2.ico">"#;
+                // 次の行は、vite/login フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
+                // (参照) vite/login/README.md
+                buf += r#"<script type="module" crossorigin src="/static/js/login/index-tzlgMdvR.js"></script>"#;
             }
             buf += r#"</head>"#;
 
@@ -36,9 +39,6 @@ impl LoginPage {
                     buf += r#"<input type=hidden id="locale" name="locale">"#;
                 }
                 buf += r#"</form>"#;
-
-                buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
-                buf += r#"<script src="/static/js/login1015.js"></script>"#;
             }
             buf += r#"</body>"#;
         }

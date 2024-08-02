@@ -1,8 +1,10 @@
 import { marked } from "marked";
 import CommentModal from "./commentModal";
+import DeleteCommentModal from "./deleteCommentModal";
 
 export default class Comment {
   commentModal = new CommentModal();
+  deleteCommentModal = new DeleteCommentModal();
 
   constructor() {
     this.handler();
@@ -22,5 +24,6 @@ export default class Comment {
   // イベントハンドラを登録する
   private handler() {
     this.commentModal.handler();
+    this.deleteCommentModal.handler();
   }
 }

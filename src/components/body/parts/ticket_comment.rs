@@ -117,8 +117,6 @@ impl Component for TicketComment {
                     *buf += r#"<input type="hidden" id="comment_id" name="comment_id" value="">"#;
                     *buf += r#"<input type="hidden" id="action" name="action" value="">"#;
                     *buf += r#"<input type="hidden" id="comment" name="comment" value="">"#;
-                    *buf +=
-                        r#"<input type="hidden" id="selectedIndex" name="selectedIndex" value="">"#;
                 }
                 *buf += r#"</form>"#;
 

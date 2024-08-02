@@ -5,7 +5,7 @@ export default class CommentModal {
   private id = "commentModal";
   private modal: bootstrap.Modal | null = null;
 
-  constructor(/*private info: Comment*/) {
+  constructor() {
     const memberModal = document.querySelector<HTMLDivElement>(`#${this.id}`);
     if (memberModal) {
       this.modal = new bootstrap.Modal(memberModal);
@@ -26,6 +26,13 @@ export default class CommentModal {
     if (btnAdd) {
       btnAdd.addEventListener("click", () => {
         this.add();
+      });
+    }
+
+    const btnUpdate = document.querySelector<HTMLButtonElement>(`#btnUpdate`);
+    if (btnUpdate) {
+      btnUpdate.addEventListener("click", () => {
+        this.update();
       });
     }
 
@@ -54,6 +61,24 @@ export default class CommentModal {
     const action = document.querySelector<HTMLInputElement>(`#action`);
     if (action) {
       action.value = "Create";
+      const markdown = document.querySelector<HTMLInputElement>(`#markdown`);
+      if (markdown) {
+        const comment = document.querySelector<HTMLInputElement>(`#comment`);
+        if (comment) {
+          comment.value = markdown.value;
+          const form = document.querySelector<HTMLFormElement>(`#post_comment`);
+          if (form) {
+            form.submit();
+          }
+        }
+      }
+    }
+  }
+
+  update() {
+    const action = document.querySelector<HTMLInputElement>(`#action`);
+    if (action) {
+      action.value = "Update";
       const markdown = document.querySelector<HTMLInputElement>(`#markdown`);
       if (markdown) {
         const comment = document.querySelector<HTMLInputElement>(`#comment`);

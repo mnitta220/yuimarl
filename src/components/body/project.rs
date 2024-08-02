@@ -1,9 +1,9 @@
 use super::super::Component;
 use super::parts::{
-    footer::Footer, gantt_chart::GanttChart, loading, nav::Nav, project_history::ProjectHistory,
+    gantt_chart::GanttChart, loading, nav::Nav, project_history::ProjectHistory,
     project_info::ProjectInfo, project_note::ProjectNote,
 };
-use crate::{handlers::validation, Props, Tab};
+use crate::{components::footer::footer::Footer, handlers::validation, Props, Tab};
 
 pub struct ProjectBody {
     pub nav: Box<dyn Component + Send>,
@@ -155,22 +155,11 @@ impl Component for ProjectBody {
             *buf += r#"</main>"#;
 
             self.footer.write(props, buf);
+
             match &props.tab {
-                /*
                 Tab::Info => {
-                    *buf +=
-                        r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
-                    *buf += r#"<script src="/static/js/project1015.js"></script>"#;
+                    crate::components::footer::project_info::project_info_footer(buf);
                 }
-                */
-                /*
-                Tab::Note => {
-                    *buf +=
-                        r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
-                    *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;
-                    *buf += r#"<script src="/static/js/markdown1015.js"></script>"#;
-                }
-                */
                 _ => {}
             }
         }

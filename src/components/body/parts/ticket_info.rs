@@ -34,6 +34,7 @@ impl Component for TicketInfo {
                         *buf += &p.id;
                         *buf += r#"">"#;
                     }
+                    /*
                     *buf += r#"<input class="invisible" type="button" id="btnAddParentInvisible" value="">"#;
                     *buf +=
                         r#"<input class="invisible" type="button" id="btnRemoveParent" value="">"#;
@@ -48,6 +49,7 @@ impl Component for TicketInfo {
                     *buf +=
                         r#"<input type="hidden" name="selectedIndex" id="selectedIndex" value="">"#;
                     *buf += r#"<input type="hidden" name="selectedColor" id="selectedColor" value="light">"#;
+                    */
                 }
                 *buf += r#"</div>"#;
             }
@@ -440,8 +442,6 @@ impl Component for TicketInfo {
                                 *buf += r#"</a>"#;
                                 //*buf += r#"<img class="icon" style="cursor:pointer" id="icnRemoveParent" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
 
-                                //*buf += r#"<input class="invisible" type="button" id="btnAddParentInvisible" value="">"#;
-                                //*buf += r#"<input class="invisible" type="button" id="btnRemoveParent" value="">"#;
                                 *buf += r#"<input type="hidden" id="parent" name="parent" value=""#;
                                 *buf += &t.id;
                                 *buf += r#"">"#;
@@ -457,8 +457,6 @@ impl Component for TicketInfo {
                                     *buf += r#"</a>"#;
                                     //*buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddParent" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">"#;
 
-                                    //*buf += r#"<input class="invisible" type="button" id="btnAddParentInvisible" value="">"#;
-                                    //*buf += r#"<input class="invisible" type="button" id="btnRemoveParent" value="">"#;
                                     *buf += r#"<input type="hidden" id="parent" name="parent" value="">"#;
                                 }
                             }
@@ -1066,6 +1064,7 @@ impl Component for TicketInfo {
         }
         *buf += r#"</div>"#;
 
+        /*
         *buf += r#"<script>
         function clickRemoveCharge(idx) {
           const btnRemoveCharge = document.querySelector(`#btnRemoveCharge`);
@@ -1136,5 +1135,6 @@ impl Component for TicketInfo {
           }
         }
         </script>"#;
+        */
     }
 }

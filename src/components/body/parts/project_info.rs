@@ -179,13 +179,6 @@ impl Component for ProjectInfo {
                             }
                             *buf += r#" id="divAddMember">"#;
                             {
-                                /*
-                                *buf += r#"<a href="javascript:clickAddMember();">"#;
-                                {
-                                    *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="メンバーを追加">"#;
-                                }
-                                *buf += r#"</a>"#;
-                                */
                                 *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddMember" src="/static/ionicons/add-circle-outline.svg" title="メンバーを追加">"#;
                             }
                             *buf += r#"</div>"#;
@@ -484,9 +477,6 @@ impl Component for ProjectInfo {
                             *buf += r#"<img class="icon" src="/static/ionicons/create-outline.svg">&nbsp;作成"#;
                         }
                         *buf += r#"</button>"#;
-                        *buf +=
-                            r#"<input class="invisible" type="button" id="btnSetMember" value="">"#;
-                        *buf += r#"<input class="invisible" type="button" id="btnRemoveMember" value="">"#;
                     }
                     *buf += r#"</div>"#;
                     *buf += r#"<input type="hidden" name="project_id" value="">"#;
@@ -513,8 +503,6 @@ impl Component for ProjectInfo {
                                     *buf += r#"<img class="icon" src="/static/ionicons/refresh-outline.svg">&nbsp;再読み込み"#;
                                 }
                                 *buf += r#"</a>"#;
-                                *buf += r#"<input class="invisible" type="button" id="btnSetMember" value="">"#;
-                                *buf += r#"<input class="invisible" type="button" id="btnRemoveMember" value="">"#;
                             }
                             *buf += r#"</div>"#;
 
@@ -553,8 +541,6 @@ impl Component for ProjectInfo {
                         if let Some(p) = &props.project {
                             *buf += r#"<div class="col text-end">"#;
                             {
-                                *buf += r#"<input class="invisible" type="button" id="btnSetMember" value="">"#;
-                                *buf += r#"<input class="invisible" type="button" id="btnRemoveMember" value="">"#;
                                 *buf += r##"<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#withdrawModal">"##;
                                 {
                                     *buf += r#"<img class="icon" src="/static/ionicons/exit-outline.svg">&nbsp;プロジェクトから離脱"#;
@@ -777,29 +763,5 @@ impl Component for ProjectInfo {
             *buf += r#"</div>"#;
         }
         *buf += r#"</div>"#;
-
-        *buf += r#"<script>
-        function clickSetMember(idx) {
-          const btnSetMember = document.querySelector(`#btnSetMember`);
-          if (btnSetMember) {
-            const selectedIndex = document.querySelector(`#selectedIndex`);
-            if (selectedIndex) {
-              selectedIndex.value = `${idx}`;
-              btnSetMember.click();
-            }
-          }
-        }
-
-        function clickRemoveMember(idx) {
-          const btnRemoveMember = document.querySelector(`#btnRemoveMember`);
-          if (btnRemoveMember) {
-            const selectedIndex = document.querySelector(`#selectedIndex`);
-            if (selectedIndex) {
-              selectedIndex.value = `${idx}`;
-              btnRemoveMember.click();
-            }
-          }
-        }
-        </script>"#;
     }
 }

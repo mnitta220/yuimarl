@@ -1,6 +1,6 @@
 use super::super::Component;
-use super::parts::{footer::Footer, nav::Nav};
-use crate::Props;
+use super::parts::nav::Nav;
+use crate::{components::footer::footer::Footer, Props};
 
 pub struct AgreementBody {
     pub nav: Box<dyn Component + Send>,

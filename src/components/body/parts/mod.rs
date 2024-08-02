@@ -1,4 +1,3 @@
-pub mod footer;
 pub mod gantt_chart;
 pub mod loading;
 pub mod nav;

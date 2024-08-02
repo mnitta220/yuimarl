@@ -1,6 +1,6 @@
 use super::super::Component;
-use super::parts::{footer::Footer, nav::Nav};
-use crate::{handlers::validation, Props};
+use super::parts::nav::Nav;
+use crate::{components::footer::footer::Footer, handlers::validation, Props};
 
 pub struct NoticeDelBody {
     pub nav: Box<dyn Component + Send>,

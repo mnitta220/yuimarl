@@ -175,7 +175,7 @@ impl GanttTicket {
         tickets_upd: &Vec<GanttTicket>,
         db: &FirestoreDb,
     ) -> Result<()> {
-        let updated = "他のユーザーがチケットを更新しため、更新できませんでした。<br>再読み込みを行ってください。".to_string();
+        let updated = "他のユーザーがチケットを更新しため、更新できませんでした。再読み込みを行ってください。".to_string();
 
         let member = match model::project::ProjectMember::find(&project_id, &session.uid, &db).await
         {

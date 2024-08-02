@@ -1,8 +1,8 @@
 use super::super::super::handlers::ticket_list::{TicketListInput, TicketListProps};
 use super::super::super::pages::ticket_list_page::PAGE_COUNT;
 use super::super::Component;
-use super::parts::{footer::Footer, nav::Nav};
-use crate::{model, Props};
+use super::parts::nav::Nav;
+use crate::{components::footer::footer::Footer, model, Props};
 
 pub struct TicketListBody {
     pub nav: Box<dyn Component + Send>,
@@ -227,9 +227,9 @@ impl Component for TicketListBody {
                                     {
                                         *buf += r#"<div class="col d-flex align-items-end justify-content-end">"#;
                                         {
-                                            *buf += r#"<input class="invisible" type="button" id="btnAddCharge" value="">"#;
-                                            *buf += r#"<input class="invisible" type="button" id="btnRemoveCharge" value="">"#;
-                                            *buf += r#"<input class="invisible" type="button" id="btnPageCharge" value="">"#;
+                                            //*buf += r#"<input class="invisible" type="button" id="btnAddCharge" value="">"#;
+                                            //*buf += r#"<input class="invisible" type="button" id="btnRemoveCharge" value="">"#;
+                                            //*buf += r#"<input class="invisible" type="button" id="btnPageCharge" value="">"#;
                                             *buf += r#"<button id="btnFilter" class="btn btn-sm btn-primary" type="button">"#;
                                             {
                                                 *buf += r#"<img class="icon" src="/static/ionicons/funnel-outline.svg">&nbsp;フィルター"#;
@@ -594,37 +594,8 @@ impl Component for TicketListBody {
             *buf += r#"</main>"#;
 
             self.footer.write(props, buf);
-
-            //*buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
-            //*buf += r#"<script src="/static/js/ticket_list1015.js"></script>"#;
+            crate::components::footer::ticket_list::ticket_list_footer(buf);
         }
         *buf += r#"</body>"#;
-
-        *buf += r#"<script>
-        function clickSelectCharge() {
-          const btnAddCharge = document.querySelector(`#btnAddCharge`);
-          if (btnAddCharge) {
-            btnAddCharge.click();
-          }
-        }
-
-        function clickRemoveCharge() {
-          const btnRemoveCharge = document.querySelector(`#btnRemoveCharge`);
-          if (btnRemoveCharge) {
-            btnRemoveCharge.click();
-          }
-        }
-  
-        function pageChange(idx) {
-          const page = document.querySelector(`#page`);
-          if (page) {
-            page.value = `${idx}`;
-          }
-          const btnPageCharge = document.querySelector(`#btnPageCharge`);
-          if (btnPageCharge) {
-            btnPageCharge.click();
-          }
-        }
-        </script>"#;
     }
 }

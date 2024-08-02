@@ -2,6 +2,7 @@ use crate::Props;
 use chrono::{DateTime, FixedOffset, Utc};
 
 pub mod body;
+pub mod footer;
 pub mod head;
 
 pub trait Component {

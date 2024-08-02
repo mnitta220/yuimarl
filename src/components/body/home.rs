@@ -1,6 +1,6 @@
 use super::super::Component;
-use super::parts::{footer::Footer, nav::Nav, news::News};
-use crate::{model, Props};
+use super::parts::{nav::Nav, news::News};
+use crate::{components::footer::footer::Footer, model, Props};
 
 pub struct HomeBody {
     pub nav: Box<dyn Component + Send>,

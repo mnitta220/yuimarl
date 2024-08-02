@@ -1,9 +1,9 @@
 use super::super::Component;
 use super::parts::{
-    footer::Footer, nav::Nav, ticket_comment::TicketComment, ticket_history::TicketHistory,
+    nav::Nav, ticket_comment::TicketComment, ticket_history::TicketHistory,
     ticket_info::TicketInfo, ticket_note::TicketNote,
 };
-use crate::{handlers::validation, Props, Tab};
+use crate::{components::footer::footer::Footer, handlers::validation, Props, Tab};
 
 pub struct TicketBody {
     pub nav: Box<dyn Component + Send>,
@@ -160,23 +160,16 @@ impl Component for TicketBody {
             *buf += r#"">"#;
 
             self.footer.write(props, buf);
-            //*buf += r#"<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>"#;
-            /*
+
             match &props.tab {
                 Tab::Info => {
-                    *buf += r#"<script src="/static/js/ticket1015.js"></script>"#;
-                }
-                Tab::Note => {
-                    *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;
-                    *buf += r#"<script src="/static/js/markdown1015.js"></script>"#;
+                    crate::components::footer::ticket_info::ticket_info_footer(buf);
                 }
                 Tab::Comment => {
-                    *buf += r#"<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>"#;
-                    *buf += r#"<script src="/static/js/comment1015.js"></script>"#;
+                    crate::components::footer::ticket_comment::ticket_comment_footer(buf);
                 }
                 _ => {}
             }
-            */
         }
         *buf += r#"</body>"#;
     }

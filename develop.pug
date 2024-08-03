@@ -94,9 +94,12 @@ html(lang="ja")
                         br
 
                         .alert.alert-primary(role="alert")
-                          | ガントチャート機能のフロントエンドは、TypeScript で実装しています。それについては、次のページをご参照ください。
-                          br
-                          a(href="https://github.com/mnitta220/yuimarl/tree/main/gantt-chart" target="_blank") ガントチャート表示用フロントエンドモジュール
+                          | フロントエンドの一部は、 
+                          a(href="https://ja.vitejs.dev/" target="_blank") Vite
+                          |  を使用しています。それについては、vite フォルダの下のサブフォルダにある README.md をご参照ください。
+                          ul
+                            li
+                              a(href="https://github.com/mnitta220/yuimarl/tree/main/vite/gantt-chart" target="_blank") ガントチャート表示用フロントエンドモジュール
                       hr
                       section.pb-2
                         h4#step06 Dockerイメージを作る

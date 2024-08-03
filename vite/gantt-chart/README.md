@@ -9,7 +9,7 @@ npm コマンドで JavaScript にコンパイルされます。
 
 ## インストール
 
-1. `gantt-chart` フォルダで、次のコマンドを実行します。
+1. `vite\gantt-chart` フォルダで、次のコマンドを実行します。
 
 ```
 npm install
@@ -17,7 +17,7 @@ npm install
 
 ## ローカル起動
 
-1. `gantt-chart` フォルダで、次のコマンドを実行します。
+1. `vite\gantt-chart` フォルダで、次のコマンドを実行します。
 
 ```
 npm run dev
@@ -28,7 +28,7 @@ npm run dev
 
 ## ビルド
 
-1. `gantt-chart` フォルダで、次のコマンドを実行します。
+1. `vite\gantt-chart` フォルダで、次のコマンドを実行します。
 
 ```
 npm run build

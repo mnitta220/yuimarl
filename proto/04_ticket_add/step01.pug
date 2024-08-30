@@ -37,7 +37,7 @@ html(lang="ja")
                       //- | &nbsp;[プロジェクトを作成]
 
         // チケット
-        .py-3
+        .pt-3
           section.mb-3#tickets
             .container
               .row
@@ -49,6 +49,19 @@ html(lang="ja")
                   | &nbsp;&nbsp;&nbsp;
                   a(href="step02.html" title="チケットを追加")
                     img.icon3(src="../../static/ionicons/add-circle-outline.svg")
+
+        // メモ
+        .pt-3.mb-2.bg-light
+          section#memo
+            .container
+              .row
+                .col-md-3
+                  h3 メモ
+                .col-md-9.py-0
+                  .row.pb-1
+                    .col
+                      a(href="/project/add" title="編集")
+                        img.icon3(src="../../static/ionicons/create-outline3.svg")
 
     //- include ../includes/footer.pug
     footer.py-1.mt-3.bg-dark.text-light

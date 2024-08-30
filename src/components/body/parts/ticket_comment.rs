@@ -1,9 +1,7 @@
-use crate::{components::Component, handlers::validation, Props};
+use crate::{components::Component, Props};
 
 pub struct TicketComment {
     pub can_update: bool,
-    pub validation: Option<validation::ticket::TicketValidation>,
-    pub is_edit: bool,
 }
 
 impl Component for TicketComment {

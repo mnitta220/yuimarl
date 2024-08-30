@@ -15,7 +15,6 @@ pub struct LoginInput {
     pub email: String,
     pub photo_url: String,
     pub uid: String,
-    pub locale: String,
 }
 
 pub async fn get_login() -> Result<Html<String>, AppError> {

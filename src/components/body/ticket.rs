@@ -20,7 +20,6 @@ impl TicketBody {
         can_update: bool,
         can_delete: bool,
         validation: Option<validation::ticket::TicketValidation>,
-        is_edit: bool,
     ) -> Self {
         TicketBody {
             nav: Box::new(Nav {}),
@@ -30,11 +29,7 @@ impl TicketBody {
                 validation: validation.clone(),
             }),
             ticket_note: Box::new(TicketNote { can_update }),
-            ticket_comment: Box::new(TicketComment {
-                can_update,
-                validation: validation.clone(),
-                is_edit,
-            }),
+            ticket_comment: Box::new(TicketComment { can_update }),
             ticket_history: Box::new(TicketHistory {}),
             footer: Box::new(Footer {}),
             validation,

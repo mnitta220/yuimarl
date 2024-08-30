@@ -11,27 +11,19 @@ use axum::response::Html;
 use firestore::*;
 use tower_cookies::Cookies;
 
-pub async fn get(cookies: Cookies) -> Result<Html<String>, AppError> {
+pub async fn get() -> Result<Html<String>, AppError> {
     tracing::debug!("GET /agree");
 
-    let session_id = match super::get_session_id(cookies, false) {
-        Ok(session_id) => session_id,
-        Err(_) => return Ok(Html(LoginPage::write())),
-    };
-    let props = page::Props::new(&session_id);
+    let props = page::Props::new();
     let mut page = AgreementPage::new(props, false);
 
     Ok(Html(page.write()))
 }
 
-pub async fn get_disagree(cookies: Cookies) -> Result<Html<String>, AppError> {
+pub async fn get_disagree() -> Result<Html<String>, AppError> {
     tracing::debug!("GET /agree");
 
-    let session_id = match super::get_session_id(cookies, false) {
-        Ok(session_id) => session_id,
-        Err(_) => return Ok(Html(LoginPage::write())),
-    };
-    let props = page::Props::new(&session_id);
+    let props = page::Props::new();
     let mut page = AgreementPage::new(props, true);
 
     Ok(Html(page.write()))
@@ -51,7 +43,7 @@ pub async fn post(cookies: Cookies) -> Result<Html<String>, AppError> {
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
 
     if let Err(e) = model::user::User::insert(&session, &db).await {
         return Err(AppError(anyhow::anyhow!(e)));
@@ -64,7 +56,7 @@ pub async fn post(cookies: Cookies) -> Result<Html<String>, AppError> {
 
     props.session = Some(session);
 
-    let mut page = HomePage::new(props, 0);
+    let mut page = HomePage::new(props, 0, None);
 
     Ok(Html(page.write()))
 }

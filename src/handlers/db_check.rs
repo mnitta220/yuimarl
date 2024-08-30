@@ -9,14 +9,10 @@ use firestore::*;
 use serde::Deserialize;
 use tower_cookies::Cookies;
 
-pub async fn get(cookies: Cookies) -> Result<Html<String>, AppError> {
+pub async fn get() -> Result<Html<String>, AppError> {
     tracing::debug!("GET /db_check");
 
-    let session_id = match super::get_session_id(cookies, false) {
-        Ok(session_id) => session_id,
-        Err(_) => return Ok(Html(LoginPage::write())),
-    };
-    let mut props = page::Props::new(&session_id);
+    let mut props = page::Props::new();
     props.title = Some(String::from("データベースチェック"));
     let mut page = DbCheckPage::new(props, None, None);
 
@@ -57,10 +53,8 @@ pub async fn post(
             }
         };
 
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
     props.title = Some(String::from("データベースチェック"));
-    //props.db_check_password = Some(input.db_check_password);
-    //props.db_check_validation = v;
     props.session = Some(session);
     let mut page = DbCheckPage::new(props, Some(input.db_check_password), v);
 

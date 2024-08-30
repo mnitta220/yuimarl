@@ -30,7 +30,8 @@ pub async fn show_home(
     mut session: model::session::Session,
     db: &FirestoreDb,
 ) -> Result<Html<String>, AppError> {
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
+    let memo: Option<String>;
 
     let user = match model::user::User::find(&session.uid, &db).await {
         Ok(user) => user,
@@ -55,6 +56,7 @@ pub async fn show_home(
                 return Err(AppError(anyhow::anyhow!(e)));
             };
         }
+        memo = user.memo;
     } else {
         return Ok(Html(LoginPage::write()));
     }
@@ -81,12 +83,13 @@ pub async fn show_home(
         }
     };
 
+    props.screen = Some(crate::Screen::Home);
     props.project = project;
     props.project_member = member;
     props.tickets = tickets;
     props.session = Some(session);
     props.news = news;
-    let mut page = HomePage::new(props, owner_cnt);
+    let mut page = HomePage::new(props, owner_cnt, memo);
 
     Ok(Html(page.write()))
 }

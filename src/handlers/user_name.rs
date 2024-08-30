@@ -32,7 +32,7 @@ pub async fn post(
         Err(_) => return Ok(Html(LoginPage::write())),
     };
 
-    let props = page::Props::new(&session.id);
+    let props = page::Props::new();
 
     let name = input.name.trim();
 

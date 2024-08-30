@@ -15,6 +15,7 @@ pub mod notice;
 pub mod project;
 pub mod ticket;
 pub mod ticket_list;
+pub mod user_memo;
 pub mod user_name;
 pub mod validation;
 

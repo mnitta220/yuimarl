@@ -3,6 +3,7 @@ import {
   CALENDAR_MIN,
   LINE_HEIGHT,
   DAY_WIDTH,
+  CANVAS_FONT,
   SCROLL_BAR_WIDTH,
 } from "./common";
 import GanttFrame from "./ganttFrame";
@@ -66,7 +67,6 @@ export default class CalendarHeader {
         ? LINE_HEIGHT + LINE_HEIGHT
         : LINE_HEIGHT;
       const ctx = cnvs.getContext("2d");
-      const font = "10pt sans-serif";
       if (ctx) {
         ctx.save();
         // カレンダーヘッダー横線
@@ -81,7 +81,7 @@ export default class CalendarHeader {
         let dt = this.frame.calendarStart.clone();
         let x = 0;
         let first = true;
-        ctx.font = font;
+        ctx.font = CANVAS_FONT;
         ctx.textBaseline = "bottom";
         ctx.textAlign = "left";
         let iteration = this.frame.iterationNo;
@@ -192,7 +192,7 @@ export default class CalendarHeader {
           ctx.fillText(
             `${dt.date()}`,
             x + 3 - this.dtpos,
-            this.frame.headerHeight - 4
+            this.frame.headerHeight - 3
           );
           x += DAY_WIDTH;
           dt = dt.add(1, "day");

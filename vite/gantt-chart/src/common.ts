@@ -4,6 +4,8 @@ export const TICKET_HEIGHT = 22;
 export const DAY_WIDTH = 22;
 export const CALENDAR_MIN = DAY_WIDTH * 10;
 export const DAY_MILISEC = 1000 * 60 * 60 * 24;
+export const CANVAS_FONT =
+  '400 10.5pt system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
 
 export class GanttTicket {
   id: string = "";

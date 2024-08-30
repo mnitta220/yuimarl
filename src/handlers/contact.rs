@@ -21,7 +21,7 @@ pub async fn get_contact(cookies: Cookies) -> Result<Html<String>, AppError> {
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
 
     props.session = Some(session);
     let mut page = ContactPage::new(props);

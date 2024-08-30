@@ -7,12 +7,12 @@ pub struct HomePage {
 }
 
 impl HomePage {
-    pub fn new(props: page::Props, owner_cnt: usize) -> Self {
+    pub fn new(props: page::Props, owner_cnt: usize, memo: Option<String>) -> Self {
         // Construct the components of the HTML page.
         let mut page = page::Page::new();
 
         // Construct the components of the HTML body.
-        let body = HomeBody::new(owner_cnt);
+        let body = HomeBody::new(owner_cnt, memo);
         page.body = Some(Box::new(body));
 
         HomePage { props, page }

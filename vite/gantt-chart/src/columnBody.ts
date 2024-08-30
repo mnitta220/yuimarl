@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import {
   SCROLL_BAR_WIDTH,
   TICKET_HEIGHT,
+  CANVAS_FONT,
   GanttTicket,
   TicketModalResult,
 } from "./common";
@@ -175,7 +176,9 @@ export default class ColumnBody {
   // チケットを描画する
   drawTicket(ctx: CanvasRenderingContext2D, ticket: GanttTicket) {
     if (this.frame.moving && ticket.id === this.frame.movingTicket?.id) return;
-    ctx.font = "10pt sans-serif";
+    //ctx.font = "400 10pt sans-serif";
+    //ctx.font = "lighter 10pt Arial";
+    ctx.font = CANVAS_FONT;
     ctx.textBaseline = "bottom";
     let y1 = ticket.y1;
     let y2 = ticket.y2;
@@ -223,7 +226,7 @@ export default class ColumnBody {
       }
     }
 
-    const y3 = y1 + 18;
+    const y3 = y1 + 19;
     ctx.fillStyle = "#00f";
     // ID
     ctx.fillText(ticket.id_disp, 3, y3 + this.posY);
@@ -303,7 +306,8 @@ export default class ColumnBody {
     ticket: GanttTicket,
     y: number
   ) {
-    ctx.font = "10pt sans-serif";
+    //ctx.font = "400 10pt sans-serif";
+    ctx.font = CANVAS_FONT;
     ctx.textBaseline = "bottom";
     let y2 = y;
     const y1 = y2 + 18;

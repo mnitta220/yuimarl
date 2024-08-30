@@ -1,16 +1,13 @@
 use super::super::Component;
-use super::parts::nav::Nav;
 use crate::{components::footer::footer::Footer, Props};
 
 pub struct UserNameBody {
-    pub nav: Box<dyn Component + Send>,
     pub footer: Box<dyn Component + Send>,
 }
 
 impl UserNameBody {
     pub fn new() -> Self {
         UserNameBody {
-            nav: Box::new(Nav {}),
             footer: Box::new(Footer {}),
         }
     }

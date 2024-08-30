@@ -10,14 +10,10 @@ use firestore::*;
 use serde::Deserialize;
 use tower_cookies::Cookies;
 
-pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
+pub async fn get_add() -> Result<Html<String>, AppError> {
     tracing::debug!("GET /notice_add");
 
-    let session_id = match super::get_session_id(cookies, false) {
-        Ok(session_id) => session_id,
-        Err(_) => return Ok(Html(LoginPage::write())),
-    };
-    let mut props = page::Props::new(&session_id);
+    let mut props = page::Props::new();
     props.title = Some(String::from("運用からのお知らせ"));
     let mut page = NoticeAddPage::new(props, None, None, None, None);
 
@@ -74,7 +70,7 @@ pub async fn post_add(
         }
     }
 
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
     props.title = Some(String::from("運用からのお知らせ"));
     props.session = Some(session);
     let mut page = NoticeAddPage::new(
@@ -88,14 +84,10 @@ pub async fn post_add(
     Ok(Html(page.write()))
 }
 
-pub async fn get_del(cookies: Cookies) -> Result<Html<String>, AppError> {
+pub async fn get_del() -> Result<Html<String>, AppError> {
     tracing::debug!("GET /notice_del");
 
-    let session_id = match super::get_session_id(cookies, false) {
-        Ok(session_id) => session_id,
-        Err(_) => return Ok(Html(LoginPage::write())),
-    };
-    let mut props = page::Props::new(&session_id);
+    let mut props = page::Props::new();
     props.title = Some(String::from("運用からのお知らせ削除"));
     let mut page = NoticeDelPage::new(props, None, None, None);
 
@@ -147,7 +139,7 @@ pub async fn post_del(
         }
     }
 
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
     props.title = Some(String::from("運用からのお知らせ削除"));
     props.session = Some(session);
     let mut page = NoticeDelPage::new(props, Some(input.notice_id), Some(input.password), v);

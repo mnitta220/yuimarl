@@ -80,7 +80,7 @@ async fn get_list_sub(cookies: Cookies, input: TicketListInput) -> Result<Html<S
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
     props.title = Some("チケット一覧".to_string());
 
     let (project, member) = match model::project::Project::current_project(&session, &db).await {

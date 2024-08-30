@@ -23,7 +23,7 @@ npm install
 npm run build
 ```
 
-2. `vite\comment\dist\assets` の下に出力された `index-XXXXXXXX.js` を、 `static\js\ticket-list` にコピーし、既存の `index-XXXXXXXX.js` を削除します。
+2. `vite\comment\dist\assets` の下に出力された `index-XXXXXXXX.js` を、 `static\js\comment` にコピーし、既存の `index-XXXXXXXX.js` を削除します。
 3. `src\components\head.rs` にある `<script ・・・ index-XXXXXXXX.js` を書き換えます。
 
 ```Rust

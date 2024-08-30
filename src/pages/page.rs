@@ -8,7 +8,6 @@ use crate::{
 const PAGE_BUFFER_SIZE: usize = 20_000;
 
 pub struct Props {
-    pub session_id: String,
     pub session: Option<model::session::Session>,
     pub title: Option<String>,
     pub project: Option<model::project::Project>,
@@ -30,9 +29,8 @@ pub struct Props {
 }
 
 impl Props {
-    pub fn new(session_id: &String) -> Self {
+    pub fn new() -> Self {
         Props {
-            session_id: session_id.clone(),
             session: None,
             title: None,
             project: None,
@@ -58,6 +56,7 @@ impl Props {
 /// 画面
 #[derive(Clone, Copy, PartialEq)]
 pub enum Screen {
+    Home = 0,        // ホーム画面
     ProjectInfo = 1, // プロジェクト情報画面
     TicketInfo = 2,  // チケット情報画面
     TicketList = 3,  // チケット一覧画面

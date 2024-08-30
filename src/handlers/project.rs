@@ -38,7 +38,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
         Err(_) => return Ok(Html(LoginPage::write())),
     };
 
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
     props.title = Some("プロジェクトを作成".to_string());
     props.action = crate::Action::Create;
     props.project = None;
@@ -72,7 +72,7 @@ pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
         Err(_) => return Ok(Html(LoginPage::write())),
     };
 
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
     props.title = Some("プロジェクト一覧".to_string());
 
     let (projects, owner_cnt) =
@@ -107,7 +107,7 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
         Err(_) => return Ok(Html(LoginPage::write())),
     };
 
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
     props.action = crate::Action::Update;
     props.title = Some("プロジェクト".to_string());
     props.screen = Some(crate::Screen::ProjectInfo);
@@ -261,7 +261,7 @@ pub async fn post(
         Err(_) => return Ok(Html(LoginPage::write())),
     };
 
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
 
     let action = match input.action.as_ref() {
         "Create" => crate::Action::Create,
@@ -425,7 +425,7 @@ pub async fn post_note(
             }
         };
 
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
 
     if let Some(v) = validation {
         let mut can_update = false;
@@ -454,7 +454,6 @@ pub async fn post_note(
         props.tab = crate::Tab::Note;
         props.action = crate::Action::Update;
         props.session = Some(session);
-        //props.project_validation = Some(v);
         let mut page = ProjectPage::new(props, can_update, can_delete, Some(v));
         return Ok(Html(page.write()));
     }

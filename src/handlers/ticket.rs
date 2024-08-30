@@ -31,7 +31,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
         Err(_) => return Ok(Html(LoginPage::write())),
     };
 
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
     props.title = Some("チケットを作成".to_string());
     props.action = crate::Action::Create;
     props.screen = Some(crate::Screen::TicketInfo);
@@ -54,7 +54,7 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
     props.tickets = tickets;
     props.session = Some(session);
 
-    let mut page = TicketPage::new(props, true, true, None, false);
+    let mut page = TicketPage::new(props, true, true, None);
 
     Ok(Html(page.write()))
 }
@@ -85,7 +85,7 @@ pub async fn show_ticket(
     tab: &str,
     db: &FirestoreDb,
 ) -> Result<Html<String>, AppError> {
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
     props.action = crate::Action::Update;
     props.title = Some("チケット".to_string());
     props.screen = Some(crate::Screen::TicketInfo);
@@ -168,7 +168,7 @@ pub async fn show_ticket(
     props.ticket_children = children;
     props.session = Some(session);
 
-    let mut page = TicketPage::new(props, can_update, can_delete, None, false);
+    let mut page = TicketPage::new(props, can_update, can_delete, None);
 
     Ok(Html(page.write()))
 }
@@ -235,7 +235,7 @@ pub async fn post(
         Err(_) => return Ok(Html(LoginPage::write())),
     };
 
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
 
     let action = match input.action.as_ref() {
         "Create" => crate::Action::Create,
@@ -345,7 +345,7 @@ pub async fn post(
         props.ticket = Some(ticket_new);
         props.ticket_members = ticket_members;
 
-        let mut page = TicketPage::new(props, can_update, can_delete, Some(v), false);
+        let mut page = TicketPage::new(props, can_update, can_delete, Some(v));
         return Ok(Html(page.write()));
     }
 
@@ -423,7 +423,7 @@ pub async fn post_note(
         return Ok(Html(LoginPage::write()));
     }
 
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
 
     if let Some(v) = validation {
         let mut can_update = false;
@@ -473,7 +473,7 @@ pub async fn post_note(
         props.action = crate::Action::Update;
         props.project = project;
 
-        let mut page = TicketPage::new(props, can_update, can_delete, Some(v), false);
+        let mut page = TicketPage::new(props, can_update, can_delete, Some(v));
         return Ok(Html(page.write()));
     }
 
@@ -547,7 +547,7 @@ pub async fn post_comment(
             }
         };
 
-    let mut props = page::Props::new(&session.id);
+    let mut props = page::Props::new();
 
     if let Some(v) = validation {
         props.tab = crate::Tab::Comment;
@@ -557,7 +557,7 @@ pub async fn post_comment(
         props.project_member = project_member;
         props.ticket = ticket;
 
-        let mut page = TicketPage::new(props, true, false, Some(v), false);
+        let mut page = TicketPage::new(props, true, false, Some(v));
         return Ok(Html(page.write()));
     }
 

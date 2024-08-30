@@ -1,9 +1,7 @@
 use super::super::Component;
-use super::parts::nav::Nav;
 use crate::{components::footer::footer::Footer, Props};
 
 pub struct AgreementBody {
-    pub nav: Box<dyn Component + Send>,
     pub footer: Box<dyn Component + Send>,
     pub disagree: bool,
 }
@@ -11,7 +9,6 @@ pub struct AgreementBody {
 impl AgreementBody {
     pub fn new(disagree: bool) -> Self {
         AgreementBody {
-            nav: Box::new(Nav {}),
             footer: Box::new(Footer {}),
             disagree,
         }

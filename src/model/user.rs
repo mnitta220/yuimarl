@@ -15,6 +15,7 @@ pub struct User {
     pub name: String,
     pub photo_url: Option<String>,
     pub status: i32, // 0:未承認, 1:承認済, 2:禁止
+    pub memo: Option<String>,
     pub created_at: DateTime<Utc>,
     pub last_login: DateTime<Utc>,
 }
@@ -41,6 +42,7 @@ impl User {
             name: String::new(),
             photo_url: None,
             status: UserStatus::Unapproved as i32,
+            memo: None,
             created_at: Utc::now(),
             last_login: Utc::now(),
         }
@@ -74,6 +76,7 @@ impl User {
             name: session.name.clone(),
             photo_url: Some(session.photo_url.clone()),
             status: UserStatus::Approved as i32,
+            memo: None,
             created_at: Utc::now(),
             last_login: Utc::now(),
         };
@@ -185,6 +188,26 @@ impl User {
             .fluent()
             .update()
             .fields(paths!(User::name))
+            .in_col(&COLLECTION_NAME)
+            .document_id(uid)
+            .object(&user)
+            .execute::<User>()
+            .await
+        {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+
+        Ok(())
+    }
+
+    pub async fn update_memo(uid: &str, memo: &str, db: &FirestoreDb) -> Result<()> {
+        let mut user = User::new();
+        user.memo = Some(memo.to_string());
+
+        if let Err(e) = db
+            .fluent()
+            .update()
+            .fields(paths!(User::memo))
             .in_col(&COLLECTION_NAME)
             .document_id(uid)
             .object(&user)

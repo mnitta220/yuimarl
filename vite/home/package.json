@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "home": "file:",
     "marked": "^13.0.3"
   },
   "devDependencies": {

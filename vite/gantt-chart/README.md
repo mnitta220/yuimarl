@@ -4,7 +4,7 @@
 [Vite](https://ja.vitejs.dev/) を使用して作成しました。
 
 プログラミング言語は、TypeScript が使用されています。  
-npm コマンドで JavaScript にコンパイルされます。  
+npm コマンドで JavaScript にトランスパイルされます。  
 出力された JavaScript と CSS ファイルを、Yuimarl のプロジェクトに組み込みます。
 
 ## インストール

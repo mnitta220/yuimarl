@@ -26,7 +26,7 @@ impl Component for Head {
                     Screen::Home => {
                         // 次の行は、vite/home フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
                         // (参照) vite/home/README.md
-                        *buf += r#"<script type="module" crossorigin src="/static/js/home/index-BKQcXE_P.js"></script>"#;
+                        *buf += r#"<script type="module" crossorigin src="/static/js/home/index-C9hWSHBl.js"></script>"#;
                     }
                     Screen::ProjectInfo => {
                         match &props.tab {
@@ -43,8 +43,8 @@ impl Component for Head {
                             Tab::GanttChart => {
                                 // 以下の2行は、vite/gantt-chart フォルダでビルドして出力された index-XXXXXXXX.js と index-XXXXXXXX.css を設定する。
                                 // (参照) gantt-chart/README.md
-                                *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-DGJiSWfa.js"></script>"#;
-                                *buf += r#"<link rel="stylesheet" crossorigin href="/static/js/gantt-chart/index-BZzXyAxC.css">"#;
+                                *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-BKc0_gQt.js"></script>"#;
+                                *buf += r#"<link rel="stylesheet" crossorigin href="/static/js/gantt-chart/index-DCz_j2JK.css">"#;
                             }
                             _ => {}
                         }
@@ -64,7 +64,7 @@ impl Component for Head {
                             Tab::Comment => {
                                 // 次の行は、vite/comment フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
                                 // (参照) vite/comment/README.md
-                                *buf += r#"<script type="module" crossorigin src="/static/js/comment/index-DGGa0BgU.js"></script>"#;
+                                *buf += r#"<script type="module" crossorigin src="/static/js/comment/index-CdH1O0mD.js"></script>"#;
                             }
                             _ => {}
                         }

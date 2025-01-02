@@ -9,7 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "bootstrap": "^5.3.3"
+    "bootstrap": "^5.3.3",
+    "ticket-info": "file:"
   },
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",

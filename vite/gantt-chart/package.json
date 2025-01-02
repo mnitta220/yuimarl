@@ -11,7 +11,8 @@
   "dependencies": {
     "bootstrap": "^5.3.3",
     "dayjs": "^1.11.11",
-    "dexie": "^4.0.8"
+    "dexie": "^4.0.8",
+    "gantt-chart": "file:"
   },
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",

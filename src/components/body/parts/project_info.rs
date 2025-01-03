@@ -13,7 +13,8 @@ impl Component for ProjectInfo {
             // プロジェクト名
             *buf += r#"<div class="row py-2">"#;
             {
-                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="name">"#;
+                *buf +=
+                    r#"<label class="col-md-3 col-form-label bg-light mb-1" for="project_name">"#;
                 *buf += r#"プロジェクト名</label>"#;
 
                 *buf += r#"<div class="col-md-9 mb-1">"#;

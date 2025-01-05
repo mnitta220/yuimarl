@@ -1,7 +1,10 @@
 use anyhow::Result;
 use chrono::{DateTime, Utc};
 use firestore::*;
+use futures::{stream::BoxStream, TryStreamExt};
 use serde::{Deserialize, Serialize};
+
+use super::user::User;
 
 const COLLECTION_NAME: &'static str = "session";
 
@@ -12,6 +15,7 @@ pub struct Session {
     pub name: String,
     pub email: String,
     pub photo_url: String,
+    pub e2e_test: Option<bool>,
     pub created_at: DateTime<Utc>,
 }
 
@@ -75,5 +79,49 @@ impl Session {
         }
 
         Ok(())
+    }
+
+    pub async fn e2e_test_session(db: &FirestoreDb, session_id: &str, user: &User) -> Result<Self> {
+        let object_stream: BoxStream<FirestoreResult<Session>> = match db
+            .fluent()
+            .select()
+            .from(COLLECTION_NAME)
+            .filter(|q| q.for_all([q.field(path!(Session::e2e_test)).eq(true)]))
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let sessions: Vec<Session> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        if sessions.len() > 0 {
+            return Ok(sessions[0].clone());
+        }
+
+        let session = Session {
+            id: session_id.to_string(),
+            uid: user.uid.clone(),
+            name: user.name.clone(),
+            email: user.email.clone(),
+            photo_url: "".to_string(),
+            e2e_test: Some(true),
+            created_at: Utc::now(),
+        };
+
+        if let Err(e) = Session::upsert(&session, db).await {
+            return Err(anyhow::anyhow!(e));
+        }
+
+        Ok(session)
     }
 }

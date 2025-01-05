@@ -28,6 +28,7 @@ static MESSAGING_SENDER_ID: OnceCell<String> = OnceCell::new();
 static APP_ID: OnceCell<String> = OnceCell::new();
 static DB_CHECK_PASSWORD: OnceCell<String> = OnceCell::new();
 static NOTICE_PASSWORD: OnceCell<String> = OnceCell::new();
+static E2E_TEST_PASSWORD: OnceCell<String> = OnceCell::new();
 static HOLIDAYS: OnceCell<Vec<&str>> = OnceCell::new();
 
 #[tokio::main]
@@ -108,6 +109,7 @@ async fn main() {
             "/notice_del",
             get(handlers::notice::get_del).post(handlers::notice::post_del),
         )
+        .route("/e2e_test/:password", get(handlers::e2e_test::get))
         .route("/health", get(handlers::health))
         .nest_service("/static", ServeDir::new("static"))
         .layer(
@@ -224,6 +226,16 @@ fn get_environment_values() -> Result<()> {
     // set DB_CHECK_PASSWORD static
     if let Err(_) = NOTICE_PASSWORD.set(notice_password) {
         return Err(anyhow::anyhow!("Failed to set NOTICE_PASSWORD"));
+    }
+
+    // get E2E_TEST_PASSWORD env
+    let e2e_test_password = match std::env::var("E2E_TEST_PASSWORD") {
+        Ok(e2e_test_password) => e2e_test_password,
+        Err(_) => "".to_string(),
+    };
+    // set E2E_TEST_PASSWORD static
+    if let Err(_) = E2E_TEST_PASSWORD.set(e2e_test_password) {
+        return Err(anyhow::anyhow!("Failed to set E2E_TEST_PASSWORD"));
     }
 
     // set HOLIDAYS static (日本の祝日)

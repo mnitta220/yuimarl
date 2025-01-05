@@ -4,17 +4,22 @@ from playwright.sync_api import Page, expect
 
 # テストシナリオ1
 class Senario1:
-    def __init__(self, page: Page, url):
+    def __init__(self, page: Page):
         self.page = page
-        self.url = url
+        # self.url = url
+        # self.e2e_password = e2e_password
 
     def run(self):
-        self.page.goto(self.url)
+        # URLを組み立てる
+        # test_url = f"{self.url}/e2e_test/{self.e2e_password}"
+        # print(f"***test_url: {test_url}")
+        # self.page.goto(test_url)
 
         # タイトルに"Yuimarl"が含まれることを確認する
         expect(self.page).to_have_title(re.compile("Yuimarl"))
 
         title = self.page.title()
+        print(f"***title: {title}")
         assert title == "Yuimarl"
 
         self.page.get_by_title("プロジェクト一覧").click()

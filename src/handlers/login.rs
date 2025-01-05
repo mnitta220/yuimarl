@@ -44,6 +44,7 @@ pub async fn post_login(
         name: input.display_name,
         email: input.email,
         photo_url: input.photo_url,
+        e2e_test: Some(false),
         created_at: Utc::now(),
     };
     if let Err(e) = model::session::Session::upsert(&session, &db).await {

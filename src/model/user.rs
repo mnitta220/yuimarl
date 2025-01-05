@@ -5,6 +5,7 @@ use firestore::*;
 use futures::stream::BoxStream;
 use futures::TryStreamExt;
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 pub const COLLECTION_NAME: &'static str = "user";
 
@@ -16,6 +17,7 @@ pub struct User {
     pub photo_url: Option<String>,
     pub status: i32, // 0:未承認, 1:承認済, 2:禁止
     pub memo: Option<String>,
+    pub e2e_test: Option<bool>,
     pub created_at: DateTime<Utc>,
     pub last_login: DateTime<Utc>,
 }
@@ -43,12 +45,17 @@ impl User {
             photo_url: None,
             status: UserStatus::Unapproved as i32,
             memo: None,
+            e2e_test: None,
             created_at: Utc::now(),
             last_login: Utc::now(),
         }
     }
 
     pub async fn find(uid: &str, db: &FirestoreDb) -> Result<Option<Self>> {
+        if uid.is_empty() {
+            return Ok(None);
+        }
+
         let obj_by_id: Option<User> = match db
             .fluent()
             .select()
@@ -77,6 +84,7 @@ impl User {
             photo_url: Some(session.photo_url.clone()),
             status: UserStatus::Approved as i32,
             memo: None,
+            e2e_test: session.e2e_test,
             created_at: Utc::now(),
             last_login: Utc::now(),
         };
@@ -218,5 +226,60 @@ impl User {
         }
 
         Ok(())
+    }
+
+    pub async fn e2e_test_user(db: &FirestoreDb) -> Result<Self> {
+        let object_stream: BoxStream<FirestoreResult<User>> = match db
+            .fluent()
+            .select()
+            .from(COLLECTION_NAME)
+            .filter(|q| q.for_all([q.field(path!(User::e2e_test)).eq(true)]))
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let users: Vec<User> = match object_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        if users.len() > 0 {
+            return Ok(users[0].clone());
+        }
+
+        let user_id = Uuid::now_v7().to_string();
+        let user = User {
+            uid: user_id.clone(),
+            email: "".to_string(),
+            name: "E2E_TEST_USER".to_string(),
+            photo_url: Some("".to_string()),
+            status: UserStatus::Approved as i32,
+            memo: None,
+            e2e_test: Some(true),
+            created_at: Utc::now(),
+            last_login: Utc::now(),
+        };
+
+        if let Err(e) = db
+            .fluent()
+            .insert()
+            .into(&COLLECTION_NAME)
+            .document_id(user_id)
+            .object(&user)
+            .execute::<User>()
+            .await
+        {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+
+        Ok(user)
     }
 }

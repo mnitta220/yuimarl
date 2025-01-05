@@ -1,6 +1,7 @@
 use anyhow::Result;
-use firestore::*;
 use serde::{Deserialize, Serialize};
+
+use crate::handlers;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct E2eTestValidation {
@@ -18,7 +19,7 @@ impl E2eTestValidation {
         }
     }
 
-    pub async fn validate(password: &str, _db: &FirestoreDb) -> Result<Option<Self>> {
+    pub async fn validate_post(input: &handlers::e2e_test::E2eTestInput) -> Result<Option<Self>> {
         let mut validation = Self::new();
 
         let e2e_test_password = match crate::E2E_TEST_PASSWORD.get() {
@@ -27,13 +28,14 @@ impl E2eTestValidation {
         };
 
         if e2e_test_password.len() == 0 {
-            return Err(anyhow::anyhow!(
-                "E2E_TEST_PASSWORD 環境変数が設定されていません。"
-            ));
+            validation.info = Some("E2E_TEST_PASSWORD 環境変数が設定されていません".to_string());
+            return Ok(Some(validation));
         }
 
-        if password != e2e_test_password {
-            return Err(anyhow::anyhow!("E2E_TEST_PASSWORD が正しくありません。"));
+        if input.e2e_test_password != e2e_test_password {
+            validation.e2e_test_password =
+                Some("E2E_TEST_PASSWORD が正しくありません。".to_string());
+            return Ok(Some(validation));
         }
 
         validation.result = true;

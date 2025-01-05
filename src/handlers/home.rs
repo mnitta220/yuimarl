@@ -32,7 +32,6 @@ pub async fn show_home(
 ) -> Result<Html<String>, AppError> {
     let mut props = page::Props::new();
     let memo: Option<String>;
-    println!("***show_home: 1");
 
     let user = match model::user::User::find(&session.uid, &db).await {
         Ok(user) => user,
@@ -40,14 +39,11 @@ pub async fn show_home(
             return Err(AppError(anyhow::anyhow!(e)));
         }
     };
-    println!("***show_home: 2");
 
     if let Some(user) = user {
-        println!("***show_home: 3");
         if user.status != model::user::UserStatus::Approved as i32 {
             return Err(AppError(anyhow::anyhow!("このシステムを使用できません。")));
         }
-        println!("***show_home: 4");
         if user.name.trim().len() == 0 {
             let mut page = UserNamePage::new(props);
             return Ok(Html(page.write()));
@@ -61,10 +57,8 @@ pub async fn show_home(
         }
         memo = user.memo;
     } else {
-        println!("***show_home: 5");
         return Ok(Html(LoginPage::write()));
     }
-    println!("***show_home: 6");
     let (project, member, tickets) =
         match model::project::Project::current_project_and_tickets(&session, &db).await {
             Ok((project, member, tickets)) => (project, member, tickets),

@@ -109,7 +109,10 @@ async fn main() {
             "/notice_del",
             get(handlers::notice::get_del).post(handlers::notice::post_del),
         )
-        .route("/e2e_test/:password", get(handlers::e2e_test::get))
+        .route(
+            "/e2e_test",
+            get(handlers::e2e_test::get).post(handlers::e2e_test::post),
+        )
         .route("/health", get(handlers::health))
         .nest_service("/static", ServeDir::new("static"))
         .layer(

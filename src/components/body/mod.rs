@@ -1,6 +1,7 @@
 pub mod agreement;
 pub mod contact;
 pub mod db_check;
+pub mod e2e_test;
 pub mod home;
 pub mod notice_add;
 pub mod notice_del;

@@ -35,9 +35,10 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
 
     let session = match super::get_session_info(cookies, true, &db).await {
         Ok(session_id) => session_id,
-        Err(_) => return Ok(Html(LoginPage::write())),
+        Err(_) => {
+            return Ok(Html(LoginPage::write()));
+        }
     };
-
     let mut props = page::Props::new();
     props.title = Some("プロジェクトを作成".to_string());
     props.action = crate::Action::Create;
@@ -59,7 +60,6 @@ pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
 
 pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
     tracing::debug!("GET /project_list");
-    println!("***get_list: 1");
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
         Ok(db) => db,
@@ -67,16 +67,13 @@ pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
             return Err(AppError(anyhow::anyhow!(e)));
         }
     };
-    println!("***get_list: 2");
     let session = match super::get_session_info(cookies, true, &db).await {
         Ok(session_id) => session_id,
         Err(_) => return Ok(Html(LoginPage::write())),
     };
-    println!("***get_list: 3");
 
     let mut props = page::Props::new();
     props.title = Some("プロジェクト一覧".to_string());
-    println!("***get_list: 4");
     let (projects, owner_cnt) =
         match model::project::ProjectMember::my_projects(&session, &db).await {
             Ok(projects) => projects,
@@ -84,7 +81,6 @@ pub async fn get_list(cookies: Cookies) -> Result<Html<String>, AppError> {
                 return Err(AppError(anyhow::anyhow!(e)));
             }
         };
-    println!("***get_list: 5");
 
     props.session = Some(session);
     props.project_members = projects;

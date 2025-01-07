@@ -306,6 +306,10 @@ pub async fn post(
     if let Some(v) = validation {
         let mut can_update = false;
         let mut can_delete = false;
+        if action == crate::Action::Create {
+            can_update = true;
+            can_delete = true;
+        }
 
         // プロジェクトを更新できるのは、オーナー、管理者
         // プロジェクトを削除できるのは、オーナー

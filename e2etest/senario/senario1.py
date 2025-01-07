@@ -51,3 +51,7 @@ class Senario1:
         self.page.get_by_label("プロジェクト名").fill("__E2E_TEST__")
         self.page.get_by_label("チケットID接頭辞").fill("E2E")
         self.page.get_by_role("button", name=" 作成").click()
+        self.page.get_by_title("プロジェクト一覧").click()
+        expect(self.page).to_have_title(re.compile("プロジェクト一覧"))
+        self.page.get_by_role("link", name="__E2E_TEST__").click()
+        expect(self.page).to_have_title(re.compile("プロジェクト - Yuimarl"))

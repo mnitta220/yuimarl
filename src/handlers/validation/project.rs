@@ -180,7 +180,6 @@ impl ProjectValidation {
                         continue;
                     }
 
-                    //let mut validation = Self::new();
                     validation.project_name =
                         Some("同じ名前のプロジェクトが存在します".to_string());
                     return Ok((Some(validation), project, member));

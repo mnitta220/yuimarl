@@ -11,7 +11,8 @@ use axum::{
 };
 use firestore::*;
 use serde::Deserialize;
-use tower_cookies::Cookies;
+use tower_cookies::{Cookie, Cookies};
+use uuid::Uuid;
 
 pub async fn get() -> Result<Html<String>, AppError> {
     tracing::debug!("GET /e2e_test");
@@ -53,7 +54,6 @@ pub async fn post(cookies: Cookies, Form(input): Form<E2eTestInput>) -> Result<R
             return Ok(Redirect::to("/e2e_test"));
         }
     }
-
     let user = match model::user::User::e2e_test_user(&db).await {
         Ok(u) => u,
         Err(e) => {
@@ -61,29 +61,25 @@ pub async fn post(cookies: Cookies, Form(input): Form<E2eTestInput>) -> Result<R
         }
     };
 
-    let mut exist = false;
-    if let Ok(session) = super::get_session_info(cookies.clone(), true, &db).await {
-        if session.e2e_test.unwrap() {
-            exist = true;
-        }
-    }
+    let session_id = Uuid::now_v7().to_string();
+    let session = model::session::Session {
+        id: session_id.to_string(),
+        uid: user.uid.clone(),
+        name: user.name.clone(),
+        email: user.email.clone(),
+        photo_url: "".to_string(),
+        e2e_test: Some(true),
+        created_at: chrono::Utc::now(),
+    };
 
-    if !exist {
-        let session_id = super::get_session_id(cookies, false)?;
+    let mut c = Cookie::new(super::COOKIE_SESSION_ID, session_id);
+    let mut expire = time::OffsetDateTime::now_utc();
+    expire += time::Duration::weeks(52);
+    c.set_expires(expire);
+    cookies.add(c);
 
-        let session = model::session::Session {
-            id: session_id.to_string(),
-            uid: user.uid.clone(),
-            name: user.name.clone(),
-            email: user.email.clone(),
-            photo_url: "".to_string(),
-            e2e_test: Some(true),
-            created_at: chrono::Utc::now(),
-        };
-
-        if let Err(e) = model::session::Session::upsert(&session, &db).await {
-            return Err(AppError(anyhow::anyhow!(e)));
-        }
+    if let Err(e) = model::session::Session::upsert(&session, &db).await {
+        return Err(AppError(anyhow::anyhow!(e)));
     }
 
     Ok(Redirect::to("/"))

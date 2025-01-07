@@ -59,6 +59,7 @@ pub async fn show_home(
     } else {
         return Ok(Html(LoginPage::write()));
     }
+
     let (project, member, tickets) =
         match model::project::Project::current_project_and_tickets(&session, &db).await {
             Ok((project, member, tickets)) => (project, member, tickets),

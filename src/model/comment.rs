@@ -109,7 +109,7 @@ impl Comment {
     }
 
     pub async fn get_comment_list(ticket_id: &str, db: &FirestoreDb) -> Result<Vec<Self>> {
-        let object_stream: BoxStream<FirestoreResult<Comment>> = match db
+        let comments_stream: BoxStream<FirestoreResult<Comment>> = match db
             .fluent()
             .select()
             .from(COLLECTION_NAME)
@@ -128,7 +128,7 @@ impl Comment {
             }
         };
 
-        let comments: Vec<Comment> = match object_stream.try_collect().await {
+        let comments: Vec<Comment> = match comments_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));

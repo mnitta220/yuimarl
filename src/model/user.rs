@@ -113,7 +113,7 @@ impl User {
     }
 
     pub async fn search_by_email(email: &String, db: &FirestoreDb) -> Result<Vec<UserSub>> {
-        let object_stream: BoxStream<FirestoreResult<User>> = match db
+        let users_stream: BoxStream<FirestoreResult<User>> = match db
             .fluent()
             .select()
             .fields(paths!(User::{uid, name, email, status, created_at, last_login}))
@@ -134,7 +134,7 @@ impl User {
             }
         };
 
-        let users: Vec<User> = match object_stream.try_collect().await {
+        let users: Vec<User> = match users_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -151,7 +151,7 @@ impl User {
     }
 
     pub async fn search_by_name(name: &String, db: &FirestoreDb) -> Result<Vec<UserSub>> {
-        let object_stream: BoxStream<FirestoreResult<User>> = match db
+        let users_stream: BoxStream<FirestoreResult<User>> = match db
             .fluent()
             .select()
             .fields(paths!(User::{uid, name, email, status, created_at, last_login}))
@@ -172,7 +172,7 @@ impl User {
             }
         };
 
-        let users: Vec<User> = match object_stream.try_collect().await {
+        let users: Vec<User> = match users_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -229,7 +229,7 @@ impl User {
     }
 
     pub async fn e2e_test_user(db: &FirestoreDb) -> Result<Self> {
-        let object_stream: BoxStream<FirestoreResult<User>> = match db
+        let users_stream: BoxStream<FirestoreResult<User>> = match db
             .fluent()
             .select()
             .from(COLLECTION_NAME)
@@ -244,7 +244,7 @@ impl User {
             }
         };
 
-        let users: Vec<User> = match object_stream.try_collect().await {
+        let users: Vec<User> = match users_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));

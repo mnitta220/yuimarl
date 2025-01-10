@@ -79,7 +79,7 @@ impl News {
 
         if let Some(ref t) = ticket {
             // 同じユーザーに１つのチケットのイベントは１つのみにする
-            let object_stream: BoxStream<FirestoreResult<News>> = match db
+            let news_stream: BoxStream<FirestoreResult<News>> = match db
                 .fluent()
                 .select()
                 .from(COLLECTION_NAME)
@@ -95,7 +95,7 @@ impl News {
                 }
             };
 
-            let news: Vec<News> = match object_stream.try_collect().await {
+            let news: Vec<News> = match news_stream.try_collect().await {
                 Ok(s) => s,
                 Err(e) => {
                     return Err(anyhow::anyhow!(e.to_string()));
@@ -156,7 +156,7 @@ impl News {
     }
 
     pub async fn get_news_list(uid: &String, db: &FirestoreDb) -> Result<Vec<Self>> {
-        let object_stream: BoxStream<FirestoreResult<News>> = match db
+        let news_stream: BoxStream<FirestoreResult<News>> = match db
             .fluent()
             .select()
             .fields(paths!(News::{id, timestamp, uid, event, project_id, project_name, ticket, member_name, notice_id, message}))
@@ -173,7 +173,7 @@ impl News {
             }
         };
 
-        let news: Vec<News> = match object_stream.try_collect().await {
+        let news: Vec<News> = match news_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -223,7 +223,7 @@ impl News {
         let notice_id = Uuid::now_v7().to_string();
         let now = Utc::now();
 
-        let object_stream: BoxStream<FirestoreResult<super::user::User>> = match db
+        let users_stream: BoxStream<FirestoreResult<super::user::User>> = match db
             .fluent()
             .select()
             .fields(paths!(super::user::User::{uid, email, name, status, created_at, last_login}))
@@ -251,7 +251,7 @@ impl News {
             message: Some(message.to_string()),
         };
 
-        let users: Vec<super::user::User> = match object_stream.try_collect().await {
+        let users: Vec<super::user::User> = match users_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -283,7 +283,7 @@ impl News {
     }
 
     pub async fn del_operation_notice(notice_id: &str, db: &FirestoreDb) -> Result<()> {
-        let object_stream: BoxStream<FirestoreResult<News>> = match db
+        let news_stream: BoxStream<FirestoreResult<News>> = match db
             .fluent()
             .select()
             .fields(paths!(News::{id, timestamp, uid, event, project_id, project_name}))
@@ -299,7 +299,7 @@ impl News {
             }
         };
 
-        let news_list: Vec<News> = match object_stream.try_collect().await {
+        let news_list: Vec<News> = match news_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));

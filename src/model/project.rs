@@ -11,7 +11,7 @@ use std::cmp::Ordering;
 use uuid::Uuid;
 
 pub const COLLECTION_NAME: &'static str = "project";
-const COLLECTION_MEMBER: &'static str = "project_member";
+pub const COLLECTION_MEMBER: &'static str = "project_member";
 pub const MEMBER_LIMIT_DEFAULT: i32 = 20;
 pub const TICKET_LIMIT_DEFAULT: i32 = 1000;
 
@@ -106,7 +106,7 @@ impl Project {
         session: &Session,
         db: &FirestoreDb,
     ) -> Result<(Option<Self>, Option<ProjectMember>)> {
-        let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
+        let project_members_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
             .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used}))
@@ -126,7 +126,7 @@ impl Project {
             }
         };
 
-        let project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
+        let project_members: Vec<ProjectMember> = match project_members_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -196,7 +196,7 @@ impl Project {
         project_name: &String,
         db: &FirestoreDb,
     ) -> Result<Vec<Self>> {
-        let object_stream: BoxStream<FirestoreResult<Project>> = match db
+        let projects_stream: BoxStream<FirestoreResult<Project>> = match db
             .fluent()
             .select()
             .fields(paths!(Project::{id, project_name, owner, prefix, db_check, deleted}))
@@ -218,7 +218,7 @@ impl Project {
             }
         };
 
-        let projects: Vec<Project> = match object_stream.try_collect().await {
+        let projects: Vec<Project> = match projects_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -230,7 +230,7 @@ impl Project {
 
     // ログインユーザーがオーナーになっているプロジェクトの件数を取得する。
     pub async fn count_owner_projects(owner: &String, db: &FirestoreDb) -> Result<usize> {
-        let object_stream: BoxStream<FirestoreResult<Project>> = match db
+        let projects_stream: BoxStream<FirestoreResult<Project>> = match db
             .fluent()
             .select()
             .fields(paths!(Project::{id, db_check, deleted}))
@@ -251,7 +251,7 @@ impl Project {
             }
         };
 
-        let projects: Vec<Project> = match object_stream.try_collect().await {
+        let projects: Vec<Project> = match projects_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -992,7 +992,7 @@ impl Project {
             }
         };
 
-        let object_stream: BoxStream<FirestoreResult<Project>> = match db
+        let projects_stream: BoxStream<FirestoreResult<Project>> = match db
             .fluent()
             .select()
             .fields(paths!(Project::{id, db_check, deleted}))
@@ -1008,7 +1008,7 @@ impl Project {
             }
         };
 
-        let projects: Vec<Project> = match object_stream.try_collect().await {
+        let projects: Vec<Project> = match projects_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -1016,7 +1016,7 @@ impl Project {
         };
 
         for prj in projects {
-            let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
+            let project_members_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
                 .fluent()
                 .select()
                 .fields(paths!(ProjectMember::{id, project_id, uid}))
@@ -1032,12 +1032,13 @@ impl Project {
                 }
             };
 
-            let project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
-                Ok(s) => s,
-                Err(e) => {
-                    return Err(anyhow::anyhow!(e.to_string()));
-                }
-            };
+            let project_members: Vec<ProjectMember> =
+                match project_members_stream.try_collect().await {
+                    Ok(s) => s,
+                    Err(e) => {
+                        return Err(anyhow::anyhow!(e.to_string()));
+                    }
+                };
 
             for member in project_members {
                 if let Err(e) = db
@@ -1051,7 +1052,7 @@ impl Project {
                 }
             }
 
-            let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
+            let tickets_stream: BoxStream<FirestoreResult<Ticket>> = match db
                 .fluent()
                 .select()
                 .fields(paths!(Ticket::{id, project_id, progress, priority}))
@@ -1067,7 +1068,7 @@ impl Project {
                 }
             };
 
-            let tickets: Vec<Ticket> = match object_stream.try_collect().await {
+            let tickets: Vec<Ticket> = match tickets_stream.try_collect().await {
                 Ok(s) => s,
                 Err(e) => {
                     return Err(anyhow::anyhow!(e.to_string()));
@@ -1075,7 +1076,7 @@ impl Project {
             };
 
             for ticket in tickets {
-                let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
+                let ticket_members_stream: BoxStream<FirestoreResult<TicketMember>> = match db
                     .fluent()
                     .select()
                     .fields(paths!(TicketMember::{id, ticket_id, project_id, uid, seq}))
@@ -1091,7 +1092,7 @@ impl Project {
                     }
                 };
 
-                let members: Vec<TicketMember> = match object_stream.try_collect().await {
+                let members: Vec<TicketMember> = match ticket_members_stream.try_collect().await {
                     Ok(s) => s,
                     Err(e) => {
                         return Err(anyhow::anyhow!(e.to_string()));
@@ -1190,7 +1191,7 @@ impl ProjectMember {
             ],
         };
 
-        let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
+        let project_members_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
             .fields(paths!(ProjectMember::{id, project_id, uid, role, email, name, last_used}))
@@ -1207,7 +1208,7 @@ impl ProjectMember {
             }
         };
 
-        let project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
+        let project_members: Vec<ProjectMember> = match project_members_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -1219,7 +1220,7 @@ impl ProjectMember {
 
     /// プロジェクトメンバー情報を取得する
     pub async fn find(project_id: &str, uid: &str, db: &FirestoreDb) -> Result<Option<Self>> {
-        let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
+        let project_members_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
             .fields(paths!(ProjectMember::{id, project_id, uid, role, email, name, last_used}))
@@ -1240,7 +1241,7 @@ impl ProjectMember {
             }
         };
 
-        let project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
+        let project_members: Vec<ProjectMember> = match project_members_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -1256,7 +1257,7 @@ impl ProjectMember {
 
     /// 自分のプロジェクトを検索する
     pub async fn my_projects(session: &Session, db: &FirestoreDb) -> Result<(Vec<Self>, i32)> {
-        let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
+        let project_members_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
             .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used}))
@@ -1276,12 +1277,13 @@ impl ProjectMember {
             }
         };
 
-        let mut project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
-            Ok(s) => s,
-            Err(e) => {
-                return Err(anyhow::anyhow!(e.to_string()));
-            }
-        };
+        let mut project_members: Vec<ProjectMember> =
+            match project_members_stream.try_collect().await {
+                Ok(s) => s,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
 
         let mut members = Vec::new();
         let mut owner_cnt = 0;
@@ -1323,7 +1325,7 @@ impl ProjectMember {
         project_id: &str,
         db: &FirestoreDb,
     ) -> Result<()> {
-        let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
+        let project_members_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
             .fields(paths!(ProjectMember::{id, project_id, uid, role, last_used}))
@@ -1344,7 +1346,7 @@ impl ProjectMember {
             }
         };
 
-        let project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
+        let project_members: Vec<ProjectMember> = match project_members_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));

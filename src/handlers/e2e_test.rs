@@ -54,6 +54,12 @@ pub async fn post(cookies: Cookies, Form(input): Form<E2eTestInput>) -> Result<R
             return Ok(Redirect::to("/e2e_test"));
         }
     }
+
+    // E2Eテストデータを削除
+    if let Err(e) = model::session::Session::delete_e2e_test(&db).await {
+        return Err(AppError(e));
+    }
+
     let user = match model::user::User::e2e_test_user(&db).await {
         Ok(u) => u,
         Err(e) => {

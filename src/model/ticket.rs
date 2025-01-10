@@ -765,7 +765,7 @@ impl Ticket {
         uid: &str,
         db: &FirestoreDb,
     ) -> Result<Vec<Ticket>> {
-        let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
+        let ticket_members_stream: BoxStream<FirestoreResult<TicketMember>> = match db
             .fluent()
             .select()
             .fields(paths!(TicketMember::{id, project_id, uid, ticket_id, seq, color}))
@@ -790,7 +790,7 @@ impl Ticket {
             }
         };
 
-        let ticket_members: Vec<TicketMember> = match object_stream.try_collect().await {
+        let ticket_members: Vec<TicketMember> = match ticket_members_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -874,7 +874,7 @@ impl Ticket {
         let mut ticket_members: Vec<TicketMember> = Vec::new();
         let mut parent: Option<Ticket> = None;
         if let Some(t) = &ticket {
-            let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
+            let ticket_members_stream: BoxStream<FirestoreResult<TicketMember>> = match db
                 .fluent()
                 .select()
                 .fields(paths!(TicketMember::{id, project_id, uid, ticket_id, seq, color}))
@@ -891,7 +891,7 @@ impl Ticket {
                 }
             };
 
-            ticket_members = match object_stream.try_collect().await {
+            ticket_members = match ticket_members_stream.try_collect().await {
                 Ok(s) => s,
                 Err(e) => {
                     return Err(anyhow::anyhow!(e.to_string()));
@@ -928,7 +928,7 @@ impl Ticket {
             }
         }
 
-        let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
+        let tickets_stream: BoxStream<FirestoreResult<Ticket>> = match db
             .fluent()
             .select()
             .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority}))
@@ -945,7 +945,7 @@ impl Ticket {
             }
         };
 
-        let children: Vec<Ticket> = match object_stream.try_collect().await {
+        let children: Vec<Ticket> = match tickets_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -969,7 +969,7 @@ impl Ticket {
         id_disp: &str,
         db: &FirestoreDb,
     ) -> Result<Option<Ticket>> {
-        let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
+        let tickets_stream: BoxStream<FirestoreResult<Ticket>> = match db
             .fluent()
             .select()
             .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority}))
@@ -990,7 +990,7 @@ impl Ticket {
             }
         };
 
-        let tickets: Vec<Ticket> = match object_stream.try_collect().await {
+        let tickets: Vec<Ticket> = match tickets_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -1055,7 +1055,7 @@ impl Ticket {
             };
         }
 
-        let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
+        let tickets_stream: BoxStream<FirestoreResult<Ticket>> = match db
             .fluent()
             .select()
             .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority, start_date, end_date, parent_id}))
@@ -1076,7 +1076,7 @@ impl Ticket {
             }
         };
 
-        let tickets: Vec<Ticket> = match object_stream.try_collect().await {
+        let tickets: Vec<Ticket> = match tickets_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -1160,7 +1160,7 @@ impl Ticket {
             }
         };
 
-        let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
+        let tickets_stream: BoxStream<FirestoreResult<Ticket>> = match db
             .fluent()
             .select()
             .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority, parent_id}))
@@ -1176,7 +1176,7 @@ impl Ticket {
             }
         };
 
-        let tickets: Vec<Ticket> = match object_stream.try_collect().await {
+        let tickets: Vec<Ticket> = match tickets_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -1200,7 +1200,7 @@ impl Ticket {
             }
         }
 
-        let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
+        let ticket_members_stream: BoxStream<FirestoreResult<TicketMember>> = match db
             .fluent()
             .select()
             .fields(paths!(TicketMember::{id, project_id, ticket_id, uid, seq}))
@@ -1216,7 +1216,7 @@ impl Ticket {
             }
         };
 
-        let members: Vec<TicketMember> = match object_stream.try_collect().await {
+        let members: Vec<TicketMember> = match ticket_members_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -1273,7 +1273,7 @@ impl TicketMember {
         uid: &str,
         db: &FirestoreDb,
     ) -> Result<Option<TicketMember>> {
-        let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
+        let ticket_members_stream: BoxStream<FirestoreResult<TicketMember>> = match db
             .fluent()
             .select()
             .fields(paths!(TicketMember::{id, project_id, uid, ticket_id, seq}))
@@ -1294,7 +1294,7 @@ impl TicketMember {
             }
         };
 
-        let ticket_members: Vec<TicketMember> = match object_stream.try_collect().await {
+        let ticket_members: Vec<TicketMember> = match ticket_members_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -1309,7 +1309,7 @@ impl TicketMember {
     }
 
     pub async fn members_of_ticket(ticket_id: &str, db: &FirestoreDb) -> Result<Vec<TicketMember>> {
-        let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
+        let ticket_members_stream: BoxStream<FirestoreResult<TicketMember>> = match db
             .fluent()
             .select()
             .fields(paths!(TicketMember::{id, project_id, uid, ticket_id, seq}))
@@ -1326,7 +1326,7 @@ impl TicketMember {
             }
         };
 
-        let ticket_members: Vec<TicketMember> = match object_stream.try_collect().await {
+        let ticket_members: Vec<TicketMember> = match ticket_members_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -1342,7 +1342,7 @@ impl TicketMember {
         session: &Session,
         db: &FirestoreDb,
     ) -> Result<()> {
-        let object_stream: BoxStream<FirestoreResult<TicketMember>> = match db
+        let ticket_members_stream: BoxStream<FirestoreResult<TicketMember>> = match db
             .fluent()
             .select()
             .fields(paths!(TicketMember::{id, project_id, uid, ticket_id, seq, color}))
@@ -1358,7 +1358,7 @@ impl TicketMember {
             }
         };
 
-        let ticket_members: Vec<TicketMember> = match object_stream.try_collect().await {
+        let ticket_members: Vec<TicketMember> = match ticket_members_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));

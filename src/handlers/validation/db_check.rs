@@ -251,6 +251,10 @@ impl DbCheckValidation {
             return Err(anyhow::anyhow!(e));
         }
 
+        if let Err(e) = model::session::Session::delete_e2e_test(&db).await {
+            return Err(anyhow::anyhow!(e));
+        }
+
         validation.result = true;
         Ok(Some(validation))
     }

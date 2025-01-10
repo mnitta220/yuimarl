@@ -48,7 +48,7 @@ impl GanttTicket {
         project_id: &str,
         db: &FirestoreDb,
     ) -> Result<(Vec<GanttTicket>, String, String)> {
-        let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
+        let tickets_stream: BoxStream<FirestoreResult<Ticket>> = match db
             .fluent()
             .select()
             .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority, start_date, end_date, parent_id, ganttseq, updated_at}))
@@ -72,7 +72,7 @@ impl GanttTicket {
             }
         };
 
-        let tickets: Vec<Ticket> = match object_stream.try_collect().await {
+        let tickets: Vec<Ticket> = match tickets_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -202,7 +202,7 @@ impl GanttTicket {
         }
 
         // 現在のデータ
-        let object_stream: BoxStream<FirestoreResult<Ticket>> = match db
+        let tickets_stream: BoxStream<FirestoreResult<Ticket>> = match db
             .fluent()
             .select()
             .fields(paths!(Ticket::{id, project_id, id_disp, name, progress, priority, start_date, end_date, parent_id, ganttseq, updated_at}))
@@ -226,7 +226,7 @@ impl GanttTicket {
             }
         };
 
-        let tickets_cur: Vec<Ticket> = match object_stream.try_collect().await {
+        let tickets_cur: Vec<Ticket> = match tickets_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));

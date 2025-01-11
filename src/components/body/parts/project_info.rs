@@ -225,7 +225,7 @@ impl Component for ProjectInfo {
                                     *buf += r#" disabled"#;
                                 }
                                 *buf += r#">"#;
-                                *buf += r#"<label class="form-check-label" for="holiday">日本の祝日を赤表示</label>"#;
+                                *buf += r#"<label class="form-check-label" for="holiday_jp">日本の祝日を赤表示</label>"#;
                             }
                             *buf += r#"</div>"#;
                         }

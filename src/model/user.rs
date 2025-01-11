@@ -27,6 +27,7 @@ pub struct UserSub {
     pub uid: String,
     pub email: String,
     pub name: String,
+    pub e2e_test: Option<bool>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -109,6 +110,7 @@ impl User {
             uid: self.uid.clone(),
             email: self.email.clone(),
             name: self.name.clone(),
+            e2e_test: self.e2e_test,
         }
     }
 
@@ -116,7 +118,7 @@ impl User {
         let users_stream: BoxStream<FirestoreResult<User>> = match db
             .fluent()
             .select()
-            .fields(paths!(User::{uid, name, email, status, created_at, last_login}))
+            .fields(paths!(User::{uid, name, email, status, created_at, last_login, e2e_test}))
             .from(COLLECTION_NAME)
             .filter(|q| {
                 q.for_all([
@@ -154,7 +156,7 @@ impl User {
         let users_stream: BoxStream<FirestoreResult<User>> = match db
             .fluent()
             .select()
-            .fields(paths!(User::{uid, name, email, status, created_at, last_login}))
+            .fields(paths!(User::{uid, name, email, status, created_at, last_login, e2e_test}))
             .from(COLLECTION_NAME)
             .filter(|q| {
                 q.for_all([
@@ -228,12 +230,22 @@ impl User {
         Ok(())
     }
 
-    pub async fn e2e_test_user(db: &FirestoreDb) -> Result<Self> {
+    pub async fn find_or_create_e2e_test_user(
+        name: &str,
+        email: &str,
+        db: &FirestoreDb,
+    ) -> Result<Self> {
         let users_stream: BoxStream<FirestoreResult<User>> = match db
             .fluent()
             .select()
             .from(COLLECTION_NAME)
-            .filter(|q| q.for_all([q.field(path!(User::e2e_test)).eq(true)]))
+            .filter(|q| {
+                q.for_all([
+                    q.field(path!(User::name)).eq(name),
+                    q.field(path!(User::email)).eq(email),
+                    q.field(path!(User::e2e_test)).eq(true),
+                ])
+            })
             .obj()
             .stream_query_with_errors()
             .await
@@ -255,12 +267,11 @@ impl User {
             return Ok(users[0].clone());
         }
 
-        let user_id = Uuid::now_v7().to_string();
-        let user = User {
-            uid: user_id.clone(),
-            email: "".to_string(),
-            name: "E2E_TEST_USER".to_string(),
-            photo_url: Some("".to_string()),
+        let new_user = User {
+            uid: Uuid::now_v7().to_string(),
+            email: email.to_string(),
+            name: name.to_string(),
+            photo_url: None,
             status: UserStatus::Approved as i32,
             memo: None,
             e2e_test: Some(true),
@@ -271,15 +282,15 @@ impl User {
         if let Err(e) = db
             .fluent()
             .insert()
-            .into(&COLLECTION_NAME)
-            .document_id(user_id)
-            .object(&user)
+            .into(COLLECTION_NAME)
+            .document_id(&new_user.uid)
+            .object(&new_user)
             .execute::<User>()
             .await
         {
             return Err(anyhow::anyhow!(e.to_string()));
         }
 
-        Ok(user)
+        Ok(new_user)
     }
 }

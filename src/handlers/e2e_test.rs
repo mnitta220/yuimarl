@@ -10,6 +10,8 @@ use axum::{
     response::{Html, Redirect},
 };
 use firestore::*;
+use futures::stream::BoxStream;
+use futures::TryStreamExt;
 use serde::Deserialize;
 use tower_cookies::{Cookie, Cookies};
 use uuid::Uuid;
@@ -55,12 +57,7 @@ pub async fn post(cookies: Cookies, Form(input): Form<E2eTestInput>) -> Result<R
         }
     }
 
-    // E2Eテストデータを削除
-    if let Err(e) = model::session::Session::delete_e2e_test(&db).await {
-        return Err(AppError(e));
-    }
-
-    let user = match model::user::User::e2e_test_user(&db).await {
+    let user = match initialize_data(&db).await {
         Ok(u) => u,
         Err(e) => {
             return Err(AppError(e));
@@ -89,4 +86,268 @@ pub async fn post(cookies: Cookies, Form(input): Form<E2eTestInput>) -> Result<R
     }
 
     Ok(Redirect::to("/"))
+}
+
+pub async fn initialize_data(db: &FirestoreDb) -> Result<model::user::User> {
+    let mut transaction = match db.begin_transaction().await {
+        Ok(t) => t,
+        Err(e) => {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+    };
+
+    let sessions_stream: BoxStream<FirestoreResult<model::session::Session>> = match db
+        .fluent()
+        .select()
+        .fields(paths!(model::session::Session::{id, uid, name, email, photo_url, e2e_test, created_at}))
+        .from(model::session::COLLECTION_NAME)
+        .filter(|q| q.for_all([q.field(path!(model::session::Session::e2e_test)).eq(true)]))
+        .obj()
+        .stream_query_with_errors()
+        .await
+    {
+        Ok(s) => s,
+        Err(e) => {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+    };
+
+    let sessions: Vec<model::session::Session> = match sessions_stream.try_collect().await {
+        Ok(s) => s,
+        Err(e) => {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+    };
+
+    for session in sessions {
+        if let Err(e) = db
+            .fluent()
+            .delete()
+            .from(model::session::COLLECTION_NAME)
+            .document_id(&session.id)
+            .add_to_transaction(&mut transaction)
+        {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+    }
+
+    let users_stream: BoxStream<FirestoreResult<model::user::User>> = match db
+        .fluent()
+        .select()
+        .fields(
+            paths!(model::user::User::{uid, email, name, status, e2e_test, created_at, last_login}),
+        )
+        .from(model::user::COLLECTION_NAME)
+        .filter(|q| q.for_all([q.field(path!(model::user::User::e2e_test)).eq(true)]))
+        .obj()
+        .stream_query_with_errors()
+        .await
+    {
+        Ok(s) => s,
+        Err(e) => {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+    };
+
+    let users: Vec<model::user::User> = match users_stream.try_collect().await {
+        Ok(s) => s,
+        Err(e) => {
+            return Err(anyhow::anyhow!(e.to_string()));
+        }
+    };
+
+    for user in users {
+        let projects_stream: BoxStream<FirestoreResult<model::project::Project>> = match db
+            .fluent()
+            .select()
+            .fields(paths!(model::project::Project::{id, db_check, deleted}))
+            .from(model::project::COLLECTION_NAME)
+            .filter(|q| {
+                q.for_all([q
+                    .field(path!(model::project::Project::owner))
+                    .eq(user.uid.clone())])
+            })
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let projects: Vec<model::project::Project> = match projects_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        for prj in projects {
+            let project_members_stream: BoxStream<FirestoreResult<model::project::ProjectMember>> =
+                match db
+                    .fluent()
+                    .select()
+                    .fields(paths!(model::project::ProjectMember::{id, project_id, uid}))
+                    .from(model::project::COLLECTION_MEMBER)
+                    .filter(|q| {
+                        q.for_all([q
+                            .field(path!(model::project::ProjectMember::project_id))
+                            .eq(&prj.id)])
+                    })
+                    .obj()
+                    .stream_query_with_errors()
+                    .await
+                {
+                    Ok(s) => s,
+                    Err(e) => {
+                        return Err(anyhow::anyhow!(e.to_string()));
+                    }
+                };
+
+            let project_members: Vec<model::project::ProjectMember> =
+                match project_members_stream.try_collect().await {
+                    Ok(s) => s,
+                    Err(e) => {
+                        return Err(anyhow::anyhow!(e.to_string()));
+                    }
+                };
+
+            for member in project_members {
+                if let Err(e) = db
+                    .fluent()
+                    .delete()
+                    .from(model::project::COLLECTION_MEMBER)
+                    .document_id(&member.id)
+                    .add_to_transaction(&mut transaction)
+                {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            }
+
+            let tickets_stream: BoxStream<FirestoreResult<model::ticket::Ticket>> = match db
+                .fluent()
+                .select()
+                .fields(paths!(model::ticket::Ticket::{id, project_id, progress, priority}))
+                .from(model::ticket::COLLECTION_NAME)
+                .filter(|q| {
+                    q.for_all([q
+                        .field(path!(model::ticket::Ticket::project_id))
+                        .eq(&prj.id)])
+                })
+                .obj()
+                .stream_query_with_errors()
+                .await
+            {
+                Ok(s) => s,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+
+            let tickets: Vec<model::ticket::Ticket> = match tickets_stream.try_collect().await {
+                Ok(s) => s,
+                Err(e) => {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            };
+
+            for ticket in tickets {
+                let ticket_members_stream: BoxStream<FirestoreResult<model::ticket::TicketMember>> =
+                    match db
+                        .fluent()
+                        .select()
+                        .fields(paths!(model::ticket::TicketMember::{id, ticket_id, project_id, uid, seq}))
+                        .from(model::ticket::COLLECTION_MEMBER)
+                        .filter(|q| q.for_all([q.field(path!(model::ticket::TicketMember::ticket_id)).eq(&ticket.id)]))
+                        .obj()
+                    .stream_query_with_errors()
+                    .await
+                {
+                    Ok(s) => s,
+                    Err(e) => {
+                        return Err(anyhow::anyhow!(e.to_string()));
+                    }
+                };
+
+                let members: Vec<model::ticket::TicketMember> =
+                    match ticket_members_stream.try_collect().await {
+                        Ok(s) => s,
+                        Err(e) => {
+                            return Err(anyhow::anyhow!(e.to_string()));
+                        }
+                    };
+
+                for member in members {
+                    if let Err(e) = db
+                        .fluent()
+                        .delete()
+                        .from(model::ticket::COLLECTION_MEMBER)
+                        .document_id(&member.id)
+                        .add_to_transaction(&mut transaction)
+                    {
+                        return Err(anyhow::anyhow!(e.to_string()));
+                    }
+                }
+
+                if let Err(e) = db
+                    .fluent()
+                    .delete()
+                    .from(model::ticket::COLLECTION_NAME)
+                    .document_id(&ticket.id)
+                    .add_to_transaction(&mut transaction)
+                {
+                    return Err(anyhow::anyhow!(e.to_string()));
+                }
+            }
+
+            if let Err(e) = db
+                .fluent()
+                .delete()
+                .from(model::project::COLLECTION_NAME)
+                .document_id(&prj.id)
+                .add_to_transaction(&mut transaction)
+            {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        }
+    }
+
+    if let Err(e) = transaction.commit().await {
+        return Err(anyhow::anyhow!(e.to_string()));
+    }
+
+    // e2eテストユーザーが存在しない場合は作成する
+    let yamada_user = match model::user::User::find_or_create_e2e_test_user(
+        "山田太郎",
+        "taro.yamada@e2e_test.com",
+        db,
+    )
+    .await
+    {
+        Ok(u) => u,
+        Err(e) => {
+            return Err(anyhow::anyhow!(e));
+        }
+    };
+
+    if let Err(e) =
+        model::user::User::find_or_create_e2e_test_user("岩鬼正美", "masami.iwaki@e2e_test.com", db)
+            .await
+    {
+        return Err(anyhow::anyhow!(e));
+    }
+
+    if let Err(e) = model::user::User::find_or_create_e2e_test_user(
+        "殿馬一人",
+        "kazuto.tonoma@e2e_test.com",
+        db,
+    )
+    .await
+    {
+        return Err(anyhow::anyhow!(e));
+    }
+
+    Ok(yamada_user)
 }

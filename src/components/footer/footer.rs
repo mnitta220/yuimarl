@@ -50,7 +50,7 @@ impl Component for Footer {
                     {
                         *buf += r#"Yuimarl version "#;
                         *buf += VERSION;
-                        *buf += r#"&nbsp;&nbsp;&nbsp;Copyright &copy; 2024 Masahiro Nitta"#;
+                        *buf += r#"&nbsp;&nbsp;&nbsp;Copyright &copy; 2024-2025 Masahiro Nitta"#;
                     }
                     *buf += r#"</small>"#;
                 }

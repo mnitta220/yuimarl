@@ -37,7 +37,7 @@ impl Component for E2eTestBody {
                     {
                         *buf += r#"<h3 class="mb-3">E2Eテスト</h3>"#;
                         *buf += r#"<p>E2Eテストを実行します。<br>"#;
-                        *buf += r#"システム環境変数に設定した「E2E_TEST_PASSWORD」の値を入力して、「実行」をクリックしてください。</p>"#;
+                        *buf += r#"システム環境変数に設定した「E2E_TEST_PASSWORD」の値を入力し、ログインユーザーを選択して、「実行」をクリックしてください。</p>"#;
 
                         if let Some(v) = &self.validation {
                             if let Some(e) = &v.info {
@@ -53,7 +53,6 @@ impl Component for E2eTestBody {
 
                         *buf += r#"<form action="/e2e_test" method="POST">"#;
                         {
-                            // E2E_TEST_PASSWORD
                             *buf += r#"<div class="row pt-1 pb-2">"#;
                             {
                                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="e2e_test_password">E2E_TEST_PASSWORD</label>"#;
@@ -78,6 +77,79 @@ impl Component for E2eTestBody {
                                             *buf += r#"</div>"#;
                                         }
                                     }
+                                }
+                                *buf += r#"</div>"#;
+                            }
+                            *buf += r#"</div>"#;
+
+                            *buf += r#"<div class="row pt-1 pb-2">"#;
+                            {
+                                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="password">ログインユーザー</label>"#;
+                                *buf += r#"<div class="col-md-9 mb-1">"#;
+                                {
+                                    *buf += r#"<table class="table table-hover">"#;
+                                    {
+                                        *buf += r#"<thead>"#;
+                                        {
+                                            *buf += r#"<tr>"#;
+                                            {
+                                                *buf += r#"<th scope="col">選択</th>"#;
+                                                *buf += r#"<th scope="col">メールアドレス</th>"#;
+                                                *buf += r#"<th scope="col">名前</th>"#;
+                                            }
+                                            *buf += r#"</tr>"#;
+                                        }
+                                        *buf += r#"</thead>"#;
+                                        *buf += r#"<tbody>"#;
+                                        {
+                                            *buf += r#"<tr>"#;
+                                            {
+                                                *buf += r#"<td>"#;
+                                                {
+                                                    *buf += r#"<input class="form-check-input" id="user" type="radio" name="user" value="1" checked>"#;
+                                                }
+                                                *buf += r#"</td>"#;
+                                                *buf += r#"<td>taro.yamada@e2e_test.com</td>"#;
+                                                *buf += r#"<td>山田太郎</td>"#;
+                                            }
+                                            *buf += r#"</tr>"#;
+                                            *buf += r#"<tr>"#;
+                                            {
+                                                *buf += r#"<td>"#;
+                                                {
+                                                    *buf += r#"<input class="form-check-input" id="user" type="radio" name="user" value="2">"#;
+                                                }
+                                                *buf += r#"</td>"#;
+                                                *buf += r#"<td>kazuto.tonoma@e2e_test.com</td>"#;
+                                                *buf += r#"<td>殿馬一人</td>"#;
+                                            }
+                                            *buf += r#"</tr>"#;
+                                            *buf += r#"<tr>"#;
+                                            {
+                                                *buf += r#"<td>"#;
+                                                {
+                                                    *buf += r#"<input class="form-check-input" id="user" type="radio" name="user" value="3">"#;
+                                                }
+                                                *buf += r#"</td>"#;
+                                                *buf += r#"<td>masami.iwaki@e2e_test.com</td>"#;
+                                                *buf += r#"<td>岩鬼正美</td>"#;
+                                            }
+                                            *buf += r#"</tr>"#;
+                                            *buf += r#"<tr>"#;
+                                            {
+                                                *buf += r#"<td>"#;
+                                                {
+                                                    *buf += r#"<input class="form-check-input" id="user" type="radio" name="user" value="4">"#;
+                                                }
+                                                *buf += r#"</td>"#;
+                                                *buf += r#"<td>satoru.satonaka@e2e_test.com</td>"#;
+                                                *buf += r#"<td>里中智</td>"#;
+                                            }
+                                            *buf += r#"</tr>"#;
+                                        }
+                                        *buf += r#"</tbody>"#;
+                                    }
+                                    *buf += r#"</table>"#;
                                 }
                                 *buf += r#"</div>"#;
                             }

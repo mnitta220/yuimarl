@@ -29,12 +29,14 @@ pub async fn get() -> Result<Html<String>, AppError> {
 #[derive(Deserialize, Debug)]
 pub struct E2eTestInput {
     pub e2e_test_password: String,
+    pub user: String,
 }
 
 pub async fn post(cookies: Cookies, Form(input): Form<E2eTestInput>) -> Result<Redirect, AppError> {
     tracing::debug!(
-        "POST /e2e_test, e2e_test_password: {}",
-        input.e2e_test_password
+        "POST /e2e_test, e2e_test_password: {}, user: {}",
+        input.e2e_test_password,
+        input.user
     );
 
     let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
@@ -57,7 +59,7 @@ pub async fn post(cookies: Cookies, Form(input): Form<E2eTestInput>) -> Result<R
         }
     }
 
-    let user = match initialize_data(&db).await {
+    let user = match initialize_data(&input.user, &db).await {
         Ok(u) => u,
         Err(e) => {
             return Err(AppError(e));
@@ -88,7 +90,7 @@ pub async fn post(cookies: Cookies, Form(input): Form<E2eTestInput>) -> Result<R
     Ok(Redirect::to("/"))
 }
 
-pub async fn initialize_data(db: &FirestoreDb) -> Result<model::user::User> {
+pub async fn initialize_data(login_user: &str, db: &FirestoreDb) -> Result<model::user::User> {
     let mut transaction = match db.begin_transaction().await {
         Ok(t) => t,
         Err(e) => {
@@ -332,22 +334,49 @@ pub async fn initialize_data(db: &FirestoreDb) -> Result<model::user::User> {
         }
     };
 
-    if let Err(e) =
-        model::user::User::find_or_create_e2e_test_user("岩鬼正美", "masami.iwaki@e2e_test.com", db)
-            .await
+    let iwaki_user = match model::user::User::find_or_create_e2e_test_user(
+        "岩鬼正美",
+        "masami.iwaki@e2e_test.com",
+        db,
+    )
+    .await
     {
-        return Err(anyhow::anyhow!(e));
-    }
+        Ok(u) => u,
+        Err(e) => {
+            return Err(anyhow::anyhow!(e));
+        }
+    };
 
-    if let Err(e) = model::user::User::find_or_create_e2e_test_user(
+    let tonoma_user = match model::user::User::find_or_create_e2e_test_user(
         "殿馬一人",
         "kazuto.tonoma@e2e_test.com",
         db,
     )
     .await
     {
-        return Err(anyhow::anyhow!(e));
-    }
+        Ok(u) => u,
+        Err(e) => {
+            return Err(anyhow::anyhow!(e));
+        }
+    };
 
-    Ok(yamada_user)
+    let satonaka_user = match model::user::User::find_or_create_e2e_test_user(
+        "里中智",
+        "satoru.satonaka@e2e_test.com",
+        db,
+    )
+    .await
+    {
+        Ok(u) => u,
+        Err(e) => {
+            return Err(anyhow::anyhow!(e));
+        }
+    };
+
+    Ok(match login_user {
+        "2" => tonoma_user,
+        "3" => iwaki_user,
+        "4" => satonaka_user,
+        _ => yamada_user,
+    })
 }

@@ -109,6 +109,7 @@ async fn main() {
             "/notice_del",
             get(handlers::notice::get_del).post(handlers::notice::post_del),
         )
+        .route("/e2e_init/:password", get(handlers::api::e2e_init))
         .route(
             "/e2e_test",
             get(handlers::e2e_test::get).post(handlers::e2e_test::post),

@@ -251,7 +251,11 @@ impl DbCheckValidation {
             return Err(anyhow::anyhow!(e));
         }
 
-        if let Err(e) = handlers::e2e_test::initialize_data("1", &db).await {
+        if let Err(e) = handlers::e2e_test::delete_e2e_test_data(&db).await {
+            return Err(anyhow::anyhow!(e));
+        }
+
+        if let Err(e) = handlers::e2e_test::get_e2e_user("4", &db).await {
             return Err(anyhow::anyhow!(e));
         }
 

@@ -59,7 +59,7 @@ pub async fn post(cookies: Cookies, Form(input): Form<E2eTestInput>) -> Result<R
         }
     }
 
-    let user = match initialize_data(&input.user, &db).await {
+    let user = match get_e2e_user(&input.user, &db).await {
         Ok(u) => u,
         Err(e) => {
             return Err(AppError(e));
@@ -90,7 +90,7 @@ pub async fn post(cookies: Cookies, Form(input): Form<E2eTestInput>) -> Result<R
     Ok(Redirect::to("/"))
 }
 
-pub async fn initialize_data(login_user: &str, db: &FirestoreDb) -> Result<model::user::User> {
+pub async fn delete_e2e_test_data(db: &FirestoreDb) -> Result<()> {
     let mut transaction = match db.begin_transaction().await {
         Ok(t) => t,
         Err(e) => {
@@ -320,6 +320,10 @@ pub async fn initialize_data(login_user: &str, db: &FirestoreDb) -> Result<model
         return Err(anyhow::anyhow!(e.to_string()));
     }
 
+    Ok(())
+}
+
+pub async fn get_e2e_user(login_user: &str, db: &FirestoreDb) -> Result<model::user::User> {
     // e2eテストユーザーが存在しない場合は作成する
     let yamada_user = match model::user::User::find_or_create_e2e_test_user(
         "山田太郎",

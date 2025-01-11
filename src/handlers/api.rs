@@ -612,3 +612,31 @@ pub async fn ticket(cookies: Cookies, Path(id): Path<String>) -> String {
 
     buf
 }
+
+pub async fn e2e_init(Path(password): Path<String>) -> String {
+    tracing::info!("GET /e2e_init: {:?}", &password);
+
+    let e2e_test_password = match crate::E2E_TEST_PASSWORD.get() {
+        Some(password) => password.to_string(),
+        None => {
+            return "NG".to_string();
+        }
+    };
+
+    if password != e2e_test_password {
+        return "NG".to_string();
+    }
+
+    let db = match FirestoreDb::new(crate::GOOGLE_PROJECT_ID.get().unwrap()).await {
+        Ok(db) => db,
+        Err(e) => {
+            return e.to_string();
+        }
+    };
+
+    if let Err(e) = super::e2e_test::delete_e2e_test_data(&db).await {
+        return e.to_string();
+    }
+
+    "OK".to_string()
+}

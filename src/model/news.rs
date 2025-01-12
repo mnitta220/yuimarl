@@ -6,7 +6,7 @@ use futures::TryStreamExt;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-const COLLECTION_NAME: &'static str = "news";
+pub const COLLECTION_NAME: &'static str = "news";
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct News {

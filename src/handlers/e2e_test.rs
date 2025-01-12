@@ -314,6 +314,45 @@ pub async fn delete_e2e_test_data(db: &FirestoreDb) -> Result<()> {
                 return Err(anyhow::anyhow!(e.to_string()));
             }
         }
+
+        let news_stream: BoxStream<FirestoreResult<model::news::News>> = match db
+            .fluent()
+            .select()
+            //.fields(paths!(model::news::News::{id, timestamp, uid, event, project_id, project_name, ticket, member_name, notice_id, message}))
+            .from(model::news::COLLECTION_NAME)
+            .filter(|q| q.for_all(q.field(path!(model::news::News::uid)).eq(user.uid.clone())))
+            .order_by([(
+                path!(model::news::News::timestamp),
+                FirestoreQueryDirection::Ascending,
+            )])
+            .obj()
+            .stream_query_with_errors()
+            .await
+        {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        let news_list: Vec<model::news::News> = match news_stream.try_collect().await {
+            Ok(s) => s,
+            Err(e) => {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        };
+
+        for news in news_list {
+            if let Err(e) = db
+                .fluent()
+                .delete()
+                .from(model::news::COLLECTION_NAME)
+                .document_id(&news.id)
+                .add_to_transaction(&mut transaction)
+            {
+                return Err(anyhow::anyhow!(e.to_string()));
+            }
+        }
     }
 
     if let Err(e) = transaction.commit().await {

@@ -1,16 +1,16 @@
 [package]
 name = "yuimarl"
-version = "1.0.18"
+version = "1.0.19"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 anyhow = { version = "1.0.86", features = ["backtrace"] }
-axum = { version = "0.7.5", features = ["macros"] }
+axum = { version = "0.8.1", features = ["macros"] }
 chrono = "0.4.38"
 dotenv = "0.15.0"
-firestore = "0.42.0"
+firestore = "0.44.0"
 futures = "0.3.30"
 once_cell = "1.19.0"
 percent-encoding = "2.3.1"
@@ -18,9 +18,9 @@ serde = { version = "1.0.199", features = ["derive"] }
 serde_json = "1.0.116"
 time = "0.3.36"
 tokio = { version = "1.37.0", features = ["full"] }
-tower = { version = "0.4.13", features = ["util", "timeout"] }
-tower-cookies = "0.10.0"
-tower-http = { version = "0.5.2", features = ["fs", "trace"] }
+tower = { version = "0.5.2", features = ["util", "timeout"] }
+tower-cookies = "0.11.0"
+tower-http = { version = "0.6.2", features = ["fs", "trace"] }
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 uuid = { version = "1.8.0", features = ["v7"] }

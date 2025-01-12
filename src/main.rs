@@ -69,7 +69,7 @@ async fn main() {
         .route("/project_list", get(handlers::project::get_list))
         .route("/project_note", post(handlers::project::post_note))
         .route(
-            "/project_select/:id",
+            "/project_select/{id}",
             get(handlers::project::get_project_select),
         )
         .route("/ticket_add", get(handlers::ticket::get_add))
@@ -84,7 +84,7 @@ async fn main() {
         )
         .route("/post_comment", post(handlers::ticket::post_comment))
         .route("/post_memo", post(handlers::user_memo::post))
-        .route("/news_del/:id", get(handlers::news::del_news))
+        .route("/news_del/{id}", get(handlers::news::del_news))
         .route("/contact", get(handlers::contact::get_contact))
         .route("/api/firebaseConfig", get(handlers::api::firebase_config))
         .route("/api/userByEmail", post(handlers::api::user_by_email))
@@ -96,7 +96,7 @@ async fn main() {
             post(handlers::api::ticket_by_id_disp),
         )
         .route("/api/ticketColor", post(handlers::api::ticket_color))
-        .route("/api/ticket/:id", get(handlers::api::ticket))
+        .route("/api/ticket/{id}", get(handlers::api::ticket))
         .route(
             "/db_check",
             get(handlers::db_check::get).post(handlers::db_check::post),
@@ -109,7 +109,7 @@ async fn main() {
             "/notice_del",
             get(handlers::notice::get_del).post(handlers::notice::post_del),
         )
-        .route("/e2e_init/:password", get(handlers::api::e2e_init))
+        .route("/e2e_init/{password}", get(handlers::api::e2e_init))
         .route(
             "/e2e_test",
             get(handlers::e2e_test::get).post(handlers::e2e_test::post),

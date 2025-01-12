@@ -15,7 +15,7 @@ load_dotenv()
 
 # 環境変数を取得
 PAGE_URL = os.getenv("PAGE_URL")
-E2E_PASSWORD = os.getenv("E2E_PASSWORD")
+E2E_TEST_PASSWORD = os.getenv("E2E_TEST_PASSWORD")
 
 # def test_senario1(page: Page):
 #     senario1 = scenario_module.Senario1(page, PAGE_URL, E2E_PASSWORD)
@@ -24,14 +24,14 @@ E2E_PASSWORD = os.getenv("E2E_PASSWORD")
 
 def test_senario1(page: Page):
     # 初期化
-    test_url = f"{PAGE_URL}/e2e_init/{E2E_PASSWORD}"
+    test_url = f"{PAGE_URL}/e2e_init/{E2E_TEST_PASSWORD}"
     page.goto(test_url)
 
     # テスト
     test_url = f"{PAGE_URL}/e2e_test"
     page.goto(test_url)
     expect(page.get_by_role("heading")).to_contain_text("E2Eテスト")
-    page.get_by_label("E2E_TEST_PASSWORD").fill(E2E_PASSWORD)
+    page.get_by_label("E2E_TEST_PASSWORD").fill(E2E_TEST_PASSWORD)
     page.get_by_role("row", name="kazuto.tonoma@e2e_test.com").locator("#user").check()
     page.get_by_role("button", name="実行").click()
     expect(page.locator("#project")).to_contain_text("プロジェクト")
@@ -85,7 +85,7 @@ def test_senario1(page: Page):
 
     page.goto(test_url)
     expect(page.get_by_role("heading")).to_contain_text("E2Eテスト")
-    page.get_by_label("E2E_TEST_PASSWORD").fill(E2E_PASSWORD)
+    page.get_by_label("E2E_TEST_PASSWORD").fill(E2E_TEST_PASSWORD)
     page.get_by_role("row", name="masami.iwaki@e2e_test.com 岩鬼正美").locator(
         "#user"
     ).check()

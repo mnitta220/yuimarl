@@ -71,6 +71,31 @@ npx playwright test --headed
 npx playwright test
 ```
 
+## テストシナリオ
+
+上記のテストでは、以下のテスト用ユーザーを自動的に作成してテストを実行します。
+
+| ユーザー名 | メールアドレス               |
+| ---------- | ---------------------------- |
+| 山田太郎   | taro.yamada@e2e_test.com     |
+| 殿馬一人   | kazuto.tonoma@e2e_test.com   |
+| 岩鬼正美   | masami.iwaki@e2e_test.com    |
+| 里中智     | satoru.satonaka@e2e_test.com |
+
+以下の URL にアクセスして、テストデータの初期化とログインを行います。
+
+- E2E テストデータ初期化 URL
+
+```
+(PAGE_URL)/e2e_init/(E2E_TEST_PASSWORD)
+```
+
+- E2E テストログイン URL
+
+```
+(PAGE_URL)/e2e_test
+```
+
 ## (参考情報) テストコードの生成
 
 https://playwright.dev/docs/codegen-intro

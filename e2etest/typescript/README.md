@@ -57,6 +57,43 @@ PAGE_URL=https://yuimarl-2u5rvkqlq-an.a.run.app/
 E2E_TEST_PASSWORD=password
 ```
 
+## ブラウザの設定
+
+初期状態では、Chrome で E2E テストが実行されます。  
+[e2etest\typescript\playwright.config.ts](playwright.config.ts) の「projects:」の設定を変えると、Firefox または Safari を起動することができます。  
+その場合は、"chromium" をコメントアウトして、"firefox" または "webkit" のコメントアウトを解除してください。
+
+```
+  projects: [
+    {
+      name: "setup db",
+      testMatch: /global\.setup\.ts/,
+    },
+
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
+      dependencies: ["setup db"],
+    },
+
+    /*
+    {
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"] },
+      dependencies: ["setup db"],
+    },
+    */
+
+    /*
+    {
+      name: "webkit",
+      use: { ...devices["Desktop Safari"] },
+      dependencies: ["setup db"],
+    },
+    */
+
+```
+
 ## テストの実行
 
 ブラウザを起動する場合

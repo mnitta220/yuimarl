@@ -63,7 +63,9 @@ test("scenario1", async ({ page }) => {
   await page.locator("#start_date").fill("2025-01-13");
   await page.locator("#end_date").fill("2025-01-31");
   await page.locator("#progress").fill("10");
+  await page.getByLabel("高").click();
   await page.getByLabel("高").check();
+  await page.getByLabel("ガントチャートに表示する").click();
   await page.getByLabel("ガントチャートに表示する").check();
   await page.locator("a:nth-child(3)").click();
   await page.getByRole("button", { name: "作成" }).click();

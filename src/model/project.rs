@@ -68,7 +68,7 @@ impl Project {
     }
 
     pub async fn my_projects(session: &Session, db: &FirestoreDb) -> Result<Vec<Self>> {
-        let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
+        let project_members_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
             .fields(paths!(ProjectMember::{id, project_id, member, role, last_used}))
@@ -88,7 +88,7 @@ impl Project {
             }
         };
 
-        let project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
+        let project_members: Vec<ProjectMember> = match project_members_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -123,7 +123,7 @@ impl Project {
         project_name: &String,
         db: &FirestoreDb,
     ) -> Result<Vec<Self>> {
-        let object_stream: BoxStream<FirestoreResult<Project>> = match db
+        let projects_stream: BoxStream<FirestoreResult<Project>> = match db
             .fluent()
             .select()
             .fields(paths!(Project::{id, project_name, language, owner, created_at}))
@@ -144,7 +144,7 @@ impl Project {
             }
         };
 
-        let projects: Vec<Project> = match object_stream.try_collect().await {
+        let projects: Vec<Project> = match projects_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));
@@ -254,7 +254,7 @@ impl Project {
 
 impl ProjectMember {
     pub async fn find(project_id: &str, member: &str, db: &FirestoreDb) -> Result<Vec<Self>> {
-        let object_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
+        let project_members_stream: BoxStream<FirestoreResult<ProjectMember>> = match db
             .fluent()
             .select()
             .fields(paths!(ProjectMember::{id, project_id, member, role, last_used}))
@@ -279,7 +279,7 @@ impl ProjectMember {
             }
         };
 
-        let project_members: Vec<ProjectMember> = match object_stream.try_collect().await {
+        let project_members: Vec<ProjectMember> = match project_members_stream.try_collect().await {
             Ok(s) => s,
             Err(e) => {
                 return Err(anyhow::anyhow!(e.to_string()));

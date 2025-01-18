@@ -183,7 +183,10 @@ pub struct TicketInput {
     pub end_date: String,
     pub progress: String,
     pub priority: String,
-    pub parent: String,
+    pub parent_id: String,
+    pub parent_id_disp: String,
+    pub parent_name: String,
+    pub ticket_children: String,
     pub deliverables: String,
     pub ganttchart: Option<String>,
     pub project_id: String,
@@ -196,24 +199,7 @@ pub async fn post(
     cookies: Cookies,
     Form(input): Form<TicketInput>,
 ) -> Result<Html<String>, AppError> {
-    tracing::debug!(
-        "POST /ticket {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {:?}, {}, {}, {}, {}",
-        input.action,
-        input.name,
-        input.description,
-        input.members,
-        input.start_date,
-        input.end_date,
-        input.progress,
-        input.priority,
-        input.parent,
-        input.deliverables,
-        input.ganttchart,
-        input.project_id,
-        input.ticket_id,
-        input.timestamp,
-        input.color
-    );
+    tracing::info!("POST /ticket {}, {}", input.parent_id, input.parent_name,);
 
     let members = format!(r#"{{"members":{}}}"#, input.members);
     let members: serde_json::Value = match serde_json::from_str(&members) {
@@ -265,6 +251,9 @@ pub async fn post(
         member.email = Some(String::from(m["email"].as_str().unwrap()));
         member.name = Some(String::from(m["name"].as_str().unwrap()));
         member.seq = i;
+        if member.uid == session.uid {
+            member.color = Some(input.color.clone());
+        }
         ticket_members.push(member);
         i += 1;
     }
@@ -288,43 +277,67 @@ pub async fn post(
         return Ok(Html(LoginPage::write()));
     }
 
-    if let Some(v) = validation {
-        let mut can_update = false;
-        let mut can_delete = false;
+    /*
+    let ticket_parent: Option<model::ticket::Ticket> = match serde_json::from_str(&input.parent) {
+        Ok(p) => p,
+        Err(_) => None,
+    };
+    */
+    let mut ticket_parent: Option<model::ticket::Ticket> = None;
+    if input.parent_id.len() > 0 {
+        let mut p = model::ticket::Ticket::new(&input.parent_id, "");
+        if input.parent_id_disp.len() > 0 {
+            p.id_disp = Some(input.parent_id_disp.clone());
+        }
+        if input.parent_name.len() > 0 {
+            p.name = Some(input.parent_name.clone());
+        }
+        ticket_parent = Some(p);
+    }
 
-        // チケットを更新できるのは、作成者、担当者、オーナー、管理者
-        // チケットを削除できるのは、作成者、オーナー、管理者
-        if action == crate::Action::Create {
-            can_update = true;
-            can_delete = true;
-        } else {
-            if let Some(pmem) = project_member {
-                if let Some(r) = pmem.role {
-                    if r == model::project::ProjectRole::Owner as i32
-                        || r == model::project::ProjectRole::Administrator as i32
-                    {
-                        can_update = true;
-                        can_delete = true;
-                    }
-                }
-            }
+    let ticket_children: Vec<model::ticket::Ticket> =
+        match serde_json::from_str(&input.ticket_children) {
+            Ok(t) => t,
+            Err(_) => Vec::new(),
+        };
 
-            if can_delete == false {
-                if let Some(t) = &ticket {
-                    if let Some(o) = &t.owner {
-                        if o == &session.uid {
-                            can_update = true;
-                            can_delete = true;
-                        }
-                    }
-                    let member = ticket_members.iter().find(|m| m.uid == session.uid);
-                    if member.is_some() {
-                        can_update = true;
-                    }
+    let mut can_update = false;
+    let mut can_delete = false;
+
+    // チケットを更新できるのは、作成者、担当者、オーナー、管理者
+    // チケットを削除できるのは、作成者、オーナー、管理者
+    if action == crate::Action::Create {
+        can_update = true;
+        can_delete = true;
+    } else {
+        if let Some(pmem) = project_member {
+            if let Some(r) = pmem.role {
+                if r == model::project::ProjectRole::Owner as i32
+                    || r == model::project::ProjectRole::Administrator as i32
+                {
+                    can_update = true;
+                    can_delete = true;
                 }
             }
         }
 
+        if can_delete == false {
+            if let Some(t) = &ticket {
+                if let Some(o) = &t.owner {
+                    if o == &session.uid {
+                        can_update = true;
+                        can_delete = true;
+                    }
+                }
+                let member = ticket_members.iter().find(|m| m.uid == session.uid);
+                if member.is_some() {
+                    can_update = true;
+                }
+            }
+        }
+    }
+
+    if let Some(v) = validation {
         let mut ticket_new = model::ticket::Ticket::new("", &input.project_id);
         if let Some(t) = ticket {
             ticket_new.id = t.id;
@@ -339,11 +352,32 @@ pub async fn post(
         ticket_new.progress = input.progress.parse::<i32>().unwrap_or_default();
         ticket_new.priority = input.priority.parse::<i32>().unwrap_or_default();
 
+        if input.deliverables.len() > 0 {
+            ticket_new.deliverables = Some(input.deliverables.clone());
+        } else {
+            ticket_new.deliverables = None;
+        }
+
+        match &input.ganttchart {
+            Some(g) => {
+                if g == "on" {
+                    ticket_new.ganttchart = Some(true);
+                } else {
+                    ticket_new.ganttchart = None;
+                }
+            }
+            None => ticket_new.ganttchart = None,
+        }
+
         props.session = Some(session);
         props.action = action;
         props.project = project;
         props.ticket = Some(ticket_new);
         props.ticket_members = ticket_members;
+        props.ticket_parent = ticket_parent;
+        props.ticket_children = ticket_children;
+        props.screen = Some(crate::Screen::TicketInfo);
+        props.tab = crate::Tab::Info;
 
         let mut page = TicketPage::new(props, can_update, can_delete, Some(v));
         return Ok(Html(page.write()));
@@ -364,14 +398,32 @@ pub async fn post(
                 return Err(AppError(anyhow::anyhow!(e)));
             }
         }
+
         crate::Action::Update => {
             // チケット更新
-            if let Err(e) =
-                model::ticket::Ticket::update(&input, &session, &ticket_members, &db).await
-            {
-                return Err(AppError(anyhow::anyhow!(e)));
-            }
+            let ticket_updated =
+                match model::ticket::Ticket::update(&input, &session, &ticket_members, &db).await {
+                    Ok(t) => t,
+                    Err(e) => {
+                        return Err(AppError(anyhow::anyhow!(e)));
+                    }
+                };
+
+            props.session = Some(session);
+            props.action = action;
+            props.project = project;
+            props.ticket = Some(ticket_updated);
+            props.ticket_parent = ticket_parent;
+            props.ticket_members = ticket_members;
+            props.ticket_children = ticket_children;
+            props.screen = Some(crate::Screen::TicketInfo);
+            props.tab = crate::Tab::Info;
+            props.toast_message = Some("チケットを更新しました。".to_string());
+
+            let mut page = TicketPage::new(props, can_update, can_delete, None);
+            return Ok(Html(page.write()));
         }
+
         crate::Action::Delete => {
             // チケット削除
             if let Err(e) = model::ticket::Ticket::delete(&input, &db).await {

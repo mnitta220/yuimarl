@@ -49,13 +49,18 @@ export default class TicketInfo {
       });
     }
 
+    console.log(`***up4`);
+
     const btnUpCharge =
       document.querySelector<HTMLButtonElement>(`#btnUpCharge`);
     if (btnUpCharge) {
+      console.log(`***up5`);
       btnUpCharge.addEventListener("click", () => {
+        console.log(`***up6`);
         const selectedIndex =
           document.querySelector<HTMLInputElement>(`#selectedIndex`);
         if (selectedIndex) {
+          console.log(`***up7`);
           this.chargeSeqUp(Number(selectedIndex.value));
         }
       });
@@ -141,6 +146,23 @@ export default class TicketInfo {
     const ds = document.querySelector<HTMLInputElement>(`#deliverables`);
     if (ds?.value) {
       this.deliverables = JSON.parse(ds.value);
+    }
+
+    const toastMessage =
+      document.querySelector<HTMLInputElement>(`#toast_message`);
+    if (toastMessage?.value) {
+      // トーストを表示する
+      setTimeout(function () {
+        const toast = document.getElementById("toast");
+        if (toast) {
+          toast.innerHTML = toastMessage.value;
+          toast.style.visibility = "visible";
+          setTimeout(function () {
+            toast.style.visibility = "hidden";
+            toastMessage.value = "";
+          }, 1500);
+        }
+      }, 100);
     }
   }
 

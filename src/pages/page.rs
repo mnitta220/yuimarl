@@ -25,6 +25,7 @@ pub struct Props {
     pub news: Vec<model::news::News>,
     pub screen: Option<Screen>,
     pub tab: Tab,
+    pub toast_message: Option<String>,
     pub action: crate::Action,
 }
 
@@ -48,6 +49,7 @@ impl Props {
             news: Vec::new(),
             screen: None,
             tab: Tab::Info,
+            toast_message: None,
             action: crate::Action::Read,
         }
     }

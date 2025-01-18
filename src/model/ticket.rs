@@ -153,8 +153,8 @@ impl Ticket {
         ticket.progress = progress;
         ticket.priority = priority;
 
-        if input.parent.len() > 0 {
-            ticket.parent_id = Some(input.parent.clone());
+        if input.parent_id.len() > 0 {
+            ticket.parent_id = Some(input.parent_id.clone());
         }
 
         if input.deliverables.len() > 0 {
@@ -297,7 +297,7 @@ impl Ticket {
         session: &Session,
         members: &Vec<TicketMember>,
         db: &FirestoreDb,
-    ) -> Result<()> {
+    ) -> Result<Self> {
         let ticket = match Self::find(&input.ticket_id, db).await {
             Ok(t) => t,
             Err(e) => return Err(anyhow::anyhow!(e.to_string())),
@@ -360,8 +360,8 @@ impl Ticket {
             None => ticket.ganttchart = None,
         }
 
-        if input.parent.len() > 0 {
-            ticket.parent_id = Some(input.parent.clone());
+        if input.parent_id.len() > 0 {
+            ticket.parent_id = Some(input.parent_id.clone());
         } else {
             ticket.parent_id = None;
         }
@@ -632,7 +632,7 @@ impl Ticket {
 
         tracing::debug!("Ticket updated {:?}", ticket);
 
-        Ok(())
+        Ok(ticket)
     }
 
     pub async fn update_note(

@@ -401,16 +401,17 @@ impl Component for TicketInfo {
             // 親チケット
             *buf += r#"<div class="row pt-1 pb-2">"#;
             {
-                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="category">親チケット</label>"#;
+                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="parentTicket">親チケット</label>"#;
                 *buf += r#"<div class="col-md-9">"#;
                 {
                     *buf += r#"<div id="parentTicket">"#;
                     {
                         if let Some(t) = &props.ticket_parent {
+                            println!("***&props.ticket_parent={:?}", &props.ticket_parent);
                             *buf += r#"<a href="/ticket?id="#;
                             *buf += &t.id;
                             *buf += r#"">"#;
-                            *buf += &t.id_disp.clone().unwrap();
+                            *buf += &t.id_disp.clone().unwrap_or("".to_string());
                             *buf += r#"</a>&nbsp;:&nbsp;"#;
 
                             if let Some(ref name) = t.name {
@@ -425,8 +426,16 @@ impl Component for TicketInfo {
                                 }
                                 *buf += r#"</a>"#;
 
-                                *buf += r#"<input type="hidden" id="parent" name="parent" value=""#;
+                                *buf += r#"<input type="hidden" id="parent_id" name="parent_id" value=""#;
                                 *buf += &t.id;
+                                *buf += r#"">"#;
+
+                                *buf += r#"<input type="hidden" id="parent_id_disp" name="parent_id_disp" value=""#;
+                                *buf += &t.id_disp.clone().unwrap_or("".to_string());
+                                *buf += r#"">"#;
+
+                                *buf += r#"<input type="hidden" id="parent_name" name="parent_name" value=""#;
+                                *buf += &t.name.clone().unwrap_or("".to_string());
                                 *buf += r#"">"#;
                             }
                         } else {
@@ -454,7 +463,7 @@ impl Component for TicketInfo {
             // 子チケット
             *buf += r#"<div class="row pt-1 pb-2">"#;
             {
-                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="category">子チケット</label>"#;
+                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="children">子チケット</label>"#;
                 *buf += r#"<div class="col-md-9 pb-md-2">"#;
                 {
                     for child in &props.ticket_children {
@@ -482,7 +491,7 @@ impl Component for TicketInfo {
             // 成果物
             *buf += r#"<div class="row pt-1 pb-2">"#;
             {
-                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="category">成果物</label>"#;
+                *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="deliverablesTbl">成果物</label>"#;
                 *buf += r#"<div class="col-md-9 mb-1">"#;
                 {
                     *buf += r#"<div class="form-floating">"#;
@@ -841,6 +850,12 @@ impl Component for TicketInfo {
 
             *buf += r#"<input type="hidden" name="action" id="action" value=""#;
             *buf += &props.action.to_string();
+            *buf += r#"">"#;
+
+            *buf += r#"<input type="hidden" id="ticket_children" name="ticket_children" value=""#;
+            if let Ok(g) = serde_json::to_string(&props.ticket_children) {
+                super::super::super::escape_html(&g, buf)
+            }
             *buf += r#"">"#;
         }
         *buf += r#"</form>"#;

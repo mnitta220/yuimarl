@@ -5,7 +5,7 @@ const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 pub struct Footer {}
 
 impl Component for Footer {
-    fn write(&self, _props: &Props, buf: &mut String) {
+    fn write(&self, props: &Props, buf: &mut String) {
         *buf += r#"<footer class="py-1 mt-3 bg-dark text-light">"#;
         {
             *buf += r#"<div class="container text-center pt-1">"#;
@@ -59,6 +59,13 @@ impl Component for Footer {
             *buf += r#"</div>"#;
         }
         *buf += r#"</footer>"#;
+
+        *buf += r#"<div id="toast"></div>"#;
+        *buf += r#"<input type="hidden" id="toast_message" value=""#;
+        if let Some(t) = &props.toast_message {
+            *buf += &t;
+        }
+        *buf += r#"">"#;
 
         *buf += r#"<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" "#;
         *buf += r#"integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" "#;

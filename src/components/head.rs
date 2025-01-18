@@ -18,7 +18,7 @@ impl Component for Head {
             *buf += r#"rel="stylesheet" "#;
             *buf += r#"integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" "#;
             *buf += r#"crossorigin="anonymous">"#;
-            *buf += r#"<link rel="stylesheet" href="/static/css/style1013a.css">"#;
+            *buf += r#"<link rel="stylesheet" href="/static/css/style1020.css">"#;
             *buf += r#"<link rel="icon" type="image/x-icon" href="/static/favicon2.ico">"#;
 
             if let Some(screen) = &props.screen {
@@ -54,7 +54,7 @@ impl Component for Head {
                             Tab::Info => {
                                 // 次の行は、vite/ticket-info フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
                                 // (参照) vite/ticket-info/README.md
-                                *buf += r#"<script type="module" crossorigin src="/static/js/ticket-info/index-Bry6yV1i.js"></script>"#;
+                                *buf += r#"<script type="module" crossorigin src="/static/js/ticket-info/index-CgJj3hhs.js"></script>"#;
                             }
                             Tab::Note => {
                                 // 次の行は、vite/note フォルダでビルドして出力された index-XXXXXXXX.js を設定する。

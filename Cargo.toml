@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = { version = "1.0.86", features = ["backtrace"] }
-axum = { version = "0.8.1", features = ["macros"] }
+axum = { version = "0.8.0", features = ["macros"] }
 chrono = "0.4.38"
 dotenv = "0.15.0"
 firestore = "0.44.0"

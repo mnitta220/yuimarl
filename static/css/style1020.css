@@ -153,3 +153,18 @@
   display: flex;
   padding: 10px;
 }
+
+#toast {
+  display: flex;
+  visibility: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  z-index: 999;
+  background-color: #666;
+  position: absolute;
+  top: calc(100vh - 90px);
+  left: calc(50vw - 80px);
+  font-size: .88em;
+  padding: 14px 20px;
+  color: white;
+}

@@ -85,12 +85,21 @@ impl TicketValidation {
                 if let Some(t) = &ticket {
                     // 読み込み時のタイムスタンプと現在のタイムスタンプを比較し、他のユーザーが更新していたら更新できない。
                     let mut ok = false;
+                    //println!("***ticket.update1: ");
                     if let Some(ts) = &t.updated_at {
+                        /**/
+                        println!(
+                            "***ticket.update2: {:?}, {:?}",
+                            ts.timestamp_micros().to_string(),
+                            input.timestamp
+                        );
+                        /**/
                         if ts.timestamp_micros().to_string() == input.timestamp {
                             ok = true;
                         }
                     }
                     if !ok {
+                        //println!("***ticket.update3: ");
                         validation.info = Some("他のユーザーがチケットを更新しため、更新できませんでした。<br>再読み込みを行ってください。".to_string());
                         return Ok((Some(validation), project, project_member, ticket));
                     }

@@ -8,6 +8,12 @@ pub fn ticket_info_footer(buf: &mut String) {
     *buf += r#"<input class="invisible" type="button" id="btnSelectColor" value="">"#;
     *buf += r#"<input type="hidden" name="selectedIndex" id="selectedIndex" value="">"#;
     *buf += r#"<input type="hidden" name="selectedColor" id="selectedColor" value="light">"#;
+    /*
+     *buf += r#"<div id="toast"></div>"#;
+     *buf += r#"<input type="hidden" id="toast_message" value=""#;
+     *buf += &toast_message;
+     *buf += r#"">"#;
+     */
 
     *buf += r#"<script>
 function clickRemoveCharge(idx) {
@@ -78,5 +84,29 @@ function clickColor(color) {
     }
   }
 }
+
+/*
+console.log(`***loadx 1`);
+const toastMessage =
+  document.querySelector(`#toast_message`);
+console.log(`***loadx 2: ${toastMessage?.value}`);
+if (toastMessage?.value) {
+  // トーストを表示する
+  setTimeout(function () {
+    console.log(`***loadx 3`);
+    const toast = document.getElementById("toast");
+    if (toast) {
+      console.log(`***loadx 4`);
+      toast.innerHTML = toastMessage.value;
+      toast.style.visibility = "visible";
+      setTimeout(function () {
+        toast.style.visibility = "hidden";
+        toastMessage.value = "";
+      }, 1500);
+    }
+  }, 100);
+}
+*/
+
 </script>"#;
 }

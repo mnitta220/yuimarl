@@ -67,6 +67,36 @@ impl Component for Footer {
         }
         *buf += r#"">"#;
 
+        // トースト表示
+        *buf += r#"<script>"#;
+        *buf += r#"window.addEventListener("load", () => {"#;
+        {
+            *buf += r#"const toastMessage = document.querySelector(`#toast_message`); "#;
+            *buf += r#"if (toastMessage?.value) {"#;
+            {
+                *buf += r#"setTimeout(function () { "#;
+                {
+                    *buf += r#"const toast = document.getElementById("toast"); "#;
+                    *buf += r#"if (toast) { "#;
+                    {
+                        *buf += r#"toast.innerHTML = toastMessage.value; "#;
+                        *buf += r#"toast.style.visibility = "visible"; "#;
+                        *buf += r#"setTimeout(function () { "#;
+                        {
+                            *buf += r#"toast.style.visibility = "hidden"; "#;
+                            *buf += r#"toastMessage.value = "";"#;
+                        }
+                        *buf += r#"}, 1500);"#;
+                    }
+                    *buf += r#"}"#;
+                }
+                *buf += r#"}, 100);"#;
+            }
+            *buf += r#"}"#;
+        }
+        *buf += r#"});"#;
+        *buf += r#"</script>"#;
+
         *buf += r#"<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" "#;
         *buf += r#"integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" "#;
         *buf += r#"crossorigin="anonymous"></script>"#;

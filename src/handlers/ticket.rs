@@ -277,12 +277,6 @@ pub async fn post(
         return Ok(Html(LoginPage::write()));
     }
 
-    /*
-    let ticket_parent: Option<model::ticket::Ticket> = match serde_json::from_str(&input.parent) {
-        Ok(p) => p,
-        Err(_) => None,
-    };
-    */
     let mut ticket_parent: Option<model::ticket::Ticket> = None;
     if input.parent_id.len() > 0 {
         let mut p = model::ticket::Ticket::new(&input.parent_id, "");
@@ -476,44 +470,43 @@ pub async fn post_note(
     }
 
     let mut props = page::Props::new();
+    let mut can_update = false;
+    let mut can_delete = false;
+    // チケットを更新できるのは、作成者、担当者、オーナー、管理者
+    // チケットを削除できるのは、作成者、オーナー、管理者
+    if let Some(pmem) = &project_member {
+        if let Some(r) = pmem.role {
+            if r == model::project::ProjectRole::Owner as i32
+                || r == model::project::ProjectRole::Administrator as i32
+            {
+                can_update = true;
+                can_delete = true;
+            }
+        }
+    }
 
-    if let Some(v) = validation {
-        let mut can_update = false;
-        let mut can_delete = false;
-        // チケットを更新できるのは、作成者、担当者、オーナー、管理者
-        // チケットを削除できるのは、作成者、オーナー、管理者
-        if let Some(pmem) = &project_member {
-            if let Some(r) = pmem.role {
-                if r == model::project::ProjectRole::Owner as i32
-                    || r == model::project::ProjectRole::Administrator as i32
-                {
+    if can_delete == false {
+        if let Some(t) = &ticket {
+            if let Some(o) = &t.owner {
+                if o == &session.uid {
                     can_update = true;
                     can_delete = true;
                 }
             }
         }
 
-        if can_delete == false {
-            if let Some(t) = &ticket {
-                if let Some(o) = &t.owner {
-                    if o == &session.uid {
-                        can_update = true;
-                        can_delete = true;
-                    }
-                }
-            }
-
-            if let Some(m) = &project_member {
-                if let Some(r) = m.role {
-                    if r == model::project::ProjectRole::Owner as i32
-                        || r == model::project::ProjectRole::Administrator as i32
-                    {
-                        can_update = true;
-                    }
+        if let Some(m) = &project_member {
+            if let Some(r) = m.role {
+                if r == model::project::ProjectRole::Owner as i32
+                    || r == model::project::ProjectRole::Administrator as i32
+                {
+                    can_update = true;
                 }
             }
         }
+    }
 
+    if let Some(v) = validation {
         if let Some(t) = ticket {
             let mut t = t.clone();
             t.note = Some(input.markdown);
@@ -529,14 +522,28 @@ pub async fn post_note(
         return Ok(Html(page.write()));
     }
 
-    match model::ticket::Ticket::update_note(&input, &session, &db).await {
+    let ticket_updated = match model::ticket::Ticket::update_note(&input, &session, &db).await {
         Ok(t) => t,
         Err(e) => {
             return Err(AppError(anyhow::anyhow!(e)));
         }
     };
 
-    return super::home::show_home(session, &db).await;
+    props.session = Some(session);
+    props.action = crate::Action::Update;
+    props.project = project;
+    props.ticket = Some(ticket_updated);
+    //props.ticket_parent = ticket_parent;
+    //props.ticket_members = ticket_members;
+    //props.ticket_children = ticket_children;
+    props.screen = Some(crate::Screen::TicketInfo);
+    props.tab = crate::Tab::Note;
+    props.toast_message = Some("ノートを更新しました。".to_string());
+
+    let mut page = TicketPage::new(props, can_update, can_delete, None);
+    return Ok(Html(page.write()));
+
+    //return super::home::show_home(session, &db).await;
 }
 
 #[derive(Deserialize, Debug)]

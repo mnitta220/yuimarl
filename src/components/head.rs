@@ -54,7 +54,7 @@ impl Component for Head {
                             Tab::Info => {
                                 // 次の行は、vite/ticket-info フォルダでビルドして出力された index-XXXXXXXX.js を設定する。
                                 // (参照) vite/ticket-info/README.md
-                                *buf += r#"<script type="module" crossorigin src="/static/js/ticket-info/index-CFvniZkd.js"></script>"#;
+                                *buf += r#"<script type="module" crossorigin src="/static/js/ticket-info/index-UCgKP5To.js"></script>"#;
                             }
                             Tab::Note => {
                                 // 次の行は、vite/note フォルダでビルドして出力された index-XXXXXXXX.js を設定する。

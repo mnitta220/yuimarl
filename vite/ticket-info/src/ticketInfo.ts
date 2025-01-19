@@ -142,23 +142,6 @@ export default class TicketInfo {
     if (ds?.value) {
       this.deliverables = JSON.parse(ds.value);
     }
-
-    const toastMessage =
-      document.querySelector<HTMLInputElement>(`#toast_message`);
-    if (toastMessage?.value) {
-      // トーストを表示する
-      setTimeout(function () {
-        const toast = document.getElementById("toast");
-        if (toast) {
-          toast.innerHTML = toastMessage.value;
-          toast.style.visibility = "visible";
-          setTimeout(function () {
-            toast.style.visibility = "hidden";
-            toastMessage.value = "";
-          }, 1500);
-        }
-      }, 100);
-    }
   }
 
   private removeCharge(i: number) {

@@ -49,18 +49,13 @@ export default class TicketInfo {
       });
     }
 
-    console.log(`***up4`);
-
     const btnUpCharge =
       document.querySelector<HTMLButtonElement>(`#btnUpCharge`);
     if (btnUpCharge) {
-      console.log(`***up5`);
       btnUpCharge.addEventListener("click", () => {
-        console.log(`***up6`);
         const selectedIndex =
           document.querySelector<HTMLInputElement>(`#selectedIndex`);
         if (selectedIndex) {
-          console.log(`***up7`);
           this.chargeSeqUp(Number(selectedIndex.value));
         }
       });
@@ -260,8 +255,11 @@ export default class TicketInfo {
     buf +=
       '<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">';
     buf += "</a>";
-    buf += '<input type="hidden" id="parent" name="parent" value="">';
     buf += "</p>";
+    buf += '<input type="hidden" id="parent_id" name="parent_id" value="">';
+    buf +=
+      '<input type="hidden" id="parent_id_disp" name="parent_id_disp" value="">';
+    buf += '<input type="hidden" id="parent_name" name="parent_name" value="">';
     const parentTicket = document.querySelector<HTMLElement>(`#parentTicket`);
     if (parentTicket) {
       parentTicket.innerHTML = buf;

@@ -401,22 +401,28 @@ impl Component for TicketInfo {
             // 親チケット
             *buf += r#"<div class="row pt-1 pb-2">"#;
             {
+                let mut parent_id = String::from("");
+                let mut parent_id_disp = String::from("");
+                let mut parent_name = String::from("");
+
                 *buf += r#"<label class="col-md-3 col-form-label bg-light mb-1" for="parentTicket">親チケット</label>"#;
                 *buf += r#"<div class="col-md-9">"#;
                 {
                     *buf += r#"<div id="parentTicket">"#;
                     {
                         if let Some(t) = &props.ticket_parent {
-                            println!("***&props.ticket_parent={:?}", &props.ticket_parent);
+                            parent_id = t.id.clone();
+                            parent_id_disp = t.id_disp.clone().unwrap_or("".to_string());
+                            parent_name = t.name.clone().unwrap_or("".to_string());
                             *buf += r#"<a href="/ticket?id="#;
-                            *buf += &t.id;
+                            *buf += &parent_id;
                             *buf += r#"">"#;
-                            *buf += &t.id_disp.clone().unwrap_or("".to_string());
+                            *buf += &parent_id_disp;
                             *buf += r#"</a>&nbsp;:&nbsp;"#;
 
-                            if let Some(ref name) = t.name {
-                                super::super::super::escape_html(&name, buf);
-                            }
+                            //if let Some(ref name) = t.name {
+                            super::super::super::escape_html(&parent_name, buf);
+                            //}
 
                             if self.can_update {
                                 *buf += r#"&nbsp;"#;
@@ -425,18 +431,6 @@ impl Component for TicketInfo {
                                     *buf += r#"<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">"#;
                                 }
                                 *buf += r#"</a>"#;
-
-                                *buf += r#"<input type="hidden" id="parent_id" name="parent_id" value=""#;
-                                *buf += &t.id;
-                                *buf += r#"">"#;
-
-                                *buf += r#"<input type="hidden" id="parent_id_disp" name="parent_id_disp" value=""#;
-                                *buf += &t.id_disp.clone().unwrap_or("".to_string());
-                                *buf += r#"">"#;
-
-                                *buf += r#"<input type="hidden" id="parent_name" name="parent_name" value=""#;
-                                *buf += &t.name.clone().unwrap_or("".to_string());
-                                *buf += r#"">"#;
                             }
                         } else {
                             *buf += r#"<p class="my-1">"#;
@@ -447,12 +441,23 @@ impl Component for TicketInfo {
                                         *buf += r#"<img class="icon3" src="/static/ionicons/add-circle-outline.svg" title="親チケットを追加">"#;
                                     }
                                     *buf += r#"</a>"#;
-
-                                    *buf += r#"<input type="hidden" id="parent" name="parent" value="">"#;
                                 }
                             }
                             *buf += r#"</p>"#;
                         }
+
+                        *buf += r#"<input type="hidden" id="parent_id" name="parent_id" value=""#;
+                        *buf += &parent_id;
+                        *buf += r#"">"#;
+
+                        *buf += r#"<input type="hidden" id="parent_id_disp" name="parent_id_disp" value=""#;
+                        *buf += &parent_id_disp;
+                        *buf += r#"">"#;
+
+                        *buf +=
+                            r#"<input type="hidden" id="parent_name" name="parent_name" value=""#;
+                        super::super::super::escape_html(&parent_name, buf);
+                        *buf += r#"">"#;
                     }
                     *buf += r#"</div>"#;
                 }

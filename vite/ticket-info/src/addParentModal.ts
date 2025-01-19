@@ -174,24 +174,25 @@ export default class AddParentModal {
   }
 
   private addParent() {
-    let buf = `<a href="/ticket?id=`;
     const parentId = document.querySelector<HTMLInputElement>(
       `input#searchedParentId`
     );
+    const parentIdDisp = document.querySelector<HTMLInputElement>(
+      `input#searchedParentIdDisp`
+    );
+    const parentName = document.querySelector<HTMLInputElement>(
+      `input#searchedParentName`
+    );
+
+    let buf = `<a href="/ticket?id=`;
     if (parentId) {
       buf += parentId.value;
     }
     buf += `">`;
-    const parentIdDisp = document.querySelector<HTMLInputElement>(
-      `input#searchedParentIdDisp`
-    );
     if (parentIdDisp) {
       buf += parentIdDisp.value;
     }
     buf += `</a>&nbsp;:&nbsp;`;
-    const parentName = document.querySelector<HTMLInputElement>(
-      `input#searchedParentName`
-    );
     if (parentName) {
       buf += this.info.escapeHtml(parentName.value);
     }
@@ -199,11 +200,22 @@ export default class AddParentModal {
     buf += `<a href="javascript:clickRemoveParent();">`;
     buf += `<img class="icon" src="/static/ionicons/remove-circle-outline.svg" title="削除">`;
     buf += `</a>`;
-    buf += `<input type="hidden" id="parent" name="parent" value="`;
+    buf += `<input type="hidden" id="parent_id" name="parent_id" value="`;
     if (parentId) {
       buf += parentId.value;
     }
     buf += `">`;
+    buf += `<input type="hidden" id="parent_id_disp" name="parent_id_disp" value="`;
+    if (parentIdDisp) {
+      buf += parentIdDisp.value;
+    }
+    buf += `">`;
+    buf += `<input type="hidden" id="parent_name" name="parent_name" value="`;
+    if (parentName) {
+      buf += this.info.escapeHtml(parentName.value);
+    }
+    buf += `">`;
+
     const parentTicket = document.querySelector<HTMLElement>(`#parentTicket`);
     if (parentTicket) {
       parentTicket.innerHTML = buf;

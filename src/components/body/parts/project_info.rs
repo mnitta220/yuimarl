@@ -180,7 +180,7 @@ impl Component for ProjectInfo {
                             }
                             *buf += r#" id="divAddMember">"#;
                             {
-                                *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddMember" src="/static/ionicons/add-circle-outline.svg" title="メンバーを追加">"#;
+                                *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddMember" src="/static/ionicons/add-circle-outline.svg" title="メンバーを追加" data-testid="addMember">"#;
                             }
                             *buf += r#"</div>"#;
                         }

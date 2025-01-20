@@ -533,9 +533,6 @@ pub async fn post_note(
     props.action = crate::Action::Update;
     props.project = project;
     props.ticket = Some(ticket_updated);
-    //props.ticket_parent = ticket_parent;
-    //props.ticket_members = ticket_members;
-    //props.ticket_children = ticket_children;
     props.screen = Some(crate::Screen::TicketInfo);
     props.tab = crate::Tab::Note;
     props.toast_message = Some("ノートを更新しました。".to_string());

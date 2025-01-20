@@ -428,47 +428,55 @@ pub async fn post_note(
             }
         };
 
-    let mut props = page::Props::new();
+    let mut can_update = false;
+    let mut can_delete = false;
 
-    if let Some(v) = validation {
-        let mut can_update = false;
-        let mut can_delete = false;
-
-        // プロジェクトを更新できるのは、オーナー、管理者
-        // プロジェクトを削除できるのは、オーナー
-        if let Some(pmem) = &member {
-            if let Some(r) = pmem.role {
-                if r == model::project::ProjectRole::Owner as i32 {
-                    can_update = true;
-                    can_delete = true;
-                }
-                if r == model::project::ProjectRole::Administrator as i32 {
-                    can_update = true;
-                }
+    // プロジェクトを更新できるのは、オーナー、管理者
+    // プロジェクトを削除できるのは、オーナー
+    if let Some(pmem) = &member {
+        if let Some(r) = pmem.role {
+            if r == model::project::ProjectRole::Owner as i32 {
+                can_update = true;
+                can_delete = true;
+            }
+            if r == model::project::ProjectRole::Administrator as i32 {
+                can_update = true;
             }
         }
+    }
 
+    let mut props = page::Props::new();
+    props.action = crate::Action::Update;
+    props.screen = Some(crate::Screen::ProjectInfo);
+    props.tab = crate::Tab::Note;
+
+    if let Some(v) = validation {
         if let Some(p) = project {
             let mut p = p.clone();
             p.note = Some(input.markdown);
-            props.project = Some(p.clone());
+            props.project = Some(p);
         }
 
-        props.tab = crate::Tab::Note;
-        props.action = crate::Action::Update;
         props.session = Some(session);
         let mut page = ProjectPage::new(props, can_update, can_delete, Some(v));
         return Ok(Html(page.write()));
     }
 
-    match model::project::Project::update_note(&input, &session, &db).await {
+    let project_updated = match model::project::Project::update_note(&input, &session, &db).await {
         Ok(p) => p,
         Err(e) => {
             return Err(AppError(anyhow::anyhow!(e)));
         }
     };
 
-    return super::home::show_home(session, &db).await;
+    props.session = Some(session);
+    props.project = Some(project_updated);
+    props.toast_message = Some("ノートを更新しました。".to_string());
+
+    let mut page = ProjectPage::new(props, can_update, can_delete, None);
+    return Ok(Html(page.write()));
+
+    //return super::home::show_home(session, &db).await;
 }
 
 pub async fn get_project_select(

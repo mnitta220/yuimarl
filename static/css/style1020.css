@@ -164,7 +164,6 @@
   position: absolute;
   top: calc(100vh - 90px);
   left: calc(50vw - 80px);
-  font-size: .88em;
-  padding: 14px 20px;
+  padding: 14px 10px;
   color: white;
 }

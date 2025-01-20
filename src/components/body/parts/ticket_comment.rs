@@ -97,7 +97,7 @@ impl Component for TicketComment {
                         {
                             *buf += r#"<div class="col">"#;
                             {
-                                *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddComment" src="/static/ionicons/add-circle-outline.svg" title="コメントを追加">"#;
+                                *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddComment" src="/static/ionicons/add-circle-outline.svg" title="コメントを追加" data-testid="addComment">"#;
                             }
                             *buf += r#"</div>"#;
                         }

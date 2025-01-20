@@ -57,8 +57,10 @@ impl Component for TicketInfo {
                             *buf += n;
                         }
                     }
-                    *buf += r#"" required"#;
-                    if !self.can_update {
+                    *buf += r#"""#;
+                    if self.can_update {
+                        *buf += r#" required"#;
+                    } else {
                         *buf += r#" disabled"#;
                     }
                     *buf += r#">"#;
@@ -180,7 +182,7 @@ impl Component for TicketInfo {
                         *buf += r#"</div>"#;
 
                         if self.can_update {
-                            *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddCharge" src="/static/ionicons/add-circle-outline.svg" title="担当者を追加">"#;
+                            *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddCharge" src="/static/ionicons/add-circle-outline.svg" title="担当者を追加" data-testid="addCharge">"#;
                         }
                     }
                     *buf += r#"</div>"#;
@@ -586,7 +588,7 @@ impl Component for TicketInfo {
                         *buf += r#"</div>"#;
 
                         if self.can_update {
-                            *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddDeliverables" src="/static/ionicons/add-circle-outline.svg" title="成果物を追加">"#;
+                            *buf += r#"<img class="icon3" style="cursor:pointer" id="icnAddDeliverables" src="/static/ionicons/add-circle-outline.svg" title="成果物を追加" data-testid="addDeliverables">"#;
                         }
                     }
                     *buf += r#"</div>"#;

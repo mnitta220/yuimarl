@@ -21,6 +21,7 @@ use tower_cookies::Cookies;
 pub struct Params {
     id: Option<String>,
     tab: Option<String>,
+    toast: Option<String>,
 }
 
 pub async fn get_add(cookies: Cookies) -> Result<Html<String>, AppError> {
@@ -199,6 +200,11 @@ pub async fn get(cookies: Cookies, Query(params): Query<Params>) -> Result<Html<
     }
 
     props.project_members = members;
+    if let Some(t) = params.toast {
+        if t == "updated" {
+            props.toast_message = Some("更新しました。".to_string());
+        }
+    }
 
     props.session = Some(session);
     let mut page = ProjectPage::new(props, can_update, can_delete, None);

@@ -349,118 +349,13 @@ export default class GanttFrame {
           const projectid =
             document.querySelector<HTMLInputElement>(`#projectId`);
           if (projectid) {
-            window.location.href = `/project?id=${projectid.value}&tab=gantt`;
+            window.location.href = `/project?id=${projectid.value}&tab=gantt&toast=updated`;
           }
         } else {
           window.alert(`エラーが発生しました。: ${data.message}`);
         }
       })
       .catch((e) => window.alert(`エラーが発生しました。: ${e.message}`));
-
-    /*
-    $.ajax({
-      type: "POST",
-      url: "/api/ganttUpdate",
-      data: {
-        project_id: this.projectId ?? "",
-        tickets: JSON.stringify(this.tickets),
-      },
-      success: function (result) {
-        $("#loading").addClass("d-none");
-        var ret = JSON.parse(result);
-        if (ret.result) {
-          const projectid =
-            document.querySelector<HTMLInputElement>(`#projectId`);
-          if (projectid) {
-            //window.location.href = `/project?id=${projectid.value}&tab=gantt`;
-          }
-        } else {
-          window.alert(`エラーが発生しました。: ${ret.message}`);
-        }
-      },
-      error: function (result) {
-        $("#loading").addClass("d-none");
-        console.error(result);
-        window.alert(`エラーが発生しました。: ${result}`);
-      },
-    });
-    */
-
-    /*let data = new FormData();
-    //data.append("project_id", this.projectId ?? "");
-    data.append("email", "aaa");
-    //data.append("tickets", JSON.stringify(this.tickets));
-    //data.append("tickets", "bbb");
-    fetch("/api/userByEmail", {
-      method: "POST",
-      body: data,
-    })
-      .then((response) => response.json())
-      .then((data: GanttSaveResult) => {
-        console.log(JSON.stringify(data));
-        if (data.result) {
-          //this.frame.ticketModal.show(data);
-        } else {
-          window.alert(`エラーが発生しました。: ${data.message}`);
-        }
-      })
-      .catch((e) => window.alert(`エラーが発生しました。: ${e.message}`));
-      */
-    /*
-    data.append("project_id", "aaa");
-    //data.append("tickets", JSON.stringify(this.tickets));
-    data.append("tickets", "bbb");
-    fetch("/api/ganttUpdate", {
-      method: "POST",
-      body: data,
-    })
-      .then((response) => response.json())
-      .then((data: GanttSaveResult) => {
-        console.log(JSON.stringify(data));
-        if (data.result) {
-          //this.frame.ticketModal.show(data);
-        } else {
-          window.alert(`エラーが発生しました。: ${data.message}`);
-        }
-      })
-      .catch((e) => window.alert(`エラーが発生しました。: ${e.message}`));
-      */
-    /*
-    let data = {
-      project_id: this.projectId ?? "",
-      tickets: "hello", // JSON.stringify(this.tickets),
-    };
-    fetch("/api/ganttUpdate", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      mode: "no-cors",
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data: GanttSaveResult) => {
-        console.log(JSON.stringify(data));
-        if (data.result) {
-          //this.frame.ticketModal.show(data);
-        } else {
-          window.alert(`エラーが発生しました。: ${data.message}`);
-        }
-      })
-      .catch((e) => window.alert(`エラーが発生しました。: ${e.message}`));
-      */
-
-    /*
-    const tickets = document.querySelector<HTMLInputElement>(`#tickets`);
-    if (tickets) {
-      tickets.value = JSON.stringify(this.tickets);
-      const ganttform = document.querySelector<HTMLFormElement>(`#ganttform`);
-      if (ganttform) {
-        ganttform.submit();
-      }
-    }
-    */
   }
 
   resize() {

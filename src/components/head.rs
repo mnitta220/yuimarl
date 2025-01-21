@@ -18,7 +18,7 @@ impl Component for Head {
             *buf += r#"rel="stylesheet" "#;
             *buf += r#"integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" "#;
             *buf += r#"crossorigin="anonymous">"#;
-            *buf += r#"<link rel="stylesheet" href="/static/css/style1020.css">"#;
+            *buf += r#"<link rel="stylesheet" href="/static/css/style1021.css">"#;
             *buf += r#"<link rel="icon" type="image/x-icon" href="/static/favicon2.ico">"#;
 
             if let Some(screen) = &props.screen {
@@ -43,8 +43,8 @@ impl Component for Head {
                             Tab::GanttChart => {
                                 // 以下の2行は、vite/gantt-chart フォルダでビルドして出力された index-XXXXXXXX.js と index-XXXXXXXX.css を設定する。
                                 // (参照) gantt-chart/README.md
-                                *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-BKc0_gQt.js"></script>"#;
-                                *buf += r#"<link rel="stylesheet" crossorigin href="/static/js/gantt-chart/index-DCz_j2JK.css">"#;
+                                *buf += r#"<script type="module" crossorigin src="/static/js/gantt-chart/index-CjyhNl7n.js"></script>"#;
+                                *buf += r#"<link rel="stylesheet" crossorigin href="/static/js/gantt-chart/index-DWVwR3H2.css">"#;
                             }
                             _ => {}
                         }

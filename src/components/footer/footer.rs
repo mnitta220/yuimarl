@@ -60,7 +60,55 @@ impl Component for Footer {
         }
         *buf += r#"</footer>"#;
 
+        /*
         if let Some(t) = &props.toast_message {
+            // トースト表示
+            *buf += r#"<div id="toast_container">"#;
+            {
+                *buf += r#"<div id="toast_message" class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true" data-testid="toast" data-bs-delay="2000">"#;
+                {
+                    *buf += r#"<div class="toast-body">"#;
+                    *buf += &t;
+                    *buf += r#"</div>"#;
+                }
+                *buf += r#"</div>"#;
+            }
+            *buf += r#"</div>"#;
+
+            *buf += r#"<script>"#;
+            {
+                *buf += r#"window.addEventListener("load", () => {"#;
+                {
+                    *buf += r#"setTimeout(function () { "#;
+                    {
+                        *buf += r#"const toastMessage = document.querySelector(`#toast_message`);"#;
+                        *buf += r#"if (toastMessage) {"#;
+                        {
+                            *buf += r#"toastMessage.style.visibility = "hidden";"#;
+                        }
+                        *buf += r#"}"#;
+                    }
+                    *buf += r#"}, 2000);"#;
+                }
+                *buf += r#"});"#;
+            }
+            *buf += r#"</script>"#;
+        }
+        */
+
+        if let Some(t) = &props.toast_message {
+            *buf += r#"<div id="toast_container">"#;
+            {
+                *buf += r#"<div id="toast_message" class="toast fade show text-bg-secondary border-0" role="alert" aria-live="assertive" aria-atomic="true">"#;
+                {
+                    *buf += r#"<div id="toast_body" class="toast-body" data-testid="toast">"#;
+                    *buf += &t;
+                    *buf += r#"</div>"#;
+                }
+                *buf += r#"</div>"#;
+            }
+            *buf += r#"</div>"#;
+            /*
             if t.len() > 0 {
                 // トースト表示
                 *buf += r#"<div id="toast"><span id="toast_message" data-testid="toast">"#;
@@ -86,6 +134,26 @@ impl Component for Footer {
                 }
                 *buf += r#"</script>"#;
             }
+            */
+            // トースト表示
+            *buf += r#"<script>"#;
+            {
+                *buf += r#"window.addEventListener("load", () => {"#;
+                {
+                    *buf += r#"const toastMessage = document.querySelector(`#toast_message`);"#;
+                    *buf += r#"if (toastMessage) {"#;
+                    {
+                        *buf += r#"setTimeout(function () { "#;
+                        {
+                            *buf += r#"toastMessage.classList.remove("show");"#;
+                        }
+                        *buf += r#"}, 2000);"#;
+                    }
+                    *buf += r#"}"#;
+                }
+                *buf += r#"});"#;
+            }
+            *buf += r#"</script>"#;
         }
 
         *buf += r#"<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" "#;

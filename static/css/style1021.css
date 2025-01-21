@@ -154,16 +154,10 @@
   padding: 10px;
 }
 
-#toast {
+#toast_container {
   display: flex;
-  visibility: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  z-index: 999;
-  background-color: #666;
+  z-index: 1030;
   position: absolute;
-  top: calc(100vh - 90px);
-  left: calc(50vw - 80px);
-  padding: 14px 10px;
-  color: white;
+  top: 61px;
+  right: 8px;
 }
